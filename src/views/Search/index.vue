@@ -378,7 +378,7 @@ export default {
       max-width: 580px;
       height: 52px;
       border-radius: 8px;
-      overflow-x: scroll;
+      // overflow-x: scroll;
       white-space: nowrap;
 
       .placeholder {

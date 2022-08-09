@@ -16,7 +16,7 @@ const isSupportWebP = (() => {
 })();
 
 const imgProxy = url => {
-  let result = url.replace(/i.pximg.net/g, 'pximg.pixiv-viewer.workers.dev')
+  let result = url.replace(/i.pximg.net/g, 'pximg.cocomi.cf')
 
   if (!isSupportWebP) {
     result = result.replace(/_10_webp/g, '_70')
@@ -102,20 +102,20 @@ const parseIllust = data => {
 
 const api = {
   /**
-   * 
+   *
    * @param {Number} id 作品ID
    * @param {Number} index 页数 0起始
    */
   url(id, index) {
     if (!index) {
-      return `https://pixiv.cat/${id}.png`
+      return `https://pixiv.re/${id}.png`
     } else {
-      return `https://pixiv.cat/${id}-${index}.png`
+      return `https://pixiv.re/${id}-${index}.png`
     }
   },
 
   /**
-   * 
+   *
    * @param {Number} offset 偏移值
    * @param {Number} per_page 每页数量
    */
@@ -171,7 +171,7 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {Number} id 作品ID
    * @param {Number} page 页数 [1,5]
    */
@@ -214,9 +214,9 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {String} mode 排行榜类型  ['day', 'week', 'month', 'week_rookie', 'week_original', 'day_male', 'day_female', 'day_r18', 'week_r18', 'day_male_r18', 'day_female_r18', 'week_r18g']
-   * @param {Number} page 页数 
+   * @param {Number} page 页数
    * @param {String} date YYYY-MM-DD 默认为「前天」
    */
   async getRankList(mode = 'weekly', page = 1, date = moment().subtract(2, 'days').format('YYYY-MM-DD')) {
@@ -260,9 +260,9 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {String} word 关键词
-   * @param {Number} page 页数 
+   * @param {Number} page 页数
    */
   async search(word, page = 1) {
     let searchList, key = `searchList_${Base64.encode(word)}_${page}`
@@ -303,7 +303,7 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {Number} id 作品ID
    */
   async getArtwork(id) {
@@ -342,7 +342,7 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {Number} id 作品ID
    */
   async ugoiraMetadata(id) {
@@ -376,7 +376,7 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {Number} id 画师ID
    */
   async getMemberInfo(id) {
@@ -407,9 +407,9 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {Number} id 画师ID
-   * @param {Number} page 页数 
+   * @param {Number} page 页数
    */
   async getMemberArtwork(id, page) {
     let memberArtwork
@@ -449,7 +449,7 @@ const api = {
   },
 
   /**
-   * 
+   *
    * @param {Number} id 画师ID
    * @param {Number} max_bookmark_id max_bookmark_id
    */
