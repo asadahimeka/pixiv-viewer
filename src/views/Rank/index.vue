@@ -14,7 +14,7 @@
         mode="single"
         :popover="{
           placement: 'bottom',
-          visibility: 'click' 
+          visibility: 'click'
         }"
       >
         <div class="calendar">
@@ -200,7 +200,7 @@ export default {
 <style lang="stylus" scoped>
 .rank {
   padding-top: 100px;
-  padding-top: env(safe-area-inset-top);
+  // padding-top: env(safe-area-inset-top);
   // height: 100%;
   box-sizing: border-box;
 
