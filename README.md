@@ -1,9 +1,8 @@
-<p align="center"><img src="https://count.getloli.com/get/@pixiv-viewer.github" alt="pixiv-viewer"></p>
+<p align="center"><img src="https://api.moedog.org/count/@asadahimeka-pixiv-viewer-github" alt="pixiv-viewer"></p>
 
 # pixiv-viewer
-![Github CI](https://github.com/journey-ad/pixiv-viewer/workflows/Github%20CI/badge.svg?branch=master)
 
-[DEMO](https://journey-ad.github.io/pixiv-viewer)
+[DEMO](https://pixiv.kanata.ml/)
 
 [APK(5+)](https://github.com/journey-ad/pixiv-viewer/raw/master/pics/pixiv_viewer_0607231648.apk)
 
