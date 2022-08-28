@@ -13,7 +13,7 @@
     </van-cell>
     <div class="artwork-list-wrap" v-if="memberArtwork.length>=10">
       <!-- <div class="artwork-list" :style="{width:`${(memberArtwork.length-5)/2.3*100}%`}"> -->
-      <swiper class="artwork-list" :options="swiperOption">
+      <swiper class="artwork-list"  :options="swiperOption">
         <swiper-slide
           class="image-card-slide"
           v-for="art in memberArtwork.slice(0,memberArtwork.length-5)"
@@ -29,6 +29,7 @@
             </div>
           </ImageSlide>
         </swiper-slide>
+        <div class="swiper-scrollbar" slot="scrollbar"></div>
       </swiper>
       <!-- </div> -->
     </div>
@@ -74,7 +75,12 @@ export default {
       memberArtwork: null,
       swiperOption: {
         freeMode: true,
-        slidesPerView: "auto"
+        slidesPerView: "auto",
+        mousewheel: true,
+        scrollbar: {
+          el: '.swiper-scrollbar',
+          draggable: true
+        }
       }
     };
   },
@@ -180,6 +186,7 @@ export default {
           border-radius: 18px;
           box-sizing: border-box;
           margin-right: 6px;
+          padding-bottom: 0 !important;
         }
 
         .image-slide {

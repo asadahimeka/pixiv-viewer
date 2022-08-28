@@ -14,7 +14,16 @@
       error-text="网络异常，点击重新加载"
       @load="getRelated()"
     >
-      <div class="card-box">
+     <masonry v-bind="$store.getters.wfProps">
+        <ImageCard
+          mode="all"
+          :artwork="art"
+          @click-card="toArtwork($event)"
+          v-for="art in artList"
+          :key="art.id"
+        />
+      </masonry>
+      <!-- <div class="card-box">
         <div class="column">
           <ImageCard
             mode="cover"
@@ -33,7 +42,7 @@
             :key="art.id"
           />
         </div>
-      </div>
+      </div> -->
     </van-list>
   </div>
 </template>
@@ -70,6 +79,7 @@ export default {
     },
     getRelated: _.throttle(async function() {
       if (!this.artwork.id) return;
+      this.loading = true
       let newList;
       let res = await api.getRelated(this.artwork.id, this.curPage);
       if (res.status === 0) {

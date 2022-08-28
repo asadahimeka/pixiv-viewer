@@ -2,8 +2,9 @@
   <div
     @click.stop="click(artwork.id)"
     class="image-card"
-    :style="{height: `${(375/artwork.width*artwork.height/column).toFixed(2)}px`}"
-  >
+    :style="{paddingBottom:paddingBottom(artwork)}"
+    >
+    <!-- :style="{height: `${(375/artwork.width*artwork.height/column).toFixed(2)}px`}" -->
     <img
       v-lazy="artwork.images[0].m"
       :alt="artwork.title"
@@ -16,16 +17,18 @@
       :color="tagText==='R-18'?'#fb7299':'#ff3f3f'"
       v-if="tagText"
     >{{tagText}}</van-tag>
-    <div class="layer-num" v-if="mode==='cover' && artwork.count>1">
+    <div class="layer-num" v-if="(mode=='all'||mode==='cover') && artwork.count>1">
       <Icon name="layer" scale="1.5"></Icon>
       {{artwork.count}}
     </div>
-    <Icon class="btn-play" name="play" scale="8" v-if="mode==='cover' && artwork.type==='ugoira'"></Icon>
-    <div class="meta" v-if="mode==='meta'">
+    <Icon class="btn-play" name="play" scale="8" v-if="(mode=='all'||mode==='cover') && artwork.type==='ugoira'"></Icon>
+    <div class="meta" v-if="mode=='all'||mode==='meta'">
       <div class="content">
         <h2 class="title">{{artwork.title}}</h2>
-        <img :src="artwork.author.avatar" :alt="artwork.author.name" class="avatar" />
-        <div class="author">{{artwork.author.name}}</div>
+        <div class="author-cont">
+          <img :src="artwork.author.avatar" :alt="artwork.author.name" class="avatar" />
+          <div class="author">{{artwork.author.name}}</div>
+        </div>
       </div>
     </div>
   </div>
@@ -75,6 +78,10 @@ export default {
         return false;
 
       this.$emit("click-card", id);
+    },
+    paddingBottom(artwork) {
+      const pb = artwork.height / artwork.width * 100
+      return (pb > 160 ? 160 : pb.toFixed(2)) + '%'
     }
   },
   components: {
@@ -91,8 +98,13 @@ export default {
   align-items: center;
   overflow: hidden;
   background: #fafafa;
+  margin-bottom: 10px;
+  border-radius: 20px;
 
   .image {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -100,6 +112,9 @@ export default {
     &[lazy='loading'] {
       width: 100px;
       height: 100px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -154,8 +169,13 @@ export default {
       box-sizing: border-box;
       color: #fff;
 
+      .author-cont {
+        display: flex;
+        align-items: center;
+      }
+
       .title {
-        font-size: 34px;
+        font-size: 28px;
         margin: 10px 0;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -166,6 +186,7 @@ export default {
 
       .avatar {
         width: 48px;
+        min-width: 48px;
         height: 48px;
         margin-right: 8px;
         vertical-align: bottom;
@@ -175,7 +196,7 @@ export default {
 
       .author {
         display: inline-block;
-        font-size: 30px;
+        font-size: 20px;
         font-weight: 200;
       }
     }

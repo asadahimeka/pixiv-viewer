@@ -46,8 +46,9 @@ export default {
 .app-main {
   position: relative;
   height: 100%;
+  padding-top 10px;
   // height: calc(100vh - 100px);
-  // padding-bottom: 100px;
+  padding-bottom: 100px;
   // height: calc(100vh - env(safe-area-inset-bottom));
   // padding-bottom: env(safe-area-inset-bottom);
   overflow-y: scroll;

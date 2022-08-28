@@ -24,6 +24,7 @@
     "vue": "2.6.12",
     "vue-awesome-swiper": "4.1.0",
     "vue-concise-slider": "3.4.4",
+    "vue-masonry-css": "1.0.3",
     "vue-moment": "4.1.0",
     "vue-router": "3.1.5",
     "vuex": "3.1.2",

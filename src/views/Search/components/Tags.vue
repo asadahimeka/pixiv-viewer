@@ -1,5 +1,22 @@
 <template>
-  <div class="tags">
+  <masonry class="tags" v-bind="$store.getters.wfProps">
+    <div
+      class="tag"
+      style="width: 100%;float: none;margin-bottom: 10px;"
+      v-for="(tag,index) in tags"
+      :key="index"
+      @click.stop="search(tag.name)"
+      >
+      <img :src="tag.pic" alt />
+      <div class="meta">
+        <div class="content">
+          <div class="name" v-if="tag.name" :class="[getLength(tag.name)]">#{{tag.name}}</div>
+          <div class="tname" v-if="tag.tname" :class="[getLength(tag.tname)]">{{tag.tname}}</div>
+        </div>
+      </div>
+    </div>
+  </masonry>
+  <!-- <div class="tags">
     <div class="top" v-if="tags.length>0">
       <div class="tag" @click.stop="search(tags[0].name)">
         <img :src="tags[0].pic" alt />
@@ -37,7 +54,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <script>
@@ -84,7 +101,7 @@ export default {
 <style lang="stylus" scoped>
 .tags {
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
 
   .tag {
     position: relative;

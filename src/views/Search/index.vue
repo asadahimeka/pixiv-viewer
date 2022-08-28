@@ -62,7 +62,16 @@
         error-text="网络异常，点击重新加载"
         @load="search"
       >
-        <div class="card-box">
+        <masonry v-bind="$store.getters.wfProps">
+          <ImageCard
+            mode="all"
+            :artwork="art"
+            @click-card="toArtwork($event)"
+            v-for="art in artList"
+            :key="art.id"
+          />
+        </masonry>
+        <!-- <div class="card-box">
           <div class="column">
             <ImageCard
               mode="cover"
@@ -81,7 +90,7 @@
               :key="art.id"
             />
           </div>
-        </div>
+        </div> -->
       </van-list>
       <Tags v-if="keywords.trim()===''" @search="searchTag" />
       <van-loading
@@ -102,6 +111,8 @@ import ImageSearch from "./components/ImageSearch";
 import { mapState, mapActions } from "vuex";
 import _ from "lodash";
 import api from "@/api";
+
+let appMainEl = null;
 export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -241,6 +252,7 @@ export default {
       this.focus = true; // 获取焦点
     },
     onBlur(flag) {
+      appMainEl && appMainEl.scrollTo(0, 0);
       let keywords = `${this.keywords} `.replace(/\s\s+/g, " "); // 去除多余空格
 
       this.keywords = keywords;
@@ -286,6 +298,8 @@ export default {
     ...mapActions(["setSearchHistory"])
   },
   mounted() {
+    appMainEl = document.querySelector('.app-main');
+
     let input = document.querySelector('input[type="search"]');
     document.addEventListener("selectionchange", () => {
       if (this.focus)
@@ -329,7 +343,7 @@ export default {
     top: 60px;
     top: env(safe-area-inset-top);
     width: 100%;
-    max-width: 10rem;
+    // max-width: 10rem;
     // min-height: 122px;
     background: #fff;
     z-index: 1;
@@ -357,6 +371,9 @@ export default {
       position: absolute;
       width: 100%;
       height: 128px;
+      backdrop-filter: blur(6px);
+      background: rgba(255, 255, 255, 0.8);
+
 
       // top: 26px;
       ::v-deep .van-cell {
@@ -491,7 +508,7 @@ export default {
         position: fixed;
         top: 122px;
         width: 100%;
-        max-width: 10rem;
+        // max-width: 10rem;
         height: calc(100% - 122px);
         box-sizing: border-box;
         // pointer-events: none;

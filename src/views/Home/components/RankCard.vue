@@ -99,6 +99,8 @@ export default {
       overflow: hidden;
 
       .swipe-item {
+        margin-right: 12px;
+
         &:last-child {
           .image-card {
             margin-right: 0;
@@ -108,13 +110,11 @@ export default {
         .image-card {
           // width: 50vw;
           font-size: 0;
-          float: left;
-          margin-right: 12px;
           border: 1px solid #ebebeb;
-          border-radius: 18px;
           box-sizing: border-box;
-          width: calc(100% - 12px);
+          width: 100%;
           height: 100% !important;
+          padding-bottom: 0 !important;
         }
 
         .image-slide {

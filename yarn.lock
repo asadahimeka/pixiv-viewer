@@ -9702,6 +9702,11 @@ vue-loader@^15.8.3:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-masonry-css@1.0.3:
+  version "1.0.3"
+  resolved "https://registry.npmmirror.com/vue-masonry-css/-/vue-masonry-css-1.0.3.tgz#a5e7bb248570eeedcd358637d3f1f4fc7f0c5f86"
+  integrity sha512-viecHQiHVLez7HlYUQsv1wJb2MT/RDSzkDp6m3In41vPrk6OsBmT2qRE8LZqYIA4daIwrnx/Xm8h4fjOpuE3hw==
+
 vue-moment@4.1.0:
   version "4.1.0"
   resolved "https://registry.npmmirror.com/vue-moment/-/vue-moment-4.1.0.tgz#092a8ff723a96c6f85a0a8e23ad30f0bf320f3b0"

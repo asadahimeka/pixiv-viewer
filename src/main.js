@@ -8,6 +8,7 @@ import { Toast, Lazyload, ImagePreview } from 'vant';
 import '@vant/touch-emulator';
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VCalendar from 'v-calendar';
+import VueMasonry from 'vue-masonry-css'
 
 import 'swiper/css/swiper.css'
 import '@/assets/css/base.styl'
@@ -24,6 +25,7 @@ Vue.use(Lazyload, {
 Vue.use(ImagePreview);
 Vue.use(VueAwesomeSwiper)
 Vue.use(VCalendar)
+Vue.use(VueMasonry)
 
 Vue.component('Icon', Icon)
 

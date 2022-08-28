@@ -98,7 +98,7 @@ export default {
           if (i === Math.floor(h / txtHeight / 2) && j === 2) {
             ctx.fillStyle = "rgba(0,0,0,.13)";
           } else {
-            ctx.fillStyle = "rgba(0,0,0,.03)";
+            ctx.fillStyle = "rgba(0,0,0,.05)";
           }
           ctx.fillText(txt, (j - 1) * w, i * txtHeight);
         }

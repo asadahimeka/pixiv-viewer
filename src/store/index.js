@@ -26,7 +26,22 @@ export default new Vuex.Store({
       } else {
         return false;
       }
-    }
+    },
+    wfProps: () => ({
+      gutter: "8px",
+      cols: {
+        300: 1,
+        600: 2,
+        900: 3,
+        1200: 4,
+        1600: 5,
+        1920: 6,
+        2400: 7,
+        2700: 8,
+        3000: 9,
+        default: 6
+      }
+    })
   },
   mutations: {
     setGalleryList(state, { list, id }) {

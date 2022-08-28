@@ -16,7 +16,16 @@
       error-text="网络异常，点击重新加载"
       @load="getMemberFavorite()"
     >
-      <div class="card-box">
+      <masonry v-bind="$store.getters.wfProps">
+        <ImageCard
+          mode="all"
+          :artwork="art"
+          @click-card="toArtwork($event)"
+          v-for="art in artList"
+          :key="art.id"
+        />
+      </masonry>
+      <!-- <div class="card-box">
         <div class="column">
           <ImageCard
             mode="cover"
@@ -35,7 +44,7 @@
             :key="art.id"
           />
         </div>
-      </div>
+      </div> -->
     </van-list>
   </div>
 </template>
@@ -76,6 +85,7 @@ export default {
     },
     getMemberFavorite: _.throttle(async function() {
       if (!this.id) return;
+      this.loading = true;
       let newList;
       let res = await api.getMemberFavorite(this.id, this.next);
       if (res.status === 0) {

@@ -296,4 +296,8 @@ export default {
     margin: 10px 0 20px 0;
   }
 }
+
+::v-deep .top-bar-wrap
+  background none
+
 </style>

@@ -42,7 +42,7 @@ export default {
   top: 0;
   padding-top: 60px;
   width: 100%;
-  max-width: 10rem;
+  // max-width: 10rem;
   height: 160px;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(#fff, 0));
   z-index: 99;

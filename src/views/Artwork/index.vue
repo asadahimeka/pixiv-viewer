@@ -2,19 +2,24 @@
   <div class="artwork">
     <TopBar />
     <div v-if="artwork">
-      <ImageView
-        :artwork="artwork"
-        :lazy="true"
-        @open-download="ugoiraDownloadPanelShow=true"
-        ref="imgView"
-      />
-      <van-skeleton class="skeleton" avatar :row="3" :avatar-size="'42px'" :loading="loading">
-        <Meta :artwork="artwork" />
-      </van-skeleton>
-      <van-divider />
-      <keep-alive>
-        <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
-      </keep-alive>
+      <div class="ia-cont">
+        <div class="ia-left">
+          <ImageView
+            :artwork="artwork"
+            :lazy="true"
+            @open-download="ugoiraDownloadPanelShow=true"
+            ref="imgView"
+          />
+        </div>
+        <div class="ia-right">
+          <van-skeleton class="skeleton" avatar :row="3" :avatar-size="'42px'" :loading="loading">
+            <Meta :artwork="artwork" />
+          </van-skeleton>
+          <keep-alive>
+            <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
+          </keep-alive>
+        </div>
+      </div>
       <van-divider />
       <keep-alive>
         <Related :artwork="artwork" :key="artwork.id" />
@@ -141,4 +146,41 @@ export default {
     margin: 30px 0;
   }
 }
+
+.ia-cont
+  display flex
+
+  .ia-left
+    width 72%
+    min-width 72%
+
+    ::v-deep .image-box
+      width: 100% !important
+      height: auto !important
+
+      .image
+        width auto
+        max-width 100%
+        height 90vh
+        max-height 100%
+        margin 0 auto
+
+  .ia-right
+    padding-right 40px
+
+.artwork
+  ::v-deep .top-bar-wrap
+    width 60vw
+    background none
+
+@media screen and (max-width: 1200px)
+  .ia-cont
+    display block !important
+
+  .ia-left
+    width 100% !important
+    margin 0 auto
+    ::v-deep .image
+      height: 72vh !important
+
 </style>

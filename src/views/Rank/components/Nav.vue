@@ -52,8 +52,8 @@ export default {
 
 <style lang="stylus" scoped>
 .nav {
-  width: 90%;
-  overflow-x: scroll;
+  // width: 90%;
+  overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
 

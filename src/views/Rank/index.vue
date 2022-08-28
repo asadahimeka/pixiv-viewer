@@ -22,9 +22,9 @@
         </div>
       </v-date-picker>
     </div>
-    <Top3 v-if="artList.length>=3" :artList="artList.slice(0,3)" />
+    <!-- <Top3 v-if="artList.length>=3" :artList="artList.slice(0,3)" /> -->
+    <!-- v-if="artList.length>3" -->
     <van-list
-      v-if="artList.length>3"
       class="rank-list"
       v-model="loading"
       :finished="finished"
@@ -33,10 +33,19 @@
       error-text="网络异常，点击重新加载"
       @load="getRankList"
     >
-      <div class="card-box">
+      <masonry v-bind="$store.getters.wfProps">
+        <ImageCard
+          mode="all"
+          :artwork="art"
+          @click-card="toArtwork($event)"
+          v-for="art in artList"
+          :key="art.id"
+        />
+      </masonry>
+      <!-- <div class="card-box">
         <div class="column">
           <ImageCard
-            mode="cover"
+            mode="meta"
             :artwork="art"
             @click-card="toArtwork($event)"
             v-for="art in odd(artList.slice(3))"
@@ -45,14 +54,14 @@
         </div>
         <div class="column">
           <ImageCard
-            mode="cover"
+            mode="meta"
             :artwork="art"
             @click-card="toArtwork($event)"
             v-for="art in even(artList.slice(3))"
             :key="art.id"
           />
         </div>
-      </div>
+      </div> -->
     </van-list>
     <van-loading v-show="!artList || artList.length===0" class="loading" :size="'50px'" />
   </div>
@@ -63,7 +72,7 @@ import moment from "moment";
 import { List, Loading, Empty } from "vant";
 import ImageCard from "@/components/ImageCard";
 import Nav from "./components/Nav";
-import Top3 from "./components/Top3";
+// import Top3 from "./components/Top3";
 import _ from "lodash";
 import api from "@/api";
 export default {
@@ -145,19 +154,23 @@ export default {
       return this.menu[type] ? this.menu[type].io : null;
     },
     getRankList: _.throttle(async function() {
+      this.loading = true;
       let type = this.getIOType(this.curType);
       let res = await api.getRankList(type, this.curPage, this.date);
       if (res.status === 0) {
         let newList = res.data;
-        let artList = JSON.parse(JSON.stringify(this.artList));
+        if (newList.length == 0) {
+          this.finished = true;
+        } else {
+          let artList = JSON.parse(JSON.stringify(this.artList));
 
-        artList.push(...newList);
-        artList = _.uniqBy(artList, "id");
+          artList.push(...newList);
+          artList = _.uniqBy(artList, "id");
 
-        this.artList = artList;
-        this.loading = false;
-        this.curPage++;
-        if (this.curPage > 5) this.finished = true;
+          this.artList = artList;
+          this.loading = false;
+          this.curPage++;
+        }
       } else {
         this.$toast({
           message: res.msg
@@ -165,7 +178,6 @@ export default {
         this.loading = false;
         this.error = true;
       }
-      this.isLoading = false;
     }, 5000),
     odd(list) {
       return list.filter((_, index) => (index + 1) % 2);
@@ -188,7 +200,7 @@ export default {
   },
   components: {
     Nav,
-    Top3,
+    // Top3,
     [List.name]: List,
     [Loading.name]: Loading,
     [Empty.name]: Empty,
@@ -218,7 +230,8 @@ export default {
     align-items: center;
     top: 60px;
     top: env(safe-area-inset-top);
-    width: 750px;
+    // width: 750px;
+    width: 100%;
     height: 100px;
     padding: 0 12px;
     box-sizing: border-box;

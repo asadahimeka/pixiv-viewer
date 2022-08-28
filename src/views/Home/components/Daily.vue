@@ -15,7 +15,16 @@
       error-text="网络异常，点击重新加载"
       @load="getRankList"
     >
-      <div class="card-box">
+      <masonry v-bind="$store.getters.wfProps">
+        <ImageCard
+          mode="all"
+          :artwork="art"
+          @click-card="toArtwork($event)"
+          v-for="art in artList"
+          :key="art.id"
+        />
+      </masonry>
+      <!-- <div class="card-box">
         <div class="column">
           <ImageCard
             mode="cover"
@@ -34,7 +43,7 @@
             :key="art.id"
           />
         </div>
-      </div>
+      </div> -->
     </van-list>
   </div>
 </template>
@@ -60,6 +69,7 @@ export default {
       return api.url(id, index);
     },
     getRankList: _.throttle(async function() {
+      this.loading = true;
       let res = await api.getRankList("day", this.curPage);
       if (res.status === 0) {
         let newList = res.data;
@@ -79,7 +89,6 @@ export default {
         this.loading = false;
         this.error = true;
       }
-      this.isLoading = false;
     }, 5000),
     odd(list) {
       return list.filter((_, index) => (index + 1) % 2);

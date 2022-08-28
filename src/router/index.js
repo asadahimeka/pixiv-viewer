@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 
 import BaseLayout from '@/layouts/BaseLayout'
 import MainLayout from '@/layouts/MainLayout'
-import SafeAreaLayout from '@/layouts/SafeAreaLayout'
+// import SafeAreaLayout from '@/layouts/SafeAreaLayout'
 
 import Home from '@/views/Home'
 import Search from '@/views/Search'
