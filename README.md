@@ -2,7 +2,7 @@
 
 # pixiv-viewer
 
-[DEMO](https://pixiv.kanata.ml/)
+[DEMO](https://pixiv-viewer.vercel.app/)
 
 [APK(5+)](https://github.com/journey-ad/pixiv-viewer/raw/master/pics/pixiv_viewer_0607231648.apk)
 
@@ -62,7 +62,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## Credit
 - Vue：前端框架
 - Vant UI：组件库
-- 自己的 [Pixiv API](https://api.imjad.cn/pixiv_v2.md)：提供大部分接口支持
+- [Pixiv API](https://api.imjad.cn/pixiv_v2.md)：提供大部分接口支持
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务
 - Github Pages：提供页面托管服务
