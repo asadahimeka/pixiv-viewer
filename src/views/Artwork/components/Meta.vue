@@ -27,10 +27,14 @@
         {{artwork.like | convertToK}}
       </span>
     </div>
+    <div class="pid_link">
+      <a target="_blank" rel="noreferrer" :href="'https://www.pixiv.net/artworks/' + artwork.id">https://www.pixiv.net/artworks/{{artwork.id}}</a>
+    </div>
     <ul class="tag-list" :class="{censored: isCensored(artwork)}">
-      <template v-for="tag in artwork.tags">
-        <li class="tag name" @click="toSearch(tag.name)">#{{tag.name}}</li>
+      <template v-for="(tag,ti) in artwork.tags">
+        <li :key="ti+'_1'" class="tag name" @click="toSearch(tag.name)">#{{tag.name}}</li>
         <li
+          :key="ti+'_2'"
           class="tag translated"
           @click="toSearch(tag.name)"
           v-if="tag.translated_name"
@@ -135,6 +139,10 @@ export default {
   position: relative;
   padding: 12px 20px;
   margin: 24px 0;
+
+  .pid_link {
+    font-size: 22px;
+  }
 
   .mask {
     position: absolute;

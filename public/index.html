@@ -3,19 +3,15 @@
 
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible"
-        content="IE=edge">
-  <link rel="icon"
-        href="<%= BASE_URL %>favicon.ico">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
   <title><%= htmlWebpackPlugin.options.title %></title>
-  <link rel="stylesheet"
-        type="text/css"
-        href="<%= BASE_URL %>static/css/normalize.css">
-  <link rel="stylesheet"
-        type="text/css"
-        href="<%= BASE_URL %>static/css/flexible.css">
+  <link rel="stylesheet" type="text/css" href="<%= BASE_URL %>static/css/normalize.css">
+  <link rel="stylesheet" type="text/css" href="<%= BASE_URL %>static/css/flexible.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap">
+
   <script src="<%= BASE_URL %>static/js/flexible.js"></script>
-  <script type="text/javascript">
+  <!-- <script type="text/javascript">
     document.addEventListener('plusready', function () {
       plus.navigator.setStatusBarStyle('dark');
       plus.navigator.setFullscreen(false);
@@ -32,7 +28,7 @@
       });
     });
 
-  </script>
+  </script> -->
   <!--<script src="//cdn.jsdelivr.net/npm/eruda"></script>
     <script>eruda.init();</script>-->
 </head>
@@ -40,7 +36,7 @@
 <body>
   <noscript>
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
-      Please enable it to continue.</strong>
+        Please enable it to continue.</strong>
   </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->

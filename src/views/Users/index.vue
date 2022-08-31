@@ -125,6 +125,7 @@ export default {
       this.commentHeight = this.$refs.comment.clientHeight;
     },
     showSub(page) {
+      document.querySelector('.app-main').scrollTop = 0;
       switch (page) {
         case "illusts":
           this.showIllusts = true;
@@ -163,7 +164,7 @@ export default {
 
   .illust-wrap, .user-wrap {
     height: 100vh;
-    overflow-y: scroll;
+    // overflow-y: scroll;
   }
 }
 

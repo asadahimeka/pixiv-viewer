@@ -11,11 +11,11 @@
 export default {
   name: "Safearea",
   mounted() {
-    if (window.plus) {
+    // if (window.plus) {
       // let pt = plus.navigator.getStatusbarHeight();
       // pt = pt + 5;
       // $("#appSafeArea").css("padding-top", pt + "px");
-    }
+    // }
   }
 };
 </script>

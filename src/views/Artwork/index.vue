@@ -149,28 +149,38 @@ export default {
 
 .ia-cont
   display flex
+  align-items start
 
   .ia-left
+    display flex
+    justify-content center
+    align-items center
     width 72%
     min-width 72%
+    margin-top 36px
 
     ::v-deep .image-box
       width: 100% !important
       height: auto !important
+      min-width 300px
+      min-height 300px
 
       .image
         width auto
         max-width 100%
-        height 90vh
-        max-height 100%
+        height auto
+        max-height 92vh
         margin 0 auto
 
   .ia-right
+    max-width 28%
     padding-right 40px
+    box-sizing border-box
+    overflow hidden
 
 .artwork
   ::v-deep .top-bar-wrap
-    width 60vw
+    width 30vw
     background none
 
 @media screen and (max-width: 1200px)
@@ -181,6 +191,10 @@ export default {
     width 100% !important
     margin 0 auto
     ::v-deep .image
-      height: 72vh !important
+      max-width: 100% !important
+      max-height: 72vh !important
+
+  .ia-right
+    max-width unset !important
 
 </style>

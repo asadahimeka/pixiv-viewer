@@ -107,38 +107,38 @@ export default {
         });
       } else {
         if (window.plus) {
-          var x = index;
-          if (Object.keys(this.original).length == 1) {
-            x = 0;
-          }
-          var obj = [];
-          for (var b in this.original) {
-            obj.push(this.original[b]);
-          }
-          plus.nativeUI.previewImage(obj, {
-            current: x,
-            onLongPress: function(e) {
-              // 预览界面长按显示ActionSheet
-              var bts = [{ title: "保存至相册" }];
-              plus.nativeUI.actionSheet(
-                { title: "选择操作", cancel: "取消", buttons: bts },
-                function(t) {
-                  if (t.index == 1) {
-                    //e.url e.path
-                    plus.gallery.save(
-                      e.url,
-                      function() {
-                        plus.nativeUI.toast("保存成功");
-                      },
-                      function() {
-                        plus.nativeUI.toast("保存失败");
-                      }
-                    );
-                  }
-                }
-              );
-            }
-          });
+          // var x = index;
+          // if (Object.keys(this.original).length == 1) {
+          //   x = 0;
+          // }
+          // var obj = [];
+          // for (var b in this.original) {
+          //   obj.push(this.original[b]);
+          // }
+          // plus.nativeUI.previewImage(obj, {
+          //   current: x,
+          //   onLongPress: function(e) {
+          //     // 预览界面长按显示ActionSheet
+          //     var bts = [{ title: "保存至相册" }];
+          //     plus.nativeUI.actionSheet(
+          //       { title: "选择操作", cancel: "取消", buttons: bts },
+          //       function(t) {
+          //         if (t.index == 1) {
+          //           //e.url e.path
+          //           plus.gallery.save(
+          //             e.url,
+          //             function() {
+          //               plus.nativeUI.toast("保存成功");
+          //             },
+          //             function() {
+          //               plus.nativeUI.toast("保存失败");
+          //             }
+          //           );
+          //         }
+          //       }
+          //     );
+          //   }
+          // });
         } else {
           ImagePreview({
             className: "image-preview",
@@ -398,7 +398,7 @@ export default {
 .image-view {
   position: relative;
   min-height: 600px;
-  background-color: #fafafa;
+  // background-color: #fafafa;
 
   &.censored {
     pointer-events: none;
@@ -446,7 +446,7 @@ export default {
 
   .image-box {
     position: relative;
-    background: #fafafa;
+    // background: #fafafa;
 
     &:nth-of-type(n+2) {
       min-height: 600px;
@@ -466,30 +466,36 @@ export default {
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        width: 120px;
-        height: 120px;
+        width: 120px !important;
+        height: 120px !important;
         min-height: auto;
       }
     }
 
     .ugoira {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      // background: #fff;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: auto;
+      max-width: 100%;
+      height: auto;
+      max-height 100%
     }
   }
 
   .ugoira-controls {
     position: absolute;
-    bottom: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 100%;
 
     .btn-play, .btn-pause {
       position: absolute;
-      right: 16px;
-      bottom: 16px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       color: rgba(122, 172, 208, 0.9);
     }
 

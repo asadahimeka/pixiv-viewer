@@ -14,16 +14,17 @@ export default {
 };
 </script>
 
-<style lang="stylus" scoped>
-html,body {
+<style lang="stylus">
+html,body
   width 100%;
-}
+  height 100%
 
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  // max-width: 750px;
-  width 100%;
-  margin: 0 auto;
-}
+#app
+  -webkit-font-smoothing antialiased
+  -moz-osx-font-smoothing grayscale
+  // max-width 750px
+  width 100%
+  height 100%
+  margin 0 auto
+
 </style>

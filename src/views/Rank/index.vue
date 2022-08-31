@@ -178,7 +178,7 @@ export default {
         this.loading = false;
         this.error = true;
       }
-    }, 5000),
+    }, 1500),
     odd(list) {
       return list.filter((_, index) => (index + 1) % 2);
     },
@@ -215,6 +215,7 @@ export default {
   // padding-top: env(safe-area-inset-top);
   // height: 100%;
   box-sizing: border-box;
+  padding-bottom: 100px;
 
   .loading {
     position: absolute;
@@ -228,20 +229,24 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    top: 60px;
-    top: env(safe-area-inset-top);
+    // top: 60px;
+    // top: env(safe-area-inset-top);
+    top: 0;
     // width: 750px;
     width: 100%;
     height: 100px;
-    padding: 0 12px;
+    padding: 0 32px 0 12px;
     box-sizing: border-box;
-    background: #fff;
+    // background: #fff;
     z-index: 1;
+    backdrop-filter: blur(6px);
+    background: rgba(255, 255, 255, 0.8);
 
     .calendar {
       position: relative;
       width: 60px;
       height: 60px;
+      margin-left: 8px;
       background: url('~@/assets/images/calendar.png') center no-repeat;
       background-size: 100%;
       transform: translateY(-4px);
@@ -262,7 +267,7 @@ export default {
     ::v-deep .vc-popover-content-wrapper {
       top: 90px !important;
       left: auto !important;
-      right: 14px;
+      right: 36px;
       transform: none !important;
 
       .vc-popover-caret {

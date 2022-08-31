@@ -36,7 +36,7 @@
           :key="index"
         >{{keyword}}</div>
       </div>
-      <transition-group name="fade">
+      <!-- <transition-group name="fade">
         <ImageSearch
           v-show="!focus && imageSearchShow"
           @show="switchImageSearchShow(true)"
@@ -49,7 +49,7 @@
           v-show="!focus && maskShow"
           key="mask"
         ></div>
-      </transition-group>
+      </transition-group> -->
     </form>
     <div class="list-wrap" :class="{focus: focus}">
       <van-list
@@ -107,12 +107,11 @@
 import { Search, List, Loading, Empty, Icon } from "vant";
 import ImageCard from "@/components/ImageCard";
 import Tags from "./components/Tags";
-import ImageSearch from "./components/ImageSearch";
+// import ImageSearch from "./components/ImageSearch";
 import { mapState, mapActions } from "vuex";
 import _ from "lodash";
 import api from "@/api";
 
-let appMainEl = null;
 export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -234,7 +233,7 @@ export default {
         this.error = true;
       }
       this.isLoading = false;
-    }, 5000),
+    }, 1500),
     odd(list) {
       return list.filter((_, index) => (index + 1) % 2);
     },
@@ -252,7 +251,8 @@ export default {
       this.focus = true; // 获取焦点
     },
     onBlur(flag) {
-      appMainEl && appMainEl.scrollTo(0, 0);
+      document.querySelector('.app-main').scrollTop = 0
+
       let keywords = `${this.keywords} `.replace(/\s\s+/g, " "); // 去除多余空格
 
       this.keywords = keywords;
@@ -298,7 +298,7 @@ export default {
     ...mapActions(["setSearchHistory"])
   },
   mounted() {
-    appMainEl = document.querySelector('.app-main');
+    document.querySelector('.app-main').scrollTop = 0
 
     let input = document.querySelector('input[type="search"]');
     document.addEventListener("selectionchange", () => {
@@ -315,7 +315,7 @@ export default {
   },
   components: {
     Tags,
-    ImageSearch,
+    // ImageSearch,
     [Search.name]: Search,
     [List.name]: List,
     [Loading.name]: Loading,
@@ -340,8 +340,9 @@ export default {
 
   .search-bar-wrap {
     position: fixed;
-    top: 60px;
-    top: env(safe-area-inset-top);
+    // top: 60px;
+    // top: env(safe-area-inset-top);
+    top: 0;
     width: 100%;
     // max-width: 10rem;
     // min-height: 122px;
@@ -436,12 +437,14 @@ export default {
 
     .image-search-mask {
       position: fixed;
-      top: 128px;
-      top: env(safe-area-inset-top);
+      // top: 128px;
+      // top: env(safe-area-inset-top);
+      top: 0;
       width: 100%;
-      max-width: 10rem;
-      height: calc(100% - 128px);
-      height: calc(100% - env(safe-area-inset-top));
+      // max-width: 10rem;
+      // height: calc(100% - 128px);
+      // height: calc(100% - env(safe-area-inset-top));
+      height: 100%;
       box-sizing: border-box;
       // pointer-events: none;
       background: rgba(0, 0, 0, 0.6);
@@ -495,7 +498,7 @@ export default {
     // overflow-y: scroll;
     padding-top: 122px;
     padding-bottom: 100px;
-    padding-bottom: calc(100px + env(safe-area-inset-bottom));
+    // padding-bottom: calc(100px + env(safe-area-inset-bottom));
     box-sizing: border-box;
 
     >.mask {

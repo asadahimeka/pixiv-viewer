@@ -7,7 +7,25 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <van-swipe class="swipe-wrap" :loop="false" :show-indicators="false" :width="300">
+      <swiper class="swipe-wrap" :options="swiperOption">
+        <swiper-slide
+          class="swipe-item"
+          style="width: 300px;"
+          v-for="art in artList.slice(0, 10)"
+          :key="art.id"
+        >
+          <ImageCard mode="meta" :artwork="art" @click-card="toArtwork($event)" />
+        </swiper-slide>
+        <swiper-slide class="swipe-item more" style="width: 300px;">
+          <ImageSlide :images="slides">
+            <div class="link" @click="$router.push('/rank/daily')">
+              <Icon name="more" scale="20"></Icon>
+              <div>查看更多</div>
+            </div>
+          </ImageSlide>
+        </swiper-slide>
+      </swiper>
+      <!-- <van-swipe class="swipe-wrap" :loop="false" :show-indicators="false" :width="300">
         <van-swipe-item class="swipe-item" v-for="art in artList.slice(0, 6)" :key="art.id">
           <ImageCard mode="meta" :artwork="art" @click-card="toArtwork($event)" />
         </van-swipe-item>
@@ -18,12 +36,8 @@
               <div>查看更多</div>
             </div>
           </ImageSlide>
-          <!-- <router-link class="rank" :to="{name: 'Rank'}">
-            查看更多
-            <van-icon name="arrow" />
-          </router-link>-->
         </van-swipe-item>
-      </van-swipe>
+      </van-swipe> -->
     </div>
   </div>
 </template>
@@ -37,12 +51,17 @@ export default {
   name: "RankCard",
   data() {
     return {
-      artList: []
+      artList: [],
+      swiperOption: {
+        freeMode: true,
+        slidesPerView: "auto",
+        mousewheel: true
+      }
     };
   },
   computed: {
     slides() {
-      let artList = this.artList.slice(6, 11);
+      let artList = this.artList.slice(10, 15);
       return artList.map(art => {
         return {
           title: art.title,
@@ -53,7 +72,7 @@ export default {
   },
   methods: {
     async getRankList() {
-      let res = await api.getRankList("week");
+      let res = await api.getRankList("day");
       if (res.status === 0) {
         this.artList = res.data;
       } else {

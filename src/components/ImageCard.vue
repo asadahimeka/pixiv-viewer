@@ -5,6 +5,7 @@
     :style="{paddingBottom:paddingBottom(artwork)}"
     >
     <!-- :style="{height: `${(375/artwork.width*artwork.height/column).toFixed(2)}px`}" -->
+    <!-- v-lazy="'https://upload-bbs.mihoyo.com/upload/2022/08/31/190122060/99742fb77603da1106a3c26b6df0e4bd_5644345988783803629.png'" -->
     <img
       v-lazy="artwork.images[0].m"
       :alt="artwork.title"
@@ -142,6 +143,9 @@ export default {
 
   .btn-play {
     position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     color: #565656;
     opacity: 0.6;
   }

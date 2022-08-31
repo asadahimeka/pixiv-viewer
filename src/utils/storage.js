@@ -1,5 +1,6 @@
 class Storage {
   get(key, def) {
+    console.log('%c - storage get: ' + key, 'color:purple')
     let result = this.drive.getItem(key)
     if (result) {
       let data = deserialize(result)
@@ -17,6 +18,7 @@ class Storage {
   }
 
   set(key, val, expires = -1) {
+    console.log('%c - storage set: ' + key, 'color:blue')
     try {
       if (val === undefined) {
         return this.remove(key)

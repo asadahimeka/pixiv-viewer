@@ -32,30 +32,18 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.main-layout {
-  box-sizing: border-box;
+.main-layout
+  box-sizing border-box
 
-  &.safe-area {
-    padding-top: 60px;
-    height: calc(100vh - 60px);
-    padding-top: env(safe-area-inset-top);
-    height: calc(100vh - env(safe-area-inset-top));
-  }
-}
+  &.safe-area
+    height 100vh
+    padding-top 0
 
-.app-main {
-  position: relative;
-  height: 100%;
-  padding-top 10px;
-  // height: calc(100vh - 100px);
-  padding-bottom: 100px;
-  // height: calc(100vh - env(safe-area-inset-bottom));
-  // padding-bottom: env(safe-area-inset-bottom);
-  overflow-y: scroll;
-  box-sizing: border-box;
+.app-main
+  position relative
+  height 100vh
+  padding 10px 8px 0
+  box-sizing border-box
+  overflow-y auto
 
-  &::-webkit-scrollbar {
-    width: 0;
-  }
-}
 </style>

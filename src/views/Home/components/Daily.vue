@@ -53,6 +53,7 @@ import { Cell, Swipe, SwipeItem, Icon, List, PullRefresh } from "vant";
 import ImageCard from "@/components/ImageCard";
 import api from "@/api";
 import _ from "lodash";
+import moment from 'moment';
 export default {
   name: "Daily",
   data() {
@@ -61,7 +62,8 @@ export default {
       artList: [],
       error: false,
       loading: false,
-      finished: false
+      finished: false,
+      rankModes: ['day', 'week', 'month', 'week_original', 'day_male']
     };
   },
   methods: {
@@ -70,9 +72,11 @@ export default {
     },
     getRankList: _.throttle(async function() {
       this.loading = true;
-      let res = await api.getRankList("day", this.curPage);
+      const mode = _.sample(this.rankModes)
+      const date = moment().subtract(_.random(2, 14), 'days').format('YYYY-MM-DD')
+      let res = await api.getRankList(mode, this.curPage, date);
       if (res.status === 0) {
-        let newList = res.data;
+        let newList = _.shuffle(res.data);
         let artList = JSON.parse(JSON.stringify(this.artList));
 
         artList.push(...newList);
@@ -89,7 +93,7 @@ export default {
         this.loading = false;
         this.error = true;
       }
-    }, 5000),
+    }, 1500),
     odd(list) {
       return list.filter((_, index) => (index + 1) % 2);
     },

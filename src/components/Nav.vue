@@ -30,7 +30,7 @@ export default {
     navigateTo(name, params) {
       if (this.$route.name === name) {
         document
-          .querySelector(".app-main")
+          .querySelector('.app-main')
           .scrollTo({ top: 0, behavior: "smooth" });
       } else {
         this.$router.push({ name, params });
@@ -50,7 +50,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100px;
-  height: calc(100px + env(safe-area-inset-bottom));
+  // height: calc(100px + env(safe-area-inset-bottom));
   z-index: 10;
 
   .nav-bar {

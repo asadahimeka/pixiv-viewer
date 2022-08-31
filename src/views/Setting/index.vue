@@ -145,7 +145,7 @@ export default {
 
 <style lang="stylus" scoped>
 .setting {
-  max-width 750px
-  margin 0 auto
+  max-width: 750px;
+  margin: 0 auto;
 }
 </style>

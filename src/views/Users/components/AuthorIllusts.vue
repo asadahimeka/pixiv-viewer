@@ -99,7 +99,7 @@ export default {
         this.artList = artList;
         this.loading = false;
         this.curPage++;
-        if (this.once || this.curPage > 20) this.finished = true;
+        if (this.once || !newList.length ||this.curPage > 20) this.finished = true;
       } else {
         this.$toast({
           message: res.msg
@@ -107,7 +107,7 @@ export default {
         this.loading = false;
         this.error = true;
       }
-    }, 5000),
+    }, 1500),
     odd(list) {
       return list.filter((_, index) => (index + 1) % 2);
     },

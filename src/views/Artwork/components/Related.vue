@@ -100,7 +100,7 @@ export default {
         this.loading = false;
         this.error = true;
       }
-    }, 5000),
+    }, 1500),
     odd(list) {
       return list.filter((_, index) => (index + 1) % 2);
     },
