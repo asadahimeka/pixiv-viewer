@@ -9,6 +9,9 @@
   <link rel="stylesheet" type="text/css" href="<%= BASE_URL %>static/css/normalize.css">
   <link rel="stylesheet" type="text/css" href="<%= BASE_URL %>static/css/flexible.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap">
+  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
+  <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="stylesheet">
+  <% } %>
 
   <script src="<%= BASE_URL %>static/js/flexible.js"></script>
   <!-- <script type="text/javascript">
@@ -39,6 +42,9 @@
         Please enable it to continue.</strong>
   </noscript>
   <div id="app"></div>
+  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.js) { %>
+  <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
+  <% } %>
   <!-- built files will be auto injected -->
 </body>
 
