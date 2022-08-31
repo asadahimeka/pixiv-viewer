@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = 'https://api.imki.moe/api'
+const baseURL = 'https://kw.cocomi.cf/https://api.imki.moe/api'
 
 axios.defaults.baseURL = baseURL
 axios.defaults.timeout = 10000
