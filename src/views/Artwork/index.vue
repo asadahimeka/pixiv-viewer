@@ -149,7 +149,7 @@ export default {
 
 .ia-cont
   display flex
-  align-items start
+  align-items flex-start
 
   .ia-left
     display flex
@@ -189,7 +189,7 @@ export default {
 
   .ia-left
     width 100% !important
-    margin 0 auto
+    margin 0 auto !important
     ::v-deep .image
       max-width: 100% !important
       max-height: 72vh !important

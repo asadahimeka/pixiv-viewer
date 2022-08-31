@@ -40,7 +40,8 @@
 
 <script>
 import { Uploader } from "vant";
-import _ from "lodash";
+import _orderBy from "lodash/orderBy";
+import _uniqBy from "lodash/uniqBy";
 export default {
   computed: {
     resultList() {
@@ -56,8 +57,8 @@ export default {
         };
       });
 
-      list = _.uniqBy(list, "id");
-      list = _.orderBy(list, "similarity", "desc");
+      list = _uniqBy(list, "id");
+      list = _orderBy(list, "similarity", "desc");
 
       return list;
     }

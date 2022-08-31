@@ -73,7 +73,8 @@ import { List, Loading, Empty } from "vant";
 import ImageCard from "@/components/ImageCard";
 import Nav from "./components/Nav";
 // import Top3 from "./components/Top3";
-import _ from "lodash";
+import _throttle from "lodash/throttle";
+import _uniqBy from "lodash/uniqBy";
 import api from "@/api";
 export default {
   name: "Rank",
@@ -153,7 +154,7 @@ export default {
     getIOType(type) {
       return this.menu[type] ? this.menu[type].io : null;
     },
-    getRankList: _.throttle(async function() {
+    getRankList: _throttle(async function() {
       this.loading = true;
       let type = this.getIOType(this.curType);
       let res = await api.getRankList(type, this.curPage, this.date);
@@ -165,7 +166,7 @@ export default {
           let artList = JSON.parse(JSON.stringify(this.artList));
 
           artList.push(...newList);
-          artList = _.uniqBy(artList, "id");
+          artList = _uniqBy(artList, "id");
 
           this.artList = artList;
           this.loading = false;

@@ -50,10 +50,11 @@
 </template>
 
 <script>
-import { Cell, Swipe, SwipeItem, Icon, List, PullRefresh } from "vant";
+import { Cell, /* Swipe, SwipeItem, */ Icon, List/* , PullRefresh */ } from "vant";
 import ImageCard from "@/components/ImageCard";
 import api from "@/api";
-import _ from "lodash";
+import _throttle from "lodash/throttle";
+import _uniqBy from "lodash/uniqBy";
 export default {
   name: "AuthorIllusts",
   props: {
@@ -83,7 +84,7 @@ export default {
       this.curPage = 1;
       this.artList = [];
     },
-    getMemberArtwork: _.throttle(async function() {
+    getMemberArtwork: _throttle(async function() {
       if (!this.id) return;
       this.loading = true
       let newList;
@@ -94,7 +95,7 @@ export default {
         let artList = JSON.parse(JSON.stringify(this.artList));
 
         artList.push(...newList);
-        artList = _.uniqBy(artList, "id");
+        artList = _uniqBy(artList, "id");
 
         this.artList = artList;
         this.loading = false;
@@ -130,11 +131,11 @@ export default {
   },
   components: {
     [Cell.name]: Cell,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
+    // [Swipe.name]: Swipe,
+    // [SwipeItem.name]: SwipeItem,
     [Icon.name]: Icon,
     [List.name]: List,
-    [PullRefresh.name]: PullRefresh,
+    // [PullRefresh.name]: PullRefresh,
     ImageCard
   }
 };

@@ -106,7 +106,7 @@ export default {
           icon: require("@/svg/ban-view.svg")
         });
       } else {
-        if (window.plus) {
+        // if (window.plus) {
           // var x = index;
           // if (Object.keys(this.original).length == 1) {
           //   x = 0;
@@ -139,14 +139,15 @@ export default {
           //     );
           //   }
           // });
-        } else {
+        // } else {
           ImagePreview({
             className: "image-preview",
             images: this.original,
             startPosition: index,
-            closeOnPopstate: true
+            closeOnPopstate: true,
+            closeable: true
           });
-        }
+        // }
       }
     },
     showFull() {
@@ -486,16 +487,13 @@ export default {
 
   .ugoira-controls {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    bottom: 0;
     width: 100%;
 
     .btn-play, .btn-pause {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
+      right: 16px;
+      bottom: 16px;
       color: rgba(122, 172, 208, 0.9);
     }
 

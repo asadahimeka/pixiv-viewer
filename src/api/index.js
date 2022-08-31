@@ -219,7 +219,7 @@ const api = {
    * @param {Number} page 页数
    * @param {String} date YYYY-MM-DD 默认为「前天」
    */
-  async getRankList(mode = 'weekly', page = 1, date = moment().subtract(2, 'days').format('YYYY-MM-DD')) {
+  async getRankList(mode = 'week', page = 1, date = moment().subtract(2, 'days').format('YYYY-MM-DD'), nocache = false) {
     let rankList
     date = moment(date).format('YYYY-MM-DD')
     if (!SessionStorage.has(`rankList_${mode}_${date}_${page}`)) {
@@ -250,7 +250,7 @@ const api = {
         return parseIllust(art)
       })
 
-      SessionStorage.set(`rankList_${mode}_${date}_${page}`, rankList, 60 * 60 * 24)
+      !nocache && SessionStorage.set(`rankList_${mode}_${date}_${page}`, rankList, 60 * 60 * 24)
     } else {
       rankList = SessionStorage.get(`rankList_${mode}_${date}_${page}`)
     }

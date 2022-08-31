@@ -109,7 +109,8 @@ import ImageCard from "@/components/ImageCard";
 import Tags from "./components/Tags";
 // import ImageSearch from "./components/ImageSearch";
 import { mapState, mapActions } from "vuex";
-import _ from "lodash";
+import _throttle from "lodash/throttle";
+import _uniqBy from "lodash/uniqBy";
 import api from "@/api";
 
 export default {
@@ -200,7 +201,7 @@ export default {
         this.search(this.keywords);
       }
     },
-    search: _.throttle(async function(val) {
+    search: _throttle(async function(val) {
       val = val || this.keywords;
       this.keywords__ = val;
       val = val.trim();
@@ -219,7 +220,7 @@ export default {
         let artList = JSON.parse(JSON.stringify(this.artList));
 
         artList.push(...newList);
-        artList = _.uniqBy(artList, "id");
+        artList = _uniqBy(artList, "id");
 
         this.artList = artList;
         this.loading = false;

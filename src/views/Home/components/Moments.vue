@@ -37,7 +37,8 @@
 import { Cell, Swipe, SwipeItem, Icon, List, PullRefresh } from "vant";
 import ImageCard from "@/components/ImageCard";
 import api from "@/api";
-import _ from "lodash";
+import _throttle from "lodash/throttle";
+import _uniqBy from "lodash/uniqBy";
 export default {
   name: "Moments",
   data() {
@@ -64,7 +65,7 @@ export default {
       }
       this.isLoading = false;
     },
-    getLatest: _.throttle(async function() {
+    getLatest: _throttle(async function() {
       let newList;
       let res = await api.getLatest();
       if (res.status === 0) {
@@ -72,7 +73,7 @@ export default {
         let artList = JSON.parse(JSON.stringify(this.artList));
 
         artList.push(...newList);
-        artList = _.uniqBy(artList, "id")
+        artList = _uniqBy(artList, "id")
 
         this.artList = artList;
         this.loading = false;

@@ -46,18 +46,24 @@
       :class="{censored: isCensored(artwork)}"
       @click.stop.prevent="handleClick($event)"
       v-html="artwork.caption"
-    ></div>
+      ></div>
+    <van-button color="#3e7699" size="small" plain block style="margin-top:16px" @click="downloadArtwork()">下载</van-button>
   </div>
 </template>
 
 <script>
+import { Button } from "vant";
 import { mapGetters } from "vuex";
+import FileSaver from "file-saver";
 export default {
   props: {
     artwork: {
       type: Object,
       required: true
     }
+  },
+  components: {
+    [Button.name]: Button
   },
   data() {
     return {};
@@ -125,6 +131,14 @@ export default {
         params: {
           keyword: keyword
         }
+      });
+    },
+    downloadArtwork() {
+      this.artwork.images.forEach((item, index) => {
+        FileSaver.saveAs(
+          item.o,
+          `${this.artwork.author.name}_${this.artwork.title}_${this.artwork.id}_p${index}.${item.o.split('.').pop()}`
+        );
       });
     }
   },

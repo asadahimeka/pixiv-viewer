@@ -173,15 +173,15 @@ export default {
 
       .swiper-slide {
         &.image-card-slide {
-          width: 40%;
+          width: 240px;
         }
 
         &.image-slide-slide {
-          width: 70%;
+          width: 320px;
         }
 
         .image-card {
-          height: 330px !important;
+          height: 240px !important;
           border: 1px solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
@@ -190,7 +190,7 @@ export default {
         }
 
         .image-slide {
-          height: 330px !important;
+          height: 240px !important;
           border: 1px solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;

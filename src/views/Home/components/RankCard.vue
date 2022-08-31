@@ -43,7 +43,7 @@
 </template>
 
 <script>
-import { Cell, Swipe, SwipeItem, Icon } from "vant";
+import { Cell, /* Swipe, SwipeItem, */ Icon } from "vant";
 import ImageCard from "@/components/ImageCard";
 import ImageSlide from "@/components/ImageSlide";
 import api from "@/api";
@@ -94,8 +94,8 @@ export default {
   },
   components: {
     [Cell.name]: Cell,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
+    // [Swipe.name]: Swipe,
+    // [SwipeItem.name]: SwipeItem,
     [Icon.name]: Icon,
     ImageCard,
     ImageSlide
