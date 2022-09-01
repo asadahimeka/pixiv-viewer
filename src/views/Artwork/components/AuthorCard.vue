@@ -97,7 +97,7 @@ export default {
       } else {
         this.$toast({
           message: res.msg,
-          icon: require("@/svg/error.svg")
+          icon: require("@/icons/error.svg")
         });
       }
     },

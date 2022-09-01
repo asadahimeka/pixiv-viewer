@@ -103,7 +103,7 @@ export default {
       if (censored) {
         this.$toast({
           message: "根据当前设置，此内容将不予显示",
-          icon: require("@/svg/ban-view.svg")
+          icon: require("@/icons/ban-view.svg")
         });
       } else {
         ImagePreview({
@@ -240,7 +240,7 @@ export default {
       if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
         this.$toast({
           message: "iOS 设备暂不支持 WebM 格式下载",
-          icon: require("@/svg/error.svg")
+          icon: require("@/icons/error.svg")
         });
         return;
       }

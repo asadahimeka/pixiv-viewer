@@ -102,9 +102,7 @@ export default {
   computed: {},
   methods: {
     init() {
-      document
-        .querySelector(".app-main")
-        .scrollTo({ top: 0, behavior: "smooth" });
+      window._appMainEl && window._appMainEl.scrollTo({ top: 0, behavior: "smooth" });
       this.loading = true;
       let id = +this.$route.params.id;
       this.userInfo = {};

@@ -76,15 +76,16 @@ import Nav from "./components/Nav";
 import _throttle from "lodash/throttle";
 import _uniqBy from "lodash/uniqBy";
 import api from "@/api";
+
 export default {
   name: "Rank",
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      document.querySelector(".app-main").scrollTo(0, vm.scrollTop);
+      window._appMainEl && window._appMainEl.scrollTo(0, vm.scrollTop);
     });
   },
   beforeRouteLeave(to, from, next) {
-    this.scrollTop = document.querySelector(".app-main").scrollTop;
+    this.scrollTop = window._appMainEl ? window._appMainEl.scrollTop : 0;
     next();
   },
   data() {

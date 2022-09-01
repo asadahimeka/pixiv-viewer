@@ -1,10 +1,10 @@
+const path = require('path')
 const autoprefixer = require('autoprefixer');
 const pxtorem = require('postcss-pxtorem');
 
 const cdn = {
   css: [
-    'https://lib.baomitu.com/vant/2.12.48/index.min.css',
-    'https://lib.baomitu.com/Swiper/5.4.5/css/swiper.min.css'
+    'https://lib.baomitu.com/vant/2.12.48/index.min.css'
   ],
   js: [
     'https://lib.baomitu.com/vue/2.6.14/vue.min.js',
@@ -21,8 +21,12 @@ const cdn = {
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+/** @type import('@vue/cli-service').ProjectOptions */
 module.exports = {
   publicPath: isProduction ? '././' : '/',
+  lintOnSave: false,
+  runtimeCompiler: true,
+  productionSourceMap: true,
   chainWebpack: config => {
     config
       .module
@@ -32,17 +36,30 @@ module.exports = {
         args.compilerOptions.whitespace = 'preserve'
       })
 
+    config.module
+      .rule('svg')
+      .exclude.add(path.join(__dirname, 'src/icons/svg'))
+      .end()
+
+    config.module
+      .rule('icons')
+      .test(/\.svg$/)
+      .include.add(path.join(__dirname, 'src/icons/svg'))
+      .end()
+      .use('svg-sprite-loader')
+      .loader('svg-sprite-loader')
+      .options({
+        symbolId: 'icon-[name]'
+      })
+      .end()
+
     if (isProduction) {
-      // 删除预加载
       config.plugins.delete('preload');
       config.plugins.delete('prefetch');
-      // 压缩代码
       config.optimization.minimize(true);
-      // 分割代码
       config.optimization.splitChunks({
         chunks: 'all'
       })
-      // 生产环境注入cdn
       config.plugin('html')
         .tap(args => {
           args[0].cdn = cdn;
@@ -52,7 +69,6 @@ module.exports = {
   },
   configureWebpack: config => {
     if (isProduction) {
-      // 用cdn方式引入
       config.externals = {
         vue: "Vue",
         vant: "vant",
@@ -67,21 +83,78 @@ module.exports = {
     }
   },
   css: {
+    sourceMap: false,
     loaderOptions: {
       postcss: {
-        plugins: [
-          autoprefixer(),
-          pxtorem({
-            rootValue: 75,
-            propList: ['*'],
-            selectorBlackList: ['van']
-          })
-        ]
-      }
+        postcssOptions: {
+          plugins: [
+            autoprefixer(),
+            pxtorem({
+              rootValue: 75,
+              propList: ['*'],
+              selectorBlackList: ['van']
+            }),
+          ],
+        },
+      },
     },
-    sourceMap: false
   },
-  lintOnSave: false,
-  runtimeCompiler: true,
-  productionSourceMap: false,
+  pwa: {
+    name: 'Pixiv Viewer Kai',
+    themeColor: '#0097fa',
+    workboxPluginMode: 'GenerateSW',
+    workboxOptions: {
+      skipWaiting: true,
+      clientsClaim: true,
+      runtimeCaching: [
+        {
+          urlPattern: /.*\.css/,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'css-cache',
+            cacheableResponse: {
+              statuses: [200]
+            }
+          }
+        },
+        {
+          urlPattern: /.*\.js/,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'js-cache',
+            cacheableResponse: {
+              statuses: [200]
+            }
+          }
+        },
+        {
+          urlPattern: /\.(?:png|gif|jpg|jpeg|svg)$/,
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'image-cache',
+            cacheableResponse: {
+              statuses: [200]
+            },
+            expiration: {
+              maxEntries: 100,
+              maxAgeSeconds: 31536000
+            }
+          }
+        },
+        {
+          urlPattern: new RegExp('^https://lib.baomitu.com'),
+          handler: 'StaleWhileRevalidate',
+          options: {
+            cacheName: 'cdn-cache',
+            cacheableResponse: {
+              statuses: [200]
+            },
+            fetchOptions: {
+              credentials: 'include'
+            }
+          }
+        }
+      ]
+    }
+  }
 }

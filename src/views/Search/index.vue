@@ -116,11 +116,11 @@ import api from "@/api";
 export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      document.querySelector(".app-main").scrollTo(0, vm.scrollTop);
+      window._appMainEl && window._appMainEl.scrollTo(0, vm.scrollTop);
     });
   },
   beforeRouteLeave(to, from, next) {
-    this.scrollTop = document.querySelector(".app-main").scrollTop;
+    this.scrollTop = window._appMainEl ? window._appMainEl.scrollTop : 0;
     next();
   },
   data() {
@@ -430,7 +430,7 @@ export default {
           display: inline-block;
           width: 24px;
           height: 24px;
-          background: url('~@/svg/close.svg');
+          background: url('~@/icons/close.svg');
           background-size: 100%;
         }
       }

@@ -85,9 +85,7 @@ export default {
   },
   methods: {
     init() {
-      document
-        .querySelector(".app-main")
-        .scrollTo({ top: 0, behavior: "smooth" });
+      window._appMainEl && window._appMainEl.scrollTo({ top: 0, behavior: "smooth" });
       this.loading = true;
       let id = +this.$route.params.id;
       this.artwork = {};
@@ -103,7 +101,7 @@ export default {
         if (this.isCensored(this.artwork)) {
           this.$toast({
             message: "根据当前设置，此内容将不予显示",
-            icon: require("@/svg/ban-view.svg")
+            icon: require("@/icons/ban-view.svg")
           });
           setTimeout(() => {
             // this.$router.back();
@@ -112,7 +110,7 @@ export default {
       } else {
         this.$toast({
           message: res.msg,
-          icon: require("@/svg/error.svg")
+          icon: require("@/icons/error.svg")
         });
         setTimeout(() => {
           this.$router.back();

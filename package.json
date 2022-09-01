@@ -18,6 +18,7 @@
     "jszip": "3.10.1",
     "lodash": "4.17.21",
     "moment": "2.29.4",
+    "register-service-worker": "^1.7.2",
     "swiper": "5.4.5",
     "v-calendar": "1.0.3",
     "vant": "2.12.48",
@@ -32,6 +33,7 @@
     "@types/lodash": "4.14.184",
     "@vue/cli-plugin-babel": "5.0.8",
     "@vue/cli-plugin-eslint": "5.0.8",
+    "@vue/cli-plugin-pwa": "5.0.8",
     "@vue/cli-plugin-router": "5.0.8",
     "@vue/cli-plugin-vuex": "5.0.8",
     "@vue/cli-service": "5.0.8",
@@ -43,6 +45,7 @@
     "postcss-pxtorem": "5.1.1",
     "stylus": "0.59.0",
     "stylus-loader": "7.0.0",
+    "svg-sprite-loader": "6.0.11",
     "vue-svg-icon": "1.2.9",
     "vue-template-compiler": "2.6.14"
   }

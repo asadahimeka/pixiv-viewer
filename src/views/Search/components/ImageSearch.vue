@@ -158,7 +158,7 @@ export default {
       margin-right: -8px;
       width: 3em;
       height: 3em;
-      background: url('~@/svg/loading-1.svg');
+      background: url('~@/icons/loading-1.svg');
       background-size: 100%;
     }
   }

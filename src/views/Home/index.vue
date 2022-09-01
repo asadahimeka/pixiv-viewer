@@ -8,6 +8,7 @@
 <script>
 import RankCard from "./components/RankCard";
 import Daily from "./components/Daily";
+
 export default {
   name: "Home",
   data() {
@@ -17,16 +18,19 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      document.querySelector(".app-main").scrollTo(0, vm.scrollTop);
+      window._appMainEl && window._appMainEl.scrollTo(0, vm.scrollTop);
     });
   },
   beforeRouteLeave(to, from, next) {
-    this.scrollTop = document.querySelector(".app-main").scrollTop;
+    this.scrollTop = window._appMainEl ? window._appMainEl.scrollTop : 0;
     next();
   },
   components: {
     RankCard,
     Daily
+  },
+  mounted () {
+    window._appMainEl = document.querySelector(".app-main")
   }
 };
 </script>
