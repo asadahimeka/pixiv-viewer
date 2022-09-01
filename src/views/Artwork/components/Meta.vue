@@ -83,7 +83,7 @@ export default {
       }
     },
     formatDate(val) {
-      return moment(val, "YYYY-MM-DD hh:mm");
+      return moment(val).format("YYYY-MM-DD hh:mm");
     }
   },
   methods: {

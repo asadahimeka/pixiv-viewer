@@ -2,7 +2,26 @@
   <div class="rank">
     <div class="top">
       <Nav :menu="menu" />
-      <v-date-picker
+      <van-popover v-model="isDatePickerShow" trigger="click" placement="bottom-end">
+        <van-calendar
+          color="#f2c358"
+          class="sel-rank-date"
+          row-height="1rem"
+          :min-date="minDate"
+          :max-date="maxDate"
+          :default-date="date"
+          :poppable="false"
+          :show-title="false"
+          :show-confirm="false"
+          @confirm="v => {date = v;isDatePickerShow = false}"
+        />
+        <template #reference>
+          <div class="calendar">
+            <div class="date">{{dateNum}}</div>
+          </div>
+        </template>
+      </van-popover>
+      <!-- <v-date-picker
         :attributes="[{
           key: 'today',
           highlight: 'yellow',
@@ -20,7 +39,7 @@
         <div class="calendar">
           <div class="date">{{dateNum}}</div>
         </div>
-      </v-date-picker>
+      </v-date-picker> -->
     </div>
     <!-- <Top3 v-if="artList.length>=3" :artList="artList.slice(0,3)" /> -->
     <!-- v-if="artList.length>3" -->
@@ -69,7 +88,7 @@
 
 <script>
 import moment from "moment";
-import { List, Loading, Empty } from "vant";
+import { List, Loading, Empty, Popover, Calendar } from "vant";
 import ImageCard from "@/components/ImageCard";
 import Nav from "./components/Nav";
 // import Top3 from "./components/Top3";
@@ -137,6 +156,18 @@ export default {
     date(val, old) {
       if (val !== old) {
         this.init();
+      }
+    },
+    isDatePickerShow(val) {
+      if (val) {
+        this.$nextTick(() => {
+          setTimeout(() => {
+            const bd = document.querySelector('.sel-rank-date .van-calendar__body')
+            if (bd) bd.scrollTop = bd.scrollHeight
+            const sel = document.querySelector('.sel-rank-date .van-calendar__selected-day')
+            sel && sel.parentElement.scrollIntoView()
+          }, 200);
+        })
       }
     }
   },
@@ -206,11 +237,19 @@ export default {
     [List.name]: List,
     [Loading.name]: Loading,
     [Empty.name]: Empty,
+    [Popover.name]: Popover,
+    [Calendar.name]: Calendar,
     ImageCard
   }
 };
 </script>
 
+<style lang="stylus">
+.sel-rank-date
+  width 480px
+  height 520px
+  margin 10px
+</style>
 <style lang="stylus" scoped>
 .rank {
   padding-top: 100px;

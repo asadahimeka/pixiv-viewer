@@ -3,9 +3,7 @@ const autoprefixer = require('autoprefixer');
 const pxtorem = require('postcss-pxtorem');
 
 const cdn = {
-  css: [
-    'https://lib.baomitu.com/vant/2.12.48/index.min.css'
-  ],
+  css: [],
   js: [
     'https://lib.baomitu.com/vue/2.6.14/vue.min.js',
     'https://lib.baomitu.com/vue-router/3.5.3/vue-router.min.js',
@@ -26,7 +24,7 @@ module.exports = {
   publicPath: isProduction ? '././' : '/',
   lintOnSave: false,
   runtimeCompiler: true,
-  productionSourceMap: true,
+  productionSourceMap: false,
   chainWebpack: config => {
     config
       .module

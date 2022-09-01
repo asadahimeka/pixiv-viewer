@@ -13,10 +13,8 @@
   <link rel="stylesheet" type="text/css" href="<%= BASE_URL %>static/css/flexible.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap">
   <link rel="preconnect" href="https://lib.baomitu.com" crossorigin>
+  <link rel="stylesheet" href="https://lib.baomitu.com/vant/2.12.48/index.min.css">
   <link rel="stylesheet" href="https://lib.baomitu.com/Swiper/5.4.5/css/swiper.min.css">
-  <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
-  <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="stylesheet">
-  <% } %>
   <script src="<%= BASE_URL %>static/js/flexible.js"></script>
 </head>
 

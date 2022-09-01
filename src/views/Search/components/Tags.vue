@@ -2,12 +2,11 @@
   <masonry class="tags" v-bind="$store.getters.wfProps">
     <div
       class="tag"
-      style="width: 100%;float: none;margin-bottom: 10px;"
       v-for="(tag,index) in tags"
       :key="index"
       @click.stop="search(tag.name)"
       >
-      <img :src="tag.pic" alt />
+      <img :src="tag.pic" alt style="position: absolute;top: 0;left: 0;" />
       <div class="meta">
         <div class="content">
           <div class="name" v-if="tag.name" :class="[getLength(tag.name)]">#{{tag.name}}</div>
@@ -105,8 +104,9 @@ export default {
 
   .tag {
     position: relative;
-    float: left;
-    width: 33.3%;
+    width: 100%;
+    margin-bottom: 10px;
+    padding-bottom: 100%;
 
     img {
       display: block;

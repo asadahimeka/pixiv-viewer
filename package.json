@@ -46,7 +46,6 @@
     "stylus": "0.59.0",
     "stylus-loader": "7.0.0",
     "svg-sprite-loader": "6.0.11",
-    "vue-svg-icon": "1.2.9",
     "vue-template-compiler": "2.6.14"
   }
 }

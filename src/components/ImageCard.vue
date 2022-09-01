@@ -136,7 +136,7 @@ export default {
     border-radius: 20px;
 
     svg {
-      vertical-align: bottom;
+      vertical-align: -0.2em;
       margin-right: -2px;
     }
   }
