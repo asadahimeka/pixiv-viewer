@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import Moment from 'vue-moment'
 import Icon from 'vue-svg-icon/Icon.vue'
 import { Toast, Lazyload, ImagePreview } from 'vant';
 import '@vant/touch-emulator';
@@ -16,7 +15,6 @@ import '@/assets/css/base.styl'
 
 import './polyfill'
 
-Vue.use(Moment);
 Vue.use(Toast);
 Vue.use(Lazyload, {
   lazyComponent: true,

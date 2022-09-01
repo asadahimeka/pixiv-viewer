@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="date">
-      <span class="created">{{artwork.created | moment("YYYY-MM-DD hh:mm")}}</span>
+      <span class="created">{{artwork.created | formatDate}}</span>
       <span class="view">
         <Icon name="view" class="icon"></Icon>
         {{artwork.view | convertToK}}
@@ -55,6 +55,7 @@
 import { Button } from "vant";
 import { mapGetters } from "vuex";
 import FileSaver from "file-saver";
+import moment from 'moment';
 export default {
   props: {
     artwork: {
@@ -80,9 +81,13 @@ export default {
       } else {
         return val;
       }
+    },
+    formatDate(val) {
+      return moment(val, "YYYY-MM-DD hh:mm");
     }
   },
   methods: {
+    moment,
     drawMask() {
       let canvas = this.$refs.mask;
       if (!canvas) return;

@@ -106,48 +106,13 @@ export default {
           icon: require("@/svg/ban-view.svg")
         });
       } else {
-        // if (window.plus) {
-          // var x = index;
-          // if (Object.keys(this.original).length == 1) {
-          //   x = 0;
-          // }
-          // var obj = [];
-          // for (var b in this.original) {
-          //   obj.push(this.original[b]);
-          // }
-          // plus.nativeUI.previewImage(obj, {
-          //   current: x,
-          //   onLongPress: function(e) {
-          //     // 预览界面长按显示ActionSheet
-          //     var bts = [{ title: "保存至相册" }];
-          //     plus.nativeUI.actionSheet(
-          //       { title: "选择操作", cancel: "取消", buttons: bts },
-          //       function(t) {
-          //         if (t.index == 1) {
-          //           //e.url e.path
-          //           plus.gallery.save(
-          //             e.url,
-          //             function() {
-          //               plus.nativeUI.toast("保存成功");
-          //             },
-          //             function() {
-          //               plus.nativeUI.toast("保存失败");
-          //             }
-          //           );
-          //         }
-          //       }
-          //     );
-          //   }
-          // });
-        // } else {
-          ImagePreview({
-            className: "image-preview",
-            images: this.original,
-            startPosition: index,
-            closeOnPopstate: true,
-            closeable: true
-          });
-        // }
+        ImagePreview({
+          className: "image-preview",
+          images: this.original,
+          startPosition: index,
+          closeOnPopstate: true,
+          closeable: true
+        });
       }
     },
     showFull() {
@@ -358,7 +323,7 @@ export default {
       if (this.progressShow) return;
 
       if (this.ugoira) {
-        if (!window.plus) this.$emit("open-download");
+        this.$emit("open-download");
       } else {
         this.playUgoira();
       }

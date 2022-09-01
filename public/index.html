@@ -4,36 +4,18 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-  <title><%= htmlWebpackPlugin.options.title %></title>
+  <title>Pixiv Viewer Kai</title>
+  <meta name="keywords" content="Pixiv,Pixiv-Ranking,pixiv-viewer,p站,Pixiv每日排行,ACG,插图排行,插画排行,二次元插画,动漫图片,动漫插图,动漫插画" />
+  <meta name="description" content="又一个 Pixiv 阅览工具" />
   <link rel="stylesheet" type="text/css" href="<%= BASE_URL %>static/css/normalize.css">
   <link rel="stylesheet" type="text/css" href="<%= BASE_URL %>static/css/flexible.css">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap">
   <% for (var i in htmlWebpackPlugin.options.cdn && htmlWebpackPlugin.options.cdn.css) { %>
   <link href="<%= htmlWebpackPlugin.options.cdn.css[i] %>" rel="stylesheet">
   <% } %>
-
   <script src="<%= BASE_URL %>static/js/flexible.js"></script>
-  <!-- <script type="text/javascript">
-    document.addEventListener('plusready', function () {
-      plus.navigator.setStatusBarStyle('dark');
-      plus.navigator.setFullscreen(false);
-
-      var webview = plus.webview.currentWebview();
-      plus.key.addEventListener('backbutton', function () {
-        webview.canBack(function (e) {
-          if (e.canBack) {
-            webview.back();
-          } else {
-            //webview.close(); //hide,quit
-          }
-        })
-      });
-    });
-
-  </script> -->
-  <!--<script src="//cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>-->
 </head>
 
 <body>
@@ -46,6 +28,9 @@
   <script src="<%= htmlWebpackPlugin.options.cdn.js[i] %>"></script>
   <% } %>
   <!-- built files will be auto injected -->
+  <% if (process.env.NODE_ENV === 'production' ) { %>
+    <script async defer data-website-id="abfa85e5-0657-43b4-9a28-94b551121760" src="https://ummst.nanoka.top/5y6l9drdtjx.js"></script>
+  <% } %>
 </body>
 
 </html>
