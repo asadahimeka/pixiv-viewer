@@ -85,6 +85,9 @@ export default {
   },
   methods: {
     init() {
+      document
+        .querySelector(".app-main")
+        .scrollTo({ top: 0, behavior: "smooth" });
       this.loading = true;
       let id = +this.$route.params.id;
       this.artwork = {};

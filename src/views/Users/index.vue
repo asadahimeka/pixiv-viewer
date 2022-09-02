@@ -53,6 +53,16 @@ import FavoriteIllusts from "./components/FavoriteIllusts";
 import api from "@/api";
 export default {
   name: "Users",
+  watch: {
+    $route() {
+      if (
+        this.$route.name === "Users" &&
+        this.$route.params.id !== this.userInfo.id
+      ) {
+        this.init();
+      }
+    }
+  },
   data() {
     return {
       loading: false,
