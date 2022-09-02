@@ -58,6 +58,10 @@ export default {
       }
     }
   },
+  beforeRouteEnter(to, from, next) {
+    document.querySelector('.app-main')?.scrollTo(0, 0)
+    next()
+  },
   data() {
     return {
       loading: false,
@@ -85,9 +89,6 @@ export default {
   },
   methods: {
     init() {
-      document
-        .querySelector(".app-main")
-        .scrollTo({ top: 0, behavior: "smooth" });
       this.loading = true;
       let id = +this.$route.params.id;
       this.artwork = {};
