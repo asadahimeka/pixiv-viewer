@@ -1,5 +1,5 @@
 <template>
-  <div class="main-layout" :class="{'safe-area': safeArea}">
+  <div class="main-layout" :class="{ 'safe-area': safeArea }">
     <div class="app-main">
       <keep-alive>
         <router-view></router-view>
@@ -27,7 +27,7 @@ export default {
   },
   components: {
     Nav
-  }
+  },
 };
 </script>
 

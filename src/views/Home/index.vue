@@ -16,22 +16,19 @@ export default {
       scrollTop: 0
     };
   },
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      window._appMainEl && window._appMainEl.scrollTo(0, vm.scrollTop);
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    this.scrollTop = window._appMainEl ? window._appMainEl.scrollTop : 0;
-    next();
-  },
+  // beforeRouteEnter(to, from, next) {
+  //   next(vm => {
+  //     document.querySelector('.app-main')?.scrollTo(0, vm.scrollTop);
+  //   });
+  // },
+  // beforeRouteLeave(to, from, next) {
+  //   this.scrollTop = document.querySelector('.app-main')?.scrollTop || 0;
+  //   next();
+  // },
   components: {
     RankCard,
     Daily
   },
-  mounted () {
-    window._appMainEl = document.querySelector(".app-main")
-  }
 };
 </script>
 

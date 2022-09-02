@@ -20,7 +20,7 @@ const get = async (url, params) => {
       api.searchParams.set('_vercel_no_cache', '1')
       Object.keys(params).forEach(k => {
         const v = params[k]
-        v && req_url.searchParams.set(k, v)
+        v != null && req_url.searchParams.set(k, v)
       })
       api.searchParams.set('u', req_url.href)
       res = await axios.get(api.href)

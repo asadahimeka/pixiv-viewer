@@ -1,11 +1,9 @@
 <template>
   <div class="app-base">
     <PageLoading v-show="loading" />
-    <transition :name="transitionName">
-      <keep-alive>
-        <router-view v-if="!loading"></router-view>
-      </keep-alive>
-    </transition>
+    <keep-alive>
+      <router-view v-if="!loading"></router-view>
+    </keep-alive>
   </div>
 </template>
 
@@ -14,13 +12,12 @@ import PageLoading from "@/components/PageLoading";
 export default {
   data() {
     return {
-      transitionName: "fade",
       loading: false
     };
   },
   components: {
     PageLoading
-  }
+  },
 };
 </script>
 

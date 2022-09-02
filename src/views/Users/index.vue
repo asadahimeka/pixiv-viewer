@@ -1,18 +1,6 @@
 <template>
   <div class="user-container">
-    <div class="illust-wrap" v-show="showIllusts">
-      <div class="illust">
-        <TopBar :action="()=>{showIllusts=false}" />
-        <AuthorIllusts v-if="userInfo.id" :id="userInfo.id" key="multi-illust" />
-      </div>
-    </div>
-    <div class="illust-wrap" v-show="showFavorite">
-      <div class="illust">
-        <TopBar :action="()=>{showFavorite=false}" />
-        <FavoriteIllusts v-if="userInfo.id" :id="userInfo.id" key="multi-favorite" />
-      </div>
-    </div>
-    <div class="user-wrap" v-show="!showIllusts&&!showFavorite">
+    <div class="user-wrap">
       <div class="users">
         <TopBar />
         <div class="info-container" v-if="userInfo.id">
@@ -23,48 +11,36 @@
             <div class="avatar">
               <img :src="userInfo.avatar" :alt="userInfo.name" />
             </div>
-            <h2 class="name">{{userInfo.name}}</h2>
-            <ul class="site-list" :class="{multi: userInfo.webpage&&userInfo.twitter_url}">
+            <h2 class="name">{{ userInfo.name }}</h2>
+            <ul class="site-list" :class="{ multi: userInfo.webpage && userInfo.twitter_url }">
               <li class="site" v-if="userInfo.webpage">
                 <Icon class="icon home" name="home-s"></Icon>
-                <a :href="userInfo.webpage" target="_blank">{{userInfo.webpage | hostname}}</a>
+                <a :href="userInfo.webpage" target="_blank">{{ userInfo.webpage | hostname }}</a>
               </li>
               <li class="site" v-if="userInfo.twitter_url">
                 <Icon class="icon twitter" name="twitter"></Icon>
-                <a :href="userInfo.twitter_url" target="_blank">@{{userInfo.twitter_account}}</a>
+                <a :href="userInfo.twitter_url" target="_blank">@{{ userInfo.twitter_account }}</a>
               </li>
             </ul>
             <span class="follow">
-              <span class="num">{{userInfo.follow}}</span>关注
+              <span class="num">{{ userInfo.follow }}</span>关注
             </span>
             <span class="friend" v-if="userInfo.friend">
-              <span class="num">{{userInfo.friend}}</span>好P友
+              <span class="num">{{ userInfo.friend }}</span>好P友
             </span>
-            <div class="detail" :class="{ex:isEx||commentHeight<160}">
+            <div class="detail" :class="{ ex: isEx || commentHeight < 160 }">
               <div class="content" v-html="userInfo.comment" ref="comment"></div>
-              <div class="more" v-if="!isEx&&commentHeight>=160" @click="isEx=true">
+              <div class="more" v-if="!isEx && commentHeight >= 160" @click="isEx = true">
                 查看更多
                 <Icon class="icon dropdown" name="dropdown"></Icon>
               </div>
             </div>
           </div>
         </div>
-        <AuthorIllusts
-          v-if="userInfo.id"
-          :id="userInfo.id"
-          :num="userInfo.illusts"
-          :once="true"
-          @onCilck="showSub('illusts')"
-          key="once-illust"
-        />
-        <FavoriteIllusts
-          v-if="userInfo.id"
-          :id="userInfo.id"
-          :num="userInfo.bookmarks"
-          :once="true"
-          @onCilck="showSub('favorite')"
-          key="once-favorite"
-        />
+        <AuthorIllusts v-if="userInfo.id" :id="userInfo.id" :num="userInfo.illusts" :once="true"
+          @onCilck="showSub('illusts')" key="once-illust" />
+        <FavoriteIllusts v-if="userInfo.id" :id="userInfo.id" :num="userInfo.bookmarks" :once="true"
+          @onCilck="showSub('favorite')" key="once-favorite" />
       </div>
     </div>
   </div>
@@ -77,32 +53,18 @@ import FavoriteIllusts from "./components/FavoriteIllusts";
 import api from "@/api";
 export default {
   name: "Users",
-  watch: {
-    $route() {
-      this.showIllusts = false;
-      this.showFavorite = false;
-      if (
-        this.$route.name === "Users" &&
-        this.$route.params.id !== this.userInfo.id
-      ) {
-        this.init();
-      }
-    }
-  },
   data() {
     return {
       loading: false,
       userInfo: {},
       isEx: false,
-      showIllusts: false,
-      showFavorite: false,
       commentHeight: 0
     };
   },
   computed: {},
   methods: {
     init() {
-      window._appMainEl && window._appMainEl.scrollTo({ top: 0, behavior: "smooth" });
+      // document.querySelector('.app-main')?.scrollTo({ top: 0, behavior: "smooth" });
       this.loading = true;
       let id = +this.$route.params.id;
       this.userInfo = {};
@@ -123,14 +85,19 @@ export default {
       this.commentHeight = this.$refs.comment.clientHeight;
     },
     showSub(page) {
-      document.querySelector('.app-main').scrollTop = 0;
       switch (page) {
         case "illusts":
-          this.showIllusts = true;
+          this.$router.push({
+            name: "AuthorIllusts",
+            params: { id: this.userInfo.id }
+          });
           break;
 
         case "favorite":
-          this.showFavorite = true;
+          this.$router.push({
+            name: "AuthorFavorites",
+            params: { id: this.userInfo.id }
+          });
           break;
 
         default:

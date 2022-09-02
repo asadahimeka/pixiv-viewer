@@ -90,6 +90,7 @@ export default {
       let newList;
       let res = await api.getMemberFavorite(this.id, this.next);
       if (res.status === 0) {
+        if (this.once || this.next == res.data.next || !res.data.next) this.finished = true;
         this.next = res.data.next;
         newList = res.data.illusts;
         if (this.once) newList = newList.slice(0, 10);
@@ -100,7 +101,6 @@ export default {
 
         this.artList = artList;
         this.loading = false;
-        if (this.once || !this.next) this.finished = true;
       } else {
         this.$toast({
           message: res.msg
@@ -126,8 +126,8 @@ export default {
     }
   },
   mounted() {
-    this.reset();
-    this.getMemberFavorite();
+    // this.reset();
+    // this.getMemberFavorite();
   },
   components: {
     [Cell.name]: Cell,

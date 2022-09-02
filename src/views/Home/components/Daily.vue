@@ -80,13 +80,21 @@ export default {
       const date = moment().subtract(_random(2, 14), 'days').format('YYYY-MM-DD')
       let res = await api.getRankList(mode, this.curPage, date, true);
       if (res.status === 0) {
-        let newList = _shuffle(res.data);
-        let artList = JSON.parse(JSON.stringify(this.artList));
+        this.artList =  _uniqBy([
+          ...this.artList,
+          ..._shuffle(res.data)
+        ].filter(e => {
+          return e.images.length == 1 && !e.tags.some(el => {
+            return [
+              '漫画',
+              '描き方',
+              'manga' ,
+              'BL',
+              '創作BL'
+            ].includes(el.name)
+          })
+        }), 'id');
 
-        artList.push(...newList);
-        artList = _uniqBy(artList, "id")
-
-        this.artList = artList;
         this.loading = false;
         this.curPage++;
         if (this.curPage > 5) this.finished = true;
