@@ -21,7 +21,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 /** @type import('@vue/cli-service').ProjectOptions */
 module.exports = {
-  publicPath: isProduction ? '././' : '/',
+  publicPath: '/',
   lintOnSave: false,
   runtimeCompiler: true,
   productionSourceMap: false,

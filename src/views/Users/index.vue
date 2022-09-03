@@ -28,6 +28,10 @@
             <span class="friend" v-if="userInfo.friend">
               <span class="num">{{ userInfo.friend }}</span>好P友
             </span>
+            <div class="user_link">
+              <a target="_blank" rel="noreferrer"
+                :href="'https://www.pixiv.net/users/' + userInfo.id">https://www.pixiv.net/users/{{ userInfo.id }}</a>
+            </div>
             <div class="detail" :class="{ ex: isEx || commentHeight < 160 }">
               <div class="content" v-html="userInfo.comment" ref="comment"></div>
               <div class="more" v-if="!isEx && commentHeight >= 160" @click="isEx = true">
@@ -218,6 +222,11 @@ export default {
           color: #333;
           margin-right: 6px;
         }
+      }
+
+      .user_link {
+        margin-top: 20px;
+        font-size: 22px;
       }
 
       .detail {
