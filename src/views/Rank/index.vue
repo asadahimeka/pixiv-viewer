@@ -112,7 +112,7 @@ export default {
       scrollTop: 0,
       minDate: moment("2007-09-13").toDate(),
       maxDate: moment()
-        .subtract(2, "days")
+        .subtract(1, "days")
         .toDate(),
       date: moment()
         .subtract(2, "days")
