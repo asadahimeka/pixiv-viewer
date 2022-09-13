@@ -108,12 +108,14 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log('to, from: ', to, from)
   const container = document.querySelector('.app-main')
   if (container) from.meta.__scrollTop = container.scrollTop
   next()
 })
 
 router.afterEach((to, from) => {
+  console.log('to, from: ', to, from)
   const shouldScroll = to.meta.__depth < from.meta.__depth
   if (shouldScroll) {
     const container = document.querySelector('.app-main')

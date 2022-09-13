@@ -2,7 +2,6 @@ class Storage {
   get(key, def) {
     console.log('%c- storage get: ' + key, 'color:purple')
     let result = this.drive.getItem(key)
-    console.log('%c- storage has result: ' + !!result, 'color:purple')
     if (result) {
       let data = deserialize(result)
 

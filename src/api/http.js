@@ -12,18 +12,8 @@ const get = async (url, params) => {
   try {
     let res = {}
     if (url.endsWith('pixiv/')) {
-      // url = 'https://kw.cocomi.cf/https://api.moedog.org/pixiv/v2/'
-      // res = await axios.get(url, { params })
-
-      const api = new URL('https://kw.kanata.ml')
-      const req_url = new URL('https://api.moedog.org/pixiv/v2/')
-      api.searchParams.set('_vercel_no_cache', '1')
-      Object.keys(params).forEach(k => {
-        const v = params[k]
-        v != null && req_url.searchParams.set(k, v)
-      })
-      api.searchParams.set('u', req_url.href)
-      res = await axios.get(api.href)
+      url = 'https://pixiv-api.kanata.ml/v2'
+      res = await axios.get(url, { params })
     } else {
       res = await axios.get(url, { params })
     }
