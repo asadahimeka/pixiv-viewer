@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = 'https://hibiapi.getloli.com/api'
+const baseURL = 'https://ef.kanata.ml/moedog/pixiv/v2'
 
 axios.defaults.baseURL = baseURL
 axios.defaults.timeout = 10000
@@ -10,13 +10,7 @@ const get = async (url, params) => {
   console.log('url: ', url)
   console.log('params: ', params)
   try {
-    let res = {}
-    if (url.endsWith('pixiv/')) {
-      url = 'https://pixiv-api.kanata.ml/v2'
-      res = await axios.get(url, { params })
-    } else {
-      res = await axios.get(url, { params })
-    }
+    const res = await axios.get(url, { params })
 
     return new Promise((resolve, reject) => {
       let data = res.data
