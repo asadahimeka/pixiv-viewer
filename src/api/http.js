@@ -10,7 +10,13 @@ const get = async (url, params) => {
   console.log('url: ', url)
   console.log('params: ', params)
   try {
-    const res = await axios.get(url, { params })
+    let res = {}
+    if (url.endsWith('pixiv/')) {
+      url = 'https://ef.kanata.ml/moedog/pixiv/v2'
+      res = await axios.get(url, { params })
+    } else {
+      res = await axios.get(url, { params })
+    }
 
     return new Promise((resolve, reject) => {
       let data = res.data
