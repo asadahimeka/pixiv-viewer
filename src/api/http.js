@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const baseURL = 'https://ef.kanata.ml/moedog/pixiv/v2'
+const baseURL = 'https://hibiapi.getloli.com/api'
 
 axios.defaults.baseURL = baseURL
 axios.defaults.timeout = 10000
