@@ -46,7 +46,7 @@ export default {
   display flex
   justify-content center
   align-items center
-  margin 20px 0 50px
+  margin 40px 0 50px
   font-size 40px
   text-align center
 

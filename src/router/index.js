@@ -9,6 +9,7 @@ import Discovery from '@/views/Discovery/Discovery.vue'
 import Spotlights from '@/views/Spotlights/Spotlights.vue'
 import Spotlight from '@/views/Spotlights/Spotlight.vue'
 import Search from '@/views/Search/index.vue'
+import SearchUser from '@/views/Search/SearchUser.vue'
 import Rank from '@/views/Rank/index.vue'
 import Setting from '@/views/Setting/index.vue'
 import History from '@/views/Setting/History.vue'
@@ -100,6 +101,12 @@ const routes = [
             name: 'AuthorFavorites',
             component: UserFavorites,
             meta: { __depth: 3 },
+          },
+          {
+            path: '/searchuser/:word',
+            name: 'SearchUser',
+            component: SearchUser,
+            meta: { __depth: 1 },
           },
           {
             path: '/setting/history',

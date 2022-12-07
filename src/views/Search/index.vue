@@ -16,9 +16,14 @@
       <van-dropdown-menu class="users-iri-sel" active-color="#f2c358">
         <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
       </van-dropdown-menu>
+      <div v-show="(keywords.trim() && artList.length)" class="show_pop_icon"
+        @click="(showPopPreview = !showPopPreview)">
+        <Icon class="icon" name="popular"></Icon>
+      </div>
       <div v-if="focus" class="search-dropdown">
         <div v-if="keywords.trim()" class="pid-n-uid">
-          <div class="keyword" @click="onSearch">搜索 {{ keywords.trim() }} </div>
+          <div class="keyword" @click="onSearch">搜索标签 {{ keywords.trim() }} </div>
+          <div class="keyword" @click="$router.push(`/searchuser/${keywords.trim()}`)">搜索用户 {{ keywords.trim() }} </div>
         </div>
         <div v-if="pidOrUidList.length" class="pid-n-uid">
           <template v-for="n in pidOrUidList">
@@ -47,9 +52,10 @@
       </div>
     </div>
     <transition name="fade">
-      <ImageSearch v-show="!focus" ref="imageSearch" key="container" />
+      <ImageSearch v-show="!focus && !keywords.trim()" ref="imageSearch" key="container" />
     </transition>
     <div class="list-wrap" :class="{ focus: focus }">
+      <PopularPreview v-if="(showPopPreview && keywords.trim())" :word="keywords" />
       <van-list v-show="keywords.trim()" class="result-list" v-model="loading" :finished="finished" :error.sync="error"
         :immediate-check="false" :offset="800" finished-text="没有更多了" error-text="网络异常，点击重新加载" @load="doSearch">
         <masonry v-bind="$store.getters.wfProps">
@@ -74,6 +80,7 @@ import _throttle from "lodash/throttle";
 import _uniqBy from "lodash/uniqBy";
 import api from "@/api";
 import { notSelfHibiApi } from "@/api/http"
+import PopularPreview from "./components/PopularPreview.vue";
 
 export default {
   name: 'Search',
@@ -105,7 +112,8 @@ export default {
         { text: '500users入り', value: '500users入り' },
         { text: '250users入り', value: '250users入り' },
         { text: '100users入り', value: '100users入り' },
-      ]
+      ],
+      showPopPreview: false,
     };
   },
   watch: {
@@ -196,6 +204,7 @@ export default {
         return
       }
       this.$router.push(`/search/${keywords}`)
+      this.showPopPreview = false
     },
     doSearch: _throttle(async function (val) {
       val = val || this.keywords;
@@ -212,7 +221,7 @@ export default {
 
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       this.loading = true
-      window.umami?.trackEvent('Search Tag', { type: 'search_tag', tag: val.replace(/\s+/g, '_') })
+      // window.umami?.trackEvent('Search Tag', { type: 'search_tag', tag: val.replace(/\s+/g, '_') })
       let res = await api.search(val, this.curPage);
       if (res.status === 0) {
         if (res.data.length) {
@@ -356,7 +365,8 @@ export default {
     [Icon.name]: Icon,
     [DropdownMenu.name]: DropdownMenu,
     [DropdownItem.name]: DropdownItem,
-    ImageCard
+    ImageCard,
+    PopularPreview
   }
 };
 </script>
@@ -382,7 +392,7 @@ export default {
     // max-width: 10rem;
     // min-height: 122px;
     background: #fff;
-    z-index: 1;
+    z-index: 2;
     transition: all 0.2s;
 
     &.dropdown {
@@ -582,6 +592,13 @@ export default {
     }
   }
 }
+
+.show_pop_icon
+  position absolute
+  top: 22px;
+  right: 40px;
+  font-size 36px
+  padding 20px
 
 .users-iri-sel
   position absolute

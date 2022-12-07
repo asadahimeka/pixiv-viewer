@@ -147,7 +147,7 @@ export default {
   position: fixed;
   top: 42px;
   right: 42px;
-  z-index: 1;
+  z-index: 3;
   .open-dialog {
 
     ::v-deep .van-uploader__wrapper--disabled {

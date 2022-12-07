@@ -312,6 +312,37 @@ const api = {
     return { status: 0, data: relatedList }
   },
 
+  async getPopularPreview(word) {
+    let cacheKey = `search.popularPreview.${word}`
+    let relatedList = await getCache(cacheKey)
+
+    if (!relatedList) {
+
+      let res = await get(specHibiApiBase + '/popular_preview', { word })
+
+      if (res.illusts) {
+
+        relatedList = res.illusts.map(art => parseIllust(art))
+        setCache(cacheKey, relatedList, 60 * 60 * 48)
+
+      } else if (res.error) {
+        return {
+          status: -1,
+          msg: dealErrMsg(res)
+        }
+      } else {
+        return {
+          status: -1,
+          msg: '未知错误'
+        }
+      }
+
+    }
+
+    return { status: 0, data: relatedList }
+  },
+
+
   async getRecommendedUser() {
     let cacheKey = `recommended.user`
     let relatedList = await getCache(cacheKey)
@@ -361,13 +392,57 @@ const api = {
     return { status: 0, data: relatedList }
   },
 
+  async searchUser(word) {
+    let cacheKey = `search.user.${word}`
+    let relatedList = await getCache(cacheKey)
+
+    if (!relatedList) {
+
+      let res = await get(specHibiApiBase + '/search_user', { word })
+
+      if (res.user_previews) {
+
+        relatedList = res.user_previews
+          .map(u => {
+            return {
+              id: u.user.id,
+              name: u.user.name,
+              avatar: imgProxy(u.user.profile_image_urls.medium),
+              illusts: u.illusts.map(i => ({
+                id: i.id,
+                title: i.title,
+                src: imgProxy(i.image_urls.medium),
+                x_restrict: i.x_restrict,
+                illust_ai_type: i.illust_ai_type,
+              }))
+            }
+          })
+        setCache(cacheKey, relatedList, 60 * 60 * 12)
+
+      } else if (res.error) {
+        return {
+          status: -1,
+          msg: dealErrMsg(res)
+        }
+      } else {
+        return {
+          status: -1,
+          msg: '未知错误'
+        }
+      }
+
+    }
+
+    return { status: 0, data: relatedList }
+  },
+
   async getTagsAutocomplete(word) {
     let cacheKey = `search.autocomplete.${word}`
     let relatedList = await getCache(cacheKey)
 
     if (!relatedList) {
 
-      let res = await get('/search_autocomplete', { word })
+      let res = await get(specHibiApiBase + '/search_autocomplete', { word })
 
       if (res.tags) {
 
@@ -472,9 +547,9 @@ const api = {
    *
    * @param {String} mode 排行榜类型  ['daily_ai', 'daily_r18_ai']
    * @param {Number} page 页数
-   * @param {String} date YYYY-MM-DD 默认为「前天」
+   * @param {String} date YYYYMMDD 默认为「前天」
    */
-  async getAiRankList(mode = 'daily_ai', page = 1, date = dayjs().subtract(2, 'days').format('YYYY-MM-DD')) {
+  async getAiRankList(mode = 'daily_ai', page = 1, date = dayjs().subtract(2, 'days').format('YYYYMMDD')) {
     date = dayjs(date).format('YYYYMMDD')
     let cacheKey = `rankList_${mode}_${date}_${page}`
     let rankList = await getCache(cacheKey)

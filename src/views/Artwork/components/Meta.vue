@@ -29,13 +29,16 @@
     </div>
     <div class="whid">
       <span>{{ artwork.width }}×{{ artwork.height }}</span>
-      <span>PID:{{ artwork.id  }}</span>
-      <span>UID:{{ artwork.author.id }}</span>
+      <span @click="copyId(artwork.id)">PID:{{ artwork.id }}</span>
+      <span @click="copyId(artwork.author.id)">UID:{{ artwork.author.id }}</span>
     </div>
     <ul class="tag-list" :class="{ censored: isCensored(artwork) }">
       <li v-if="artwork.illust_ai_type == 2" class="tag name" style="margin-right: 12px;;font-weight: bold;">
         <a href="https://www.pixiv.net/info.php?id=8733" target="_blank" rel="noopener"
           style="color: #3e7699 !important;">AI 生成</a>
+      </li>
+      <li v-if="artwork.x_restrict" class="tag name" style="margin-right: 12px;;font-weight: bold;">
+        <span style="color: red !important;">NSFW</span>
       </li>
       <template v-for="(tag, ti) in artwork.tags">
         <li :key="ti + '_1'" class="tag name" @click="toSearch(tag.name)">#{{ tag.name }}</li>
@@ -139,6 +142,14 @@ export default {
           `${this.artwork.author.name}_${this.artwork.title}_${this.artwork.id}_p${index}.${item.o.split('.').pop()}`
         );
       });
+    },
+    async copyId(text) {
+      try {
+        await navigator.clipboard.writeText(text)
+        this.$toast('已复制')
+      } catch (error) {
+        console.log('error: ', error)
+      }
     }
   },
   mounted() {

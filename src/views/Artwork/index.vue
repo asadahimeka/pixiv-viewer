@@ -1,15 +1,13 @@
 <template>
   <div class="artwork">
     <TopBar />
+    <div class="share_btn" @click="share">
+      <Icon class="icon" name="share"></Icon>
+    </div>
     <div v-if="artwork">
       <div class="ia-cont">
         <div class="ia-left">
-          <ImageView
-            :artwork="artwork"
-            :lazy="true"
-            @open-download="ugoiraDownloadPanelShow=true"
-            ref="imgView"
-          />
+          <ImageView :artwork="artwork" :lazy="true" @open-download="ugoiraDownloadPanelShow = true" ref="imgView" />
         </div>
         <div class="ia-right">
           <van-skeleton class="skeleton" avatar :row="3" :avatar-size="'42px'" :loading="loading">
@@ -25,15 +23,9 @@
         <Related :artwork="artwork" :key="artwork.id" />
       </keep-alive>
     </div>
-    <van-action-sheet
-      v-model="ugoiraDownloadPanelShow"
-      :actions="ugoiraDownloadPanelActions"
-      @select="onUgoiraDownloadPanelSelect"
-      cancel-text="取消"
-      description="请选择下载格式"
-      close-on-popstate
-      close-on-click-action
-    />
+    <van-action-sheet v-model="ugoiraDownloadPanelShow" :actions="ugoiraDownloadPanelActions"
+      @select="onUgoiraDownloadPanelSelect" cancel-text="取消" description="请选择下载格式" close-on-popstate
+      close-on-click-action />
   </div>
 </template>
 
@@ -130,6 +122,26 @@ export default {
     },
     onUgoiraDownloadPanelSelect(item) {
       this.$refs.imgView.download(item.name);
+    },
+    async share() {
+      window.umami?.('share_artwork')
+
+      const shareData = {
+        title: 'Pixiv Viewer',
+        text: `${this.artwork.author.name} 的作品 ${this.artwork.title} - ID: ${this.artwork.id}`,
+        url: `${location.href}?ref=share_btn`
+      }
+
+      try {
+        if (navigator.canShare(shareData)) {
+          await navigator.share(shareData);
+        } else {
+          await navigator.clipboard.writeText(shareData.url)
+          this.$toast('已复制链接')
+        }
+      } catch (error) {
+        this.$toast({ message: '分享失败', type: 'fail' })
+      }
     }
   },
   mounted() {
@@ -163,6 +175,16 @@ export default {
 .artwork
   .skeleton
     margin: 30px 0;
+  .share_btn
+    position: fixed;
+    top: 0;
+    right 0
+    padding: 0.8rem 0.5rem;
+    z-index: 99;
+    font-size 2.6em
+    .svg-icon
+      color: #fafafa;
+      filter: drop-shadow(0.02667rem 0.05333rem 0.05333rem rgba(0,0,0,0.8));
 
 
 .ia-cont

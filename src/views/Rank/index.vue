@@ -69,10 +69,10 @@ export default {
         female: { name: "女性向", io: "day_female" },
         daily_ai: { name: "AI 生成", io: "daily_ai", ai: true },
         r18: { name: "R-18 - 日榜", io: "day_r18", x: true },
-        daily_r18_ai: { name: "R-18 - AI", io: "daily_r18_ai", x: true, ai: true },
         "r18-w": { name: "R-18 - 周榜", io: "week_r18", x: true },
         "r18-m": { name: "R-18 - 男性向", io: "day_male_r18", x: true },
         "r18-f": { name: "R-18 - 女性向", io: "day_female_r18", x: true },
+        daily_r18_ai: { name: "R-18 - AI", io: "daily_r18_ai", x: true, ai: true },
       }
     };
   },
@@ -109,11 +109,11 @@ export default {
       this.curType = this.$route.params.type;
       // console.log(this.curType, this.$route);
       this.getRankList();
-      window.umami?.trackEvent('Load Ranking', {
-        type: 'load_rank',
-        mode: this.curType,
-        date: dayjs(this.date).format('YYYYMMDD')
-      })
+      // window.umami?.trackEvent('Load Ranking', {
+      //   type: 'load_rank',
+      //   mode: this.curType,
+      //   date: dayjs(this.date).format('YYYYMMDD')
+      // })
     },
     getIOType(type) {
       return this.menu[type] ? this.menu[type].io : null;

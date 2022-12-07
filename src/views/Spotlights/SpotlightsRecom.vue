@@ -11,7 +11,7 @@
       <swiper class="swipe-wrap" :options="swiperOption">
         <swiper-slide class="swipe-item" v-for="art in list" :key="art.id">
           <div class="spec_wp" @click="toDetail(art.id)">
-            <img :src="art.thumbnail" :alt="art.title">
+            <img v-lazy="art.thumbnail" :alt="art.title">
             <div class="sp_info">
               <h2 class="sp_title">{{ art.title }}</h2>
             </div>
@@ -102,10 +102,19 @@ export default {
     height 97%
 
     img {
+      position relative
       width 100%
       height 100%
       object-fit cover
       border-radius: 20px;
+
+      &[lazy='loading'] {
+        width: 100px;
+        height: 100px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
 
     .sp_info {

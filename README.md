@@ -88,11 +88,11 @@ https://github.com/asadahimeka/pixiv-viewer-kai/issues
 ## Alternatives
 
 - [Pixiv Ranking](https://www.nanoka.top/illust/pixiv/)
+- [Pixiviz](https://pixiviz.kanata.ml/rank)
 - [PixivNow](https://pixiv.cocomi.eu.org/ranking)
 - [Pixivel](https://pixivel.moe/rank)
 - [PIXID](https://pixid.top/ranking.php)
 - [pixiv萌え](https://pixiv.moe)
-- [Pixiviz](https://pixiviz.pwp.app/rank)
 - [Pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
 - [booruwf](https://booru.kanata.ml)

@@ -2,7 +2,7 @@
   <div class="Spotlight illusts">
     <top-bar />
     <div class="main_cover">
-      <img :src="spotlight.cover || ''" alt="">
+      <img v-lazy="spotlight.cover || ''" alt="">
       <div class="title_wp">
         <div class="title_cnt">
           <h1 class="title">{{ spotlight.title }}</h1>
@@ -195,9 +195,17 @@ export default {
     width 100%
     height 500px
     img
+      position relative
       width 100%
       height 100%
       object-fit cover
+
+      &[lazy='loading']
+        width 120px
+        height 120px
+        top 50%
+        left 50%
+        transform translate(-50%, -50%)
 
 @media screen and (max-width: 700px)
   .Spotlight

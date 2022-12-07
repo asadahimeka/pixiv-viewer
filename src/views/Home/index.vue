@@ -3,9 +3,7 @@
     <RankCard />
     <SpotlightCard />
     <RecommendCard />
-    <lazy-component>
-      <DiscoveryCard />
-    </lazy-component>
+    <DiscoveryCard />
     <lazy-component>
       <RandomIllust />
     </lazy-component>
@@ -36,7 +34,7 @@ export default {
     RecommendCard,
     SpotlightCard,
     LatestIllustCard
-}
+  }
 };
 </script>
 
