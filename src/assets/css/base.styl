@@ -1,0 +1,152 @@
+.icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.15em;
+  fill: currentColor;
+  overflow: hidden;
+}
+
+html, body {
+  font-family: 'Noto Sans SC', sans-serif;
+  color: #333;
+  overscroll-behavior: none;
+  user-select: none;
+}
+
+html {
+  overflow: hidden;
+}
+
+body {
+  overflow: auto;
+}
+
+.cell {
+  padding: 14px;
+  margin-bottom: 12px;
+  border-radius: 28px;
+
+  .icon {
+    font-size: 50px;
+    margin-top: -10px;
+    margin-right: 4px;
+    vertical-align: middle;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+}
+
+.image-preview {
+  background: #333;
+}
+
+.censored {
+  filter: blur(40px);
+  position: relative;
+}
+
+.setting-page
+  max-width 750px
+  margin 0 auto 160px
+
+  #top-bar-wrap
+    width 30%
+    height auto
+    padding-top 35px
+    background transparent
+
+  .hibiapi-actions .van-action-sheet__name
+    display inline-block
+    width 100%
+    white-space nowrap
+    text-overflow ellipsis
+    overflow hidden
+
+  .van-button
+    padding 0 0.3rem
+
+  .van-popup--bottom
+    width 10rem
+    left 50%
+    margin-left -5rem
+
+  .af_title
+    position relative
+    margin-top 40px
+    margin-bottom 60px
+    text-align center
+    font-size 28px
+
+  .api-chk .van-action-sheet__item, .img-chk .van-action-sheet__item
+    padding: 7px 16px
+  .api-chk .van-action-sheet__name, .img-chk .van-action-sheet__name
+    color #323233 !important
+  .api-chk .van-action-sheet__subname, .img-chk .van-action-sheet__subname
+    margin-top -3px
+    color inherit !important
+
+
+.swiper-container
+  --swiper-theme-color: #fcb93e
+
+.swiper-container-initialized
+  .swiper-button-prev, .swiper-button-next
+    opacity: 1
+
+.swiper-button-prev, .swiper-button-next
+  top: 0
+  right: 0
+  width: 2rem
+  height: 97%
+  margin-top: 0
+  color: #ffd745
+  background-image: linear-gradient(270deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0) 100%)
+  transition: opacity 0.2s
+  opacity: 0
+  &.swiper-button-disabled
+    opacity: 0
+
+.swiper-button-prev
+  left: 0
+  right: auto
+  background-image: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0) 100%)
+
+@media screen and (max-width: 600px)
+  .swiper-button-prev, .swiper-button-next
+    display none
+
+
+
+
+@font-face {
+  font-family: 'Dosis';
+  src: local('Dosis Regular'), local('Dosis-Regular'), url('./dosis-v7-latin-ext_latin-regular.woff') format('woff');
+}
+
+::-webkit-scrollbar {
+  width: 13px;
+  height: 13px;
+}
+
+::-webkit-scrollbar-track {
+  background: #e6e6e6;
+  border-left: 1px solid #dadada;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border: solid 3px #e6e6e6;
+  border-radius: 7px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: black;
+}
+
+@media screen and (max-width: 500px) {
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+}
