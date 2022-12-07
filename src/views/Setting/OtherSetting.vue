@@ -76,7 +76,7 @@ export default {
         this.$set(e, 'loading', true)
         const startTime = Date.now()
         try {
-          const resp = await fetch(`${e._value}/rank?_t=${startTime}`, { method: 'HEAD' })
+          const resp = await fetch(`${e._value}/rank?_t=${startTime}`)
           if (!resp.ok) throw new Error('Resp not ok.')
           const duration = Date.now() - startTime
           this.$set(e, 'subname', `${duration}ms`)
