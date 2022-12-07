@@ -324,7 +324,7 @@ const api = {
 
         relatedList = res.user_previews
           .filter(u => u.illusts.length && (
-            !u.illusts.some(e => /ロリ|loli|萝莉|幼女/.test(JSON.stringify(e.tags)))
+            !u.illusts.some(e => /3DCG|ロリ|萝莉|幼女/.test(JSON.stringify(e.tags)))
           ))
           .map(u => {
             return {
