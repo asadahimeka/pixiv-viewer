@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { LocalStorage } from '@/utils/storage'
 
-const baseURL = LocalStorage.get('__HIBIAPI_BASE', 'https://ef.kanata.ml/obfs/api/pixiv')
+const baseURL = LocalStorage.get('__HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI)
 export const notSelfHibiApi = !/hibi\d?\.cocomi\.cf|hibi3/.test(baseURL)
 
 axios.defaults.baseURL = baseURL

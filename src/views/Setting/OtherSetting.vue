@@ -31,7 +31,7 @@ export default {
     return {
       pximgBed: {
         show: false,
-        value: LocalStorage.get('__PXIMG_PROXY', 'pximg.cocomi.cf'),
+        value: LocalStorage.get('__PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG),
         actions: PXIMG_PROXYS.split(';').map(e => {
           const [name, _value] = e.split(',')
           return { name, _value }
@@ -39,7 +39,7 @@ export default {
       },
       hibiapi: {
         show: false,
-        value: LocalStorage.get('__HIBIAPI_BASE', 'https://ef.kanata.ml/obfs/api/pixiv'),
+        value: LocalStorage.get('__HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI),
         actions: HIBIAPI_ALTS.split(';').map(e => {
           const [name, _value] = e.split(',')
           return { name, _value }
@@ -76,7 +76,7 @@ export default {
         this.$set(e, 'loading', true)
         const startTime = Date.now()
         try {
-          const resp = await fetch(`${e._value}/rank?_t=${startTime}`)
+          const resp = await fetch(`${e._value}/rank?_t=${startTime}`, { method: 'HEAD' })
           if (!resp.ok) throw new Error('Resp not ok.')
           const duration = Date.now() - startTime
           this.$set(e, 'subname', `${duration}ms`)

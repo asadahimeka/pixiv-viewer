@@ -2,7 +2,7 @@
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">关于</h3>
-    <van-cell center title="版本" label="v0.51.9" />
+    <van-cell center title="版本" label="v0.51.10" />
     <van-cell center title="源码" is-link label="https://github.com/asadahimeka/pixiv-viewer"
       @click="openLink('https://github.com/asadahimeka/pixiv-viewer')" />
     <van-cell center title="修改自" is-link label="https://github.com/journey-ad/pixiv-viewer"

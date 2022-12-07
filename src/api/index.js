@@ -16,7 +16,7 @@ const isSupportWebP = (() => {
   return false;
 })();
 
-const proxyBase = LocalStorage.get('__PXIMG_PROXY', 'pximg.cocomi.cf')
+const proxyBase = LocalStorage.get('__PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG)
 const imgProxy = url => {
   let result = url.replace(/i\.pximg\.net/g, proxyBase)
 

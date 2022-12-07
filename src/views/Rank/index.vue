@@ -109,7 +109,11 @@ export default {
       this.curType = this.$route.params.type;
       // console.log(this.curType, this.$route);
       this.getRankList();
-      // window.umami?.(`load_rank_${this.curType}_${dayjs(this.date).format('YYYYMMDD')}`)
+      window.umami?.trackEvent('Load Ranking', {
+        type: 'load_rank',
+        mode: this.curType,
+        date: dayjs(this.date).format('YYYYMMDD')
+      })
     },
     getIOType(type) {
       return this.menu[type] ? this.menu[type].io : null;

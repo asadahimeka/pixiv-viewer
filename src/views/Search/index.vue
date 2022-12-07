@@ -13,7 +13,7 @@
           <span class="text no-line">{{ lastWord }}</span>
         </div>
       </div>
-      <van-dropdown-menu class="users-iri-sel umami--click--search_sel_users_iri" active-color="#f2c358">
+      <van-dropdown-menu class="users-iri-sel" active-color="#f2c358">
         <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
       </van-dropdown-menu>
       <div v-if="focus" class="search-dropdown">
@@ -212,7 +212,7 @@ export default {
 
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       this.loading = true
-      // window.umami?.(`search_tag_${val.replace(/\s+/g, '_')}`)
+      window.umami?.trackEvent('Search Tag', { type: 'search_tag', tag: val.replace(/\s+/g, '_') })
       let res = await api.search(val, this.curPage);
       if (res.status === 0) {
         if (res.data.length) {
