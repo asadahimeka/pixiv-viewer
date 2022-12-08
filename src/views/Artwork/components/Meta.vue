@@ -59,6 +59,7 @@ import { Button } from "vant";
 import { mapGetters } from "vuex";
 import FileSaver from "file-saver";
 import dayjs from 'dayjs';
+import { copyText } from "@/utils";
 export default {
   props: {
     artwork: {
@@ -144,12 +145,7 @@ export default {
       });
     },
     async copyId(text) {
-      try {
-        await navigator.clipboard.writeText(text)
-        this.$toast('已复制')
-      } catch (error) {
-        console.log('error: ', error)
-      }
+      copyText(text, () => this.$toast('已复制'))
     }
   },
   mounted() {
@@ -250,11 +246,15 @@ export default {
   }
 
   .whid {
-    margin 16px 0
+    display flex
+    align-items center
+    margin 16px 0 -4px
     font-size 20px
     color #7c8f99
     span {
+      display inline-block
       margin-right 10px
+      padding 6px 4px
     }
   }
 

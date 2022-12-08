@@ -40,6 +40,7 @@ import { mapGetters, mapState } from "vuex";
 import api from "@/api";
 import { getCache, setCache } from "@/utils/siteCache";
 import _uniqBy from "lodash/uniqBy";
+import { copyText } from "@/utils";
 
 export default {
   name: "Artwork",
@@ -133,14 +134,9 @@ export default {
       }
 
       try {
-        if (navigator.canShare(shareData)) {
-          await navigator.share(shareData);
-        } else {
-          await navigator.clipboard.writeText(shareData.url)
-          this.$toast('已复制链接')
-        }
+        await navigator.share(shareData);
       } catch (error) {
-        this.$toast({ message: '分享失败', type: 'fail' })
+        copyText(shareData.url, () => this.$toast('已复制链接'))
       }
     }
   },
