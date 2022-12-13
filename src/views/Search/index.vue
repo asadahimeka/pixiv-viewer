@@ -221,7 +221,7 @@ export default {
 
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       this.loading = true
-      // window.umami?.trackEvent('Search Tag', { type: 'search_tag', tag: val.replace(/\s+/g, '_') })
+      window.umami?.trackEvent('Search Tag', { type: 'search_tag', tag: val.replace(/\s+/g, '_') })
       let res = await api.search(val, this.curPage);
       if (res.status === 0) {
         if (res.data.length) {
