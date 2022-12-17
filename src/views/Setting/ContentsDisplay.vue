@@ -14,7 +14,7 @@
     </van-cell>
     <van-cell center title="AI 生成作品显示" label="展示图片列表里的 AI 生成作品">
       <template #right-icon>
-        <van-switch active-color="#536cb8" :value="currentSETTING.ai" @input="onAIChange($event)" size="24" />
+        <van-switch active-color="#536cb8" :value="currentSETTING.showAi" @input="onAIChange($event)" size="24" />
       </template>
     </van-cell>
   </div>
@@ -31,7 +31,7 @@ export default {
       currentSETTING: {
         r18: false,
         r18g: false,
-        ai: true
+        showAi: false
       },
     };
   },
@@ -45,7 +45,7 @@ export default {
       })
     },
     onAIChange(checked) {
-      this.$set(this.currentSETTING, 'ai', checked)
+      this.$set(this.currentSETTING, 'showAi', checked)
       this.saveSwitchValues()
       window.umami?.(`set_ai_switch_${checked}`)
     },

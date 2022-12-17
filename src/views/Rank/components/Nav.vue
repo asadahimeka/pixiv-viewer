@@ -25,7 +25,7 @@ export default {
       return this.SETTING.r18;
     },
     isShowAi() {
-      return this.SETTING.ai;
+      return this.SETTING.showAi;
     },
     ...mapState(["SETTING"])
   },

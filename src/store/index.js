@@ -14,20 +14,26 @@ export default new Vuex.Store({
     SETTING: LocalStorage.get('__PIXIV_SETTING', {
       r18: false,
       r18g: false,
-      ai: true
+      showAi: false
     })
   },
   getters: {
     currentId: state => state.galleryList[state.currentIndex] ? state.galleryList[state.currentIndex].id : -1,
     isCensored: state => artwork => {
       if (artwork.x_restrict === 1) {
+        if (artwork.illust_ai_type === 2) {
+          return !state.SETTING.showAi;
+        }
         return !state.SETTING.r18;
       }
       if (artwork.x_restrict === 2) {
+        if (artwork.illust_ai_type === 2) {
+          return !state.SETTING.showAi;
+        }
         return !state.SETTING.r18g;
       }
       if (artwork.illust_ai_type === 2) {
-        return !state.SETTING.ai;
+        return !state.SETTING.showAi;
       }
       return false;
     },
