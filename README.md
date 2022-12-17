@@ -27,6 +27,7 @@
 - [x] 多 API 实例选择
 - [x] 首页特辑/推荐/发现/新作
 - [x] 搜索自动补全
+- [x] 搜索热门作品预览
 
 ## TODO
 - [ ] 左右滑动浏览作品
@@ -35,7 +36,7 @@
 
 ## Feedback
 
-https://github.com/asadahimeka/pixiv-viewer-kai/issues
+https://github.com/asadahimeka/pixiv-viewer/issues
 
 ## Preview
 
