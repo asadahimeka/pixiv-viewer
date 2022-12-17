@@ -1,6 +1,6 @@
 {
   "name": "pixiv-viewer",
-  "version": "0.52.6",
+  "version": "0.52.7",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@vant/touch-emulator": "1.2.0",
+    "@vercel/analytics": "^0.1.6",
     "axios": "0.27.2",
     "core-js": "3.25.0",
     "dayjs": "1.11.6",

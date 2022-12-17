@@ -129,7 +129,7 @@ export default {
       setCache(ck, true, 60 * 60 * 6)
     },
     async changePximgBed({ _value }) {
-      window.umami?.(`change_pximg_bed_${_value.replace(/[./]/g, '_')}`)
+      // window.umami?.(`change_pximg_bed_${_value.replace(/[./]/g, '_')}`)
       this.pximgBed.value = _value
       LocalStorage.set('__PXIMG_PROXY', _value)
       SessionStorage.clear()
@@ -139,7 +139,7 @@ export default {
       }, 500)
     },
     async changeHibiapi({ _value }) {
-      window.umami?.(`change_hibiapi_${_value.match(/https:\/\/(\w+)\.\w+\.\w+\/(\w+)\/.*/)?.slice(1).join('_')}`)
+      // window.umami?.(`change_hibiapi_${_value.match(/https:\/\/(\w+)\.\w+\.\w+\/(\w+)\/.*/)?.slice(1).join('_')}`)
       this.hibiapi.value = _value
       LocalStorage.set('__HIBIAPI_BASE', _value)
       SessionStorage.clear()
@@ -149,7 +149,7 @@ export default {
       }, 500)
     },
     changeWfType({ name }) {
-      window.umami?.(`change_wf_type_${name}`)
+      // window.umami?.(`change_wf_type_${name}`)
       this.wfType.value = name
       LocalStorage.set('__WF_TYPE', name)
       setTimeout(() => {

@@ -47,7 +47,7 @@ export default {
     onAIChange(checked) {
       this.$set(this.currentSETTING, 'showAi', checked)
       this.saveSwitchValues()
-      window.umami?.(`set_ai_switch_${checked}`)
+      // window.umami?.(`set_ai_switch_${checked}`)
     },
     onR18Change(checked, type) {
       let name;
@@ -64,7 +64,7 @@ export default {
           .then(() => {
             if (type === 1) {
               this.currentSETTING.r18 = checked;
-              window.umami?.(`set_r18_switch_${checked}`)
+              // window.umami?.(`set_r18_switch_${checked}`)
             }
             if (type === 2) {
               this.currentSETTING.r18g = checked;
@@ -73,7 +73,7 @@ export default {
                   message: `请注意，开启${name}开关可能会对您的身心健康造成不可逆的影响，如若感到不适，请立即关闭应用并寻求医学帮助`
                 });
               }, 200);
-              window.umami?.(`set_r18g_switch_${checked}`)
+              // window.umami?.(`set_r18g_switch_${checked}`)
             }
             this.saveSwitchValues()
           })

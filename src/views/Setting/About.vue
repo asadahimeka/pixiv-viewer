@@ -2,7 +2,7 @@
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">关于</h3>
-    <van-cell center title="版本" clickable label="v0.52.6" @dblclick.native="showWords" />
+    <van-cell center title="版本" clickable label="v0.52.7" />
     <van-cell center title="免责声明" is-link label="点击查看" @click="showDisclaimer" />
     <van-cell center title="源码" is-link label="https://github.com/asadahimeka/pixiv-viewer"
       @click="openLink('https://github.com/asadahimeka/pixiv-viewer')" />
@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     openLink(link) {
-      window.umami?.(`open_link_${link.replace('https://', '')}`)
+      // window.umami?.(`open_link_${link.replace('https://', '')}`)
       window.open(link, '_blank', 'noopener')
     },
     showDisclaimer() {
@@ -45,13 +45,8 @@ Pixiv Viewer 程序通过 MIT 协议授权。
 
 仅供交流与学习。`,
       })
-      window.umami?.(`show_disclaimer`)
+      // window.umami?.(`show_disclaimer`)
     },
-    showWords() {
-      if (Math.random() > 0.5) {
-        console.log(123)
-      }
-    }
   },
   components: {
     [Cell.name]: Cell,

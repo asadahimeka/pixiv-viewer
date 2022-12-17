@@ -125,12 +125,12 @@ export default {
       this.$refs.imgView.download(item.name);
     },
     async share() {
-      window.umami?.trackEvent('Share Artwork', {
-        type: 'share_artwork',
-        id: this.artwork.id,
-        title: this.artwork.title,
-        author: this.artwork.author.name
-      })
+      // window.umami?.trackEvent('Share Artwork', {
+      //   type: 'share_artwork',
+      //   id: this.artwork.id,
+      //   title: this.artwork.title,
+      //   author: this.artwork.author.name
+      // })
 
       const shareData = {
         title: 'Pixiv Viewer',
