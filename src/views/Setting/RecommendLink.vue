@@ -6,10 +6,10 @@
       @click="openLink('https://booru.kanata.ml')" />
     <van-cell center title="Pixiv Ranking" is-link label="https://www.nanoka.top/illust/pixiv/"
       @click="openLink('https://www.nanoka.top/illust/pixiv/')" />
-    <van-cell center title="PixivNow" is-link label="https://pixiv.cocomi.eu.org/ranking"
-      @click="openLink('https://pixiv.cocomi.eu.org/ranking')" />
     <van-cell center title="Pixiviz" is-link label="https://pixiviz.kanata.ml/rank"
       @click="openLink('https://pixiviz.kanata.ml/rank')" />
+    <van-cell center title="PixivNow" is-link label="https://pixiv.js.org/ranking"
+      @click="openLink('https://pixiv.js.org/ranking')" />
     <van-cell center title="Pixivel" is-link label="https://pixivel.moe/rank"
       @click="openLink('https://pixivel.moe/rank')" />
     <van-cell center title="PIXID" is-link label="https://pixid.top/ranking.php"
