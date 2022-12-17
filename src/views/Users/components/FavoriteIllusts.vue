@@ -129,7 +129,7 @@ export default {
       this.$emit("onCilck");
     }
   },
-  mounted() {
+  activated() {
     this.reset();
     this.getMemberFavorite();
   },
