@@ -94,7 +94,7 @@ module.exports = {
   },
   pwa: {
     name: 'Pixiv Viewer',
-    // themeColor: '#F1C25F',
+    themeColor: '#FFFFFF',
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {
       skipWaiting: true,
