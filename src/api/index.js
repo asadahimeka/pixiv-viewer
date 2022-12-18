@@ -291,7 +291,7 @@ const api = {
       if (res.illusts) {
 
         relatedList = res.illusts.map(art => parseIllust(art))
-        setCache(cacheKey, relatedList, 60 * 60 * 1)
+        setCache(cacheKey, relatedList, 60 * 60 * 6)
 
       } else if (res.error) {
         return {
@@ -371,7 +371,7 @@ const api = {
               }))
             }
           })
-        setCache(cacheKey, relatedList, 60 * 60 * 3)
+        setCache(cacheKey, relatedList, 60 * 60 * 6)
 
       } else if (res.error) {
         return {
@@ -564,7 +564,7 @@ const api = {
 
       if (res && res.contents) {
         rankList = res.contents.map(e => parseAiIllust(e, mode.includes('r18')))
-        rankList.length && setCache(cacheKey, rankList, 60 * 60 * 6)
+        rankList.length && setCache(cacheKey, rankList, 60 * 60 * 24)
       } else {
         return {
           status: 0,
@@ -644,7 +644,7 @@ const api = {
       if (res.illusts) {
 
         rankList = res.illusts.map(art => parseIllust(art))
-        rankList.length && setCache(cacheKey, rankList, 60 * 60 * 6)
+        rankList.length && setCache(cacheKey, rankList, 60 * 60 * 12)
 
       } else if (res.error) {
         return {
@@ -718,7 +718,7 @@ const api = {
       if (res.illust) {
 
         artwork = parseIllust(res.illust)
-        setCache(cacheKey, artwork, 60 * 60 * 1)
+        setCache(cacheKey, artwork, 60 * 60 * 12)
 
       } else if (res.error) {
         return {
@@ -819,7 +819,7 @@ const api = {
       if (res.illusts) {
 
         memberArtwork = res.illusts.map(art => parseIllust(art))
-        setCache(cacheKey, memberArtwork, 60 * 60 * 3)
+        setCache(cacheKey, memberArtwork, 60 * 60 * 12)
 
       } else if (res.error) {
         return {

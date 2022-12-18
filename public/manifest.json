@@ -3,7 +3,6 @@
   "name": "Pixiv Viewer",
   "short_name": "Pixiv Viewer",
   "description": "又一个 Pixiv 阅览工具",
-  "theme_color": "#F1C25F",
   "background_color": "#F6F8FB",
   "display": "standalone",
   "start_url": ".",
