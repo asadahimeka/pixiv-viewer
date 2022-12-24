@@ -555,7 +555,7 @@ const api = {
     let rankList = await getCache(cacheKey)
 
     if (!rankList) {
-      let res = await get('https://ef.kanata.ml/cp/86400/https:/pixiv.js.org/ranking.php', {
+      let res = await get('https://pixiv.cocomi.eu.org/api/ranking', {
         format: 'json',
         p: page,
         mode,

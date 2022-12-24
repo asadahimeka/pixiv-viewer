@@ -72,7 +72,7 @@ export default {
         "r18-w": { name: "R-18 - 周榜", io: "week_r18", x: true },
         "r18-m": { name: "R-18 - 男性向", io: "day_male_r18", x: true },
         "r18-f": { name: "R-18 - 女性向", io: "day_female_r18", x: true },
-        // daily_r18_ai: { name: "R-18 - AI", io: "daily_r18_ai", x: true, ai: true },
+        daily_r18_ai: { name: "R-18 - AI", io: "daily_r18_ai", x: true, ai: true },
       }
     };
   },
