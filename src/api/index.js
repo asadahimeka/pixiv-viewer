@@ -607,7 +607,7 @@ const api = {
 
     if (nocache) params._vercel_no_cache = 1
 
-    let res = await get('https://ef.kanata.ml/cp/600/https:/pixiv.js.org/ajax/illust/discovery', params)
+    let res = await get('https://ef.kanata.ml/cp/600/https:/pixiv.wjghj.cn/ajax/illust/discovery', params)
 
     if (res && res.illusts) {
       list = res.illusts.filter(e => !e.isAdContainer).map(e => parseWebApiIllust(e))
