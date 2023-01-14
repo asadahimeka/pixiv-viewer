@@ -118,6 +118,7 @@ export default {
   },
   watch: {
     $route() {
+      this.showPopPreview = false
       if (!this.$route.name.startsWith('Search')) return
       let keyword = this.$route.params.keyword || ''
 
