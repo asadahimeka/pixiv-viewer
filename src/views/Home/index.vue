@@ -2,14 +2,14 @@
   <div class="home">
     <RankCard />
     <SpotlightCard />
-    <RecommendCard />
-    <DiscoveryCard />
+    <RecommendCard v-if="isSelfHibi" />
+    <DiscoveryCard v-if="isSelfHibi" />
     <lazy-component>
       <RandomIllust />
     </lazy-component>
-    <lazy-component>
+    <!-- <lazy-component v-if="isSelfHibi">
       <LatestIllustCard />
-    </lazy-component>
+    </lazy-component> -->
   </div>
 </template>
 
@@ -19,12 +19,15 @@ import SpotlightCard from "../Spotlights/SpotlightCard.vue";
 import RecommendCard from "../Discovery/RecommendCard.vue";
 import DiscoveryCard from "../Discovery/DiscoveryCard.vue";
 import RandomIllust from "./components/RandomIllust.vue";
-import LatestIllustCard from "../Discovery/LatestIllustCard.vue";
+// import LatestIllustCard from "../Discovery/LatestIllustCard.vue";
+import { notSelfHibiApi } from "@/api/http";
+
 export default {
   name: "Home",
   data() {
     return {
-      scrollTop: 0
+      scrollTop: 0,
+      isSelfHibi: !notSelfHibiApi
     };
   },
   components: {
@@ -33,7 +36,7 @@ export default {
     RandomIllust,
     RecommendCard,
     SpotlightCard,
-    LatestIllustCard
+    // LatestIllustCard
   }
 };
 </script>

@@ -16,14 +16,14 @@
       <van-dropdown-menu class="users-iri-sel" active-color="#f2c358">
         <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
       </van-dropdown-menu>
-      <div v-show="(keywords.trim() && artList.length)" class="show_pop_icon"
+      <div v-if="(isSelfHibi && keywords.trim() && artList.length)" class="show_pop_icon"
         @click="(showPopPreview = !showPopPreview)">
         <Icon class="icon" name="popular"></Icon>
       </div>
       <div v-if="focus" class="search-dropdown">
         <div v-if="keywords.trim()" class="pid-n-uid">
           <div class="keyword" @click="onSearch">搜索标签 {{ keywords.trim() }} </div>
-          <div class="keyword" @click="$router.push(`/searchuser/${keywords.trim()}`)">搜索用户 {{ keywords.trim() }} </div>
+          <div v-if="isSelfHibi" class="keyword" @click="$router.push(`/searchuser/${keywords.trim()}`)">搜索用户 {{ keywords.trim() }} </div>
         </div>
         <div v-if="pidOrUidList.length" class="pid-n-uid">
           <template v-for="n in pidOrUidList">
@@ -55,7 +55,7 @@
       <ImageSearch v-show="!focus && !keywords.trim()" ref="imageSearch" key="container" />
     </transition>
     <div class="list-wrap" :class="{ focus: focus }">
-      <PopularPreview v-if="(showPopPreview && keywords.trim())" :word="keywords" />
+      <PopularPreview v-if="(isSelfHibi && showPopPreview && keywords.trim())" :word="keywords" />
       <van-list v-show="keywords.trim()" class="result-list" v-model="loading" :finished="finished" :error.sync="error"
         :immediate-check="false" :offset="800" finished-text="没有更多了" error-text="网络异常，点击重新加载" @load="doSearch">
         <masonry v-bind="$store.getters.wfProps">
@@ -114,6 +114,7 @@ export default {
         { text: '100users入り', value: '100users入り' },
       ],
       showPopPreview: false,
+      isSelfHibi: !notSelfHibiApi,
     };
   },
   watch: {

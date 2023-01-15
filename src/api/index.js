@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { Base64 } from 'js-base64';
-import { get, notSelfHibiApi } from './http'
+import { get } from './http'
 import { LocalStorage, SessionStorage } from '@/utils/storage';
 import { getCache, setCache } from '@/utils/siteCache';
 
@@ -112,7 +112,7 @@ const parseAiIllust = (d, r18) => {
     s: imgProxy(url.replace('_master1200', '_square1200')),
     m: imgProxy(url),
     l: imgProxy(url.replace(/\/c\/\d+x\d+\//i, '/')),
-    o: 'https://ef.kanata.ml/pid/' + d.illust_id
+    o: 'https://i.loli.best/' + d.illust_id
   }]
 
   let avatar = d.profile_img
@@ -153,7 +153,7 @@ const parseWebApiIllust = (d) => {
     s: imgProxy(url.replace('_master1200', '_square1200')),
     m: imgProxy(url),
     l: imgProxy(url.replace(/\/c\/\d+x\d+\//i, '/')),
-    o: 'https://ef.kanata.ml/pid/' + d.id
+    o: 'https://i.loli.best/' + d.id
   }]
 
   let avatar = d.profileImageUrl
@@ -193,8 +193,6 @@ const dealErrMsg = (res) => {
   return msg
 }
 
-const specHibiApiBase = notSelfHibiApi ? 'https://ef.kanata.ml/hibi3/api/pixiv' : ''
-
 const api = {
   /**
    *
@@ -215,7 +213,7 @@ const api = {
 
     if (!latestList) {
 
-      let res = await get(specHibiApiBase + '/illust_new')
+      let res = await get('/illust_new')
 
       if (res.illusts) {
 
@@ -286,7 +284,7 @@ const api = {
 
     if (!relatedList) {
 
-      let res = await get(specHibiApiBase + '/illust_recommended')
+      let res = await get('/illust_recommended')
 
       if (res.illusts) {
 
@@ -318,7 +316,7 @@ const api = {
 
     if (!relatedList) {
 
-      let res = await get(specHibiApiBase + '/popular_preview', { word })
+      let res = await get('/popular_preview', { word })
 
       if (res.illusts) {
 
@@ -349,7 +347,7 @@ const api = {
 
     if (!relatedList) {
 
-      let res = await get(specHibiApiBase + '/user_recommended')
+      let res = await get('/user_recommended')
 
       if (res.user_previews) {
 
@@ -398,7 +396,7 @@ const api = {
 
     if (!relatedList) {
 
-      let res = await get(specHibiApiBase + '/search_user', { word })
+      let res = await get('/search_user', { word })
 
       if (res.user_previews) {
 
@@ -442,7 +440,7 @@ const api = {
 
     if (!relatedList) {
 
-      let res = await get(specHibiApiBase + '/search_autocomplete', { word })
+      let res = await get('/search_autocomplete', { word })
 
       if (res.tags) {
 
@@ -474,7 +472,7 @@ const api = {
 
     if (!spotlights) {
 
-      let res = await get('https://pixiv.cocomi.eu.org/api/pixivision', { page })
+      let res = await get('https://www.pixivs.cn/api/pixivision', { page })
 
       if (res.articles) {
 
@@ -511,7 +509,7 @@ const api = {
 
     if (!spotlight) {
 
-      let res = await get(`https://pixiv.cocomi.eu.org/api/pixivision/${id}`)
+      let res = await get(`https://www.pixivs.cn/api/pixivision/${id}`)
 
       if (res) {
 
@@ -555,7 +553,7 @@ const api = {
     let rankList = await getCache(cacheKey)
 
     if (!rankList) {
-      let res = await get('https://pixiv.cocomi.eu.org/api/ranking', {
+      let res = await get('https://www.pixivs.cn/api/ranking', {
         format: 'json',
         p: page,
         mode,
@@ -580,7 +578,7 @@ const api = {
   async getDiscoveryArtworks(mode = 'all', limit = 60) {
     let list
 
-    let res = await get('https://ef.kanata.ml/https:/pixiv.cocomi.eu.org/ajax/discovery/artworks', {
+    let res = await get('https://pixiv.cocomi.eu.org/ajax/discovery/artworks', {
       mode,
       limit,
       lang: 'zh',
@@ -607,7 +605,7 @@ const api = {
 
     if (nocache) params._vercel_no_cache = 1
 
-    let res = await get('https://ef.kanata.ml/cp/600/https:/pixiv.wjghj.cn/ajax/illust/discovery', params)
+    let res = await get('https://cors-fetch.deno.dev/https://www.pixivs.cn/ajax/illust/discovery', params)
 
     if (res && res.illusts) {
       list = res.illusts.filter(e => !e.isAdContainer).map(e => parseWebApiIllust(e))

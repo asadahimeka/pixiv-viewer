@@ -108,7 +108,7 @@ export default {
 
       let formData = new FormData();
       formData.append("file", file.file, file.file.name)
-      fetch('https://ef.kanata.ml/hibi3/api/sauce/', {
+      fetch('https://hibi.cocomi.cf/api/sauce/', {
         method: 'POST',
         body: formData
       }).then(res => {

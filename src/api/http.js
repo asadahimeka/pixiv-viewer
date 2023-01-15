@@ -2,16 +2,20 @@ import axios from 'axios'
 import { LocalStorage } from '@/utils/storage'
 
 const baseURL = LocalStorage.get('__HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI)
-export const notSelfHibiApi = !/hibi\d?\.cocomi\.cf|hibi3/.test(baseURL)
+export const notSelfHibiApi = !/hibi\d?\.cocomi\.cf|hibi3|mogenius\.io/.test(baseURL)
 
 axios.defaults.baseURL = baseURL
 axios.defaults.timeout = 10000
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-const get = async (url, params) => {
+const get = async (url, params = {}) => {
   console.log('url: ', url)
   console.log('params: ', params)
   try {
+    if (url.startsWith('/') && baseURL.includes('moedog')) {
+      params.type = url.replace('/', '')
+      url = '/'
+    }
     const res = await axios.get(url, { params })
 
     return new Promise((resolve, reject) => {
