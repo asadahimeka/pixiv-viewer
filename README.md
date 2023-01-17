@@ -2,7 +2,7 @@
 
 <h1 align="center">Pixiv Viewer <sup><small>Kai</small></sup></h1>
 
-预览: 🔗 [pixiv.kanata.ml](https://pixiv.kanata.ml)
+预览: 🔗 [pixivviewer.vercel.app](https://pixivviewer.vercel.app)
 
 ~~[原版 APK(5+)](https://github.com/journey-ad/pixiv-viewer/raw/master/pics/pixiv_viewer_0607231648.apk)~~
 
