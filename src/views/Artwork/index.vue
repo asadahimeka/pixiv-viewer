@@ -141,7 +141,11 @@ export default {
       try {
         await navigator.share(shareData);
       } catch (error) {
-        copyText(shareData.url, () => this.$toast('已复制链接'))
+        copyText(
+          shareData.url,
+          () => this.$toast('已复制链接'),
+          () => this.$toast('复制链接失败')
+        )
       }
     }
   },

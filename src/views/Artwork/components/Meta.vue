@@ -145,7 +145,11 @@ export default {
       });
     },
     async copyId(text) {
-      copyText(text, () => this.$toast('已复制'))
+      copyText(
+        text,
+        () => this.$toast('已复制'),
+        () => this.$toast('复制链接失败')
+      )
     }
   },
   mounted() {
