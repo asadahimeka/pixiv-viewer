@@ -4,6 +4,14 @@
   },
   "rewrites": [
     {
+      "source": "/prks/obfs/:match*",
+      "destination": "https://api.obfs.dev/:match*"
+    },
+    {
+      "source": "/prks/acg/:match*",
+      "destination": "https://www.pixivs.cn/:match*"
+    },
+    {
       "source": "/:path*",
       "destination": "/index.html"
     }

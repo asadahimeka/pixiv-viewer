@@ -472,7 +472,7 @@ const api = {
 
     if (!spotlights) {
 
-      let res = await get('https://www.pixivs.cn/api/pixivision', { page })
+      let res = await get('https://pixiv.cocomi.eu.org/api/pixivision', { page })
 
       if (res.articles) {
 
@@ -509,7 +509,7 @@ const api = {
 
     if (!spotlight) {
 
-      let res = await get(`https://www.pixivs.cn/api/pixivision/${id}`)
+      let res = await get(`https://pixiv.cocomi.eu.org/api/pixivision/${id}`)
 
       if (res) {
 
@@ -553,7 +553,7 @@ const api = {
     let rankList = await getCache(cacheKey)
 
     if (!rankList) {
-      let res = await get('https://www.pixivs.cn/api/ranking', {
+      let res = await get('https://pixiv.cocomi.eu.org/api/ranking', {
         format: 'json',
         p: page,
         mode,
@@ -605,7 +605,7 @@ const api = {
 
     if (nocache) params._vercel_no_cache = 1
 
-    let res = await get('https://cors-fetch.deno.dev/https://www.pixivs.cn/ajax/illust/discovery', params)
+    let res = await get('/prks/acg/ajax/illust/discovery', params, { baseURL: '/' })
 
     if (res && res.illusts) {
       list = res.illusts.filter(e => !e.isAdContainer).map(e => parseWebApiIllust(e))

@@ -8,15 +8,11 @@ axios.defaults.baseURL = baseURL
 axios.defaults.timeout = 10000
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
-const get = async (url, params = {}) => {
+const get = async (url, params = {}, config = {}) => {
   console.log('url: ', url)
   console.log('params: ', params)
   try {
-    if (url.startsWith('/') && baseURL.includes('moedog')) {
-      params.type = url.replace('/', '')
-      url = '/'
-    }
-    const res = await axios.get(url, { params })
+    const res = await axios.get(url, { params, ...config })
 
     return new Promise((resolve, reject) => {
       let data = res.data

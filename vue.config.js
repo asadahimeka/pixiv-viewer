@@ -99,6 +99,10 @@ module.exports = {
     workboxOptions: {
       skipWaiting: true,
       clientsClaim: true,
+      navigateFallbackDenylist: [
+        /^\/api/,
+        /^\/prks/,
+      ],
       runtimeCaching: [
         {
           urlPattern: /.*\.css/,

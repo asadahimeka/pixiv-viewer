@@ -5,7 +5,6 @@ import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMasonry from 'vue-masonry-css'
 import { Toast, Lazyload, ImagePreview } from 'vant'
-import { inject } from '@vercel/analytics'
 
 import SvgIcon from '@/icons'
 import Masonry from './components/Masonry.vue'
@@ -39,7 +38,3 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
-
-if (process.env.NODE_ENV === 'production') {
-  inject()
-}

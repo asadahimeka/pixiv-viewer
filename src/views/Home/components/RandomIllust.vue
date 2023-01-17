@@ -10,7 +10,7 @@
       v-model="loading"
       class="artwork-list"
       :finished="finished"
-      finished-text=" "
+      finished-text="没有了"
       :error.sync="error"
       :offset="800"
       error-text="网络异常，点击重新加载"
