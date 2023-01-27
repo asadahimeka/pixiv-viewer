@@ -1,6 +1,6 @@
 <template>
   <div class="rank-card RecommendUserCard">
-    <van-cell class="cell" :border="false">
+    <van-cell class="cell" :border="false" is-link @click="toList">
       <template #title>
         <Icon class="icon rec_user_icon" name="rec_user"></Icon>
         <span class="title">画师</span>
@@ -8,20 +8,24 @@
     </van-cell>
     <div class="card-box">
       <swiper class="swipe-wrap" :options="swiperOption">
-        <swiper-slide v-if="loading" class="swipe-item more">
-          <ImageSlide :images="[]">
-            <div class="link">
-              <van-loading class="d-loading" :size="'50px'" />
-            </div>
-          </ImageSlide>
-        </swiper-slide>
-        <swiper-slide v-for="u in userList" :key="u.id" class="swipe-item more">
+        <swiper-slide v-for="u in userList.slice(0, 10)" :key="u.id" class="swipe-item more">
           <ImageSlide :images="u.illusts">
             <div class="link" @click="toUserPage(u.id)">
               <div class="user_info">
                 <img class="user_avatar" :src="u.avatar" alt="">
                 <div class="user_name">{{ u.name }}</div>
               </div>
+            </div>
+          </ImageSlide>
+        </swiper-slide>
+        <swiper-slide class="swipe-item more to_list">
+          <ImageSlide :images="slides">
+            <div class="link" @click="toList">
+              <van-loading v-if="loading" class="d-loading" :size="'50px'" />
+              <template v-else>
+                <Icon name="more" scale="20"></Icon>
+                <div>查看更多</div>
+              </template>
             </div>
           </ImageSlide>
         </swiper-slide>
@@ -58,6 +62,17 @@ export default {
       }
     };
   },
+  computed: {
+    slides() {
+      let userList = this.userList.slice(10, 15);
+      return userList.map(u => {
+        return {
+          title: u.name,
+          src: u.avatar
+        };
+      });
+    }
+  },
   methods: {
     async getUserList() {
       this.loading = true
@@ -71,6 +86,12 @@ export default {
         });
       }
       this.loading = false
+    },
+    toList() {
+      this.$router.push({
+        name: "RecommendUser",
+        params: { list: this.userList }
+      });
     },
     toUserPage(id) {
       this.$router.push({
@@ -97,7 +118,7 @@ export default {
 
 <style lang="stylus">
 .RecommendUserCard
-  .image-slide
+  .swipe-item:not(.to_list) .image-slide
     .slide
       margin-left -12%
       .image
@@ -201,6 +222,28 @@ export default {
               width: 100%;
               height: 100%;
               background-image: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0) 100%);
+            }
+          }
+        }
+
+        &.to_list {
+          color: white
+          .link {
+            svg {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -55%);
+              font-size: 20em;
+            }
+            div {
+              position: absolute;
+              left: 50%;
+              top: 50%;
+              transform: translate(-50%, 80%);
+              font-size: 34px;
+              text-align: center;
+              white-space: nowrap;
             }
           }
         }

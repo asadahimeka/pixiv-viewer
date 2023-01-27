@@ -6,6 +6,8 @@ import MainLayout from '@/layouts/MainLayout.vue'
 
 import Home from '@/views/Home/index.vue'
 import Discovery from '@/views/Discovery/Discovery.vue'
+import RecommendIllust from '@/views/Discovery/RecommendIllust.vue'
+import RecommendUser from '@/views/Discovery/RecommendUser.vue'
 import Spotlights from '@/views/Spotlights/Spotlights.vue'
 import Spotlight from '@/views/Spotlights/Spotlight.vue'
 import Search from '@/views/Search/index.vue'
@@ -19,6 +21,7 @@ import SettingOthers from '@/views/Setting/OtherSetting.vue'
 import SettingAbout from '@/views/Setting/About.vue'
 import RecommendLink from '@/views/Setting/RecommendLink.vue'
 import RecommendUserscript from '@/views/Setting/RecommendUserscript.vue'
+import RecommendApp from '@/views/Setting/RecommendApp.vue'
 import Artwork from '@/views/Artwork/index.vue'
 import Users from '@/views/Users/index.vue'
 import UserIllusts from '@/views/Users/AuthorIllustsFull.vue'
@@ -121,7 +124,7 @@ const routes = [
             meta: { __depth: 2 },
           },
           {
-            path: '/setting/contents-display',
+            path: '/setting/contents_display',
             name: 'ContentsDisplay',
             component: ContentsDisplay,
             meta: { __depth: 2 },
@@ -151,9 +154,27 @@ const routes = [
             meta: { __depth: 2 },
           },
           {
+            path: '/setting/apps',
+            name: 'SettingRecommendApp',
+            component: RecommendApp,
+            meta: { __depth: 2 },
+          },
+          {
             path: '/discovery',
             name: 'Discovery',
             component: Discovery,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/recom_illust',
+            name: 'RecommendIllust',
+            component: RecommendIllust,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/recom_user',
+            name: 'RecommendUser',
+            component: RecommendUser,
             meta: { __depth: 2 },
           },
           {

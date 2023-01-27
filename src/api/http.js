@@ -5,7 +5,7 @@ const baseURL = LocalStorage.get('__HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIA
 export const notSelfHibiApi = !/hibi\d?\.cocomi\.cf|hibi3|mogenius\.io/.test(baseURL)
 
 axios.defaults.baseURL = baseURL
-axios.defaults.timeout = 10000
+axios.defaults.timeout = 20000
 axios.defaults.headers.post['Content-Type'] = 'application/json'
 
 const get = async (url, params = {}, config = {}) => {

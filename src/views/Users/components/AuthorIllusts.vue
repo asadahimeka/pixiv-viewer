@@ -52,13 +52,19 @@ export default {
       default: false
     }
   },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.notFromDetail = from.name !== 'Artwork'
+    })
+  },
   data() {
     return {
       curPage: 1,
       artList: [],
       error: false,
       loading: false,
-      finished: false
+      finished: false,
+      notFromDetail: true,
     };
   },
   computed: {
@@ -79,7 +85,7 @@ export default {
       let res = await api.getMemberArtwork(this.id, this.curPage);
       if (res.status === 0) {
         newList = res.data;
-        if (this.once) newList = newList.slice(0, 10);
+        if (this.once) newList = newList.slice(0, 30);
         let artList = JSON.parse(JSON.stringify(this.artList));
 
         artList.push(...newList);
@@ -114,8 +120,10 @@ export default {
     }
   },
   activated() {
-    this.reset();
-    this.getMemberArtwork();
+    if (this.notFromDetail) {
+      this.reset();
+      this.getMemberArtwork();
+    }
   },
   components: {
     [Cell.name]: Cell,

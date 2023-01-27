@@ -7,7 +7,7 @@
     </h2>
     <van-cell size="large" center title="关于" icon="star-o" is-link to='/setting/about' />
     <van-cell size="large" center title="清除缓存" icon="delete-o" is-link to='/setting/clearcache' />
-    <van-cell size="large" center title="作品显示设置" icon="eye-o" is-link to='/setting/contents-display' />
+    <van-cell size="large" center title="作品显示设置" icon="eye-o" is-link to='/setting/contents_display' />
     <van-cell size="large" center title="历史记录" icon="underway-o" is-link to='/setting/history' />
     <van-cell size="large" center title="其他设置" icon="setting-o" is-link to='/setting/others' />
     <van-cell size="large" center title="用户脚本推荐" icon="label-o" is-link to='/setting/userscripts' />

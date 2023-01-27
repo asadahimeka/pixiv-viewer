@@ -20,19 +20,19 @@ export default new Vuex.Store({
   getters: {
     currentId: state => state.galleryList[state.currentIndex] ? state.galleryList[state.currentIndex].id : -1,
     isCensored: state => artwork => {
-      if (artwork.x_restrict === 1) {
-        if (artwork.illust_ai_type === 2) {
-          return !state.SETTING.showAi;
+      if (artwork.x_restrict == 1) {
+        if (artwork.illust_ai_type == 2) {
+          return !state.SETTING.r18 || !state.SETTING.showAi;
         }
         return !state.SETTING.r18;
       }
-      if (artwork.x_restrict === 2) {
-        if (artwork.illust_ai_type === 2) {
-          return !state.SETTING.showAi;
+      if (artwork.x_restrict == 2) {
+        if (artwork.illust_ai_type == 2) {
+          return !state.SETTING.r18g || !state.SETTING.showAi;
         }
         return !state.SETTING.r18g;
       }
-      if (artwork.illust_ai_type === 2) {
+      if (artwork.illust_ai_type == 2) {
         return !state.SETTING.showAi;
       }
       return false;

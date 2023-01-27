@@ -1,6 +1,6 @@
 <template>
   <div class="rank-card">
-    <van-cell class="cell" :border="false">
+    <van-cell class="cell" :border="false" is-link @click="toList">
       <template #title>
         <Icon class="icon" name="rec_heart"></Icon>
         <span class="title">推荐</span>
@@ -8,13 +8,17 @@
     </van-cell>
     <div class="card-box">
       <swiper class="swipe-wrap" :options="swiperOption">
-        <swiper-slide class="swipe-item" v-for="art in artList" :key="art.id">
+        <swiper-slide class="swipe-item" v-for="art in artList.slice(0, 10)" :key="art.id">
           <ImageCard mode="meta" :artwork="art" @click-card="toArtwork($event)" />
         </swiper-slide>
-        <swiper-slide v-if="loading" class="swipe-item more">
-          <ImageSlide :images="[]">
-            <div class="link">
-              <van-loading class="d-loading" :size="'50px'" />
+        <swiper-slide class="swipe-item more">
+          <ImageSlide :images="slides">
+            <div class="link" @click="toList">
+              <van-loading v-if="loading" class="d-loading" :size="'50px'" />
+              <template v-else>
+                <Icon name="more" scale="20"></Icon>
+                <div>查看更多</div>
+              </template>
             </div>
           </ImageSlide>
         </swiper-slide>
@@ -52,6 +56,17 @@ export default {
       }
     };
   },
+  computed: {
+    slides() {
+      let artList = this.artList.slice(10, 15);
+      return artList.map(art => {
+        return {
+          title: art.title,
+          src: art.images[0].m
+        };
+      });
+    }
+  },
   methods: {
     async getRankList() {
       this.loading = true
@@ -65,6 +80,12 @@ export default {
         });
       }
       this.loading = false
+    },
+    toList() {
+      this.$router.push({
+        name: "RecommendIllust",
+        params: { list: this.artList }
+      });
     },
     toArtwork(id) {
       this.$router.push({

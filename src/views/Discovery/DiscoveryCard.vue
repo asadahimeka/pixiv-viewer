@@ -8,7 +8,7 @@
     </van-cell>
     <div class="card-box">
       <swiper class="swipe-wrap" :options="swiperOption">
-        <swiper-slide class="swipe-item" v-for="art in artList.slice(0, 15)" :key="art.id">
+        <swiper-slide class="swipe-item" v-for="art in artList.slice(0, 10)" :key="art.id">
           <ImageCard mode="meta" :artwork="art" @click-card="toArtwork($event)" />
         </swiper-slide>
         <swiper-slide class="swipe-item more">
@@ -58,7 +58,7 @@ export default {
   },
   computed: {
     slides() {
-      let artList = this.artList.slice(15, 20);
+      let artList = this.artList.slice(10, 15);
       return artList.map(art => {
         return {
           title: art.title,

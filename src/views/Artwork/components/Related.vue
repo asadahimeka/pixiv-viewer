@@ -94,7 +94,7 @@ export default {
 
           this.artList = artList;
           this.curPage++;
-          if (this.curPage > 5) this.finished = true;
+          if (this.curPage > 2) this.finished = true;
         } else {
           this.finished = true
         }
