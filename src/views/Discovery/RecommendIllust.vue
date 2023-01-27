@@ -2,9 +2,9 @@
   <div class="illusts">
     <top-bar />
     <h3 class="af_title">推荐作品</h3>
-    <wf-cont layout="Grid">
+    <masonry layout="Grid">
       <ImageCard mode="all" :artwork="art" @click-card="toArtwork($event)" v-for="art in artList" :key="art.id" />
-    </wf-cont>
+    </masonry>
     <van-loading v-show="loading" class="loading" :size="'50px'" />
     <van-empty v-if="!loading && !artList.length" description="暂无数据" />
   </div>
