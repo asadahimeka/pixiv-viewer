@@ -2,7 +2,7 @@
 
 # pixiv-viewer
 
-[DEMO](https://pixiv.kanata.ml/)
+[DEMO](https://pxv.kanata.ml/)
 
 [APK(5+)](https://github.com/journey-ad/pixiv-viewer/raw/master/pics/pixiv_viewer_0607231648.apk)
 
