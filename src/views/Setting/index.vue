@@ -12,6 +12,7 @@
     <van-cell size="large" center title="其他设置" icon="setting-o" is-link to='/setting/others' />
     <van-cell size="large" center title="用户脚本推荐" icon="label-o" is-link to='/setting/userscripts' />
     <van-cell size="large" center title="网站推荐" icon="bookmark-o" is-link to='/setting/links' />
+    <van-cell size="large" center title="应用推荐" icon="apps-o" is-link to='/setting/apps' />
   </div>
 </template>
 
