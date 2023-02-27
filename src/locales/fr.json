@@ -1,0 +1,243 @@
+{
+  "about": {
+    "disclaimer": "Clause de non-responsabilité",
+    "disclaimer_text": "<b>Lié à NSFW</b><br> Ce site n'affiche pas les ressources NSFW (telles que les illustrations R-18) par défaut, tout accès à ces ressources est défini par l'utilisateur dans les paramètres, et l'utilisateur s'est assuré \nce\n\nCeux qui ont plus de 18 ans et qui ne violent pas le contenu stipulé par les lois et réglementations locales.\n\nNous avons clairement marqué les ressources NSFW telles qu'elles peuvent apparaître, et nous décourageons l'accès ou la distribution de ces ressources.\n\n<br><b>Commentaires des utilisateurs</b><br>\"Commentaires des utilisateurs\" désigne les commentaires postés par les utilisateurs du site source Pixiv via des fonctions telles que l'auto-présentation, l'introduction d'illustrations et la zone de commentaires.\n\nCette partie appartient au propre comportement de l'éditeur, et nous ne pouvons pas la contrôler efficacement.\n\nNous ne publions ni n'encourageons la diffusion de discours inappropriés.\n\nSi vous trouvez un contenu inapproprié lors de votre navigation, nous vous encourageons fortement à le signaler au site source.\n\n<br><b>Déclaration de droit d'auteur</b><br> Toutes les données et ressources multimédias demandées sont protégées par le droit d'auteur de Pixiv ou de ses auteurs originaux.\n\n<br>Le programme Pixiv Viewer est sous licence MIT.\n\n<br>Uniquement pour la communication et l'apprentissage.",
+    "feedback": "Retour",
+    "from": "Modifié à partir de",
+    "origin_site": "Site d'origine",
+    "source": "Code source",
+    "title": "à propos",
+    "version": "Version"
+  },
+  "artwork": {
+    "download": {
+      "gif": "Basse qualité, meilleure compatibilité",
+      "placeholder": "Veuillez sélectionner un format de téléchargement",
+      "ugoira": {
+        "tip": "Veuillez d'abord jouer l'animation"
+      },
+      "webm": "Haute qualité, mauvaise compatibilité",
+      "zip": "Archive de trame de séquence brute"
+    },
+    "share": {
+      "of_art": "Oeuvres de",
+      "share": "Partager",
+      "title": "Partagez avec vos amis maintenant",
+      "type": {
+        "copylink": "Copier le lien",
+        "qrcode": "QR Code",
+        "qzone": "Zone Q",
+        "web": "Partage Web",
+        "wechat": "WeChat",
+        "weibo": "Weibo"
+      }
+    }
+  },
+  "cache": {
+    "clear": "Nettoyer",
+    "confirm": {
+      "first": "Voulez-vous vraiment effacer {0} ?",
+      "second": "Rechargera le contenu pertinent du réseau après le nettoyage"
+    },
+    "db": "Cache persistant",
+    "local": "Cache des éléments de configuration",
+    "records": "Enregistrement(s)",
+    "session": "Cache d'exécution",
+    "success_tip": "Nettoyage terminé",
+    "title": "Vider le cache"
+  },
+  "common": {
+    "ai_gen": "Généré par l'IA",
+    "artwork": "Ouvrages d'art",
+    "cancel": "Annuler",
+    "confirm": "Confirmer",
+    "content": {
+      "hide": "Sur la base des paramètres actuels, ce contenu ne sera pas affiché"
+    },
+    "discovery": "Découverte",
+    "download": "Télécharger",
+    "history": "Histoire",
+    "illust": "Illusts",
+    "illust_manga": "Illusts",
+    "manga": "Mangas",
+    "new_art": "Nouvelles oeuvres",
+    "novel": "Des romans",
+    "overall": "Global",
+    "random_view": "Oeuvres aléatoires",
+    "rank": "Classement",
+    "recomm": "Recommandé",
+    "recomm_art": "Oeuvres recommandées",
+    "related": "Oeuvres connexes",
+    "ugoira": "Ugoira",
+    "user": "Utilisateur",
+    "view_more": "Voir plus",
+    "words": "Mots"
+  },
+  "display": {
+    "ai": "Affichage du travail généré par l'IA",
+    "ai_label": "Présenter des illustrations générées par l'IA dans la liste d'images",
+    "confirm": "Voulez-vous vraiment activer l'affichage des œuvres {0} ? \nVeuillez vous assurer que vous avez plus de 18 ans et que vous ne violez pas les dispositions des lois et réglementations locales.",
+    "confirm_g": "Veuillez noter que l'activation du commutateur {0} peut avoir des effets irréversibles sur votre santé physique et mentale. \nSi vous ne vous sentez pas bien, veuillez fermer l'application immédiatement et consulter un médecin",
+    "r18": "Affichage des travaux R-18",
+    "r18_label": "Contient de la nudité ou des descriptions sexuelles",
+    "r18g": "Affichage des travaux R-18G",
+    "r18g_label": "Contient du contenu sanglant ou dégoûtant",
+    "title": "Paramètres d'affichage des illustrations"
+  },
+  "history": {
+    "confirm": {
+      "i": "Voulez-vous vraiment effacer l'historique de l'illustration et du manga ?",
+      "n": "Voulez-vous vraiment effacer l'historique du roman ?",
+      "u": "Voulez-vous vraiment effacer l'historique de l'utilisateur ?"
+    }
+  },
+  "nav": {
+    "home": "Maison",
+    "rank": "Classement",
+    "search": "Recherche",
+    "setting": "Paramètres"
+  },
+  "novel": {
+    "series": {
+      "next": "Chapitre suivant:",
+      "prev": "Chapitre précédent :"
+    },
+    "settings": {
+      "text": {
+        "bg": "Arrière-plan du texte",
+        "color": "Couleur du texte",
+        "direct_h": "Horizontal",
+        "direct_v": "Vertical",
+        "direction": "Sens du texte",
+        "font": "Police du texte",
+        "height": "Hauteur de la ligne de texte",
+        "sans": "Sans",
+        "serif": "Serif",
+        "size": "Taille de police",
+        "weight": "Poids du texte"
+      },
+      "title": "Nouveaux paramètres"
+    }
+  },
+  "rank": {
+    "day": "Quotidien",
+    "day_x": "R18 Quotidien",
+    "day_x_female": "R18 Femme",
+    "day_x_male": "R18 Mâle",
+    "female": "Populaire parmi les femmes",
+    "male": "Populaire parmi les hommes",
+    "month": "Mensuel",
+    "original": "Original",
+    "r18g": "R18G",
+    "rookie": "Débutant",
+    "week": "Hebdomadaire",
+    "week_x": "R18 Hebdomadaire"
+  },
+  "search": {
+    "autocomplete": "Suggestion de recherche",
+    "history": "Historique des recherches",
+    "img": {
+      "err": "Échec de l'analyse du résultat renvoyé",
+      "placeholder": "Veuillez sélectionner un fichier image"
+    },
+    "of_user_res": "Résultats de la recherche pour {0}",
+    "placeholder": "Entrez des mots-clés",
+    "pop_preview": "Aperçu populaire",
+    "pop_preview_novel": "Aperçu du roman populaire",
+    "seach_tag": "Rechercher des balises",
+    "search": "Recherche",
+    "search_user": "Rechercher un utilisateur"
+  },
+  "setting": {
+    "about": "À propos",
+    "api": {
+      "desc": "Entrez l'adresse de l'instance HibiAPI ci-dessous, vous devez ajouter https://, et le chemin doit être renseigné dans la partie `/api/pixiv`",
+      "desc2": "Par exemple : https://hibiapi.getloli.com/api/pixiv, le cache local sera vidé après l'enregistrement",
+      "desc3": "Les instances d'API peuvent accéder à",
+      "desc4": "trouver ou créer le vôtre",
+      "desc5": "L'adresse de l'instance d'API doit prendre en charge l'accès cross-origin (CORS)",
+      "ph": "Veuillez sélectionner une instance HibiAPI (le cache local sera vidé après le changement)",
+      "title": "Paramètre d'instance HibiAPI",
+      "title2": "Sélection d'instance HibiAPI",
+      "title3": "Lien d'instance HibiAPI",
+      "title4": "Instance HibiAPI"
+    },
+    "dark": {
+      "title": "Mode sombre"
+    },
+    "img_proxy": {
+      "desc": "Entrez l'adresse proxy de l'image pixiv ci-dessous, pas besoin d'ajouter https://",
+      "desc2": "Par exemple : i-cf.pximg.net, le cache local sera vidé après l'enregistrement",
+      "ph": "Veuillez sélectionner le proxy d'image pixiv (le cache local sera vidé après le changement)",
+      "title": "Paramètre proxy pximg",
+      "title2": "sélection du proxy d'image pximg",
+      "title3": "Proxy d'image",
+      "title4": "agence d'image pixiv"
+    },
+    "img_res": {
+      "l": "Chargement lent",
+      "m": "Charger un peu plus vite",
+      "o": "Charger plus lentement",
+      "ph": "Veuillez sélectionner la qualité des détails de l'image",
+      "title": "Détails de l'image et sélection de la qualité"
+    },
+    "input": "Entrer:",
+    "lab": {
+      "title": "Expérimental"
+    },
+    "layout": {
+      "j": "Hauteur égale et largeur différente",
+      "m": "Largeur égale et hauteur différente",
+      "ph": "Veuillez sélectionner une disposition de liste d'images",
+      "title": "Sélection de la disposition de la liste d'images",
+      "g": "Largeur et hauteur égales"
+    },
+    "other": {
+      "lang": "Langue",
+      "lang_ph": "Veuillez sélectionner la langue",
+      "title": "Autres réglages"
+    },
+    "recomm": {
+      "app": "applications",
+      "site": "Site Internet",
+      "title": "Suggestion connexe",
+      "tm": "Script utilisateur"
+    }
+  },
+  "sp": {
+    "all": "Aperçu",
+    "of_new": "Dernier",
+    "of_recomm": "En rapport",
+    "rank": "Classement mensuel",
+    "recomm_4u": "Recommandé pour vous",
+    "title": "Pixivision"
+  },
+  "tips": {
+    "click_view": "Clique pour voir",
+    "copylink": {
+      "error": "Échec de la copie du lien :",
+      "succ": "Copié",
+      "success": "Lien copié"
+    },
+    "current_value": "La valeur actuelle :",
+    "download_wait": "Le téléchargement peut prendre du temps, soyez patient",
+    "ios_webm": "Les appareils iOS ne prennent actuellement pas en charge les téléchargements au format WebM",
+    "loading": "Chargement...",
+    "net_err": "Exception réseau, cliquez pour recharger",
+    "no_data": "Pas de données",
+    "no_more": "Pas plus"
+  },
+  "user": {
+    "art_num": "{0} œuvres",
+    "art_title": "{0} Œuvre",
+    "fav": "Signet",
+    "fav_novel_title": "Roman signet",
+    "fav_title": "Illusts",
+    "following": "Suivant",
+    "friend": "MonPixiv",
+    "novel_art": "Des romans",
+    "novel_art_title": "Les romans de {0}",
+    "of": "c'est",
+    "of_other_art": "ses autres oeuvres"
+  }
+}

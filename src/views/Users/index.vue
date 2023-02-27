@@ -1,0 +1,479 @@
+<template>
+  <div class="user-container">
+    <div class="user-wrap">
+      <div class="users">
+        <TopBar />
+        <div v-if="userInfo.id" class="info-container">
+          <div class="bg-cover">
+            <img v-lazy="userInfo.bgcover || userInfo.avatar" :class="{ nobg: !userInfo.bgcover }" :alt="userInfo.name">
+          </div>
+          <div class="info">
+            <div class="avatar">
+              <img :src="userInfo.avatar" :alt="userInfo.name">
+            </div>
+            <h2 class="name">
+              {{ userInfo.name }}
+              <div class="sup_tags">
+                <span class="is_premium">
+                  <van-tag v-if="userInfo.is_premium" plain color="#fc9d2b">P</van-tag>
+                </span>
+                <span v-if="userInfo.gender" class="gender">
+                  <van-tag v-if="userInfo.gender == 'male'" plain color="#005CAF">♂</van-tag>
+                  <van-tag v-if="userInfo.gender == 'female'" plain color="#F596AA">♀</van-tag>
+                </span>
+              </div>
+            </h2>
+            <ul class="site-list">
+              <li class="site">
+                <a target="_blank" rel="noreferrer" :href="'https://pixiv.me/' + userInfo.account">
+                  @{{ userInfo.account }}
+                </a>
+              </li>
+              <li v-if="userInfo.region" class="site">
+                <Icon class="icon loc" name="loc" />
+                <span>{{ userInfo.region }}</span>
+              </li>
+            </ul>
+            <ul class="site-list" :class="{ multi: userInfo.webpage && userInfo.twitter_url }">
+              <li v-if="userInfo.webpage" class="site">
+                <Icon class="icon home" name="home-s" />
+                <a :href="userInfo.webpage" target="_blank">{{ userInfo.webpage | hostname }}</a>
+              </li>
+              <li v-if="userInfo.twitter_url" class="site">
+                <Icon class="icon twitter" name="twitter" />
+                <a :href="userInfo.twitter_url" target="_blank">@{{ userInfo.twitter_account }}</a>
+              </li>
+            </ul>
+            <span class="follow">
+              <span class="num">{{ userInfo.follow }}</span>{{ $t('user.following') }}
+            </span>
+            <span v-if="userInfo.friend" class="friend">
+              <span class="num">{{ userInfo.friend }}</span>{{ $t('user.friend') }}
+            </span>
+            <div class="user_link">
+              <a
+                target="_blank"
+                rel="noreferrer"
+                :href="'https://www.pixiv.net/u/' + userInfo.id"
+              >https://www.pixiv.net/u/{{ userInfo.id }}</a>
+            </div>
+            <div class="detail" :class="{ ex: isEx || commentHeight < 160 }">
+              <div ref="comment" class="content" v-html="userInfo.comment"></div>
+              <div v-if="!isEx && commentHeight >= 160" class="more" @click="isEx = true">
+                {{ $t('common.view_more') }} <Icon class="icon dropdown" name="dropdown" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <van-tabs v-if="userInfo.id" v-model="activeTab" class="user-tabs" sticky animated swipeable color="#F2C358">
+          <van-tab v-if="userInfo.illusts > 0" :title="$t('common.illust')" name="illusts">
+            <AuthorIllusts
+              v-if="userInfo.id && userInfo.illusts > 0"
+              :id="userInfo.id"
+              key="once-illust"
+              :num="userInfo.illusts"
+              :once="true"
+              :not-from-artwork="notFromArtwork"
+              @onCilck="showSub('illusts')"
+            />
+          </van-tab>
+          <van-tab v-if="userInfo.mangas > 0" :title="$t('common.manga')" name="manga">
+            <AuthorIllusts
+              v-if="userInfo.id && userInfo.mangas > 0"
+              :id="userInfo.id"
+              key="once-manga"
+              i-type="manga"
+              :num="userInfo.mangas"
+              :once="true"
+              :not-from-artwork="notFromArtwork"
+              @onCilck="showSub('manga')"
+            />
+          </van-tab>
+          <van-tab v-if="userInfo.novels > 0" :title="$t('common.novel')" name="novel">
+            <AuthorNovels
+              v-if="userInfo.id && userInfo.novels > 0"
+              :id="userInfo.id"
+              key="once-novel"
+              :num="userInfo.novels"
+              :once="true"
+              :not-from-artwork="notFromArtwork"
+              @onCilck="showSub('novel')"
+            />
+          </van-tab>
+          <van-tab v-if="userInfo.bookmarks > 0" :title="$t('user.fav')" name="favorite">
+            <FavoriteIllusts
+              v-if="userInfo.bookmarks > 0"
+              :id="userInfo.id"
+              key="once-favorite"
+              :num="userInfo.bookmarks"
+              :not-from-artwork="notFromArtwork"
+              :once="true"
+              @onCilck="showSub('favorite')"
+            />
+            <FavoriteNovels
+              v-if="userInfo.novels > 0"
+              :id="userInfo.id"
+              key="once-fav-novel"
+              :num="0"
+              :not-from-artwork="notFromArtwork"
+              :once="true"
+              @onCilck="showSub('fav_novel')"
+            />
+          </van-tab>
+        </van-tabs>
+
+        <div v-show="!loading" style="margin-top: 10px;text-align: center;">
+          <van-button size="small" @click="showSub(activeTab)">{{ $t('common.view_more') }}</van-button>
+        </div>
+
+        <van-loading v-show="loading" class="loading" size="60px" />
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import TopBar from '@/components/TopBar'
+import AuthorIllusts from './components/AuthorIllusts'
+import FavoriteIllusts from './components/FavoriteIllusts'
+import api from '@/api'
+import AuthorNovels from './components/AuthorNovels.vue'
+import FavoriteNovels from './components/FavoriteNovels.vue'
+import { getCache, setCache } from '@/utils/siteCache'
+import _ from 'lodash'
+
+export default {
+  name: 'Users',
+  filters: {
+    hostname(a) {
+      const url = document.createElement('a')
+      url.href = a
+      return url.hostname
+    },
+  },
+  components: {
+    TopBar,
+    AuthorIllusts,
+    FavoriteIllusts,
+    AuthorNovels,
+    FavoriteNovels,
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      vm.notFromArtwork = ![
+        'Artwork',
+        'AuthorIllusts',
+        'AuthorFavorites',
+        'AuthorNovels',
+        'AuthorFavoriteNovels',
+      ].includes(from.name)
+    })
+  },
+  data() {
+    return {
+      loading: false,
+      userInfo: {},
+      isEx: false,
+      commentHeight: 0,
+      notFromArtwork: true,
+      activeTab: 'illusts',
+    }
+  },
+  computed: {},
+  watch: {
+    $route() {
+      if (
+        this.$route.name == 'Users' &&
+        this.$route.params.id != this.userInfo.id
+      ) {
+        this.init()
+      }
+    },
+  },
+  mounted() {
+    this.init()
+  },
+  methods: {
+    init() {
+      this.loading = true
+      const id = +this.$route.params.id
+      this.userInfo = {}
+      this.activeTab = 'illusts'
+      this.getMemberInfo(id)
+    },
+    async getMemberInfo(id) {
+      // console.log(id);
+      const res = await api.getMemberInfo(id)
+      if (res.status === 0) {
+        this.userInfo = res.data
+        this.loading = false
+        this.$nextTick(() => {
+          this.getCommentHeight()
+        })
+
+        let historyList = await getCache('users.history', [])
+        if (!Array.isArray(historyList)) historyList = []
+        if (historyList.length > 100) historyList = historyList.slice(0, 100)
+        historyList = _.uniqBy([res.data, ...historyList], 'id')
+        setCache('users.history', historyList)
+      } else {
+        this.loading = false
+        this.$toast({
+          message: res.msg,
+          icon: require('@/icons/error.svg'),
+          duration: 3000,
+        })
+      }
+    },
+    getCommentHeight() {
+      this.commentHeight = this.$refs.comment.clientHeight
+    },
+    showSub(page) {
+      switch (page) {
+        case 'illusts':
+          this.$router.push({
+            name: 'AuthorIllusts',
+            params: { id: this.userInfo.id },
+            query: { type: 'illust' },
+          })
+          break
+
+        case 'manga':
+          this.$router.push({
+            name: 'AuthorIllusts',
+            params: { id: this.userInfo.id },
+            query: { type: 'manga' },
+          })
+          break
+
+        case 'novel':
+          this.$router.push({
+            name: 'AuthorNovels',
+            params: { id: this.userInfo.id },
+          })
+          break
+
+        case 'favorite':
+          this.$router.push({
+            name: 'AuthorFavorites',
+            params: { id: this.userInfo.id },
+          })
+          break
+
+        case 'fav_novel':
+          this.$router.push({
+            name: 'AuthorFavoriteNovels',
+            params: { id: this.userInfo.id },
+          })
+          break
+
+        default:
+          break
+      }
+    },
+  },
+}
+</script>
+
+<style lang="stylus">
+.app-main:has(.user-container)
+  padding 0
+
+  .info, .illusts, .favorite
+    padding-left 16px
+    padding-right 16px
+</style>
+<style lang="stylus" scoped>
+.user-container {
+  height: 100%;
+
+  .illust-wrap, .user-wrap {
+    height: 100vh;
+    // overflow-y: scroll;
+  }
+}
+
+.loading {
+  position: absolute;
+  top: 30%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.user-tabs {
+  ::v-deep .van-tabs__content  {
+    margin-top 10px
+  }
+}
+
+.users {
+  padding-bottom 100px
+  .info-container {
+    margin-bottom 40px
+    .bg-cover {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+      overflow: hidden;
+
+      img {
+        display: block;
+        width: 100%;
+        &[lazy='loading'] {
+          opacity 0
+        }
+      }
+
+      .nobg {
+        filter: blur(4px);
+      }
+    }
+
+    .info {
+      position: relative;
+      padding-top: 120px;
+      text-align: center;
+      font-size: 24px;
+
+      .avatar {
+        position: absolute;
+        left: 50%;
+        top: -100px;
+        width: 200px;
+        height: 200px;
+        transform: translateX(-50%);
+
+        img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          box-shadow: 0 4px 15px #0000001f;
+        }
+      }
+
+      .name {
+        position relative
+        font-size: 46px;
+        font-weight: bold;
+        margin: 10px 0;
+
+        .sup_tags {
+          position absolute
+          top 0px
+          padding-left 8PX
+          display inline-block
+          .van-tag {
+            height 16PX
+            vertical-align super
+          }
+        }
+        .gender {
+          .van-tag {
+            padding 0 2PX
+            line-height 0.9
+          }
+        }
+      }
+
+      .site-list {
+        display: flex;
+        justify-content: center;
+
+        &.multi {
+          .site {
+            max-width: 220px;
+          }
+        }
+
+        .site {
+          margin: 20px 6px;
+          margin-top: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: #92a3aa;
+          line-height: 1.2;
+
+          a {
+            color: #92a3aa;
+          }
+        }
+      }
+
+      .follow, .friend {
+        color: #92a3aa;
+        margin: 20px 6px;
+
+        .num {
+          color: #333;
+          margin-right: 6px;
+        }
+      }
+
+      .user_link {
+        margin-top: 20px;
+        font-size: 22px;
+      }
+
+      .detail {
+        position: relative;
+        margin: 40px 0;
+        padding: 0 12%;
+        color: #555;
+        line-height: 1.8;
+        max-height: 400px;
+        overflow: hidden;
+        box-sizing: border-box;
+
+        &.ex {
+          max-height: initial;
+
+          .content {
+            &::after {
+              display: none;
+            }
+          }
+        }
+
+        .content {
+          max-width 750px
+          margin 0 auto
+          white-space: pre-wrap;
+          word-break: break-word;
+
+          &::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -10px;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(to top, #fff, rgba(#fff, 0));
+          }
+        }
+
+        .more {
+          position: absolute;
+          bottom: 10px;
+          left: 0;
+          right: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 60px;
+        }
+      }
+    }
+  }
+
+  .illusts, .favorite {
+    margin: 10px 0 20px 0;
+  }
+}
+
+::v-deep .top-bar-wrap
+  background none
+
+</style>

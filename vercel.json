@@ -1,0 +1,30 @@
+{
+  "github": {
+    "silent": true
+  },
+  "headers": [
+    {
+      "source": "/service-worker.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/prks/obfs/:match*",
+      "destination": "https://api.obfs.dev/:match*"
+    },
+    {
+      "source": "/prks/s/:match*",
+      "destination": "https://www.pixivs.cn/:match*"
+    },
+    {
+      "source": "/:path*",
+      "destination": "/index.html"
+    }
+  ]
+}

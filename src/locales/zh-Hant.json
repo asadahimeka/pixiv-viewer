@@ -1,0 +1,243 @@
+{
+  "about": {
+    "disclaimer": "免責聲明",
+    "disclaimer_text": "<b>NSFW 相關</b><br>本站默認不顯示 NSFW 資源（例如 R-18 插畫），任意訪問此類資源的行為均是由用戶在設置中設定的，並且用戶已確保自身年齡已滿18歲且未違反當地法律法規所規定的內容。\n對於可能出現的 NSFW 資源我們均有做出明顯的警告標記，我們不鼓勵訪問或傳播此類資源。 \n<br><b>用戶言論</b><br>“用戶言論”指的是 Pixiv 源站用戶通過自我介紹、插畫簡介、評論區等功能發布的言論。\n這部分屬於發表者自身的行為，我們無法有效控制。\n我們不會發布也不鼓勵傳播不當言論。\n如果您在瀏覽過程中發現了不當內容，我們非常鼓勵您前往源站進行舉報。 \n<br><b>版權聲明</b><br>請求得到的全部數據以及媒體資源，版權歸 Pixiv 或其原作者所有。 \n<br>Pixiv Viewer 程序透過 MIT 協議授權。 \n<br>僅供交流與學習。",
+    "feedback": "反饋",
+    "from": "修改自",
+    "origin_site": "原版網站",
+    "source": "源碼",
+    "title": "關於",
+    "version": "版本"
+  },
+  "artwork": {
+    "download": {
+      "gif": "低畫質，兼容性最佳",
+      "placeholder": "請選擇下載格式",
+      "ugoira": {
+        "tip": "請先播放動圖"
+      },
+      "webm": "高畫質，兼容性差",
+      "zip": "原始序列幀歸檔文件"
+    },
+    "share": {
+      "of_art": "的作品",
+      "share": "分享",
+      "title": "立即分享給好友",
+      "type": {
+        "copylink": "複製鏈接",
+        "qrcode": "二維碼",
+        "qzone": "QQ 空間",
+        "web": "Web 分享",
+        "wechat": "微信",
+        "weibo": "微博"
+      }
+    }
+  },
+  "cache": {
+    "clear": "清理",
+    "confirm": {
+      "first": "確定要清理{0}嗎？",
+      "second": "清理後將重新從網路加載相關內容"
+    },
+    "db": "持久化緩存",
+    "local": "配置項緩存",
+    "records": "條記錄",
+    "session": "運行時緩存",
+    "success_tip": "清理完成",
+    "title": "清除緩存"
+  },
+  "common": {
+    "ai_gen": "AI 生成",
+    "artwork": "作品",
+    "cancel": "取消",
+    "confirm": "確認",
+    "content": {
+      "hide": "根據當前設置，此內容將不予顯示"
+    },
+    "discovery": "探索",
+    "download": "下載",
+    "history": "歷史記錄",
+    "illust": "插畫",
+    "illust_manga": "插畫·漫畫",
+    "manga": "漫畫",
+    "new_art": "新作",
+    "novel": "小說",
+    "overall": "綜合",
+    "random_view": "隨便看看",
+    "rank": "排行榜",
+    "recomm": "推薦",
+    "recomm_art": "推薦作品",
+    "related": "相關作品",
+    "ugoira": "動圖",
+    "user": "用戶",
+    "view_more": "查看更多",
+    "words": "字"
+  },
+  "display": {
+    "ai": "AI 生成作品顯示",
+    "ai_label": "展示圖片列表裡的 AI 生成作品",
+    "confirm": "確定要開啟{0}作品顯示嗎？ 請確保您的年齡已滿18歲，且未違反當地法律法規所規定的內容。",
+    "confirm_g": "請注意，開啟{0}開關可能會對您的身心健康造成不可逆的影響，如若感到不適，請立即關閉應用並尋求醫學幫助",
+    "r18": "R-18 作品顯示",
+    "r18_label": "包含裸露內容或性描寫",
+    "r18g": "R-18G 作品顯示",
+    "r18g_label": "包含血腥或噁心內容",
+    "title": "作品顯示設置"
+  },
+  "history": {
+    "confirm": {
+      "i": "確定要清除插畫·漫畫歷史記錄嗎",
+      "n": "確定要清除小說歷史記錄嗎",
+      "u": "確定要清除用戶歷史記錄嗎"
+    }
+  },
+  "nav": {
+    "home": "首頁",
+    "rank": "排行榜",
+    "search": "搜索",
+    "setting": "設置"
+  },
+  "novel": {
+    "series": {
+      "next": "下一話:",
+      "prev": "上一話："
+    },
+    "settings": {
+      "text": {
+        "bg": "文字背景",
+        "color": "文字顏色",
+        "direct_h": "橫向",
+        "direct_v": "縱向",
+        "direction": "文字方向",
+        "font": "文字字體",
+        "height": "文字行高",
+        "sans": "黑體",
+        "serif": "宋體",
+        "size": "文字大小",
+        "weight": "文字字重"
+      },
+      "title": "小說設置"
+    }
+  },
+  "rank": {
+    "day": "日榜",
+    "day_x": "R18 日",
+    "day_x_female": "R18 女",
+    "day_x_male": "R18 男",
+    "female": "女性向",
+    "male": "男性向",
+    "month": "月榜",
+    "original": "原創",
+    "r18g": "R18G 週",
+    "rookie": "新人",
+    "week": "周榜",
+    "week_x": "R18 週"
+  },
+  "search": {
+    "autocomplete": "搜索建議",
+    "history": "歷史搜索",
+    "img": {
+      "err": "返回結果解析失敗",
+      "placeholder": "請選擇圖片文件"
+    },
+    "of_user_res": "{0}的搜索結果",
+    "placeholder": "請輸入搜索關鍵詞",
+    "pop_preview": "熱門預覽",
+    "pop_preview_novel": "熱門小說預覽",
+    "seach_tag": "搜索標籤",
+    "search": "搜索",
+    "search_user": "搜索用戶"
+  },
+  "setting": {
+    "about": "關於",
+    "api": {
+      "desc": "在下方輸入 HibiAPI 實例地址，需要加 https://，路徑需填寫到 `/api/pixiv` 部分",
+      "desc2": "例如：https://hibiapi.getloli.com/api/pixiv，保存後會清空本地緩存",
+      "desc3": "API 實例可前往",
+      "desc4": "查找或自行搭建",
+      "desc5": "API 實例地址需要支持跨域（CORS）訪問",
+      "ph": "請選擇 HibiAPI 實例 (切換後會清空本地緩存)",
+      "title": "HibiAPI 實例設置",
+      "title2": "HibiAPI 實例選擇",
+      "title3": "HibiAPI 實例地址",
+      "title4": "HibiAPI 實例"
+    },
+    "dark": {
+      "title": "深色模式"
+    },
+    "img_proxy": {
+      "desc": "在下方輸入 pixiv 圖片代理地址，不需要加 https://",
+      "desc2": "例如：i-cf.pximg.net，保存後會清空本地緩存",
+      "ph": "請選擇 pixiv 圖片代理 (切換後會清空本地緩存)",
+      "title": "pximg 圖片代理設置",
+      "title2": "pximg 圖片代理選擇",
+      "title3": "圖片代理",
+      "title4": "pixiv 圖片代理"
+    },
+    "img_res": {
+      "l": "加載稍慢",
+      "m": "加載稍快",
+      "o": "加載更慢",
+      "ph": "請選擇圖片詳情畫質",
+      "title": "圖片詳情畫質選擇"
+    },
+    "input": "輸入：",
+    "lab": {
+      "title": "實驗性"
+    },
+    "layout": {
+      "g": "等寬等高",
+      "j": "等高不等寬",
+      "m": "等寬不等高",
+      "ph": "請選擇圖片列表佈局",
+      "title": "圖片列表佈局選擇"
+    },
+    "other": {
+      "lang": "語言",
+      "lang_ph": "請選擇語言",
+      "title": "其他設置"
+    },
+    "recomm": {
+      "app": "應用",
+      "site": "網站",
+      "title": "相關推薦",
+      "tm": "用戶腳本"
+    }
+  },
+  "sp": {
+    "all": "一覽",
+    "of_new": "的最新特輯",
+    "of_recomm": "的相關推薦",
+    "rank": "本月排行榜",
+    "recomm_4u": "為你推薦",
+    "title": "特輯"
+  },
+  "tips": {
+    "click_view": "點擊查看",
+    "copylink": {
+      "error": "複製鏈接失敗:",
+      "succ": "已復制",
+      "success": "已復制鏈接"
+    },
+    "current_value": "當前值：",
+    "download_wait": "下載時間可能較長，請耐心等待",
+    "ios_webm": "iOS 設備暫不支持 WebM 格式下載",
+    "loading": "加載中...",
+    "net_err": "網絡異常，點擊重新加載",
+    "no_data": "暫無數據",
+    "no_more": "沒有更多了"
+  },
+  "user": {
+    "art_num": "{0}件作品",
+    "art_title": "{0}作品",
+    "fav": "收藏",
+    "fav_novel_title": "小說收藏",
+    "fav_title": "插畫·漫畫收藏",
+    "following": "關注",
+    "friend": "好P友",
+    "novel_art": "小說作品",
+    "novel_art_title": "{0}小說作品",
+    "of": "的",
+    "of_other_art": "的其他作品"
+  }
+}

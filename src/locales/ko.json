@@ -1,0 +1,243 @@
+{
+  "about": {
+    "disclaimer": "면책사항",
+    "disclaimer_text": "<b> NSFW 관련 </b> <br>이 사이트는 기본적으로 NSFW 리소스 (R-18 그림 등)를 표시하지 않습니다. \n이러한 리소스에 대한 액세스는 사용자가 설정으로 설정하고 사용자는 18세 이상으로 현지 법령에서 정한 내용을 위반하지 않는 분.\n\nNSFW 리소스가 표시되면 명확하게 표시되어 있으므로 이러한 리소스에 액세스하거나 배포하지 않는 것이 좋습니다.\n\n<br><b>사용자 코멘트</b><br>\"사용자 코멘트\"란 Pixiv 소스 사이트의 사용자가 자기 소개, 일러스트 소개, 코멘트란 등의 기능을 통해 게시한 코멘트입니다.\n\n이 부분은 발행자 자신의 행동에 속하며 효과적으로 제어할 수 없습니다.\n\n부적절한 발언을 게시하거나 유포를 조장하지 않습니다.\n\n탐색 중에 부적절한 콘텐츠를 발견한 경우 소스 사이트에 신고하는 것이 좋습니다.\n\n<b> <b> 저작권 정보 </b> <br> 요청한 모든 데이터 및 미디어 리소스는 Pixiv 또는 원래 작성자가 저작권으로 보호합니다.\n\n<br>Pixiv Viewer 프로그램은 MIT 라이센스하에 라이센스가 부여됩니다.\n\n<br>커뮤니케이션 및 학습 전용.",
+    "feedback": "피드백",
+    "from": "본가 레포",
+    "origin_site": "본가 링크",
+    "source": "소스 코드",
+    "title": "아바웃",
+    "version": "버전"
+  },
+  "artwork": {
+    "download": {
+      "gif": "낮은 품질, 최고의 호환성",
+      "placeholder": "다운로드 형식을 선택하세요.",
+      "ugoira": {
+        "tip": "먼저 애니메이션을 재생하세요."
+      },
+      "webm": "고품질, 호환성이 좋지 않음",
+      "zip": "원시 시퀀스 프레임 아카이브"
+    },
+    "share": {
+      "of_art": "님의 작품",
+      "share": "공유",
+      "title": "지금 친구와 공유",
+      "type": {
+        "copylink": "복사",
+        "qrcode": "QR 코드",
+        "qzone": "Qzone",
+        "web": "웹 공유",
+        "wechat": "WeChat",
+        "weibo": "Weibo"
+      }
+    }
+  },
+  "cache": {
+    "clear": "클리어",
+    "confirm": {
+      "first": "{0}을 지우시겠습니까?",
+      "second": "청소 후 네트워크에서 관련 콘텐츠를 다시 로드합니다."
+    },
+    "db": "영구 캐시",
+    "local": "구성 항목 캐시",
+    "records": "기록",
+    "session": "런타임 캐시",
+    "success_tip": "정리 완료",
+    "title": "캐시 지우기"
+  },
+  "common": {
+    "ai_gen": "AI 생성",
+    "artwork": "작품",
+    "cancel": "취소",
+    "confirm": "확인",
+    "content": {
+      "hide": "현재 설정에 따라 이 콘텐츠는 표시되지 않습니다."
+    },
+    "discovery": "디스커버리",
+    "download": "다운로드",
+    "history": "역사기록",
+    "illust": "삽화",
+    "illust_manga": "일러스트 · 만화",
+    "manga": "만화",
+    "new_art": "신작",
+    "novel": "소설",
+    "overall": "종합",
+    "random_view": "랜덤 작품",
+    "rank": "랭킹",
+    "recomm": "추천",
+    "recomm_art": "추천 작품",
+    "related": "관련작품",
+    "ugoira": "우고이라",
+    "user": "사용자",
+    "view_more": "계속 보기",
+    "words": "글자"
+  },
+  "display": {
+    "ai": "AI 생성 작품 전시",
+    "ai_label": "이미지 목록에 AI가 생성한 아트워크 표시",
+    "confirm": "{0}작품 표시를 사용하시겠습니까? 18세 이상이며 현지 법률 및 규정 규정을 위반하지 않았는지 확인하세요.",
+    "confirm_g": "{0} 스위치를 켜면 심신 건강에 회복할 수 없는 영향을 미칠 수 있습니다. \n기분이 좋지 않으면 즉시 응용 프로그램을 종료하고 의사의 진찰을 받으십시오.",
+    "r18": "R-18 작품 전시",
+    "r18_label": "누드 또는 성적 묘사 포함",
+    "r18g": "R-18G 작품 전시",
+    "r18g_label": "고어 또는 불쾌한 콘텐츠 포함",
+    "title": "작품 표시 설정"
+  },
+  "history": {
+    "confirm": {
+      "i": "일러스트와 만화의 기록을 지우시겠습니까?",
+      "n": "소설 기록을 지우시겠습니까?",
+      "u": "사용자 기록을 삭제하시겠습니까?"
+    }
+  },
+  "nav": {
+    "home": "홈",
+    "rank": "랭킹",
+    "search": "검색",
+    "setting": "설정"
+  },
+  "novel": {
+    "series": {
+      "next": "시모이치 :",
+      "prev": "上一话："
+    },
+    "settings": {
+      "text": {
+        "bg": "텍스트 배경",
+        "color": "텍스트 색상",
+        "direct_h": "가로",
+        "direct_v": "세로 쓰기",
+        "direction": "텍스트 방향",
+        "font": "텍스트 글꼴",
+        "height": "텍스트 행 높이",
+        "sans": "고딕",
+        "serif": "명나라",
+        "size": "글꼴 크기",
+        "weight": "텍스트 가중치"
+      },
+      "title": "소설 설정"
+    }
+  },
+  "rank": {
+    "day": "매일",
+    "day_x": "R18일",
+    "day_x_female": "R18 여성에게 인기",
+    "day_x_male": "R18 남성에게 인기",
+    "female": "여성에게 인기",
+    "male": "남성에게 인기",
+    "month": "월간",
+    "original": "오리지널",
+    "r18g": "R18G",
+    "rookie": "신인",
+    "week": "주간",
+    "week_x": "R18 주"
+  },
+  "search": {
+    "autocomplete": "검색 후보",
+    "history": "기록 검색",
+    "img": {
+      "err": "반환 결과 분석에 실패했습니다.",
+      "placeholder": "이미지 파일을 선택하세요."
+    },
+    "of_user_res": "{0} 검색결과",
+    "placeholder": "검색 키워드를 입력하세요.",
+    "pop_preview": "인기 미리보기",
+    "pop_preview_novel": "인기 소설 미리보기",
+    "seach_tag": "검색 태그",
+    "search": "검색",
+    "search_user": "사용자 검색"
+  },
+  "setting": {
+    "about": "아바웃",
+    "api": {
+      "desc": "아래에 HibiAPI 인스턴스의 주소를 입력하고 https:// 를 추가해야 하며 /api/pixiv 부분에 경로를 입력해야 합니다.",
+      "desc2": "예 : https://hibiapi.getloli.com/api/pixiv, 저장 후 로컬 캐시가 지워집니다.",
+      "desc3": "API 인스턴스는 다음 위치로 이동할 수 있습니다.",
+      "desc4": "나만의 검색 또는 구축",
+      "desc5": "API 인스턴스 주소는 교차 출처(CORS) 액세스를 지원해야 합니다.",
+      "ph": "HibiAPI 인스턴스를 선택하십시오 (로컬 캐시는 전환 후 지워집니다)",
+      "title": "HibiAPI 인스턴스 설정",
+      "title2": "HibiAPI 인스턴스 선택",
+      "title3": "HibiAPI 인스턴스 링크",
+      "title4": "HibiAPI 인스턴스"
+    },
+    "dark": {
+      "title": "다크 모드"
+    },
+    "img_proxy": {
+      "desc": "아래에 pixiv 이미지의 프록시 주소를 입력합니다. \nhttps:// 를 추가할 필요가 없습니다.",
+      "desc2": "예: i-cf.pximg.net, 로컬 캐시는 저장 후 지워집니다.",
+      "ph": "pixiv 이미지 프록시를 선택하십시오 (전환 후 로컬 캐시가 지워집니다)",
+      "title": "pximg 이미지 프록시 설정",
+      "title2": "pximg 이미지 프록시 선택",
+      "title3": "이미지 프록시",
+      "title4": "pixiv 이미지 프록시"
+    },
+    "img_res": {
+      "l": "로드 속도가 느림",
+      "m": "로드가 조금 빨라진다",
+      "o": "로드 속도가 느림",
+      "ph": "이미지 상세 품질을 선택하세요.",
+      "title": "이미지 세부정보 및 품질 선택"
+    },
+    "input": "입력:",
+    "lab": {
+      "title": "실험적"
+    },
+    "layout": {
+      "g": "너비와 높이가 같음",
+      "j": "높이가 같고 너비가 다릅니다.",
+      "m": "너비가 같고 높이가 다릅니다.",
+      "ph": "이미지 목록 레이아웃을 선택하세요.",
+      "title": "이미지 목록 레이아웃 선택"
+    },
+    "other": {
+      "lang": "언어",
+      "lang_ph": "언어를 선택하세요",
+      "title": "기타 설정"
+    },
+    "recomm": {
+      "app": "앱",
+      "site": "웹사이트",
+      "title": "추천 물건",
+      "tm": "사용자 스크립트"
+    }
+  },
+  "sp": {
+    "all": "요약",
+    "of_new": "최신",
+    "of_recomm": "추천",
+    "rank": "월간 순위",
+    "recomm_4u": "당신에게 추천",
+    "title": "Pixivision"
+  },
+  "tips": {
+    "click_view": "클릭하여 표시",
+    "copylink": {
+      "error": "링크를 복사하지 못했습니다.",
+      "succ": "복사한",
+      "success": "링크를 복사했습니다."
+    },
+    "current_value": "현재 값:",
+    "download_wait": "다운로드에 시간이 걸릴 수 있으므로 잠시 기다려주십시오.",
+    "ios_webm": "iOS 기기는 현재 WebM 형식 다운로드를 지원하지 않습니다.",
+    "loading": "로드 중...",
+    "net_err": "네트워크 예외입니다. \n클릭하여 다시 로드하세요.",
+    "no_data": "데이터 없음",
+    "no_more": "이미 아니"
+  },
+  "user": {
+    "art_num": "{0}개의 작품",
+    "art_title": "{0}작품",
+    "fav": "북마크",
+    "fav_novel_title": "소설 북마크",
+    "fav_title": "일러스트 · 만화 북마크",
+    "following": "팔로우 중",
+    "friend": "마이픽",
+    "novel_art": "소설 작품",
+    "novel_art_title": "{0}의 소설 작품",
+    "of": "의",
+    "of_other_art": "다른 작품"
+  }
+}

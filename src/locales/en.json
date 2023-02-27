@@ -1,0 +1,243 @@
+{
+  "common": {
+    "illust": "Illusts",
+    "manga": "Mangas",
+    "novel": "Novels",
+    "ai_gen": "AI-generated",
+    "artwork": "Artwork",
+    "cancel": "Cancel",
+    "content": {
+      "hide": "Based on current settings, this content will not be displayed"
+    },
+    "discovery": "Discovery",
+    "download": "Download",
+    "history": "History",
+    "illust_manga": "Illusts&Mangas",
+    "new_art": "New Artworks",
+    "overall": "Overall",
+    "random_view": "Random Artworks",
+    "rank": "Ranking",
+    "recomm": "Recommended",
+    "recomm_art": "Recommended Artworks",
+    "related": "Related Artworks",
+    "ugoira": "Ugoira",
+    "user": "User",
+    "view_more": "See more",
+    "words": "Words",
+    "confirm": "Confirm"
+  },
+  "about": {
+    "disclaimer": "Disclaimer",
+    "disclaimer_text": "<b>NSFW-related</b><br>This site does not display NSFW resources (such as R-18 illustrations) by default, any access to such resources is set by the user in the settings, and the user has ensured that \nThose who are over 18 years old and do not violate the content stipulated by local laws and regulations. \nWe have clearly marked NSFW resources as they may appear, and we discourage accessing or distributing such resources. \n<br><b>User Comments</b><br>\"User Comments\" refer to the comments posted by users of the Pixiv source site through functions such as self-introduction, illustration introduction, and comment area. \nThis part belongs to the publisher's own behavior, and we cannot effectively control it. \nWe do not post or encourage the dissemination of inappropriate speech. \nIf you find inappropriate content during browsing, we strongly encourage you to report it to the source site. \n<br><b>Copyright Statement</b><br>All data and media resources requested are copyrighted by Pixiv or its original authors. \n<br>The Pixiv Viewer program is licensed under the MIT license. \n<br>Only for communication and learning.",
+    "feedback": "Feedback",
+    "from": "Modified from",
+    "origin_site": "Original Site",
+    "source": "Source Code",
+    "title": "about",
+    "version": "Version"
+  },
+  "artwork": {
+    "download": {
+      "gif": "Low quality, best compatibility",
+      "placeholder": "Please select a download format",
+      "ugoira": {
+        "tip": "Please play the animation first"
+      },
+      "webm": "High quality, poor compatibility",
+      "zip": "Raw Sequence Frame Archive"
+    },
+    "share": {
+      "of_art": "'s Artworks",
+      "share": "Share",
+      "title": "Share with friends now",
+      "type": {
+        "copylink": "Copy Link",
+        "qrcode": "QR Code",
+        "qzone": "Qzone",
+        "web": "Web share",
+        "wechat": "WeChat",
+        "weibo": "Weibo"
+      }
+    }
+  },
+  "cache": {
+    "clear": "Clean up",
+    "confirm": {
+      "first": "Are you sure you want to clear {0}?",
+      "second": "Will reload relevant content from the network after cleaning"
+    },
+    "db": "Persistent cache",
+    "local": "Configuration item cache",
+    "records": "Record(s)",
+    "session": "Runtime cache",
+    "success_tip": "Cleanup completed",
+    "title": "Clear Cache"
+  },
+  "display": {
+    "ai": "AI generated work display",
+    "ai_label": "Showcasing AI-generated artwork in the image list",
+    "confirm": "Are you sure you want to enable {0} works display? Please ensure that you are over 18 years old, and do not violate the provisions of local laws and regulations.",
+    "confirm_g": "Please note that turning on the {0} switch may have irreversible effects on your physical and mental health. If you feel unwell, please close the application immediately and seek medical help",
+    "r18": "R-18 works display",
+    "r18_label": "Contains nudity or sexual descriptions",
+    "r18g": "R-18G works display",
+    "r18g_label": "Contains gore or disgusting content",
+    "title": "Artwork Display Settings"
+  },
+  "history": {
+    "confirm": {
+      "i": "Are you sure you want to clear the illustration and manga history?",
+      "n": "Are you sure you want to clear the novel history",
+      "u": "Are you sure you want to clear user history"
+    }
+  },
+  "nav": {
+    "home": "Home",
+    "rank": "Ranking",
+    "search": "Search",
+    "setting": "Settings"
+  },
+  "novel": {
+    "series": {
+      "next": "Next Chapter:",
+      "prev": "Previous Chapter:"
+    },
+    "settings": {
+      "text": {
+        "bg": "Text background",
+        "color": "Text color",
+        "direct_h": "Horizontal",
+        "direct_v": "Vertical",
+        "direction": "Text direction",
+        "font": "Text font",
+        "height": "Text line height",
+        "sans": "Sans",
+        "serif": "Serif",
+        "size": "Font size",
+        "weight": "Text weight"
+      },
+      "title": "Novel Settings"
+    }
+  },
+  "rank": {
+    "day": "Daily",
+    "day_x": "R18 Daily",
+    "day_x_female": "R18 Female",
+    "day_x_male": "R18 Male",
+    "female": "Popular among female",
+    "male": "Popular among male",
+    "month": "Monthly",
+    "original": "Original",
+    "r18g": "R18G",
+    "rookie": "Rookie",
+    "week": "Weekly",
+    "week_x": "R18 Weekly"
+  },
+  "search": {
+    "autocomplete": "Search Suggestion",
+    "history": "Search History",
+    "img": {
+      "err": "Return result parsing failed",
+      "placeholder": "Please select an image file"
+    },
+    "of_user_res": "Search results for {0}",
+    "placeholder": "Enter keywords",
+    "pop_preview": "Popular preview",
+    "pop_preview_novel": "Popular Novel Preview",
+    "seach_tag": "Search tags",
+    "search": "Search",
+    "search_user": "Search user"
+  },
+  "setting": {
+    "about": "About",
+    "api": {
+      "desc": "Enter the HibiAPI instance address below, you need to add https://, and the path needs to be filled in the `/api/pixiv` part",
+      "desc2": "For example: https://hibiapi.getloli.com/api/pixiv, the local cache will be cleared after saving",
+      "desc3": "API instances can go to",
+      "desc4": "finding or building your own",
+      "desc5": "The API instance address needs to support cross-origin (CORS) access",
+      "ph": "Please select a HibiAPI instance (the local cache will be cleared after switching)",
+      "title": "HibiAPI Instance Setting",
+      "title2": "HibiAPI instance select",
+      "title3": "HibiAPI instance link",
+      "title4": "HibiAPI instance"
+    },
+    "dark": {
+      "title": "Dark Mode"
+    },
+    "img_proxy": {
+      "desc": "Enter the pixiv image proxy address below, no need to add https://",
+      "desc2": "For example: i-cf.pximg.net, the local cache will be cleared after saving",
+      "ph": "Please select pixiv image proxy (the local cache will be cleared after switching)",
+      "title": "pximg Proxy Setting",
+      "title2": "pximg image proxy select",
+      "title3": "Image Proxy",
+      "title4": "pixiv image agency"
+    },
+    "img_res": {
+      "l": "Slow loading",
+      "m": "Load slightly faster",
+      "o": "Load slower",
+      "ph": "Please select picture details quality",
+      "title": "Image Details and Quality Select"
+    },
+    "input": "Enter:",
+    "lab": {
+      "title": "Experimental"
+    },
+    "layout": {
+      "g": "Equal width and height",
+      "j": "Equal height and different width",
+      "m": "Equal width and different height",
+      "ph": "Please select a picture list layout",
+      "title": "Picture List Layout Selection"
+    },
+    "other": {
+      "title": "Other Settings",
+      "lang": "Language",
+      "lang_ph": "Please select language"
+    },
+    "recomm": {
+      "app": "Apps",
+      "site": "Website",
+      "title": "Related Suggestion",
+      "tm": "UserScript"
+    }
+  },
+  "sp": {
+    "all": "Overview",
+    "of_new": " Latest",
+    "of_recomm": " Related",
+    "rank": "Monthy Ranking",
+    "recomm_4u": "Recommended to You",
+    "title": "Pixivision"
+  },
+  "tips": {
+    "click_view": "Click to view",
+    "copylink": {
+      "error": "Failed to copy link:",
+      "succ": "Copied",
+      "success": "Link copied"
+    },
+    "current_value": "The current value:",
+    "download_wait": "It may take a long time to download, please be patient",
+    "ios_webm": "iOS devices do not currently support WebM format downloads",
+    "loading": "Loading...",
+    "net_err": "Network exception, click to reload",
+    "no_data": "No data",
+    "no_more": "No more"
+  },
+  "user": {
+    "art_num": "{0} works",
+    "art_title": "{0} Artwork",
+    "fav": "Bookmark",
+    "fav_novel_title": "Novel Bookmark",
+    "fav_title": "Illusts&Mangas Bookmark",
+    "following": "Following",
+    "friend": "MyPixiv",
+    "novel_art": "Novels",
+    "novel_art_title": "{0} 's Novels",
+    "of": "'s ",
+    "of_other_art": "'s other works"
+  }
+}

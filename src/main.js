@@ -1,0 +1,57 @@
+// import 'swiper/css/swiper.css'
+import '@/assets/css/base.styl'
+
+import Vue from 'vue'
+import VueAwesomeSwiper from 'vue-awesome-swiper'
+import VueMasonry from 'vue-masonry-css'
+import Vant, { Toast, Lazyload, ImagePreview } from 'vant'
+import { inject } from '@vercel/analytics'
+
+import SvgIcon from '@/icons'
+import Masonry from './components/Masonry.vue'
+import TopBar from '@/components/TopBar'
+import App from './App.vue'
+import router from './router'
+import store from './store'
+import { i18n } from './i18n'
+
+import '@vant/touch-emulator'
+import './polyfill'
+import './registerServiceWorker'
+
+Vue.use(Toast)
+Vue.use(ImagePreview)
+Vue.use(Lazyload, {
+  observer: true,
+  lazyComponent: true,
+  loading: require('@/icons/loading.svg'),
+  adapter: {
+    error(evt) {
+      const src = evt.src
+      if (!src?.includes('i-cf.pximg.net')) return
+      const u = new URL(src)
+      u.host = 'i.pixiv.re'
+      evt.el.src = u.href
+    },
+  },
+})
+Vue.use(Vant)
+Vue.use(VueAwesomeSwiper)
+Vue.use(VueMasonry)
+Vue.use(SvgIcon)
+
+Vue.component('WfCont', Masonry)
+Vue.component('TopBar', TopBar)
+
+Vue.config.productionTip = false
+
+new Vue({
+  router,
+  store,
+  i18n,
+  render: h => h(App),
+}).$mount('#app')
+
+if (process.env.NODE_ENV === 'production') {
+  inject()
+}

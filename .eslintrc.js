@@ -1,0 +1,41 @@
+require('@rushstack/eslint-patch/modern-module-resolution')
+
+module.exports = {
+  root: true,
+  env: {
+    browser: true,
+    es6: true,
+    node: true,
+  },
+  extends: [
+    'eslint:recommended',
+    'plugin:vue/recommended',
+    '@vue/standard',
+  ],
+  rules: {
+    'arrow-parens': ['warn', 'as-needed'],
+    'camelcase': 'off',
+    'comma-dangle': ['warn', { arrays: 'always-multiline', objects: 'always-multiline', imports: 'always-multiline', exports: 'always-multiline', functions: 'never' }],
+    'eqeqeq': 'off',
+    'no-console': 'off',
+    'no-unexpected-multiline': 'error',
+    'no-return-await': 'error',
+    'no-unused-expressions': 'off',
+    'no-use-before-define': ['error', 'nofunc'],
+    'no-useless-concat': 'error',
+    'no-void': 'off',
+    'semi': ['warn', 'never'],
+    'space-before-function-paren': ['warn', { anonymous: 'always', named: 'never', asyncArrow: 'always' }],
+    'quotes': ['warn', 'single'],
+    'quote-props': ['warn', 'consistent-as-needed'],
+    'vue/component-tags-order': ['warn', { order: [['script', 'template'], 'style'] }],
+    'vue/html-self-closing': ['warn', { html: { void: 'never', normal: 'never', component: 'always' }, svg: 'never', math: 'never' }],
+    'vue/max-attributes-per-line': ['warn', { singleline: { max: 7 }, multiline: { max: 1 } }],
+    'vue/multi-word-component-names': 'off',
+    'vue/no-deprecated-v-bind-sync': 'off',
+    'vue/no-v-html': 'off',
+    'vue/no-v-text-v-html-on-component': 'off',
+    'vue/require-default-prop': 'off',
+    'vue/singleline-html-element-content-newline': 'off',
+  },
+}
