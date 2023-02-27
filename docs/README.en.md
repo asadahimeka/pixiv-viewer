@@ -27,6 +27,10 @@ Demo: 🔗 [pixiv.kanata.ml](https://pixiv.kanata.ml)
 - [x] Select HibiAPI Instance
 - [x] Spotlights/Recommend/Discovery/New Illustration
 - [x] Search Tags Autocomplete
+- [x] Search Popular Works Preview
+- [x] Search Params Support
+- [x] I18n Support
+- [x] Dark Mode
 
 ## TODO
 - [ ] Swipe to toggle artworks
@@ -35,57 +39,45 @@ Demo: 🔗 [pixiv.kanata.ml](https://pixiv.kanata.ml)
 
 - Mobile
 
-<kbd><img src="1.jpg" width="390"></kbd>　<kbd><img src="2.jpg" width="390"></kbd>
+<kbd><img src="docs/1.jpg" width="390"></kbd>  <kbd><img src="docs/7.jpg" width="390"></kbd>
 
-<kbd><img src="3.jpg" width="390"></kbd>　<kbd><img src="4.jpg" width="390"></kbd>
+<kbd><img src="docs/9.jpg" width="390"></kbd>  <kbd><img src="docs/10.jpg" width="390"></kbd>
 
-<kbd><img src="5.jpg" width="390"></kbd>　<kbd><img src="6.jpg" width="390"></kbd>
+<kbd><img src="docs/12.jpg" width="390"></kbd>  <kbd><img src="docs/13.jpg" width="390"></kbd>　
 
-<kbd><img src="7.jpg" width="390"></kbd>　<kbd><img src="8.png" width="390"></kbd>
+<kbd><img src="docs/15.jpg" width="390"></kbd>  <kbd><img src="docs/17.png" width="390"></kbd>
 
-<kbd><img src="9.jpg" width="390"></kbd>　<kbd><img src="10.jpg" width="390"></kbd>
-
-<kbd><img src="11.jpg" width="390"></kbd> <kbd><img src="12.jpg" width="390"></kbd>
-
-<kbd><img src="13.jpg" width="390"></kbd> <kbd><img src="14.jpg" width="390"></kbd>
-
-<kbd><img src="15.jpg" width="390"></kbd> <kbd><img src="16.jpg" width="390"></kbd>
-
-<kbd><img src="17.png" width="390"></kbd>
 
 - PC
 
-<kbd><img src="18.png"></kbd>
+<kbd><img src="docs/18.png"></kbd>
 
-<kbd><img src="19.jpg"></kbd>
+<kbd><img src="docs/20.jpg"></kbd>
 
-<kbd><img src="20.jpg"></kbd>
+<kbd><img src="docs/21.jpg"></kbd>
 
-<kbd><img src="21.jpg"></kbd>
+<kbd><img src="docs/23.png"></kbd>
 
-<kbd><img src="22.jpg"></kbd>
+<kbd><img src="docs/24.png"></kbd>
 
-<kbd><img src="23.png"></kbd>
+<kbd><img src="docs/25.png"></kbd>
 
-<kbd><img src="24.png"></kbd>
+<kbd><img src="docs/26.png"></kbd>
 
-<kbd><img src="25.png"></kbd>
+<kbd><img src="docs/27.png"></kbd>
 
-<kbd><img src="26.png"></kbd>
+<kbd><img src="docs/28.png"></kbd>
 
-<kbd><img src="27.png"></kbd>
-
-<kbd><img src="28.png"></kbd>
-
-<kbd><img src="29.png"></kbd>
+<kbd><img src="docs/29.png"></kbd>
 
 ## Alternatives
 
 - [Pixiviz](https://z.pixiv.pics/rank)
 - [PixivNow](https://now.pixiv.pics/ranking)
+- [PixivMoe](https://moe.pixiv.pics)
+- [PixivLxns](https://lxns.pixiv.pics)
 - [Pixivel](https://pixivel.moe/rank)
 - [PIXID](https://pixid.top/ranking.php)
-- [pixiv萌え](https://pixiv.moe)
 - [pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
 - [Pixiv Ranking](https://www.nanoka.top/illust/pixiv/)

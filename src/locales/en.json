@@ -24,7 +24,9 @@
     "user": "User",
     "view_more": "See more",
     "words": "Words",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "date": "date",
+    "reset": "Reset"
   },
   "about": {
     "disclaimer": "Disclaimer",
@@ -146,7 +148,22 @@
     "pop_preview_novel": "Popular Novel Preview",
     "seach_tag": "Search tags",
     "search": "Search",
-    "search_user": "Search user"
+    "search_user": "Search user",
+    "date": {
+      "asc": "sorted by date",
+      "desc": "reverse date"
+    },
+    "dura": {
+      "day": "in one day",
+      "month": "within a month",
+      "ph": "period of time",
+      "week": "within a week"
+    },
+    "mode": {
+      "exact": "Labels are exactly the same",
+      "partial": "The labels are partially consistent",
+      "title": "Title description"
+    }
   },
   "setting": {
     "about": "About",
@@ -239,5 +256,9 @@
     "novel_art_title": "{0} 's Novels",
     "of": "'s ",
     "of_other_art": "'s other works"
+  },
+  "tip": {
+    "rate_limit": "API limit exceeded, please try again later or go to the settings to change the API instance",
+    "unknown_err": "Unknown Error"
   }
 }

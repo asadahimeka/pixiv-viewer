@@ -2,6 +2,8 @@
 
 <h1 align="center">Pixiv Viewer <sup><small>Kai</small></sup></h1>
 
+中文 | [English](./docs/README.en.md)
+
 预览: 🔗 [pixiv-viewer.vercel.app](https://pixiv-viewer.vercel.app)
 
 ## Features
@@ -41,35 +43,21 @@ https://github.com/asadahimeka/pixiv-viewer/issues
 
 - 移动端
 
-<kbd><img src="docs/1.jpg" width="390"></kbd>　<kbd><img src="docs/2.jpg" width="390"></kbd>
+<kbd><img src="docs/1.jpg" width="390"></kbd>  <kbd><img src="docs/7.jpg" width="390"></kbd>
 
-<kbd><img src="docs/3.jpg" width="390"></kbd>　<kbd><img src="docs/4.jpg" width="390"></kbd>
+<kbd><img src="docs/9.jpg" width="390"></kbd>  <kbd><img src="docs/10.jpg" width="390"></kbd>
 
-<kbd><img src="docs/5.jpg" width="390"></kbd>　<kbd><img src="docs/6.jpg" width="390"></kbd>
+<kbd><img src="docs/12.jpg" width="390"></kbd>  <kbd><img src="docs/13.jpg" width="390"></kbd>　
 
-<kbd><img src="docs/7.jpg" width="390"></kbd>　<kbd><img src="docs/8.png" width="390"></kbd>
-
-<kbd><img src="docs/9.jpg" width="390"></kbd>　<kbd><img src="docs/10.jpg" width="390"></kbd>
-
-<kbd><img src="docs/11.jpg" width="390"></kbd>　<kbd><img src="docs/12.jpg" width="390"></kbd>
-
-<kbd><img src="docs/13.jpg" width="390"></kbd>　<kbd><img src="docs/14.jpg" width="390"></kbd>
-
-<kbd><img src="docs/15.jpg" width="390"></kbd>　<kbd><img src="docs/16.jpg" width="390"></kbd>
-
-<kbd><img src="docs/17.png" width="390"></kbd>
+<kbd><img src="docs/15.jpg" width="390"></kbd>  <kbd><img src="docs/17.png" width="390"></kbd>
 
 - PC 端
 
 <kbd><img src="docs/18.png"></kbd>
 
-<kbd><img src="docs/19.jpg"></kbd>
-
 <kbd><img src="docs/20.jpg"></kbd>
 
 <kbd><img src="docs/21.jpg"></kbd>
-
-<kbd><img src="docs/22.jpg"></kbd>
 
 <kbd><img src="docs/23.png"></kbd>
 
@@ -89,9 +77,10 @@ https://github.com/asadahimeka/pixiv-viewer/issues
 
 - [Pixiviz](https://z.pixiv.pics/rank)
 - [PixivNow](https://now.pixiv.pics/ranking)
+- [PixivMoe](https://moe.pixiv.pics)
+- [PixivLxns](https://lxns.pixiv.pics)
 - [Pixivel](https://pixivel.moe/rank)
 - [PIXID](https://pixid.top/ranking.php)
-- [pixiv萌え](https://pixiv.moe)
 - [pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
 - [Pixiv Ranking](https://www.nanoka.top/illust/pixiv/)

@@ -71,7 +71,9 @@
     "ugoira": "動圖",
     "user": "用戶",
     "view_more": "查看更多",
-    "words": "字"
+    "words": "字",
+    "date": "日期",
+    "reset": "重置"
   },
   "display": {
     "ai": "AI 生成作品顯示",
@@ -146,7 +148,22 @@
     "pop_preview_novel": "熱門小說預覽",
     "seach_tag": "搜索標籤",
     "search": "搜索",
-    "search_user": "搜索用戶"
+    "search_user": "搜索用戶",
+    "date": {
+      "asc": "按日期正序",
+      "desc": "按日期倒序"
+    },
+    "dura": {
+      "day": "一天內",
+      "month": "一個月內",
+      "ph": "時段",
+      "week": "一周內"
+    },
+    "mode": {
+      "exact": "標籤完全一致",
+      "partial": "標籤部分一致",
+      "title": "標題說明文"
+    }
   },
   "setting": {
     "about": "關於",
@@ -239,5 +256,9 @@
     "novel_art_title": "{0}小說作品",
     "of": "的",
     "of_other_art": "的其他作品"
+  },
+  "tip": {
+    "rate_limit": "超出 API 限制，請稍後重試或前往設置更改 API 實例",
+    "unknown_err": "未知錯誤"
   }
 }

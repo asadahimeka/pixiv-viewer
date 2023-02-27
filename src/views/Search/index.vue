@@ -22,9 +22,6 @@
           <span class="text no-line">{{ lastWord }}</span>
         </div>
       </div>
-      <!-- <van-dropdown-menu class="users-iri-sel" active-color="#f2c358">
-        <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
-      </van-dropdown-menu> -->
       <div
         v-if="(isSelfHibi && keywords.trim() && artList.length)"
         class="show_pop_icon"
@@ -65,14 +62,49 @@
         </div>
       </div>
     </div>
-    <ImageSearch v-show="isSelfHibi && !focus && !keywords.trim()" ref="imageSearch" key="container" />
+    <ImageSearch v-show="!focus && !keywords.trim()" ref="imageSearch" key="container" />
     <div v-show="!keywords.trim()" class="com_sel_tabs">
       <div class="com_sel_tab cur">{{ $t('common.illust_manga') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_novel')">{{ $t('common.novel') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_user')">{{ $t('common.user') }}</div>
     </div>
     <div class="list-wrap" :class="{ focus: focus }" :style="{ paddingTop: keywords.trim() ? '1.6rem' : '2.6rem' }">
-      <PopularPreview v-if="(isSelfHibi && showPopPreview && keywords.trim())" :word="keywords" />
+      <div v-show="keywords.trim()" class="search_params">
+        <van-dropdown-menu class="search_param_sel" active-color="#f2c358">
+          <template v-if="!showPopPreview">
+            <van-dropdown-item v-model="searchParams.mode" :options="searchModes" />
+            <van-dropdown-item v-model="searchParams.order" :options="searchOrders" />
+            <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
+            <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
+          </template>
+          <van-dropdown-item ref="s_date" :title="$t('common.date')">
+            <van-calendar
+              color="#f2c358"
+              class="sel_search_date"
+              type="range"
+              :confirm-text="$t('common.confirm')"
+              :confirm-disabled-text="$t('common.confirm')"
+              :default-date="searchDateVals"
+              :poppable="false"
+              :show-title="false"
+              :min-date="minDate"
+              :max-date="maxDate"
+              @confirm="v => { searchDateVals = v; $refs.s_date.toggle() }"
+            />
+            <div style="width: 9.4rem;margin: 5px auto 10px">
+              <van-button
+                style="height: 36px;"
+                block
+                round
+                @click="() => { searchDateVals = [null, null]; $refs.s_date.toggle() }"
+              >
+                {{ $t('common.reset') }}
+              </van-button>
+            </div>
+          </van-dropdown-item>
+        </van-dropdown-menu>
+      </div>
+      <PopularPreview v-if="showPopPreview && keywords.trim()" ref="popPreview" :word="keywords" :params="searchParams" />
       <van-list
         v-else-if="keywords.trim()"
         v-model="loading"
@@ -103,6 +135,7 @@ import Tags from './components/Tags'
 import ImageSearch from './components/ImageSearch'
 import { mapState, mapActions } from 'vuex'
 import _ from 'lodash'
+import dayjs from 'dayjs'
 import api from '@/api'
 import { notSelfHibiApi } from '@/api/http'
 import PopularPreview from './components/PopularPreview.vue'
@@ -144,6 +177,31 @@ export default {
         { text: '250users入り', value: '250users入り' },
         { text: '100users入り', value: '100users入り' },
       ],
+      minDate: new Date('2007/09/13'),
+      maxDate: new Date(),
+      searchParams: {
+        mode: 'partial_match_for_tags',
+        order: 'date_desc',
+        duration: '',
+        start_date: '',
+        end_date: '',
+      },
+      searchDateVals: [null, null],
+      searchModes: [
+        { text: this.$t('search.mode.partial'), value: 'partial_match_for_tags' },
+        { text: this.$t('search.mode.exact'), value: 'exact_match_for_tags' },
+        { text: this.$t('search.mode.title'), value: 'title_and_caption' },
+      ],
+      searchOrders: [
+        { text: this.$t('search.date.desc'), value: 'date_desc' },
+        { text: this.$t('search.date.asc'), value: 'date_asc' },
+      ],
+      searchDuration: [
+        { text: this.$t('search.dura.ph'), value: '' },
+        { text: this.$t('search.dura.day'), value: 'within_last_day' },
+        { text: this.$t('search.dura.week'), value: 'within_last_week' },
+        { text: this.$t('search.dura.month'), value: 'within_last_month' },
+      ],
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
     }
@@ -176,6 +234,25 @@ export default {
     usersIriTag() {
       this.reset()
       this.doSearch(this.keywords)
+    },
+    searchParams: {
+      deep: true,
+      handler(val) {
+        console.log('val: ', val)
+        if (this.showPopPreview) {
+          this.$refs.popPreview.getList()
+        } else {
+          this.reset()
+          this.doSearch(this.keywords)
+        }
+      },
+    },
+    searchDateVals(vals) {
+      console.log('vals: ', vals)
+      Object.assign(this.searchParams, {
+        start_date: vals[0] && dayjs(vals[0]).format('YYYY-MM-DD'),
+        end_date: vals[1] && dayjs(vals[1]).format('YYYY-MM-DD'),
+      })
     },
     keywords() {
       console.log('watch keywords: ', this.keywords)
@@ -273,7 +350,7 @@ export default {
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       this.loading = true
       // window.umami?.trackEvent('Search Tag', { type: 'search_tag', tag: val.replace(/\s+/g, '_') })
-      const res = await api.search(val, this.curPage)
+      const res = await api.search(val, this.curPage, _.pickBy(this.searchParams, Boolean))
       if (res.status === 0) {
         if (res.data.length) {
           let artList = _.uniqBy([
@@ -627,19 +704,26 @@ export default {
   font-size 36px
   padding 20px
 
-.users-iri-sel
-  position absolute
-  top 30px
-  left 82px
+.search_params
+  position relative
+  top -24px
+
+.search_param_sel
   height 70px
-  background none
 
   ::v-deep .van-dropdown-menu__title
     font-size 0.24rem
   ::v-deep .van-dropdown-menu__bar
+    background none
     height 100% !important
-    background-color transparent
-    box-shadow none
+    .van-dropdown-menu__item:first-child,
+    .van-dropdown-menu__item:nth-child(2)
+      flex 1.3
+
+.sel_search_date
+  width 750px !important
+  height 455PX
+  margin: 0 auto;
 
 .dropdown
   &.search-bar-wrap .search-bar

@@ -55,6 +55,8 @@ import IconQzone from '@/assets/images/share-sheet-qzone.png'
 import IconWeb from '@/assets/images/share-sheet-web.png'
 import IconWechat from '@/assets/images/share-sheet-wechat.png'
 import IconWeibo from '@/assets/images/share-sheet-weibo.png'
+import IconTwitter from '@/assets/images/share-sheet-twi.png'
+import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 
 const ugoiraDownloadPanelActions = [
   { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
@@ -70,6 +72,8 @@ const shareOptions = [
   { name: i18n.t('artwork.share.type.qzone'), icon: IconQzone },
   { name: 'QQ', icon: IconQQ },
   { name: i18n.t('artwork.share.type.wechat'), icon: IconWechat },
+  { name: 'Twitter', icon: IconTwitter },
+  { name: 'Facebook', icon: IconFacebook },
 ]
 
 export default {
@@ -193,6 +197,12 @@ export default {
         () => {
           this.openUrl(`https://wechat-share.pwp.space/?url=${encodeURIComponent(location.href)}&title=${this.artwork.title}`)
         },
+        () => {
+          this.openUrl(`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.pixiv.net/artworks/${this.artwork.id}`)}&text=${this.artwork.title}&hashtags=pixiv`)
+        },
+        () => {
+          this.openUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.pixiv.net/artworks/${this.artwork.id}`)}`)
+        },
       ]
       actions[index]?.()
     },
@@ -242,6 +252,11 @@ img[src*="/api/qrcode?text"]
     width 10rem !important
     left 50% !important
     margin-left -5rem !important
+  ::v-deep .van-share-sheet__option:first-child img
+    background: #f2f3f5;
+    border-radius: 50%;
+  ::v-deep .van-share-sheet__options::-webkit-scrollbar
+    height 0.12rem
 
 .ia-cont
   display flex

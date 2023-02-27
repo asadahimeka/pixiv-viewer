@@ -71,7 +71,9 @@
     "ugoira": "Ugoira",
     "user": "Utilisateur",
     "view_more": "Voir plus",
-    "words": "Mots"
+    "words": "Mots",
+    "date": "date",
+    "reset": "réinitialiser"
   },
   "display": {
     "ai": "Affichage du travail généré par l'IA",
@@ -146,7 +148,22 @@
     "pop_preview_novel": "Aperçu du roman populaire",
     "seach_tag": "Rechercher des balises",
     "search": "Recherche",
-    "search_user": "Rechercher un utilisateur"
+    "search_user": "Rechercher un utilisateur",
+    "date": {
+      "asc": "trié par date",
+      "desc": "date inversée"
+    },
+    "dura": {
+      "day": "en un jour",
+      "month": "dans un mois",
+      "ph": "période de temps",
+      "week": "dans une semaine"
+    },
+    "mode": {
+      "exact": "Les étiquettes sont exactement les mêmes",
+      "partial": "Les étiquettes sont partiellement cohérentes",
+      "title": "description du titre"
+    }
   },
   "setting": {
     "about": "À propos",
@@ -239,5 +256,9 @@
     "novel_art_title": "Les romans de {0}",
     "of": "c'est",
     "of_other_art": "ses autres oeuvres"
+  },
+  "tip": {
+    "rate_limit": "Limite d'API dépassée, veuillez réessayer plus tard ou accédez aux paramètres pour modifier l'instance d'API",
+    "unknown_err": "Erreur inconnue"
   }
 }

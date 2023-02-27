@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { get } from './http'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/siteCache'
+import { i18n } from '@/i18n'
 
 const isSupportWebP = (() => {
   const elem = document.createElement('canvas')
@@ -256,7 +257,7 @@ const parseWebApiIllust = d => {
 
 const dealErrMsg = res => {
   let msg = res.error.user_message || res.error.message || res.error
-  if (msg == 'Rate Limit') msg = 'API 超限，请稍后再试或到设置里更换 API 实例'
+  if (msg == 'Rate Limit') msg = i18n.t('tip.rate_limit')
   return msg
 }
 
@@ -292,7 +293,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -320,7 +321,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -348,7 +349,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -384,7 +385,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -415,7 +416,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -443,7 +444,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -471,7 +472,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -499,7 +500,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -509,12 +510,12 @@ const api = {
     return { status: 0, data: relatedList }
   },
 
-  async getPopularPreview(word) {
-    const cacheKey = `search.popularPreview.${word}`
+  async getPopularPreview(word, params = {}) {
+    const cacheKey = `search.popularPreview.${word}.${JSON.stringify(params)}`
     let relatedList = await getCache(cacheKey)
 
     if (!relatedList) {
-      const res = await get('/popular_preview', { word })
+      const res = await get('/popular_preview', { word, ...params })
 
       if (res.illusts) {
         relatedList = res.illusts.map(art => parseIllust(art))
@@ -527,7 +528,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -553,7 +554,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -596,7 +597,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -638,7 +639,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -664,7 +665,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -679,7 +680,14 @@ const api = {
     let spotlights = await getCache(cacheKey)
 
     if (!spotlights) {
-      const res = await get('https://www.pixivs.cn/api/pixivision', { page })
+      let url = 'https://www.pixivs.cn/api/pixivision'
+      const params = { page }
+      const lang = i18n.locale
+      if (lang != 'zh-Hans') {
+        url = 'https://now.pixiv.pics/api/pixivision'
+        params.lang = lang
+      }
+      const res = await get(url, params)
 
       if (res.articles) {
         res.articles.forEach(a => {
@@ -697,7 +705,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -712,7 +720,14 @@ const api = {
     let spotlight = await getCache(cacheKey)
 
     if (!spotlight) {
-      const res = await get(`https://www.pixivs.cn/api/pixivision/${id}`)
+      let domain = 'www.pixivs.cn'
+      const params = {}
+      const lang = i18n.locale
+      if (lang != 'zh-Hans') {
+        domain = 'now.pixiv.pics'
+        params.lang = lang
+      }
+      const res = await get(`https://${domain}/api/pixivision/${id}`, params)
 
       if (res) {
         res.cover = imgProxy(res.cover?.replace('i-ogp.pximg.net', 'i.pximg.net') || '')
@@ -732,7 +747,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -877,7 +892,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -908,7 +923,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -921,14 +936,15 @@ const api = {
    * @param {String} word 关键词
    * @param {Number} page 页数
    */
-  async search(word, page = 1) {
-    const cacheKey = `searchList_${window.btoa(encodeURI(word))}_${page}`
+  async search(word, page = 1, params = {}) {
+    const cacheKey = `searchList_${word}_${page}_${JSON.stringify(params)}`
     let searchList = SessionStorage.get(cacheKey)
 
     if (!searchList) {
       const res = await get('/search', {
         word,
         page,
+        ...params,
       })
 
       if (res.illusts) {
@@ -942,7 +958,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -971,7 +987,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -999,7 +1015,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1031,7 +1047,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1063,7 +1079,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1157,7 +1173,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1186,7 +1202,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1225,7 +1241,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1259,7 +1275,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1293,7 +1309,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
@@ -1327,7 +1343,7 @@ const api = {
       } else {
         return {
           status: -1,
-          msg: '未知错误',
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }

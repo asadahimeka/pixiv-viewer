@@ -71,7 +71,9 @@
     "ugoira": "Ugoira",
     "user": "Benutzer",
     "view_more": "Mehr sehen",
-    "words": "Wörter"
+    "words": "Wörter",
+    "date": "Datum",
+    "reset": "zurücksetzen"
   },
   "display": {
     "ai": "KI-generierte Arbeitsanzeige",
@@ -146,7 +148,22 @@
     "pop_preview_novel": "Beliebte Romanvorschau",
     "seach_tag": "Such-Tags",
     "search": "Suchen",
-    "search_user": "Benutzer suchen"
+    "search_user": "Benutzer suchen",
+    "date": {
+      "asc": "nach Datum sortiert",
+      "desc": "umgekehrtes Datum"
+    },
+    "dura": {
+      "day": "an einem Tag",
+      "month": "innerhalb eines Monats",
+      "ph": "Zeitspanne",
+      "week": "innerhalb einer Woche"
+    },
+    "mode": {
+      "exact": "Etiketten sind genau gleich",
+      "partial": "Die Beschriftungen sind teilweise konsistent",
+      "title": "Titel Beschreibung"
+    }
   },
   "setting": {
     "about": "Um",
@@ -239,5 +256,9 @@
     "novel_art_title": "Romane von {0}",
     "of": "'S",
     "of_other_art": "'s andere Werke"
+  },
+  "tip": {
+    "rate_limit": "API-Limit überschritten, bitte versuchen Sie es später erneut oder gehen Sie zu den Einstellungen, um die API-Instanz zu ändern",
+    "unknown_err": "Unbekannter Fehler"
   }
 }

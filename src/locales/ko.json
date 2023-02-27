@@ -71,7 +71,9 @@
     "ugoira": "우고이라",
     "user": "사용자",
     "view_more": "계속 보기",
-    "words": "글자"
+    "words": "글자",
+    "date": "날짜",
+    "reset": "초기화"
   },
   "display": {
     "ai": "AI 생성 작품 전시",
@@ -146,7 +148,22 @@
     "pop_preview_novel": "인기 소설 미리보기",
     "seach_tag": "검색 태그",
     "search": "검색",
-    "search_user": "사용자 검색"
+    "search_user": "사용자 검색",
+    "date": {
+      "asc": "날짜별로 정렬",
+      "desc": "반전 날짜"
+    },
+    "dura": {
+      "day": "하루에",
+      "month": "한달 이내",
+      "ph": "기간",
+      "week": "일주일 안에"
+    },
+    "mode": {
+      "exact": "라벨은 완전히 동일합니다.",
+      "partial": "레이블이 부분적으로 일치합니다.",
+      "title": "제목 설명"
+    }
   },
   "setting": {
     "about": "아바웃",
@@ -239,5 +256,9 @@
     "novel_art_title": "{0}의 소설 작품",
     "of": "의",
     "of_other_art": "다른 작품"
+  },
+  "tip": {
+    "rate_limit": "API 제한을 초과했습니다. 나중에 다시 시도하거나 설정으로 이동하여 API 인스턴스를 변경하세요.",
+    "unknown_err": "알수없는 오류"
   }
 }

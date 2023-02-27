@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import _ from 'lodash'
 import ImageCard from '@/components/ImageCard'
 import api from '@/api'
 export default {
@@ -35,6 +36,7 @@ export default {
   },
   props: {
     word: String,
+    params: Object,
   },
   data() {
     return {
@@ -52,7 +54,7 @@ export default {
       if (!this.word) return
       this.loading = true
       this.artList = []
-      const res = await api.getPopularPreview(this.word)
+      const res = await api.getPopularPreview(this.word, _.pickBy(this.params, Boolean))
       if (res.status === 0) {
         this.artList = res.data
         this.finished = true

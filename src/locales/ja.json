@@ -24,7 +24,9 @@
     "user": "ユーザー",
     "view_more": "続きを見る",
     "words": "字",
-    "confirm": "確認"
+    "confirm": "確認",
+    "date": "日にち",
+    "reset": "リセット"
   },
   "about": {
     "disclaimer": "免責事項",
@@ -67,9 +69,9 @@
       "second": "クリーニング後にネットワークから関連コンテンツをリロードします"
     },
     "db": "永続キャッシュ",
-    "local": "構成アイテムのキャッシュ",
+    "local": "設定項目のキャッシュ",
     "records": "記録",
-    "session": "ランタイム キャッシュ",
+    "session": "ランタイムキャッシュ",
     "success_tip": "クリーンアップ完了",
     "title": "キャッシュの消去"
   },
@@ -146,7 +148,22 @@
     "pop_preview_novel": "人気の小説プレビュー",
     "seach_tag": "検索タグ",
     "search": "検索",
-    "search_user": "ユーザーを検索"
+    "search_user": "ユーザーを検索",
+    "date": {
+      "asc": "日付順",
+      "desc": "逆日付"
+    },
+    "dura": {
+      "day": "一日で",
+      "month": "1ヶ月以内",
+      "ph": "期間",
+      "week": "1週間以内に"
+    },
+    "mode": {
+      "exact": "ラベルは全く同じ",
+      "partial": "ラベルは部分的に一致しています",
+      "title": "タイトル説明"
+    }
   },
   "setting": {
     "about": "アバウト",
@@ -239,5 +256,9 @@
     "novel_art_title": "{0}の小説作品",
     "of": "の",
     "of_other_art": "の他の作品"
+  },
+  "tip": {
+    "rate_limit": "API の制限を超えました。後でもう一度試すか、設定に移動して API インスタンスを変更してください",
+    "unknown_err": "不明なエラー"
   }
 }

@@ -152,7 +152,7 @@ export default {
         value: i18n.locale,
         actions: [
           { name: 'zh-Hans', subname: '简体中文' },
-          { name: 'zh-Hant', subname: '繁体中文' },
+          { name: 'zh-Hant', subname: '繁體中文' },
           { name: 'ja', subname: '日本語' },
           { name: 'en', subname: 'English' },
           { name: 'ko', subname: '한국어' },

@@ -13,7 +13,7 @@ const cdn = {
     'https://cdn.staticfile.org/vue-router/3.6.5/vue-router.min.js',
     'https://cdn.staticfile.org/vuex/3.6.2/vuex.min.js',
     'https://cdn.staticfile.org/axios/0.27.2/axios.min.js',
-    'https://cdn.staticfile.org/vant/2.12.49/vant.min.js',
+    'https://cdn.staticfile.org/vant/2.12.54/vant.min.js',
     'https://cdn.staticfile.org/Swiper/5.4.5/js/swiper.min.js',
     'https://cdn.staticfile.org/jszip/3.10.1/jszip.min.js',
     'https://cdn.staticfile.org/lodash.js/4.17.21/lodash.min.js',
