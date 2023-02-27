@@ -676,13 +676,13 @@ const api = {
   },
 
   async getSpotlights(page) {
-    const cacheKey = `spotlights.${page}`
+    const lang = i18n.locale
+    const cacheKey = `spotlights.${lang}.${page}`
     let spotlights = await getCache(cacheKey)
 
     if (!spotlights) {
       let url = 'https://www.pixivs.cn/api/pixivision'
       const params = { page }
-      const lang = i18n.locale
       if (lang != 'zh-Hans') {
         url = 'https://now.pixiv.pics/api/pixivision'
         params.lang = lang
@@ -716,13 +716,13 @@ const api = {
   },
 
   async getSpotlightDetail(id) {
-    const cacheKey = `spotlight.${id}`
+    const lang = i18n.locale
+    const cacheKey = `spotlight.${lang}.${id}`
     let spotlight = await getCache(cacheKey)
 
     if (!spotlight) {
       let domain = 'www.pixivs.cn'
       const params = {}
-      const lang = i18n.locale
       if (lang != 'zh-Hans') {
         domain = 'now.pixiv.pics'
         params.lang = lang
