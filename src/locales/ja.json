@@ -25,7 +25,7 @@
     "view_more": "続きを見る",
     "words": "字",
     "confirm": "確認",
-    "date": "日にち",
+    "date": "日付",
     "reset": "リセット"
   },
   "about": {
@@ -150,19 +150,19 @@
     "search": "検索",
     "search_user": "ユーザーを検索",
     "date": {
-      "asc": "日付順",
-      "desc": "逆日付"
+      "asc": "日付の昇順",
+      "desc": "日付の降順"
     },
     "dura": {
       "day": "一日で",
       "month": "1ヶ月以内",
       "ph": "期間",
-      "week": "1週間以内に"
+      "week": "1週間以内"
     },
     "mode": {
-      "exact": "ラベルは全く同じ",
-      "partial": "ラベルは部分的に一致しています",
-      "title": "タイトル説明"
+      "exact": "タグの完全一致",
+      "partial": "タグの部分一致",
+      "title": "タイトルとキャプション"
     }
   },
   "setting": {
@@ -227,7 +227,10 @@
     "of_recomm": " おすすめ",
     "rank": "マンスリーランキング",
     "recomm_4u": "あなたにおすすめ",
-    "title": "Pixivision"
+    "title": "Pixivision",
+    "column": "コラム",
+    "interview": "インタビュー",
+    "recomm": "おすすめ"
   },
   "tips": {
     "click_view": "クリックして表示",

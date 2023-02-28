@@ -54,8 +54,8 @@
               <a
                 target="_blank"
                 rel="noreferrer"
-                :href="'https://www.pixiv.net/u/' + userInfo.id"
-              >https://www.pixiv.net/u/{{ userInfo.id }}</a>
+                :href="'https://www.pixiv.net/users/' + userInfo.id"
+              >https://pixiv.net/u/{{ userInfo.id }}</a>
             </div>
             <div class="detail" :class="{ ex: isEx || commentHeight < 160 }">
               <div ref="comment" class="content" v-html="userInfo.comment"></div>

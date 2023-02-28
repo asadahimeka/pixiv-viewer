@@ -150,8 +150,8 @@
     "search": "Suchen",
     "search_user": "Benutzer suchen",
     "date": {
-      "asc": "nach Datum sortiert",
-      "desc": "umgekehrtes Datum"
+      "asc": "aufsteigend nach Datum sortiert",
+      "desc": "absteigend nach Datum sortiert"
     },
     "dura": {
       "day": "an einem Tag",
@@ -160,9 +160,9 @@
       "week": "innerhalb einer Woche"
     },
     "mode": {
-      "exact": "Etiketten sind genau gleich",
-      "partial": "Die Beschriftungen sind teilweise konsistent",
-      "title": "Titel Beschreibung"
+      "exact": "genaue Übereinstimmung für Tags",
+      "partial": "teilweise Übereinstimmung für Tags",
+      "title": "Titel und Bildunterschrift"
     }
   },
   "setting": {
@@ -227,7 +227,10 @@
     "of_recomm": "Verwandt",
     "rank": "Monatliches Ranking",
     "recomm_4u": "Empfohlen für Sie",
-    "title": "Pixivision"
+    "title": "Pixivision",
+    "column": "Spalte",
+    "interview": "Interview",
+    "recomm": "Empfehlen"
   },
   "tips": {
     "click_view": "Klicke zum Zeigen",

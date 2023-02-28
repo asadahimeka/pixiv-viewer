@@ -715,6 +715,78 @@ const api = {
     return { status: 0, data: spotlights }
   },
 
+  async getSpotlightTypeList(type, page) {
+    const lang = i18n.locale
+    const cacheKey = `spotlights.${type}.${lang}.${page}`
+    let spotlights = await getCache(cacheKey)
+
+    if (!spotlights) {
+      const params = { page, type }
+      if (lang != 'zh-Hans') {
+        params.lang = lang
+      }
+      const res = await get('https://now.pixiv.pics/api/pixivision/list', params)
+
+      if (res.articles) {
+        res.articles.forEach(a => {
+          a.thumbnail = imgProxy(a.thumbnail)
+        })
+        res.rank?.forEach(a => {
+          a.thumbnail = imgProxy(a.thumbnail)
+        })
+        res.recommend?.forEach(a => {
+          a.thumbnail = imgProxy(a.thumbnail)
+        })
+
+        spotlights = res
+        setCache(cacheKey, spotlights, 60 * 60 * 12)
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    console.log('spotlights: ', spotlights)
+
+    return { status: 0, data: spotlights }
+  },
+  async getSpotlightTypeDetail(id) {
+    const lang = i18n.locale
+    const cacheKey = `spotlight.type.${lang}.${id}`
+    let spotlight = await getCache(cacheKey)
+
+    if (!spotlight) {
+      const params = { id }
+      if (lang != 'zh-Hans') {
+        params.lang = lang
+      }
+      const res = await get('https://now.pixiv.pics/api/pixivision/detail', params)
+
+      if (res) {
+        res.related_latest?.items?.forEach(a => {
+          a.thumbnail = imgProxy(a.thumbnail)
+        })
+        res.related_recommend?.items?.forEach(a => {
+          a.thumbnail = imgProxy(a.thumbnail)
+        })
+
+        spotlight = res
+        setCache(cacheKey, JSON.parse(JSON.stringify(res)), 60 * 60 * 24)
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    console.log('spotlight: ', spotlight)
+
+    return { status: 0, data: spotlight }
+  },
+
   async getSpotlightDetail(id) {
     const lang = i18n.locale
     const cacheKey = `spotlight.${lang}.${id}`

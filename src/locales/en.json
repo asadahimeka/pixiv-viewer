@@ -150,8 +150,8 @@
     "search": "Search",
     "search_user": "Search user",
     "date": {
-      "asc": "sorted by date",
-      "desc": "reverse date"
+      "asc": "ascending order by date",
+      "desc": "descending order by date"
     },
     "dura": {
       "day": "in one day",
@@ -160,9 +160,9 @@
       "week": "within a week"
     },
     "mode": {
-      "exact": "Labels are exactly the same",
-      "partial": "The labels are partially consistent",
-      "title": "Title description"
+      "exact": "exact match for tags",
+      "partial": "partial match for tags",
+      "title": "title and caption"
     }
   },
   "setting": {
@@ -227,7 +227,10 @@
     "of_recomm": " Related",
     "rank": "Monthy Ranking",
     "recomm_4u": "Recommended to You",
-    "title": "Pixivision"
+    "title": "Pixivision",
+    "column": "Column",
+    "interview": "Interview",
+    "recomm": "Recommend"
   },
   "tips": {
     "click_view": "Click to view",

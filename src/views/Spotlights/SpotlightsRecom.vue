@@ -31,6 +31,10 @@ export default {
   components: {
   },
   props: {
+    isTypeDetail: {
+      type: Boolean,
+      default: false,
+    },
     title: {
       type: String,
       default: '',
@@ -67,10 +71,17 @@ export default {
   },
   methods: {
     toDetail(id) {
-      this.$router.push({
-        name: 'Spotlight',
-        params: { id },
-      })
+      if (this.isTypeDetail) {
+        this.$router.push({
+          name: 'SpotlightDetail',
+          query: { id },
+        })
+      } else {
+        this.$router.push({
+          name: 'Spotlight',
+          params: { id },
+        })
+      }
     },
   },
 }

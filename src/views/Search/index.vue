@@ -77,8 +77,9 @@
             <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
             <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
           </template>
-          <van-dropdown-item ref="s_date" :title="$t('common.date')">
+          <van-dropdown-item ref="s_date" :title="$t('common.date')" @opened="onSelDateOpen">
             <van-calendar
+              ref="selDate"
               color="#f2c358"
               class="sel_search_date"
               type="range"
@@ -317,6 +318,11 @@ export default {
         this.reset()
         this.search(keywords)
       }
+    },
+    onSelDateOpen() {
+      this.$nextTick(() => {
+        this.$refs.selDate.scrollToDate(this.maxDate)
+      })
     },
     search(keywords) {
       keywords = keywords.trim()

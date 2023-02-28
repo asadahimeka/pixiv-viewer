@@ -150,8 +150,8 @@
     "search": "Recherche",
     "search_user": "Rechercher un utilisateur",
     "date": {
-      "asc": "trié par date",
-      "desc": "date inversée"
+      "asc": "ordre croissant par date",
+      "desc": "ordre décroissant par date"
     },
     "dura": {
       "day": "en un jour",
@@ -160,9 +160,9 @@
       "week": "dans une semaine"
     },
     "mode": {
-      "exact": "Les étiquettes sont exactement les mêmes",
-      "partial": "Les étiquettes sont partiellement cohérentes",
-      "title": "description du titre"
+      "exact": "correspondance exacte pour les balises",
+      "partial": "correspondance partielle pour les balises",
+      "title": "titre et légende"
     }
   },
   "setting": {
@@ -227,7 +227,10 @@
     "of_recomm": "En rapport",
     "rank": "Classement mensuel",
     "recomm_4u": "Recommandé pour vous",
-    "title": "Pixivision"
+    "title": "Pixivision",
+    "column": "Colonne",
+    "interview": "Entretien",
+    "recomm": "Recommander"
   },
   "tips": {
     "click_view": "Clique pour voir",

@@ -111,13 +111,14 @@ export default {
       bottom: 0;
       text-align: center;
       color: #fff;
-      background: rgba(#000, 0.3);
+      background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(255,255,255,0) 100%);
       border-radius: 8px;
 
       .content {
         position: absolute;
         bottom: 10%;
         width: 100%;
+        text-shadow: 0.05333rem 0.05333rem 0.05333rem #000;
 
         .name {
           font-size: 36px;

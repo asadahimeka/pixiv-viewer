@@ -150,8 +150,8 @@
     "search": "검색",
     "search_user": "사용자 검색",
     "date": {
-      "asc": "날짜별로 정렬",
-      "desc": "반전 날짜"
+      "asc": "날짜별 오름차순",
+      "desc": "날짜별 내림차순"
     },
     "dura": {
       "day": "하루에",
@@ -160,9 +160,9 @@
       "week": "일주일 안에"
     },
     "mode": {
-      "exact": "라벨은 완전히 동일합니다.",
-      "partial": "레이블이 부분적으로 일치합니다.",
-      "title": "제목 설명"
+      "exact": "태그에 대한 정확한 일치",
+      "partial": "태그 부분 일치",
+      "title": "제목과 캡션"
     }
   },
   "setting": {
@@ -227,7 +227,10 @@
     "of_recomm": "추천",
     "rank": "월간 순위",
     "recomm_4u": "당신에게 추천",
-    "title": "Pixivision"
+    "title": "Pixivision",
+    "column": "열",
+    "interview": "회견",
+    "recomm": "추천하다"
   },
   "tips": {
     "click_view": "클릭하여 표시",

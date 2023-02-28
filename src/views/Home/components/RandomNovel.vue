@@ -11,7 +11,7 @@
       class="artwork-list"
       :loading-text="$t('tips.loading')"
       :finished="finished"
-      :finished-text="$t('tips.no_data')"
+      :finished-text="$t('tips.no_more')"
       :error.sync="error"
       :offset="800"
       :error-text="$t('tips.net_err')"

@@ -242,7 +242,10 @@
     "title": "特辑",
     "all": "一览",
     "rank": "本月排行榜",
-    "recomm_4u": "为你推荐"
+    "recomm_4u": "为你推荐",
+    "column": "专栏",
+    "interview": "采访",
+    "recomm": "推荐"
   },
   "nav": {
     "home": "首页",

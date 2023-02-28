@@ -40,7 +40,7 @@
         class="umami--click--click_pixiv_link"
         :href="'https://www.pixiv.net/novel/show.php?id=' + artwork.id"
       >
-        https://www.pixiv.net/n/{{ artwork.id }}
+        https://pixiv.net/n/{{ artwork.id }}
       </a>
       <a
         v-else
@@ -49,7 +49,7 @@
         class="umami--click--click_pixiv_link"
         :href="'https://www.pixiv.net/artworks/' + artwork.id"
       >
-        https://www.pixiv.net/i/{{ artwork.id }}
+        https://pixiv.net/i/{{ artwork.id }}
       </a>
     </div>
     <div class="whid">

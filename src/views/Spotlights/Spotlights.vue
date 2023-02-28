@@ -14,6 +14,15 @@
         <span class="title">{{ $t('sp.all') }}</span>
       </template>
     </van-cell>
+    <van-tabs v-model="activeTab" class="type_tabs" color="#F2C358">
+      <van-tab :title="$t('common.illust')" name="illustration" />
+      <van-tab :title="$t('sp.column')" name="column" />
+      <van-tab :title="$t('sp.interview')" name="interview" />
+      <van-tab :title="$t('common.manga')" name="manga" />
+      <van-tab :title="$t('sp.recomm')" name="recommend" />
+      <van-tab title="cosplay" name="cosplay" />
+    </van-tabs>
+    <van-loading v-show="loading" class="loading" :size="'50px'" />
     <van-list
       v-model="loading"
       :loading-text="$t('tips.loading')"
@@ -23,13 +32,12 @@
       :immediate-check="false"
       :offset="800"
       :error-text="$t('tips.net_err')"
-      @load="getArtList"
+      @load="getList"
     >
       <masonry v-bind="masonryProps">
         <SpCard v-for="art in artList" :key="art.id" :artwork="art" @click.native="toArtwork(art.id)" />
       </masonry>
     </van-list>
-    <van-loading v-show="loading" class="loading" :size="'50px'" />
     <van-empty v-if="!loading && !artList.length" :description="$t('tips.no_data')" />
   </div>
 </template>
@@ -50,7 +58,8 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.notFromDetail = from.name !== 'Spotlight'
+      vm.notFromDetail = !['Spotlight', 'SpotlightDetail'].includes(from.name)
+      console.log('vm.notFromDetail: ', vm.notFromDetail)
     })
   },
   data() {
@@ -63,6 +72,7 @@ export default {
       rankList: [],
       recomList: [],
       notFromDetail: true,
+      activeTab: 'illustration',
       recomMasonryProps: {
         gutter: '8px',
         cols: {
@@ -80,38 +90,52 @@ export default {
       },
     }
   },
+  watch: {
+    activeTab() {
+      this.curPage = 1
+      this.artList = []
+      this.getList()
+    },
+  },
   activated() {
     this.init()
   },
   methods: {
     toArtwork(id) {
-      this.$router.push({
-        name: 'Spotlight',
-        params: { id },
-      })
+      if (this.activeTab == 'illustration') {
+        this.$router.push({
+          name: 'Spotlight',
+          params: { id },
+        })
+      } else {
+        this.$router.push({
+          name: 'SpotlightDetail',
+          query: { id },
+        })
+      }
     },
-    getArtList: _.throttle(async function () {
+    getList: _.throttle(async function () {
       this.loading = true
-      const res = await api.getSpotlights(this.curPage == 1 ? undefined : this.curPage)
+      let res
+      if (this.activeTab == 'illustration') {
+        res = await api.getSpotlights(this.curPage == 1 ? undefined : this.curPage)
+      } else {
+        res = await api.getSpotlightTypeList(this.activeTab, this.curPage)
+      }
       if (res.status === 0) {
         this.artList = _.uniqBy([
           ...this.artList,
           ...res.data.articles,
         ], 'id')
-        if (this.curPage == 1) {
+        if (this.activeTab == 'illustration' && this.curPage == 1) {
           this.rankList = res.data.rank
           this.recomList = res.data.recommend
         }
         this.loading = false
         this.curPage++
-        if (this.curPage > 5) this.finished = true
       } else {
-        this.$toast({
-          message: res.msg,
-          icon: require('@/icons/error.svg'),
-        })
+        this.finished = true
         this.loading = false
-        this.error = true
       }
     }, 1500),
     init() {
@@ -122,7 +146,7 @@ export default {
         this.recomList = list.recommend
         this.curPage++
       } else if (this.notFromDetail) {
-        this.getArtList()
+        this.getList()
       }
     },
   },
@@ -174,5 +198,8 @@ export default {
     .image-card
       max-height: 360px
       margin: 4px 2px
+
+.type_tabs
+  margin-bottom 30px
 
 </style>

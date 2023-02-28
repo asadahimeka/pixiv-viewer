@@ -12,6 +12,7 @@ import Discovery from '@/views/Discovery/Discovery.vue'
 import RecommendIllust from '@/views/Discovery/RecommendIllust.vue'
 import Spotlights from '@/views/Spotlights/Spotlights.vue'
 import Spotlight from '@/views/Spotlights/Spotlight.vue'
+import SpotlightDetail from '@/views/Spotlights/SpotlightDetail.vue'
 import Search from '@/views/Search/index.vue'
 import SearchNovel from '@/views/Search/SearchNovel.vue'
 import SearchUser from '@/views/Search/SearchUser.vue'
@@ -207,6 +208,11 @@ const routes = [
             alias: ['/pixivision/:id'],
             name: 'Spotlight',
             component: Spotlight,
+          },
+          {
+            path: '/spotlight_detail',
+            name: 'SpotlightDetail',
+            component: SpotlightDetail,
           },
         ],
       },

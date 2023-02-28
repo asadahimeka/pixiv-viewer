@@ -227,7 +227,10 @@
     "of_recomm": "的相關推薦",
     "rank": "本月排行榜",
     "recomm_4u": "為你推薦",
-    "title": "特輯"
+    "title": "特輯",
+    "column": "專欄",
+    "recomm": "推薦",
+    "interview": "採訪"
   },
   "tips": {
     "click_view": "點擊查看",

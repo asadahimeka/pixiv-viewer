@@ -237,6 +237,9 @@ export default {
       this.lang.value = name
       i18n.locale = name
       localStorage.setItem('__PXV_LANG', name)
+      setTimeout(() => {
+        location.reload()
+      }, 500)
     },
     async checkApiAvailable() {
       const ck = 'setting.apiChk'
