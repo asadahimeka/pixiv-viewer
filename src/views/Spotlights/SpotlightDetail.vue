@@ -117,6 +117,7 @@ export default {
   padding 0
 
 .Spotlight
+  user-select text
   .sp_desc
     max-width 72vw
     margin 30px auto 90px
@@ -132,6 +133,7 @@ export default {
     img
       display block
       max-width 90%
+      height auto
       margin 20px auto
 
     .fab__credit
@@ -219,11 +221,6 @@ export default {
       margin: 10px 0 20px;
       font-size: 48px;
       text-align center
-      overflow: hidden;
-      text-overflow: ellipsis;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
 
 .illusts
   position relative
