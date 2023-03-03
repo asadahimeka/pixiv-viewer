@@ -53,10 +53,10 @@ export default {
       return this.textObj.text
         ?.replace(/\n/g, '<br>')
         ?.replace(/\[newpage\]/g, '<hr style="margin: 1rem 0;font-weight: bold;font-size: 1.2em;">')
-        ?.replace(/\[chapter: *([^[\]]+)\]/g, '<h2 style="margin: 1rem 0;font-weight:bold;font-size:1.5em">$1</h3>')
-        ?.replace(/\[pixivimage:([\d-]+)\]/g, '<img style="max-width:100%" src="https://pixiv.re/$1.png" alt>')
-        ?.replace(/\[\[rb:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '<ruby>$1<rt>$2</rt></ruby>')
+        ?.replace(/\[\[rb:([^>[\]]+) *> *([^>[\]]+)\]\]/g, '<ruby>$1<rt>$2</rt></ruby>')
         ?.replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>')
+        ?.replace(/\[pixivimage:([\d-]+)\]/g, '<img style="max-width:100%" src="https://pixiv.re/$1.png" alt>')
+        ?.replace(/\[chapter: *([^[\]]+)\]/g, '<h2 style="margin: 1rem 0;font-weight:bold;font-size:1.5em">$1</h3>')
         ?.replace(/若想浏览插图，还请使用网页版。/g, '-- 插图 --')
     },
     novelStyle() {
