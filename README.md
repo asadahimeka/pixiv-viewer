@@ -110,12 +110,12 @@ yarn lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Credit
-- Vue：前端框架
-- Vant UI：组件库
+- [Vue](https://vuejs.org/)：前端框架
+- [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)：组件库
 - [HibiAPI](https://api.obfs.dev/docs)：提供大部分接口支持
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务
-- Vercel：提供页面托管服务
+- [Vercel](https://vercel.com/)：提供页面托管服务
 
 ## LICENSE
 [![MIT License Copyright (c) 2020 Jad](https://img.shields.io/github/license/journey-ad/pixiv-viewer)](https://github.com/asadahimeka/pixiv-viewer/blob/master/LICENSE)

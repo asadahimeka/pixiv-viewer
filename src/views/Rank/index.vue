@@ -217,7 +217,7 @@ export default {
         this.loading = false
         this.error = true
       }
-    }, 1500),
+    }, 500),
     toArtwork(id) {
       this.$router.push({
         name: 'Artwork',

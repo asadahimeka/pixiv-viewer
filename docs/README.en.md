@@ -39,36 +39,36 @@ Demo: 🔗 [pixiv.kanata.ml](https://pixiv.kanata.ml)
 
 - Mobile
 
-<kbd><img src="docs/1.jpg" width="390"></kbd>  <kbd><img src="docs/7.jpg" width="390"></kbd>
+<kbd><img src="1.jpg" width="390"></kbd>  <kbd><img src="7.jpg" width="390"></kbd>
 
-<kbd><img src="docs/9.jpg" width="390"></kbd>  <kbd><img src="docs/10.jpg" width="390"></kbd>
+<kbd><img src="9.jpg" width="390"></kbd>  <kbd><img src="10.jpg" width="390"></kbd>
 
-<kbd><img src="docs/12.jpg" width="390"></kbd>  <kbd><img src="docs/13.jpg" width="390"></kbd>　
+<kbd><img src="12.jpg" width="390"></kbd>  <kbd><img src="13.jpg" width="390"></kbd>　
 
-<kbd><img src="docs/15.jpg" width="390"></kbd>  <kbd><img src="docs/17.png" width="390"></kbd>
+<kbd><img src="15.jpg" width="390"></kbd>  <kbd><img src="17.png" width="390"></kbd>
 
 
 - PC
 
-<kbd><img src="docs/18.png"></kbd>
+<kbd><img src="18.png"></kbd>
 
-<kbd><img src="docs/20.jpg"></kbd>
+<kbd><img src="20.jpg"></kbd>
 
-<kbd><img src="docs/21.jpg"></kbd>
+<kbd><img src="21.jpg"></kbd>
 
-<kbd><img src="docs/23.png"></kbd>
+<kbd><img src="23.png"></kbd>
 
-<kbd><img src="docs/24.png"></kbd>
+<kbd><img src="24.png"></kbd>
 
-<kbd><img src="docs/25.png"></kbd>
+<kbd><img src="25.png"></kbd>
 
-<kbd><img src="docs/26.png"></kbd>
+<kbd><img src="26.png"></kbd>
 
-<kbd><img src="docs/27.png"></kbd>
+<kbd><img src="27.png"></kbd>
 
-<kbd><img src="docs/28.png"></kbd>
+<kbd><img src="28.png"></kbd>
 
-<kbd><img src="docs/29.png"></kbd>
+<kbd><img src="29.png"></kbd>
 
 ## Alternatives
 

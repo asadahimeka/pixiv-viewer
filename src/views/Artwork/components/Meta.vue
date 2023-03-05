@@ -360,12 +360,17 @@ export default {
   }
 
   .date {
+    display flex
+    align-items center
+    flex-wrap wrap
     font-size: 24px;
     color: #7c8f99;
     margin: 16px 0;
+    line-height 1.5
 
     .view {
-      margin-right: 24px;
+      min-width 100px
+      margin-right: 16px;
       color: #3366FF
 
       .icon {
@@ -382,7 +387,8 @@ export default {
     }
 
     .like {
-      margin-right: 24px;
+      min-width 100px
+      margin-right: 16px;
       color: #0099FF
 
       .icon {

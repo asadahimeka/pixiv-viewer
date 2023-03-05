@@ -26,6 +26,9 @@
           <van-button type="info" size="small" plain block @click="downloadNovel">
             {{ $t('common.download') }}
           </van-button>
+          <van-button v-if="showPntBtn" type="info" size="small" plain block @click="goYoudaoFanyi">
+            去有道翻译
+          </van-button>
         </div>
         <keep-alive>
           <AuthorNovelCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
@@ -159,6 +162,9 @@ export default {
   },
   computed: {
     ...mapGetters(['isCensored']),
+    showPntBtn() {
+      return sessionStorage.getItem('__pnt_installed') === '1'
+    },
   },
   watch: {
     $route() {
@@ -291,6 +297,12 @@ export default {
     },
     downloadNovel() {
       FileSaver.saveAs(new Blob([this.novelText.text]), `${this.artwork.id}_${this.artwork.title}.txt`)
+    },
+    goYoudaoFanyi() {
+      if (/Mobile/i.test(navigator.userAgent)) {
+        return
+      }
+      this.openUrl(`https://fanyi.youdao.com/index.html?__pn_id__=${this.artwork.id}`)
     },
   },
 }
