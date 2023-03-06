@@ -109,13 +109,21 @@ yarn lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+## Contribute
+
+本项目使用 [Vue I18n](https://kazupon.github.io/vue-i18n/) 进行国际化，其他语言翻译主要来自机器翻译，如有不妥，欢迎[贡献翻译](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales)
+
 ## Credit
+- [Pixiv Viewer](https://github.com/journey-ad/pixiv-viewer)：原项目，修改于此
 - [Vue](https://vuejs.org/)：前端框架
-- [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)：组件库
+- [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)：UI 组件库
+- [Vue I18n](https://kazupon.github.io/vue-i18n/)：国际化支持
 - [HibiAPI](https://api.obfs.dev/docs)：提供大部分接口支持
+- [PixivNow](https://github.com/FreeNowOrg/PixivNow)：提供部分网页版接口支持
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务
 - [Vercel](https://vercel.com/)：提供页面托管服务
 
 ## LICENSE
+
 [![MIT License Copyright (c) 2020 Jad](https://img.shields.io/github/license/journey-ad/pixiv-viewer)](https://github.com/asadahimeka/pixiv-viewer/blob/master/LICENSE)

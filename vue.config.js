@@ -27,6 +27,20 @@ module.exports = {
   lintOnSave: false,
   runtimeCompiler: false,
   productionSourceMap: false,
+  devServer: {
+    proxy: {
+      '/prks/s': {
+        target: 'https://www.pixivs.cn',
+        changeOrigin: true,
+        pathRewrite: { '^/prks/s': '' },
+      },
+      '/prks/now': {
+        target: 'https://now.pixiv.pics',
+        changeOrigin: true,
+        pathRewrite: { '^/prks/now': '' },
+      },
+    },
+  },
   configureWebpack: config => {
     if (isProduction) {
       config.optimization.minimizer[0].options.minimizer.options.compress.drop_console = true

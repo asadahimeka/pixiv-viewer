@@ -258,7 +258,10 @@
     "novel_art": "Novels",
     "novel_art_title": "{0} 's Novels",
     "of": "'s ",
-    "of_other_art": "'s other works"
+    "of_other_art": "'s other works",
+    "sess": {
+      "logout": "Are you sure to remove session {0}?"
+    }
   },
   "tip": {
     "rate_limit": "API limit exceeded, please try again later or go to the settings to change the API instance",

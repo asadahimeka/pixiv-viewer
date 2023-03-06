@@ -302,7 +302,7 @@ export default {
       if (/Mobile/i.test(navigator.userAgent)) {
         return
       }
-      this.openUrl(`https://fanyi.youdao.com/index.html?__pn_id__=${this.artwork.id}`)
+      this.openUrl(`https://fanyi.youdao.com/index.html#/?__pn_id__=${this.artwork.id}`)
     },
   },
 }

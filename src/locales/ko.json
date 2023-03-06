@@ -258,7 +258,10 @@
     "novel_art": "소설 작품",
     "novel_art_title": "{0}의 소설 작품",
     "of": "의",
-    "of_other_art": "다른 작품"
+    "of_other_art": "다른 작품",
+    "sess": {
+      "logout": "{0} 세션을 제거하시겠습니까?"
+    }
   },
   "tip": {
     "rate_limit": "API 제한을 초과했습니다. 나중에 다시 시도하거나 설정으로 이동하여 API 인스턴스를 변경하세요.",

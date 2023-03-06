@@ -100,7 +100,10 @@
     "fav_title": "插画·漫画收藏",
     "fav_novel_title": "小说收藏",
     "following": "关注",
-    "friend": "好P友"
+    "friend": "好P友",
+    "sess": {
+      "logout": "您确定要删除会话 {0} 吗？"
+    }
   },
   "rank": {
     "day": "日榜",

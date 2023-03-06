@@ -106,13 +106,20 @@ yarn lint
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
+## Contribute
+
+This project uses [Vue I18n](https://kazupon.github.io/vue-i18n/) for internationalization, other language translations are mainly from machine translation, if there is anything wrong, welcome [contribute translation](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales)
+
 ## Credit
-- Vue
-- Vant UI
+- [Vue](https://vuejs.org/)
+- [Vant UI](https://vant-ui.github.io/vant/v2/)
+- [Vue I18n](https://kazupon.github.io/vue-i18n/)
 - [HibiAPI](https://api.obfs.dev/docs)
+- [PixivNow](https://github.com/FreeNowOrg/PixivNow)
 - [SauceNAO](https://saucenao.com/)
 - [Cloudflare Workers](https://workers.cloudflare.com/)
 - [Vercel](https://vercel.com/)
 
 ## LICENSE
+
 [![MIT License Copyright (c) 2020 Jad](https://img.shields.io/github/license/journey-ad/pixiv-viewer)](https://github.com/asadahimeka/pixiv-viewer/blob/master/LICENSE)

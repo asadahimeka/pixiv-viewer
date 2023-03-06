@@ -258,7 +258,10 @@
     "novel_art": "Romane",
     "novel_art_title": "Romane von {0}",
     "of": "'S",
-    "of_other_art": "'s andere Werke"
+    "of_other_art": "'s andere Werke",
+    "sess": {
+      "logout": "Möchten Sie die Sitzung {0} wirklich entfernen?"
+    }
   },
   "tip": {
     "rate_limit": "API-Limit überschritten, bitte versuchen Sie es später erneut oder gehen Sie zu den Einstellungen, um die API-Instanz zu ändern",

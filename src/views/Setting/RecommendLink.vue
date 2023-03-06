@@ -65,6 +65,13 @@
     />
     <van-cell
       center
+      title="Voiux 图库"
+      is-link
+      label="https://gtk.voiux.com"
+      @click="openLink('https://gtk.voiux.com/pixiv_ranking?mode=daily')"
+    />
+    <van-cell
+      center
       title="booruwf"
       is-link
       label="https://booru.kanata.ml"
@@ -81,7 +88,7 @@
       center
       title="PixAI"
       is-link
-      label="https://pixai.art/"
+      label="https://pixai.art"
       @click="openLink('https://pixai.art/?sort=daily-ranking')"
     />
   </div>
