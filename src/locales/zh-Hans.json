@@ -102,7 +102,7 @@
     "following": "关注",
     "friend": "好P友",
     "sess": {
-      "logout": "您确定要删除会话 {0} 吗？"
+      "logout": "您确定要删除会话吗？"
     }
   },
   "rank": {

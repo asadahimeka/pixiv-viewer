@@ -260,7 +260,7 @@
     "of": "c'est",
     "of_other_art": "ses autres oeuvres",
     "sess": {
-      "logout": "Voulez-vous vraiment supprimer la session {0} ?"
+      "logout": "Voulez-vous vraiment supprimer la session?"
     }
   },
   "tip": {

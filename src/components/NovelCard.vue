@@ -104,7 +104,7 @@ export default {
     width: 100%;
     height: auto;
 
-    &[lazy='loading'] {
+    &[lazy="loading"] {
       position absolute
       width: 100px;
       height: 100px;

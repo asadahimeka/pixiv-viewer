@@ -162,7 +162,7 @@ export default {
       // max-height: 1000px;
       object-fit: cover;
 
-      &[lazy='loading'] {
+      &[lazy="loading"] {
         position: absolute;
         top: 50%;
         left: 50%;

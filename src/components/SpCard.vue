@@ -49,7 +49,7 @@ export default {
     height: 100%;
     object-fit: cover;
 
-    &[lazy='loading'] {
+    &[lazy="loading"] {
       width: 100px;
       height: 100px;
       top: 50%;

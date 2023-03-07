@@ -114,7 +114,7 @@ export default {
       object-fit cover
       border-radius: 20px;
 
-      &[lazy='loading'] {
+      &[lazy="loading"] {
         width: 100px;
         height: 100px;
         top: 50%;

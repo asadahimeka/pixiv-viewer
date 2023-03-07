@@ -260,7 +260,7 @@
     "of": "'s ",
     "of_other_art": "'s other works",
     "sess": {
-      "logout": "Are you sure to remove session {0}?"
+      "logout": "Are you sure to remove session?"
     }
   },
   "tip": {

@@ -320,7 +320,7 @@ export default {
       img {
         display: block;
         width: 100%;
-        &[lazy='loading'] {
+        &[lazy="loading"] {
           opacity 0
         }
       }

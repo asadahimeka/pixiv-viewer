@@ -52,7 +52,7 @@ export default {
       clip-path: polygon(25% 0, 100% 0, 75% 100%, 0% 100%);
       margin-right: -6%;
 
-      &[lazy='loading'] {
+      &[lazy="loading"] {
         opacity 0
       }
     }

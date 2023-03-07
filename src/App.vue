@@ -7,6 +7,9 @@
 
 <script>
 import Preload from '@/components/Preload'
+import { existsSessionId, initUser } from '@/api/user'
+import { mapMutations } from 'vuex'
+
 export default {
   components: {
     Preload,
@@ -14,6 +17,17 @@ export default {
   mounted() {
     const loading = document.querySelector('#ldio-loading')
     loading && (loading.style.display = 'none')
+
+    if (!existsSessionId()) {
+      console.log('No session id found. Maybe you are not logged in?')
+      this.setUser(null)
+      return
+    }
+
+    initUser().then(this.setUser).catch(() => this.setUser(null))
+  },
+  methods: {
+    ...mapMutations(['setUser']),
   },
 }
 </script>

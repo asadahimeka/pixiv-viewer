@@ -217,7 +217,7 @@ export default {
       height 100%
       object-fit cover
 
-      &[lazy='loading']
+      &[lazy="loading"]
         width 120px
         height 120px
         top 50%

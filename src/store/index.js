@@ -23,6 +23,7 @@ export default new Vuex.Store({
     $swiper: null,
     searchHistory: LocalStorage.get('PIXIV_SearchHistory', []),
     SETTING: settings,
+    user: null,
   },
   getters: {
     currentId: state => state.galleryList[state.currentIndex] ? state.galleryList[state.currentIndex].id : -1,
@@ -68,6 +69,9 @@ export default new Vuex.Store({
         default: 4,
       },
     }),
+    isLoggedIn(state) {
+      return !!state.user
+    },
   },
   mutations: {
     setGalleryList(state, { list, id }) {
@@ -94,6 +98,9 @@ export default new Vuex.Store({
     saveSETTING(state, obj) {
       state.SETTING = obj
       LocalStorage.set('PIXIV_SETTING', state.SETTING)
+    },
+    setUser(state, user) {
+      state.user = user
     },
   },
   actions: {

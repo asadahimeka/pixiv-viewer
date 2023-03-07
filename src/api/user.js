@@ -45,7 +45,7 @@ export function logout() {
   const token = getCookie('PHPSESSID')
   if (!token) return
   Dialog.confirm({
-    message: i18n.t('user.sess.logout', [token]),
+    message: i18n.t('user.sess.logout'),
     closeOnPopstate: true,
     cancelButtonText: i18n.t('common.cancel'),
     confirmButtonText: i18n.t('common.confirm'),

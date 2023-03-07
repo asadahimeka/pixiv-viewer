@@ -33,6 +33,7 @@ import UserIllusts from '@/views/Users/AuthorIllustsFull.vue'
 import UserNovels from '@/views/Users/AuthorNovelsFull.vue'
 import UserFavorites from '@/views/Users/FavoriteIllustsFull.vue'
 import UserFavoriteNovels from '@/views/Users/FavoriteNovelsFull.vue'
+import Session from '@/views/Account/Session.vue'
 import NotFound from '@/views/NotFound.vue'
 
 Vue.use(VueRouter)
@@ -213,6 +214,11 @@ const routes = [
             path: '/spotlight_detail',
             name: 'SpotlightDetail',
             component: SpotlightDetail,
+          },
+          {
+            path: '/account/session',
+            name: 'Session',
+            component: Session,
           },
         ],
       },

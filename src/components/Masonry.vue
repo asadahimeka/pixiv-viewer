@@ -84,7 +84,7 @@ export default {
   transition: 0.2s;
 }
 
-.flexbin .image[lazy='loading'] {
+.flexbin .image[lazy="loading"] {
   top: unset !important;
   left: unset !important;
   transform: scale(0.5) !important;
