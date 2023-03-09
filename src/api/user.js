@@ -1,7 +1,7 @@
-import axios from 'axios'
+import nprogress from 'nprogress'
 import { Dialog } from 'vant'
 import { i18n } from '@/i18n'
-import { getCookie, removeCookie, setCookie } from '@/utils'
+import { getCookie, objectToQueryString, removeCookie, setCookie } from '@/utils'
 import { imgProxy, parseWebApiIllust } from '.'
 import { getCache, setCache } from '@/utils/siteCache'
 import store from '@/store'
@@ -12,7 +12,21 @@ import store from '@/store'
  * @param {import('axios').AxiosRequestConfig} config
  */
 const getJSON = (url, params, config = {}) => {
-  return axios.get(url, { baseURL: '/prks/now', params, ...config }).catch(() => ({ data: {} }))
+  nprogress.start()
+  return fetch('/prks/now' + url + objectToQueryString(params), {
+    ...config,
+    method: 'GET',
+    referrerPolicy: 'origin',
+  }).then(res => {
+    if (!res.ok) throw new Error('Not ok.')
+    nprogress.done()
+    return res.json()
+  }).then(res => {
+    return { data: res }
+  }).catch(() => {
+    nprogress.done()
+    return { data: {} }
+  })
 }
 
 /**
@@ -21,8 +35,8 @@ const getJSON = (url, params, config = {}) => {
  * @param {import('axios').AxiosRequestConfig} config
  */
 const postJSON = (url, data, config = {}) => {
-  return axios.post(url, data, {
-    baseURL: '/prks/now',
+  return fetch('/prks/now' + url, {
+    body: JSON.stringify(data),
     headers: {
       'Content-Type': 'application/json',
     },

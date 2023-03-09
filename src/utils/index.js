@@ -68,3 +68,16 @@ export function getCookie(cname) {
 export function removeCookie(key) {
   document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; Secure`
 }
+
+export function objectToQueryString(queryParameters) {
+  return queryParameters
+    ? Object.entries(queryParameters).reduce(
+      (queryString, [key, val]) => {
+        const symbol = queryString.length === 0 ? '?' : '&'
+        queryString += `${symbol}${key}=${val}`
+        return queryString
+      },
+      ''
+    )
+    : ''
+}

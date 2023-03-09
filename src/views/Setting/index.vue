@@ -40,7 +40,10 @@ export default {
     ...mapState(['user']),
     ...mapGetters(['isLoggedIn']),
     userAvatar() {
-      return `https://pixiv.js.org/${this.user.profileImg}`
+      if (/^\/(-|~)\//.test(this.user.profileImg)) {
+        return `https://pixiv.js.org/${this.user.profileImg}`
+      }
+      return this.user.profileImg
     },
   },
   methods: {
