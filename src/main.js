@@ -29,9 +29,8 @@ Vue.use(Lazyload, {
     error(evt) {
       const src = evt.src
       if (!src?.includes('i-cf.pximg.net')) return
-      const u = new URL(src)
-      u.host = 'i.pixiv.re'
-      evt.el.src = u.href
+      if (!/\/artworks\/|\/spotlight\//i.test(location.href)) evt.el.src = ''
+      evt.el.src = src.replace('i-cf.pximg.net', 'i.pixiv.re')
     },
   },
 })

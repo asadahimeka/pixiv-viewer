@@ -114,7 +114,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 本项目使用 [Vue I18n](https://kazupon.github.io/vue-i18n/) 进行国际化，其他语言翻译主要来自机器翻译，如有不妥，欢迎[贡献翻译](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales)
 
 ## Credit
-- [Pixiv Viewer](https://github.com/journey-ad/pixiv-viewer)：原项目，修改于此
+- [pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)：原项目，修改于此
 - [Vue](https://vuejs.org/)：前端框架
 - [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)：UI 组件库
 - [Vue I18n](https://kazupon.github.io/vue-i18n/)：国际化支持

@@ -1,7 +1,17 @@
 <template>
-  <div class="illusts">
+  <van-list
+    v-model="loading"
+    class="illusts"
+    :loading-text="$t('tips.loading')"
+    :finished="finished"
+    :finished-text="$t('tips.no_more')"
+    :error.sync="error"
+    :offset="800"
+    :error-text="$t('tips.net_err')"
+    @load="getUserList"
+  >
     <masonry v-bind="masonryProps">
-      <ImageSlide v-for="u in userList" :key="u.id" :images="u.illusts">
+      <ImageSlide v-for="u in userList" :key="u.id" :images="u.illusts.slice(0, 3)">
         <div class="link" @click="toUserPage(u.id)">
           <div class="user_info">
             <img class="user_avatar" :src="u.avatar" alt="">
@@ -10,32 +20,26 @@
         </div>
       </ImageSlide>
     </masonry>
-    <van-loading v-show="loading" class="loading" :size="'50px'" />
-    <van-empty v-if="!loading && !userList.length" />
-  </div>
+  </van-list>
 </template>
 
 <script>
-import api from '@/api'
 import _ from 'lodash'
 import ImageSlide from '@/components/ImageSlide.vue'
+import { getFollowingUsers } from '@/api/user'
 
 export default {
-  name: 'RecommUser',
+  name: 'FollowedUsers',
   components: {
     ImageSlide,
   },
-  props: {
-    relatedId: {
-      type: [String, Number],
-      default: null,
-    },
-  },
   data() {
     return {
+      curPage: 1,
+      error: false,
       loading: false,
+      finished: false,
       userList: [],
-      notFromDetail: true,
       masonryProps: {
         gutter: '8px',
         cols: {
@@ -59,22 +63,22 @@ export default {
     },
     getUserList: _.throttle(async function () {
       this.loading = true
-      this.userList = []
-      let res
-      if (this.relatedId) {
-        res = await api.getRelatedUser(this.relatedId)
-      } else {
-        res = await api.getRecommendedUser()
-      }
+      const res = await getFollowingUsers(this.curPage)
       if (res.status === 0) {
-        this.userList = _.shuffle(res.data)
+        this.userList = _.uniqBy([
+          ...this.userList,
+          ...res.data,
+        ], 'id')
         this.loading = false
+        this.curPage++
+        if (!res.data?.length || this.curPage > 5) this.finished = true
       } else {
         this.$toast({
           message: res.msg,
           icon: require('@/icons/error.svg'),
         })
         this.loading = false
+        this.error = true
       }
     }, 1500),
     init() {
@@ -87,6 +91,7 @@ export default {
 <style lang="stylus" scoped>
 .illusts
   position relative
+  margin-top 20px
   padding 0 20px 40px
 
   .loading

@@ -97,7 +97,8 @@
     "home": "Maison",
     "rank": "Classement",
     "search": "Recherche",
-    "setting": "Paramètres"
+    "setting": "Paramètres",
+    "follow": "Alimentation"
   },
   "novel": {
     "series": {
@@ -260,11 +261,55 @@
     "of": "c'est",
     "of_other_art": "ses autres oeuvres",
     "sess": {
-      "logout": "Voulez-vous vraiment supprimer la session?"
-    }
+      "logout": "Voulez-vous vraiment supprimer la session?",
+      "login": "Connexion",
+      "my_fav": "Mes marque-pages",
+      "out": "Se déconnecter"
+    },
+    "related": "Utilisateurs associés"
   },
   "tip": {
     "rate_limit": "Limite d'API dépassée, veuillez réessayer plus tard ou accédez aux paramètres pour modifier l'instance d'API",
     "unknown_err": "Erreur inconnue"
+  },
+  "sess": {
+    "example": "L'ID de session ressemble à (invalide, pour la démo) :",
+    "input": {
+      "ph": "Veuillez entrer l'identifiant de la session",
+      "msg": "Le format de l'identifiant de session est incorrect"
+    },
+    "q1": {
+      "p1": "1. Visitez le site d'origine {0} et connectez-vous",
+      "p3": "3. Dans l'interface pop-up, sélectionnez \"Cookie (0 cookies sont utilisés)\"",
+      "p2": "2. Cliquez sur le cadenas dans la barre d'adresse",
+      "p4": "4. Développez `pixiv.net` → `Cookies` pour trouver l'élément {0}",
+      "p5": "5. Copiez son \"contenu\" et remplissez-le ici"
+    },
+    "mobile_tip": "Trouvez la méthode par vous-même sur le terminal mobile ou obtenez-la sur le terminal informatique",
+    "q2": {
+      "p2": "2. Appuyez sur F12 pour ouvrir la console du navigateur",
+      "p3": "3. Cliquez sur la colonne \"stockage\"",
+      "p4": "4. Trouvez la colonne dont la \"clé\" est {0} dans la liste des cookies",
+      "p5": "5. Copiez sa \"valeur\" et remplissez-la ici"
+    },
+    "que2": {
+      "p1": "Nous ne stockerons ni ne transférerons vos informations personnelles et cookies.",
+      "p2": "Cependant, nous vous recommandons de conserver vos cookies en toute sécurité.\n\nSi les informations que vous enregistrez ici sont obtenues par d'autres, il existe un risque de vol de compte."
+    },
+    "ques1": "Comment obtenir l'identifiant de session Pixiv ?",
+    "ques2": "Pixiv Viewer va-t-il voler mes informations personnelles ?",
+    "save": "sauvegarder",
+    "succ_msg": "Authentification de l'ID de session réussie",
+    "title": "Définir l'ID de session Pixiv",
+    "warn": {
+      "text": "Cette fonction est une façon anormale de se connecter, et il peut y avoir un risque de bannissement du compte. \nL'utilisation de cette fonction est considérée comme le consentement de l'utilisateur et l'utilisation claire du risque. \nSi le compte est banni, etc., l'auteur de ce projet n'a rien à voir avec cela.\n\nIl est recommandé d'utiliser la trompette pour les tests.",
+      "title": "Avis de risque"
+    }
+  },
+  "follow": {
+    "fav": "Signets",
+    "latest": "Nouveau",
+    "timeline": "Alimentation",
+    "user": "Suivant"
   }
 }

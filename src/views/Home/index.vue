@@ -8,13 +8,18 @@
     <div class="home-i">
       <RankCard />
       <SpotlightCard />
-      <RecommendCard v-if="isSelfHibi" />
-      <lazy-component>
-        <RandomIllust />
-      </lazy-component>
-      <lazy-component v-if="isSelfHibi">
-        <LatestIllustCard />
-      </lazy-component>
+      <template v-if="isLogin">
+        <Recomm4U />
+      </template>
+      <template v-else>
+        <RecommendCard v-if="isSelfHibi" />
+        <lazy-component>
+          <RandomIllust />
+        </lazy-component>
+        <lazy-component v-if="isSelfHibi">
+          <LatestIllustCard />
+        </lazy-component>
+      </template>
     </div>
   </div>
 </template>
@@ -25,7 +30,11 @@ import SpotlightCard from '../Spotlights/SpotlightCard.vue'
 import RecommendCard from '../Discovery/RecommendCard.vue'
 import RandomIllust from './components/RandomIllust.vue'
 import LatestIllustCard from '../Discovery/LatestIllustCard.vue'
+import Recomm4U from './components/Recomm4U.vue'
 import { notSelfHibiApi } from '@/api/http'
+import { existsSessionId } from '@/api/user'
+
+const isLogin = existsSessionId()
 
 export default {
   name: 'HomeIllust',
@@ -35,10 +44,12 @@ export default {
     RecommendCard,
     SpotlightCard,
     LatestIllustCard,
+    Recomm4U,
   },
   data() {
     return {
       isSelfHibi: !notSelfHibiApi,
+      isLogin,
     }
   },
 }

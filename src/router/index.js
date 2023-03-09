@@ -19,6 +19,7 @@ import SearchUser from '@/views/Search/SearchUser.vue'
 import SearchUserRes from '@/views/Search/SearchUserRes.vue'
 import Rank from '@/views/Rank/index.vue'
 import RankNovel from '@/views/Rank/RankNovel.vue'
+import Following from '@/views/Account/Following.vue'
 import Setting from '@/views/Setting/index.vue'
 import History from '@/views/Setting/History.vue'
 import ClearCache from '@/views/Setting/ClearCache.vue'
@@ -102,6 +103,11 @@ const routes = [
             path: '/rank_novel/:type',
             name: 'RankNovel',
             component: RankNovel,
+          },
+          {
+            path: '/following',
+            name: 'Following',
+            component: Following,
           },
           {
             path: '/setting',

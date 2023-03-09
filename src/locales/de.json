@@ -97,7 +97,8 @@
     "home": "Heim",
     "rank": "Rangfolge",
     "search": "Suchen",
-    "setting": "Einstellungen"
+    "setting": "Einstellungen",
+    "follow": "Füttern"
   },
   "novel": {
     "series": {
@@ -260,11 +261,55 @@
     "of": "'S",
     "of_other_art": "'s andere Werke",
     "sess": {
-      "logout": "Möchten Sie die Sitzung wirklich entfernen?"
-    }
+      "logout": "Möchten Sie die Sitzung wirklich entfernen?",
+      "login": "Anmeldung",
+      "my_fav": "Meine Lesezeichen",
+      "out": "Ausloggen"
+    },
+    "related": "Verwandte Benutzer"
   },
   "tip": {
     "rate_limit": "API-Limit überschritten, bitte versuchen Sie es später erneut oder gehen Sie zu den Einstellungen, um die API-Instanz zu ändern",
     "unknown_err": "Unbekannter Fehler"
+  },
+  "sess": {
+    "example": "Sitzungs-ID sieht so aus (ungültig, für Demo):",
+    "input": {
+      "ph": "Bitte geben Sie die Sitzungs-ID ein",
+      "msg": "Sitzungs-ID-Format ist falsch"
+    },
+    "q1": {
+      "p1": "1. Besuchen Sie die Ursprungsseite {0} und melden Sie sich an",
+      "p3": "3. Wählen Sie in der Popup-Oberfläche „Cookie (0 Cookies werden verwendet)“",
+      "p2": "2. Klicken Sie auf das Schloss in der Adressleiste",
+      "p4": "4. Erweitern Sie „pixiv.net“ → „Cookies“, um das Element {0} zu finden",
+      "p5": "5. Kopieren Sie seinen \"Inhalt\" und füllen Sie ihn hier aus"
+    },
+    "mobile_tip": "Finden Sie die Methode selbst auf dem mobilen Endgerät oder beziehen Sie sie auf dem Computerterminal",
+    "q2": {
+      "p2": "2. Drücken Sie F12, um die Browserkonsole zu öffnen",
+      "p3": "3. Klicken Sie auf die Spalte „Speicher“.",
+      "p4": "4. Suchen Sie in der Cookie-Liste die Spalte, deren \"Schlüssel\" {0} ist",
+      "p5": "5. Kopieren Sie seinen \"Wert\" und füllen Sie ihn hier aus"
+    },
+    "que2": {
+      "p1": "Wir werden Ihre persönlichen Informationen und Cookies nicht speichern oder übertragen.",
+      "p2": "Wir empfehlen jedoch, Ihre Cookies sicher aufzubewahren.\n\nWenn die Informationen, die Sie hier speichern, von anderen erlangt werden, besteht die Gefahr eines Kontodiebstahls."
+    },
+    "ques1": "Wie erhalte ich eine Pixiv-Sitzungs-ID?",
+    "ques2": "Wird Pixiv Viewer meine persönlichen Daten stehlen?",
+    "save": "speichern",
+    "succ_msg": "Sitzungs-ID-Authentifizierung erfolgreich",
+    "title": "Legen Sie die Pixiv-Sitzungs-ID fest",
+    "warn": {
+      "text": "Diese Funktion ist eine anormale Art der Anmeldung, und es besteht die Gefahr, dass das Konto gesperrt wird. \nDie Nutzung dieser Funktion gilt als eigene Zustimmung des Nutzers und eindeutige Risikoübernahme. \nWenn der Account gesperrt wird usw., hat der Autor dieses Projekts nichts damit zu tun.\n\nEs wird empfohlen, Trompete zum Testen zu verwenden.",
+      "title": "Risikohinweis"
+    }
+  },
+  "follow": {
+    "fav": "Lesezeichen",
+    "latest": "Neu",
+    "timeline": "Füttern",
+    "user": "Folgend"
   }
 }

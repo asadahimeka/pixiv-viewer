@@ -31,7 +31,13 @@
       close-on-click-action
       @select="onUgoiraDownloadPanelSelect"
     />
-    <van-share-sheet v-model="showShare" :title="$t('artwork.share.title')" :options="shareOptions" @select="onShareSel" />
+    <van-share-sheet
+      v-model="showShare"
+      :title="$t('artwork.share.title')"
+      :cancel-text="$t('common.cancel')"
+      :options="shareOptions"
+      @select="onShareSel"
+    />
   </div>
 </template>
 

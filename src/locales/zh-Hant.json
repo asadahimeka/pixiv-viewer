@@ -97,7 +97,8 @@
     "home": "首頁",
     "rank": "排行榜",
     "search": "搜尋",
-    "setting": "設置"
+    "setting": "設置",
+    "follow": "動態"
   },
   "novel": {
     "series": {
@@ -260,11 +261,55 @@
     "of": "的",
     "of_other_art": "的其他作品",
     "sess": {
-      "logout": "您確定要刪除會話嗎？"
-    }
+      "logout": "您確定要刪除會話嗎？",
+      "login": "登錄",
+      "my_fav": "我的收藏",
+      "out": "退出"
+    },
+    "related": "相關用戶"
   },
   "tip": {
     "rate_limit": "超出 API 限制，請稍後重試或前往設置更改 API 實例",
     "unknown_err": "未知錯誤"
+  },
+  "sess": {
+    "example": "Session ID 形如（無效，演示用）：",
+    "input": {
+      "msg": "Session ID 格式不正確",
+      "ph": "請輸入 Session ID"
+    },
+    "mobile_tip": "移動端自行尋找方法或者到電腦端獲取",
+    "q1": {
+      "p1": "1. 訪問 {0} 源站並登錄",
+      "p2": "2. 點擊地址欄的小鎖",
+      "p3": "3. 在彈出的界面選擇「Cookie(正在使用 0 個 Cookie)」",
+      "p4": "4. 展開 `pixiv.net` → `Cookie` 找到 {0} 項",
+      "p5": "5. 將它的「內容」複製後填寫到這裡"
+    },
+    "q2": {
+      "p2": "2. 按 F12 打開瀏覽器控制台",
+      "p3": "3. 點擊「存儲/storage」一欄",
+      "p4": "4. 在 cookie 列表裡找到「鍵/key」為 {0} 的一欄",
+      "p5": "5. 將它的「值/value」複製後填寫到這裡"
+    },
+    "que2": {
+      "p1": "我們 不會 存儲或轉讓您的個人信息以及 cookie。",
+      "p2": "不過我們建議妥善保存您的 cookie。\n您在此處保存的信息若被他人獲取有被盜號的風險。"
+    },
+    "ques1": "如何獲取 Pixiv Session ID ？",
+    "ques2": "Pixiv Viewer 會竊取我的個人信息嗎？",
+    "save": "保存",
+    "succ_msg": "Session ID 認證成功",
+    "title": "設置 Pixiv Session ID",
+    "warn": {
+      "text": "本功能為非正常方式登錄，可能存在封號風險，使用本功能即視為使用者本人同意且已明確使用風險，如發生封號等情況與本項目作者無關。\n建議使用小號進行測試。",
+      "title": "風險告知"
+    }
+  },
+  "follow": {
+    "fav": "我的收藏",
+    "timeline": "動態",
+    "user": "已跟隨用户",
+    "latest": "全站最新"
   }
 }

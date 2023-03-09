@@ -102,8 +102,12 @@
     "following": "关注",
     "friend": "好P友",
     "sess": {
-      "logout": "您确定要删除会话吗？"
-    }
+      "logout": "您确定要删除会话吗？",
+      "login": "登录",
+      "my_fav": "我的收藏",
+      "out": "退出"
+    },
+    "related": "相关用户"
   },
   "rank": {
     "day": "日榜",
@@ -254,7 +258,8 @@
     "home": "首页",
     "search": "搜索",
     "rank": "排行榜",
-    "setting": "设置"
+    "setting": "设置",
+    "follow": "动态"
   },
   "history": {
     "confirm": {
@@ -266,5 +271,45 @@
   "tip": {
     "rate_limit": "API 超限，请稍后再试或到设置里更换 API 实例",
     "unknown_err": "未知错误"
+  },
+  "sess": {
+    "title": "设置 Pixiv Session ID",
+    "input": {
+      "ph": "请输入 Session ID",
+      "msg": "Session ID 格式不正确"
+    },
+    "save": "保存",
+    "ques1": "如何获取 Pixiv Session ID ？",
+    "ques2": "Pixiv Viewer 会窃取我的个人信息吗？",
+    "q1": {
+      "p1": "1. 访问 {0} 源站并登录",
+      "p4": "4. 展开 `pixiv.net` → `Cookie` 找到 {0} 项",
+      "p2": "2. 点击地址栏的小锁",
+      "p3": "3. 在弹出的界面选择「Cookie(正在使用 0 个 Cookie)」",
+      "p5": "5. 将它的「内容」复制后填写到这里"
+    },
+    "q2": {
+      "p2": "2. 按 F12 打开浏览器控制台",
+      "p3": "3. 点击「存储/storage」一栏",
+      "p5": "5. 将它的「值/value」复制后填写到这里",
+      "p4": "4. 在 cookie 列表里找到「键/key」为 {0} 的一栏"
+    },
+    "mobile_tip": "移动端自行寻找方法或者到电脑端获取",
+    "example": "Session ID 形如（无效，演示用）：",
+    "que2": {
+      "p1": "我们 不会 存储或转让您的个人信息以及 cookie。",
+      "p2": "不过我们建议妥善保存您的 cookie。您在此处保存的信息若被他人获取有被盗号的风险。"
+    },
+    "succ_msg": "Session ID 认证成功",
+    "warn": {
+      "title": "风险告知",
+      "text": "本功能为非正常方式登录，可能存在封号风险，使用本功能即视为使用者本人同意且已明确使用风险，如发生封号等情况与本项目作者无关。建议使用小号进行测试。"
+    }
+  },
+  "follow": {
+    "timeline": "动态",
+    "fav": "我的收藏",
+    "user": "已关注用户",
+    "latest": "全站最新"
   }
 }

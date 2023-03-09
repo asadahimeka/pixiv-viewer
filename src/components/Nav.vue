@@ -31,6 +31,10 @@
         />
         <span>{{ $t('nav.rank') }}</span>
       </li>
+      <li v-if="isLogin" @click="navigateTo('Following')">
+        <Icon class="icon" name="following" index="Following" :current-index="$route.name" />
+        <span>{{ $t('nav.follow') }}</span>
+      </li>
       <li @click="navigateTo('Setting')">
         <Icon class="icon" name="setting" index="Setting" :current-index="$route.name" />
         <span>{{ $t('nav.setting') }}</span>
@@ -40,6 +44,8 @@
 </template>
 
 <script>
+import { existsSessionId } from '@/api/user'
+
 function throttleScroll(el, downFn, upFn) {
   let position = el.scrollTop
   let ticking = false
@@ -55,9 +61,12 @@ function throttleScroll(el, downFn, upFn) {
   }
 }
 
+const isLogin = existsSessionId()
+
 export default {
   data() {
     return {
+      isLogin,
       showNav: true,
       scrollFn: () => {},
     }

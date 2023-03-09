@@ -18,7 +18,7 @@
       center
       title="Clover (Android)"
       is-link
-      label="全新的第三方pixiv客户端。"
+      label="全新的第三方 pixiv 客户端。"
       @click="openLink('https://github.com/CeuiLiSA/Pixiv-Slinky')"
     />
     <van-cell

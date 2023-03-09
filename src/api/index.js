@@ -17,8 +17,16 @@ const isSupportWebP = (() => {
 })()
 
 export const PXIMG_PROXY_BASE = LocalStorage.get('PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG_MAIN)
-const imgProxy = url => {
+export const imgProxy = url => {
   let result = url.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
+  if (url.startsWith('/-/')) {
+    result = result.replace(/\/-\//, '/')
+    result = `https://${PXIMG_PROXY_BASE}` + result
+  }
+  if (url.startsWith('/~/')) {
+    result = result.replace(/\/~\//, '/')
+    result = 'https://s.pximg.net' + result
+  }
 
   if (!isSupportWebP) {
     result = result.replace(/_10_webp/g, '_70')
@@ -215,7 +223,7 @@ const parseWebRankIllust = (d, mode, content) => {
   return artwork
 }
 
-const parseWebApiIllust = d => {
+export const parseWebApiIllust = d => {
   const url = 'https://i.pximg.net' + d.url.replace('/-/', '/')
   const images = [{
     s: imgProxy(url.replace('_master1200', '_square1200')),
@@ -603,6 +611,48 @@ const api = {
     }
 
     console.log('getRecommendedUser: ', relatedList)
+
+    return { status: 0, data: relatedList }
+  },
+
+  async getRelatedUser(id) {
+    const cacheKey = `related.user.${id}`
+    let relatedList = await getCache(cacheKey)
+
+    if (!relatedList) {
+      const res = await get('/related_member', { id })
+
+      if (res.user_previews) {
+        relatedList = res.user_previews
+          .map(u => {
+            return {
+              id: u.user.id,
+              name: u.user.name,
+              avatar: imgProxy(u.user.profile_image_urls.medium),
+              illusts: u.illusts.map(i => ({
+                id: i.id,
+                title: i.title,
+                src: imgProxy(i.image_urls.medium),
+                x_restrict: i.x_restrict,
+                illust_ai_type: i.illust_ai_type,
+              })),
+            }
+          })
+        setCache(cacheKey, relatedList, 60 * 60 * 6)
+      } else if (res.error) {
+        return {
+          status: -1,
+          msg: dealErrMsg(res),
+        }
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    console.log('getRelatedUser: ', relatedList)
 
     return { status: 0, data: relatedList }
   },

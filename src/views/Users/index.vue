@@ -120,9 +120,12 @@
               @onCilck="showSub('fav_novel')"
             />
           </van-tab>
+          <van-tab :title="$t('user.related')" name="related">
+            <RecommUser v-if="activeTab == 'related'" :related-id="userInfo.id" />
+          </van-tab>
         </van-tabs>
 
-        <div v-show="!loading" style="margin-top: 10px;text-align: center;">
+        <div v-show="activeTab != 'related' && !loading" style="margin-top: 10px;text-align: center;">
           <van-button size="small" @click="showSub(activeTab)">{{ $t('common.view_more') }}</van-button>
         </div>
 
@@ -136,6 +139,7 @@
 import TopBar from '@/components/TopBar'
 import AuthorIllusts from './components/AuthorIllusts'
 import FavoriteIllusts from './components/FavoriteIllusts'
+import RecommUser from '../Search/components/RecommUser.vue'
 import api from '@/api'
 import AuthorNovels from './components/AuthorNovels.vue'
 import FavoriteNovels from './components/FavoriteNovels.vue'
@@ -157,6 +161,7 @@ export default {
     FavoriteIllusts,
     AuthorNovels,
     FavoriteNovels,
+    RecommUser,
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {

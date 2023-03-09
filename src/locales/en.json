@@ -97,7 +97,8 @@
     "home": "Home",
     "rank": "Ranking",
     "search": "Search",
-    "setting": "Settings"
+    "setting": "Settings",
+    "follow": "Feed"
   },
   "novel": {
     "series": {
@@ -260,11 +261,55 @@
     "of": "'s ",
     "of_other_art": "'s other works",
     "sess": {
-      "logout": "Are you sure to remove session?"
-    }
+      "logout": "Are you sure to remove session?",
+      "login": "Login",
+      "my_fav": "My Bookmarks",
+      "out": "Logout"
+    },
+    "related": "Related users"
   },
   "tip": {
     "rate_limit": "API limit exceeded, please try again later or go to the settings to change the API instance",
     "unknown_err": "Unknown Error"
+  },
+  "sess": {
+    "example": "Session ID looks like (invalid, for demo):",
+    "input": {
+      "msg": "Session ID format is incorrect",
+      "ph": "Please enter Session ID"
+    },
+    "mobile_tip": "Find the method by yourself on the mobile terminal or obtain it on the computer terminal",
+    "q1": {
+      "p1": "1. Visit the {0} origin site and log in",
+      "p2": "2. Click the lock in the address bar",
+      "p3": "3. In the pop-up interface, select \"Cookie (0 cookies are being used)\"",
+      "p4": "4. Expand `pixiv.net` → `Cookies` to find the {0} item",
+      "p5": "5. Copy its \"content\" and fill it here"
+    },
+    "q2": {
+      "p2": "2. Press F12 to open the browser console",
+      "p3": "3. Click the \"storage\" column",
+      "p4": "4. Find the column whose \"key\" is {0} in the cookie list",
+      "p5": "5. Copy its \"value\" and fill it here"
+    },
+    "que2": {
+      "p1": "We will not store or transfer your personal information and cookies.",
+      "p2": "However, we recommend keeping your cookies safe. \nIf the information you save here is obtained by others, there is a risk of account theft."
+    },
+    "ques1": "How to get Pixiv Session ID?",
+    "ques2": "Will Pixiv Viewer steal my personal information?",
+    "save": "save",
+    "succ_msg": "Session ID authentication succeeded",
+    "title": "Set Pixiv Session ID",
+    "warn": {
+      "text": "This function is an abnormal way to log in, and there may be a risk of banning the account. Using this function is deemed to be the user's own consent and clear use of the risk. If the account is banned, etc., the author of this project has nothing to do with it. \nIt is recommended to use trumpet for testing.",
+      "title": "Risk Notice"
+    }
+  },
+  "follow": {
+    "fav": "Bookmarks",
+    "latest": "New",
+    "timeline": "Feed",
+    "user": "Following"
   }
 }

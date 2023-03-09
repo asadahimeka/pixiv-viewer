@@ -111,6 +111,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 This project uses [Vue I18n](https://kazupon.github.io/vue-i18n/) for internationalization, other language translations are mainly from machine translation, if there is anything wrong, welcome [contribute translation](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales)
 
 ## Credit
+- [pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)
 - [Vue](https://vuejs.org/)
 - [Vant UI](https://vant-ui.github.io/vant/v2/)
 - [Vue I18n](https://kazupon.github.io/vue-i18n/)
