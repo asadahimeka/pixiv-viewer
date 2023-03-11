@@ -5,7 +5,7 @@
         <LatestConcerned v-if="activeTab == 1" />
       </van-tab>
       <van-tab :title="$t('follow.fav')" name="2">
-        <FavoriteIllusts v-if="activeTab == 2" :id="+user.id" :not-from-artwork="false" :show-title="false" />
+        <MyBookmarks v-if="activeTab == 2" />
       </van-tab>
       <van-tab :title="$t('follow.user')" name="3">
         <FollowedUsers v-if="activeTab == 3" />
@@ -20,14 +20,14 @@
 
 <script>
 import { mapState } from 'vuex'
-import FavoriteIllusts from '../Users/components/FavoriteIllusts.vue'
 import FollowedUsers from './components/FollowedUsers.vue'
 import LatestAllSite from './components/LatestAllSite.vue'
 import LatestConcerned from './components/LatestConcerned.vue'
+import MyBookmarks from './MyBookmarks.vue'
 
 export default {
   name: 'Following',
-  components: { LatestConcerned, FavoriteIllusts, FollowedUsers, LatestAllSite },
+  components: { LatestConcerned, FollowedUsers, LatestAllSite, MyBookmarks },
   data() {
     return {
       activeTab: '1',
@@ -58,11 +58,11 @@ export default {
     flex unset
     margin 0 0.1rem
   .van-tab__text
-    height: 0.8rem;
-    line-height: 0.8rem;
-    text-align center;
-    font-size: 0.37333rem;
+    height: 0.66rem;
     padding: 0 0.21333rem;
+    line-height: 0.66rem;
+    text-align center;
+    font-size: 0.32rem;
     border-radius: 0.13333rem;
     color: #333;
     background: #eee;

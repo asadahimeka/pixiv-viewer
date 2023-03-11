@@ -86,6 +86,7 @@ export default {
     },
     getMemberFavorite: _.throttle(async function () {
       if (!this.id) return
+      if (this.next == null) return
       this.loading = true
       let newList
       const res = await api.getMemberFavorite(this.id, this.next)

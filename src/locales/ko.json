@@ -31,7 +31,9 @@
         "wechat": "WeChat",
         "weibo": "Weibo"
       }
-    }
+    },
+    "fav_fail": "북마크에 추가 실패",
+    "unfav_fail": "북마크 삭제 실패"
   },
   "cache": {
     "clear": "클리어",
@@ -266,7 +268,9 @@
       "my_fav": "내 북마크",
       "out": "로그 아웃"
     },
-    "related": "관련 사용자"
+    "related": "관련 사용자",
+    "faved": "북마크됨",
+    "view_comments": "댓글 보기"
   },
   "tip": {
     "rate_limit": "API 제한을 초과했습니다. 나중에 다시 시도하거나 설정으로 이동하여 API 인스턴스를 변경하세요.",

@@ -60,7 +60,9 @@
         "wechat": "WeChat",
         "weibo": "Weibo"
       }
-    }
+    },
+    "fav_fail": "Add to bookmarks failed",
+    "unfav_fail": "Remove bookmark failed"
   },
   "cache": {
     "clear": "Clean up",
@@ -266,7 +268,9 @@
       "my_fav": "My Bookmarks",
       "out": "Logout"
     },
-    "related": "Related users"
+    "related": "Related users",
+    "faved": "Bookmarked",
+    "view_comments": "View Comments"
   },
   "tip": {
     "rate_limit": "API limit exceeded, please try again later or go to the settings to change the API instance",

@@ -31,7 +31,9 @@
         "wechat": "WeChat",
         "weibo": "Weibo"
       }
-    }
+    },
+    "fav_fail": "Échec de l'ajout aux favoris",
+    "unfav_fail": "Échec de la suppression du signet"
   },
   "cache": {
     "clear": "Nettoyer",
@@ -266,7 +268,9 @@
       "my_fav": "Mes marque-pages",
       "out": "Se déconnecter"
     },
-    "related": "Utilisateurs associés"
+    "related": "Utilisateurs associés",
+    "faved": "Favoris",
+    "view_comments": "Voir les commentaires"
   },
   "tip": {
     "rate_limit": "Limite d'API dépassée, veuillez réessayer plus tard ou accédez aux paramètres pour modifier l'instance d'API",

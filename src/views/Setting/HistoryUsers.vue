@@ -12,7 +12,7 @@
         <div
           class="cover"
           :class="{ nobg: !u.bgcover }"
-          :style="{ backgroundImage: `url(${u.bgcover || u.avatar})` }"
+          :style="{ background: `url(${u.bgcover || u.avatar}) no-repeat center 0 / cover` }"
         ></div>
       </div>
     </wf-cont>
@@ -117,9 +117,6 @@ export default {
       left 0
       width 100%
       height 100%
-      background-repeat no-repeat
-      background-position center 0
-      background-size cover
       &.nobg
         filter: blur(10px)
     &::before

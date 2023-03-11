@@ -80,17 +80,54 @@
       ></div>
       <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
     </div>
-    <van-button
-      v-if="!isNovel"
-      type="info"
-      size="small"
-      plain
-      block
-      style="margin-top:16px"
-      @click="downloadArtwork()"
-    >
-      <span class="umami--click--download_img">{{ $t('common.download') }}</span>
-    </van-button>
+    <div v-if="!isNovel " class="meta_btns">
+      <van-button
+        v-if="isLoggedIn"
+        size="small"
+        :loading="favLoading"
+        :icon="bookmarkId ? 'like' : 'like-o'"
+        plain
+        color="#E87A90"
+        style="margin-right: 0.15rem;"
+        @click="toggleBookmark"
+      >
+        {{ bookmarkId ? $t('user.faved'): $t('user.fav') }}
+      </van-button>
+      <van-button
+        type="info"
+        icon="down"
+        size="small"
+        plain
+        color="#5DAC81"
+        style="margin-right: 0.15rem;"
+        @click="downloadArtwork()"
+      >
+        {{ $t('common.download') }}
+      </van-button>
+      <van-button
+        type="info"
+        icon="comment-o"
+        size="small"
+        plain
+        color="#005CAF"
+        @click="showComments = true"
+      >
+        <span>{{ $t('user.view_comments') }}</span>
+      </van-button>
+      <van-popup
+        v-model="showComments"
+        position="right"
+        class="comments-popup"
+        closeable
+        :overlay="false"
+      >
+        <iframe
+          v-if="showComments"
+          class="comments-iframe"
+          :src="`https://now.pixiv.pics/#/comments/${artwork.id}`"
+        ></iframe>
+      </van-popup>
+    </div>
   </div>
 </template>
 
@@ -100,6 +137,8 @@ import FileSaver from 'file-saver'
 import dayjs from 'dayjs'
 import { copyText, sleep } from '@/utils'
 import { i18n } from '@/i18n'
+import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
+
 export default {
   filters: {
     convertToK(val) {
@@ -134,10 +173,13 @@ export default {
   data() {
     return {
       isShrink: false,
+      bookmarkId: null,
+      favLoading: false,
+      showComments: false,
     }
   },
   computed: {
-    ...mapGetters(['isCensored']),
+    ...mapGetters(['isCensored', 'isLoggedIn']),
     showTranslatedTags() {
       return i18n.locale.includes('zh')
     },
@@ -147,7 +189,17 @@ export default {
       immediate: true,
       handler() {
         this.isShrink = this.artwork?.caption?.length > 500
+        this.isLoggedIn && this.checkBookmarked()
       },
+    },
+    isLoggedIn: {
+      immediate: true,
+      handler(val) {
+        val && this.checkBookmarked()
+      },
+    },
+    showComments(val) {
+      document.documentElement.style.overflowY = val ? 'hidden' : ''
     },
   },
   mounted() {
@@ -158,6 +210,36 @@ export default {
     })
   },
   methods: {
+    checkBookmarked() {
+      if (!this.artwork.id) return
+      this.favLoading = true
+      isIllustBookmarked(this.artwork.id).then(id => {
+        this.favLoading = false
+        this.bookmarkId = id
+      })
+    },
+    toggleBookmark() {
+      this.favLoading = true
+      if (this.bookmarkId) {
+        removeBookmark(this.bookmarkId).then(({ error }) => {
+          this.favLoading = false
+          if (error) {
+            this.$toast(this.$t('artwork.unfav_fail'))
+          } else {
+            this.bookmarkId = null
+          }
+        })
+      } else {
+        addBookmark(this.artwork.id).then(({ data, error }) => {
+          this.favLoading = false
+          if (error) {
+            this.$toast(this.$t('artwork.fav_fail'))
+          } else {
+            this.bookmarkId = data?.last_bookmark_id || null
+          }
+        })
+      }
+    },
     drawMask() {
       if (this.isNovel) return
       const canvas = this.$refs.mask
@@ -272,6 +354,26 @@ export default {
       transform: translate(-50%, 6px);
     }
   }
+}
+
+.meta_btns {
+  display flex
+  margin-top 16px
+  ::v-deep button {
+    flex 1
+    padding 0 5px
+  }
+}
+
+.comments-popup {
+  top 0
+  transform none
+  overflow-y hidden
+}
+.comments-iframe {
+  width 750px
+  height 100vh
+  border 0
 }
 
 .artwork-meta {

@@ -140,11 +140,11 @@ import TopBar from '@/components/TopBar'
 import AuthorIllusts from './components/AuthorIllusts'
 import FavoriteIllusts from './components/FavoriteIllusts'
 import RecommUser from '../Search/components/RecommUser.vue'
-import api from '@/api'
 import AuthorNovels from './components/AuthorNovels.vue'
 import FavoriteNovels from './components/FavoriteNovels.vue'
-import { getCache, setCache } from '@/utils/siteCache'
 import _ from 'lodash'
+import api from '@/api'
+import { getCache, setCache } from '@/utils/siteCache'
 
 export default {
   name: 'Users',

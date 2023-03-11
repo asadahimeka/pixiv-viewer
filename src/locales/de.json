@@ -31,7 +31,9 @@
         "wechat": "WeChat",
         "weibo": "Weibo"
       }
-    }
+    },
+    "fav_fail": "Zu Lesezeichen hinzufügen fehlgeschlagen",
+    "unfav_fail": "Lesezeichen entfernen fehlgeschlagen"
   },
   "cache": {
     "clear": "Aufräumen",
@@ -266,7 +268,9 @@
       "my_fav": "Meine Lesezeichen",
       "out": "Ausloggen"
     },
-    "related": "Verwandte Benutzer"
+    "related": "Verwandte Benutzer",
+    "faved": "Markiert",
+    "view_comments": "Kommentare ansehen"
   },
   "tip": {
     "rate_limit": "API-Limit überschritten, bitte versuchen Sie es später erneut oder gehen Sie zu den Einstellungen, um die API-Instanz zu ändern",

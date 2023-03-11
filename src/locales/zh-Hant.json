@@ -31,7 +31,9 @@
         "wechat": "微信",
         "weibo": "微博"
       }
-    }
+    },
+    "fav_fail": "收藏失敗",
+    "unfav_fail": "取消收藏失敗"
   },
   "cache": {
     "clear": "清理",
@@ -266,7 +268,9 @@
       "my_fav": "我的收藏",
       "out": "退出"
     },
-    "related": "相關用戶"
+    "related": "相關用戶",
+    "faved": "已收藏",
+    "view_comments": "查看評論"
   },
   "tip": {
     "rate_limit": "超出 API 限制，請稍後重試或前往設置更改 API 實例",

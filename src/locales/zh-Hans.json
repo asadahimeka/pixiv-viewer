@@ -50,7 +50,9 @@
         "qzone": "QQ 空间",
         "wechat": "微信"
       }
-    }
+    },
+    "unfav_fail": "取消收藏失败",
+    "fav_fail": "收藏失败"
   },
   "tips": {
     "copylink": {
@@ -107,7 +109,9 @@
       "my_fav": "我的收藏",
       "out": "退出"
     },
-    "related": "相关用户"
+    "related": "相关用户",
+    "faved": "已收藏",
+    "view_comments": "查看评论"
   },
   "rank": {
     "day": "日榜",

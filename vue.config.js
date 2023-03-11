@@ -35,7 +35,7 @@ module.exports = {
         pathRewrite: { '^/prks/s': '' },
       },
       '/prks/now': {
-        target: 'https://pixiv.js.org',
+        target: 'https://now.pixiv.pics',
         changeOrigin: true,
         pathRewrite: { '^/prks/now': '' },
       },
