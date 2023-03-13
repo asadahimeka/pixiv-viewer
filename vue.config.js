@@ -155,11 +155,7 @@ module.exports = {
         {
           urlPattern: /^https:\/\/cdn\.staticfile\.org/,
           handler: 'StaleWhileRevalidate',
-          options: {
-            cacheName: 'cdn-cache',
-            cacheableResponse: { statuses: [200] },
-            fetchOptions: { credentials: 'include' },
-          },
+          options: { cacheName: 'cdn-cache', cacheableResponse: { statuses: [200] } },
         },
       ],
     },
