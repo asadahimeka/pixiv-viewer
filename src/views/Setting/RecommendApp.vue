@@ -37,17 +37,10 @@
     />
     <van-cell
       center
-      title="ComicNyaa (Android, 预发布)"
+      title="JHenTai (Android,iOS,Linux,macOS,Windows)"
       is-link
-      label=" 一个跨平台的漫画/图库聚合阅读器。"
-      @click="openLink('https://github.com/tsukiseele/ComicNyaa')"
-    />
-    <van-cell
-      center
-      title="MoeViewerN (PC, 未发布)"
-      is-link
-      label="一个可爱的二次元网络画廊浏览器，目前处在dev阶段。"
-      @click="openLink('https://github.com/tsukiseele/MoeViewerN')"
+      label="A cross-platform app made for e-hentai & exhentai by Flutter."
+      @click="openLink('https://github.com/jiangtian616/JHenTai')"
     />
     <van-cell
       center
@@ -58,10 +51,31 @@
     />
     <van-cell
       center
+      title="ComicNyaa (Android, 预发布)"
+      is-link
+      label=" 一个跨平台的漫画/图库聚合阅读器。"
+      @click="openLink('https://github.com/tsukiseele/ComicNyaa')"
+    />
+    <van-cell
+      center
+      title="MoeViewerN (Windows, 未发布)"
+      is-link
+      label="一个可爱的二次元网络画廊浏览器，目前处在dev阶段。"
+      @click="openLink('https://github.com/tsukiseele/MoeViewerN')"
+    />
+    <van-cell
+      center
       title="Tachiyomi (Android)"
       is-link
       label="Free and open source manga reader for Android."
       @click="openLink('https://github.com/tachiyomiorg/tachiyomi')"
+    />
+    <van-cell
+      center
+      title="全是漫画"
+      is-link
+      label="https://github.com/hongchacha/cartoon"
+      @click="openLink('https://github.com/hongchacha/cartoon')"
     />
     <van-cell
       center

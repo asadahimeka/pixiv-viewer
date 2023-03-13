@@ -11,7 +11,7 @@
       </div>
       <div class="ia-right">
         <van-skeleton class="skeleton" title avatar :row="5" avatar-size="42px" :loading="loading">
-          <ArtworkMeta :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
+          <ArtworkMeta ref="artworkMeta" :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
         </van-skeleton>
         <keep-alive>
           <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
@@ -49,6 +49,7 @@ import AuthorCard from './components/AuthorCard'
 import Related from './components/Related'
 import { ImagePreview } from 'vant'
 import { mapGetters } from 'vuex'
+import nprogress from 'nprogress'
 import api from '@/api'
 import { getCache, setCache } from '@/utils/siteCache'
 import _ from 'lodash'
@@ -90,6 +91,24 @@ export default {
     ArtworkMeta: Meta,
     AuthorCard,
     Related,
+  },
+  beforeRouteUpdate(to, from, next) {
+    if (this.$refs.artworkMeta.showComments) {
+      this.$refs.artworkMeta.showComments = false
+      next(false)
+      nprogress.done()
+    } else {
+      next()
+    }
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.$refs.artworkMeta.showComments) {
+      this.$refs.artworkMeta.showComments = false
+      next(false)
+      nprogress.done()
+    } else {
+      next()
+    }
   },
   data() {
     return {

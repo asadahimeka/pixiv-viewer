@@ -277,7 +277,7 @@
     "unknown_err": "未知错误"
   },
   "sess": {
-    "title": "设置 Pixiv Session ID",
+    "title": "设置 Pixiv Cookie",
     "input": {
       "ph": "请输入 Session ID",
       "msg": "Session ID 格式不正确"

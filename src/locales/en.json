@@ -304,7 +304,7 @@
     "ques2": "Will Pixiv Viewer steal my personal information?",
     "save": "save",
     "succ_msg": "Session ID authentication succeeded",
-    "title": "Set Pixiv Session ID",
+    "title": "Set Pixiv Cookie",
     "warn": {
       "text": "This function is an abnormal way to log in, and there may be a risk of banning the account. Using this function is deemed to be the user's own consent and clear use of the risk. If the account is banned, etc., the author of this project has nothing to do with it. \nIt is recommended to use trumpet for testing.",
       "title": "Risk Notice"

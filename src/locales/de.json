@@ -304,7 +304,7 @@
     "ques2": "Wird Pixiv Viewer meine persönlichen Daten stehlen?",
     "save": "speichern",
     "succ_msg": "Sitzungs-ID-Authentifizierung erfolgreich",
-    "title": "Legen Sie die Pixiv-Sitzungs-ID fest",
+    "title": "Pixiv-Cookie setzen",
     "warn": {
       "text": "Diese Funktion ist eine anormale Art der Anmeldung, und es besteht die Gefahr, dass das Konto gesperrt wird. \nDie Nutzung dieser Funktion gilt als eigene Zustimmung des Nutzers und eindeutige Risikoübernahme. \nWenn der Account gesperrt wird usw., hat der Autor dieses Projekts nichts damit zu tun.\n\nEs wird empfohlen, Trompete zum Testen zu verwenden.",
       "title": "Risikohinweis"

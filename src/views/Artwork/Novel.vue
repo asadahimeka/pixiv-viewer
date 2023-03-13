@@ -51,6 +51,7 @@
             <div class="conf-title">{{ $t('novel.settings.text.font') }}</div>
             <div class="conf-inp">
               <van-radio-group v-model="textConfig.font" direction="horizontal">
+                <van-radio name="inherit">inherit</van-radio>
                 <van-radio name="sans-serif">{{ $t('novel.settings.text.sans') }}</van-radio>
                 <van-radio name="serif">{{ $t('novel.settings.text.serif') }}</van-radio>
               </van-radio-group>
@@ -133,7 +134,7 @@ const shareOptions = [
 const textConfig = LocalStorage.get('PXV_TEXT_CONFIG', {
   size: 16,
   height: 2,
-  font: 'sans-serif',
+  font: 'inherit',
   weight: 400,
   direction: 'h',
   color: '#1f1f1f',
