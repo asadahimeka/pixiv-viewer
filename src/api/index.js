@@ -20,12 +20,10 @@ export const PXIMG_PROXY_BASE = LocalStorage.get('PXIMG_PROXY', process.env.VUE_
 export const imgProxy = url => {
   let result = url.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
   if (url.startsWith('/-/')) {
-    result = result.replace(/\/-\//, '/')
-    result = `https://${PXIMG_PROXY_BASE}` + result
+    result = result.replace(/^\/-\//, `https://${PXIMG_PROXY_BASE}/`)
   }
   if (url.startsWith('/~/')) {
-    result = result.replace(/\/~\//, '/')
-    result = 'https://s.pximg.net' + result
+    result = result.replace(/^\/~\//, 'https://s.pximg.net/')
   }
 
   if (!isSupportWebP) {
@@ -153,9 +151,9 @@ const parseAiIllust = (d, r18) => {
   }]
 
   let avatar = d.profile_img
-  const avatarPrefix = avatar.startsWith('/~/') ? 'https://s.pximg.net' : `https://${PXIMG_PROXY_BASE}`
-  avatar = avatar.replace(/\/(-)|(~)\//, '/')
-  avatar = avatarPrefix + avatar
+  if (!avatar.includes('s.pximg.net')) {
+    avatar = imgProxy(avatar)
+  }
 
   const artwork = {
     id: d.illust_id,
@@ -193,9 +191,9 @@ const parseWebRankIllust = (d, mode, content) => {
   }]
 
   let avatar = d.profile_img
-  const avatarPrefix = avatar.startsWith('/~/') ? 'https://s.pximg.net' : `https://${PXIMG_PROXY_BASE}`
-  avatar = avatar.replace(/\/(-)|(~)\//, '/')
-  avatar = avatarPrefix + avatar
+  if (!avatar.includes('s.pximg.net')) {
+    avatar = imgProxy(avatar)
+  }
 
   const artwork = {
     id: d.illust_id,
@@ -233,9 +231,9 @@ export const parseWebApiIllust = d => {
   }]
 
   let avatar = d.profileImageUrl
-  const avatarPrefix = avatar.startsWith('/~/') ? 'https://s.pximg.net' : `https://${PXIMG_PROXY_BASE}`
-  avatar = avatar.replace(/\/(-)|(~)\//, '/')
-  avatar = avatarPrefix + avatar
+  if (!avatar.includes('s.pximg.net')) {
+    avatar = imgProxy(avatar)
+  }
 
   const artwork = {
     id: d.id,

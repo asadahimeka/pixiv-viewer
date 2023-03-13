@@ -8119,10 +8119,10 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vant@2.12.49:
-  version "2.12.49"
-  resolved "https://registry.npmmirror.com/vant/-/vant-2.12.49.tgz#81b008ad7270059c5531bfdbba09f15ef9e22c0f"
-  integrity sha512-J0QTT/AgO3iVwPGJbGDyUZgxPnmxCwWARCVnXbKo4cZyb44tqrYuI8ZuhMMqQ7WnV2RvlfHHa3ObuQJQAKh90A==
+vant@2.12.54:
+  version "2.12.54"
+  resolved "https://registry.npmmirror.com/vant/-/vant-2.12.54.tgz#0bc52d80414422987cdb9b7e7c101a66d3647d8d"
+  integrity sha512-t7DCiLxNosDrg0Jm5EY9p0A5cAMo5OadmizbYtPEc0ru+OJKEa3kcfxtKIK5on7ZPqoOkyYJt8e6BQ1VDMPsrg==
   dependencies:
     "@babel/runtime" "7.x"
     "@vant/icons" "^1.7.1"
