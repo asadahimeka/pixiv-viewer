@@ -29,10 +29,7 @@
 </template>
 
 <script>
-import { LocalStorage } from '@/utils/storage'
 import { mapGetters } from 'vuex'
-
-const wfType = LocalStorage.get('__WF_TYPE', 'Masonry')
 
 export default {
   props: {
@@ -63,7 +60,7 @@ export default {
   },
   computed: {
     imgSrc() {
-      if (this.square || wfType === 'Grid') {
+      if (this.square) {
         return this.artwork.images[0].s
       }
       return this.artwork.images[0].m
