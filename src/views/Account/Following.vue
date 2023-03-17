@@ -58,11 +58,11 @@ export default {
     flex unset
     margin 0 0.1rem
   .van-tab__text
-    height: 0.66rem;
+    height: 0.8rem;
     padding: 0 0.21333rem;
-    line-height: 0.66rem;
+    line-height: 0.8rem;
     text-align center;
-    font-size: 0.32rem;
+    font-size: 0.37333rem;
     border-radius: 0.13333rem;
     color: #333;
     background: #eee;

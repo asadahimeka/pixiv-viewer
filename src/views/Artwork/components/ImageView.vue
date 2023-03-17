@@ -313,7 +313,7 @@ export default {
       const ctx = cacheCanvas.getContext('2d')
 
       const gif = new GIF({
-        workers: 4,
+        workers: 10,
         quality: 10,
         width,
         height,

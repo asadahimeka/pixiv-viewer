@@ -61,8 +61,4 @@ html,body
     top 0.3rem
     margin-bottom 0
     padding 0
-  .com_sel_tab
-    padding 0 16px
-    height 0.66rem
-    font-size 0.32rem
 </style>
