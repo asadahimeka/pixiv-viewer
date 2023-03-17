@@ -10,7 +10,11 @@
         <h1 class="title">{{ spotlight.title }}</h1>
       </div>
     </div>
-    <div class="sp_desc" v-html="spotlight.content"></div>
+    <div
+      class="sp_desc"
+      @click.stop="handleClick($event)"
+      v-html="spotlight.content"
+    ></div>
     <van-loading v-show="loading" class="loading" :size="'50px'" />
     <masonry v-bind="recomMasonryProps">
       <SpotlightsRecom
@@ -104,6 +108,23 @@ export default {
     init() {
       this.spid = this.$route.query.id
       this.getDetail()
+    },
+    handleClick(/** @type {MouseEvent} */ e) {
+      if (e.target.tagName === 'A') {
+        e.preventDefault()
+        const url = e.target.href
+        const pid = url.match(/https:\/\/www\.pixiv\.net\/artworks\/(\d+)/i)?.[1]
+        if (pid) {
+          this.$router.push(`/i/${pid}`)
+          return
+        }
+        const uid = url.match(/https:\/\/www\.pixiv\.net\/users\/(\d+)/i)?.[1]
+        if (uid) {
+          this.$router.push(`/u/${uid}`)
+          return
+        }
+        window.open(url, '_blank', 'noreferrer')
+      }
     },
     openLink() {
       window.open(`https://www.pixivision.net/zh/a/${this.spid}`, '_blank', 'noreferrer')

@@ -5,7 +5,7 @@
     <template v-if="rankList.length && recomList.length">
       <masonry v-bind="recomMasonryProps">
         <SpotlightsRecom :title="$t('sp.rank')" icon="spec_rank" :list="rankList" />
-        <SpotlightsRecom :title="$t('sp.recomm_4u')" icon="rec_heart" :list="recomList" />
+        <SpotlightsRecom is-type-detail :title="$t('sp.recomm_4u')" icon="rec_heart" :list="recomList" />
       </masonry>
     </template>
     <van-cell v-if="artList.length" class="overview" :border="false">
