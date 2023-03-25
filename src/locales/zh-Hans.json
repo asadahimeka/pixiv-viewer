@@ -245,7 +245,8 @@
       "ph": "请选择 HibiAPI 实例 (切换后会清空本地缓存)",
       "title4": "HibiAPI 实例"
     },
-    "input": "输入："
+    "input": "输入：",
+    "down_app": "客户端下载"
   },
   "sp": {
     "of_new": "的最新特辑",

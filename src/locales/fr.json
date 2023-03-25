@@ -222,7 +222,8 @@
       "site": "Site Internet",
       "title": "Suggestion connexe",
       "tm": "Script utilisateur"
-    }
+    },
+    "down_app": "Télécharger l'application"
   },
   "sp": {
     "all": "Aperçu",

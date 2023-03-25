@@ -9,11 +9,11 @@
 ## Features
 - [x] 基础页面
   - [x] 首页信息流
-  - [x] 排行榜(包括 AI 排行榜)
+  - [x] 排行榜(综合/插画/漫画/动图/小说)
   - [x] 作品页面
   - [x] 作者信息页面
   - [x] 设置页面
-- [x] 搜索功能
+- [x] 搜索功能(插画·漫画/小说/用户)
 - [x] 以图搜图
 - [x] 动图播放
 - [x] 动图下载(ZIP/GIF/WebM)
@@ -30,6 +30,8 @@
 - [x] 搜索热门作品预览
 - [x] 搜索条件选择
 - [x] 多语言支持
+- [x] 小说支持
+- [x] Cookie 登录/收藏/插画动态
 - [x] 深色模式
 
 ## TODO
@@ -43,35 +45,23 @@ https://github.com/asadahimeka/pixiv-viewer/issues
 
 - 移动端
 
-<kbd><img src="docs/1.jpg" width="390"></kbd>  <kbd><img src="docs/7.jpg" width="390"></kbd>
+<kbd><img src="docs/a1.jpg" width="390"></kbd>  <kbd><img src="docs/a2.jpg" width="390"></kbd>
 
-<kbd><img src="docs/9.jpg" width="390"></kbd>  <kbd><img src="docs/10.jpg" width="390"></kbd>
+<kbd><img src="docs/a3.jpg" width="390"></kbd>  <kbd><img src="docs/a4.jpg" width="390"></kbd>
 
-<kbd><img src="docs/12.jpg" width="390"></kbd>  <kbd><img src="docs/13.jpg" width="390"></kbd>　
+<kbd><img src="docs/a5.jpg" width="390"></kbd>  <kbd><img src="docs/a6.jpg" width="390"></kbd>　
 
-<kbd><img src="docs/15.jpg" width="390"></kbd>  <kbd><img src="docs/17.png" width="390"></kbd>
+<kbd><img src="docs/a7.jpg" width="390"></kbd>  <kbd><img src="docs/a8.jpg" width="390"></kbd>
 
-- PC 端
+- 桌面端
 
-<kbd><img src="docs/18.png"></kbd>
+<kbd><img src="docs/w1.png" width="390"></kbd>  <kbd><img src="docs/w2.png" width="390"></kbd>
 
-<kbd><img src="docs/20.jpg"></kbd>
+<kbd><img src="docs/w3.png" width="390"></kbd>  <kbd><img src="docs/w4.png" width="390"></kbd>
 
-<kbd><img src="docs/21.jpg"></kbd>
+<kbd><img src="docs/w5.png" width="390"></kbd>  <kbd><img src="docs/w6.png" width="390"></kbd>　
 
-<kbd><img src="docs/23.png"></kbd>
-
-<kbd><img src="docs/24.png"></kbd>
-
-<kbd><img src="docs/25.png"></kbd>
-
-<kbd><img src="docs/26.png"></kbd>
-
-<kbd><img src="docs/27.png"></kbd>
-
-<kbd><img src="docs/28.png"></kbd>
-
-<kbd><img src="docs/29.png"></kbd>
+<kbd><img src="docs/w7.png" width="390"></kbd>  <kbd><img src="docs/w8.png" width="390"></kbd>
 
 ## Alternatives
 
@@ -83,8 +73,9 @@ https://github.com/asadahimeka/pixiv-viewer/issues
 - [PIXID](https://pixid.top/ranking.php)
 - [pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
-- [Pixiv Ranking](https://www.nanoka.top/illust/pixiv/)
+- [moeview](https://moeview.kanata.ml)
 - [booruwf](https://booru.kanata.ml)
+- [Ranking](https://www.nanoka.top/illust/pixiv/)
 
 ## Project setup
 ```

@@ -51,6 +51,27 @@
     />
     <van-cell
       center
+      title="Eros-N (Android,iOS)"
+      is-link
+      label="An unofficial nhentai app."
+      @click="openLink('https://github.com/erosTeam/eros_n')"
+    />
+    <van-cell
+      center
+      title="PicaComic (Android,Windows)"
+      is-link
+      label="Unofficial picacg app built with flutter/使用 Flutter 构建的跨平台 Picacg App"
+      @click="openLink('https://github.com/wgh136/PicaComic')"
+    />
+    <van-cell
+      center
+      title="flutter_dmzj (Android,iOS,Linux,macOS,Windows)"
+      is-link
+      label="动漫之家 Flutter 客户端。"
+      @click="openLink('https://github.com/xiaoyaocz/flutter_dmzj')"
+    />
+    <van-cell
+      center
       title="ComicNyaa (Android, 预发布)"
       is-link
       label=" 一个跨平台的漫画/图库聚合阅读器。"
@@ -72,7 +93,7 @@
     />
     <van-cell
       center
-      title="全是漫画"
+      title="全是漫画 (Android)"
       is-link
       label="https://github.com/hongchacha/cartoon"
       @click="openLink('https://github.com/hongchacha/cartoon')"

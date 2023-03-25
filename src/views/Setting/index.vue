@@ -22,6 +22,7 @@
     <van-cell size="large" center :title="$t('display.title')" icon="eye-o" is-link to="/setting/contents_display" />
     <van-cell size="large" center :title="$t('cache.title')" icon="delete-o" is-link to="/setting/clearcache" />
     <van-cell size="large" center :title="$t('setting.other.title')" icon="setting-o" is-link to="/setting/others" />
+    <van-cell size="large" center :title="$t('setting.down_app')" icon="apps-o" is-link to="/setting/down_app" />
     <van-cell size="large" center :title="$t('setting.recomm.title')" icon="bookmark-o" is-link to="/setting/recommend" />
     <van-cell size="large" center :title="$t('setting.about')" icon="info-o" is-link to="/setting/about" />
     <div v-if="isLoggedIn" style="width: 60%;margin: 1rem auto 0;">

@@ -63,7 +63,7 @@
       </div>
     </div>
     <ImageSearch v-show="!focus && !keywords.trim()" ref="imageSearch" key="container" />
-    <div v-show="!keywords.trim()" class="com_sel_tabs">
+    <div v-show="!focus && !keywords.trim()" class="com_sel_tabs">
       <div class="com_sel_tab cur">{{ $t('common.illust_manga') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_novel')">{{ $t('common.novel') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_user')">{{ $t('common.user') }}</div>

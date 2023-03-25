@@ -60,12 +60,12 @@
       center
       title="moeview"
       is-link
-      label="https://moeview.pages.dev"
-      @click="openLink('https://moeview.pages.dev')"
+      label="https://moeview.kanata.ml"
+      @click="openLink('https://moeview.kanata.ml')"
     />
     <van-cell
       center
-      title="Voiux 图库"
+      title="Voiux"
       is-link
       label="https://gtk.voiux.com"
       @click="openLink('https://gtk.voiux.com/pixiv_ranking?mode=daily')"
@@ -83,13 +83,6 @@
       is-link
       label="https://www.nanoka.top/illust/pixiv/"
       @click="openLink('https://www.nanoka.top/illust/pixiv/')"
-    />
-    <van-cell
-      center
-      title="PixAI"
-      is-link
-      label="https://pixai.art"
-      @click="openLink('https://pixai.art/?sort=daily-ranking')"
     />
   </div>
 </template>
