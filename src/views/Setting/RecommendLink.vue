@@ -6,8 +6,8 @@
       @click="openLink('https://pixivel.moe/rank')" />
     <van-cell center title="Pixiviz" is-link label="https://pixiviz.kanata.ml/rank"
       @click="openLink('https://pixiviz.kanata.ml/rank')" />
-    <van-cell center title="PixivNow" is-link label="https://pixiv.cocomi.eu.org/ranking"
-      @click="openLink('https://pixiv.cocomi.eu.org/ranking')" />
+    <van-cell center title="PixivNow" is-link label="https://now.pixiv.pics"
+      @click="openLink('https://now.pixiv.pics')" />
     <van-cell center title="PIXID" is-link label="https://pixid.top/ranking.php"
       @click="openLink('https://pixid.top/ranking.php')" />
     <van-cell center title="pixiv萌え" is-link label="https://pixiv.moe" @click="openLink('https://pixiv.moe')" />

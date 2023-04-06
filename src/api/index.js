@@ -472,7 +472,7 @@ const api = {
 
     if (!spotlights) {
 
-      let res = await get('https://pixiv.cocomi.eu.org/api/pixivision', { page })
+      let res = await get('https://now.pixiv.pics/api/pixivision', { page })
 
       if (res.articles) {
 
@@ -509,7 +509,7 @@ const api = {
 
     if (!spotlight) {
 
-      let res = await get(`https://pixiv.cocomi.eu.org/api/pixivision/${id}`)
+      let res = await get(`https://now.pixiv.pics/api/pixivision/${id}`)
 
       if (res) {
 
@@ -553,7 +553,7 @@ const api = {
     let rankList = await getCache(cacheKey)
 
     if (!rankList) {
-      let res = await get('https://pixiv.cocomi.eu.org/api/ranking', {
+      let res = await get('https://now.pixiv.pics/api/ranking', {
         format: 'json',
         p: page,
         mode,
@@ -578,7 +578,7 @@ const api = {
   async getDiscoveryArtworks(mode = 'all', limit = 60) {
     let list
 
-    let res = await get('https://pixiv.cocomi.eu.org/ajax/discovery/artworks', {
+    let res = await get('https://now.pixiv.pics/ajax/discovery/artworks', {
       mode,
       limit,
       lang: 'zh',
