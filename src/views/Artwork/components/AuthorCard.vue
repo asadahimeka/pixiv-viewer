@@ -1,5 +1,5 @@
 <template>
-  <div class="author-card" v-if="author">
+  <div v-if="author" class="author-card">
     <!-- <div class="name-bar">
       <img class="avatar" :src="author.avatar" :alt="author.name" />
       <div class="author">{{author.name}}</div>
@@ -7,28 +7,29 @@
 
     <van-cell class="cell" :border="false" is-link @click="toAuthor(author.id)">
       <template #title>
-        <img class="icon" :src="author.avatar" :alt="author.name" />
-        <span class="title">{{author.name}} 的其他作品</span>
+        <img class="icon" :src="author.avatar" alt="">
+        <span class="title">{{ author.name }} {{ $t('user.of_other_art') }}</span>
       </template>
     </van-cell>
-    <div class="artwork-list-wrap" v-if="memberArtwork.length>=10">
+    <div v-if="memberArtwork.length>=10" class="artwork-list-wrap">
       <!-- <div class="artwork-list" :style="{width:`${(memberArtwork.length-5)/2.3*100}%`}"> -->
-      <swiper class="artwork-list" :options="swiperOption">
+      <swiper ref="mySwiper" class="artwork-list" :options="swiperOption">
         <swiper-slide
-          class="image-card-slide"
           v-for="art in memberArtwork.slice(0,memberArtwork.length-5)"
           :key="art.id"
+          class="image-card-slide"
         >
           <ImageCard class="slide" mode="cover" :artwork="art" @click-card="toArtwork($event)" />
         </swiper-slide>
         <swiper-slide class="image-slide-slide">
           <ImageSlide class="slide" :images="slides">
             <div class="link" @click="toAuthor(author.id)">
-              <Icon name="more" scale="20"></Icon>
-              <div>查看更多</div>
+              <Icon name="more" scale="20" />
+              <div>{{ $t('common.view_more') }}</div>
             </div>
           </ImageSlide>
         </swiper-slide>
+        <div slot="scrollbar" class="swiper-scrollbar"></div>
       </swiper>
       <!-- </div> -->
     </div>
@@ -36,88 +37,95 @@
 </template>
 
 <script>
-import { Cell } from "vant";
-import ImageCard from "@/components/ImageCard";
-import ImageSlide from "@/components/ImageSlide";
-import { mapActions, mapGetters } from "vuex";
-import api from "@/api";
+import ImageCard from '@/components/ImageCard'
+import ImageSlide from '@/components/ImageSlide'
+import { mapActions, mapGetters } from 'vuex'
+import api from '@/api'
 export default {
-  computed: {
-    author() {
-      return this.memberArtwork && this.memberArtwork.length > 0
-        ? this.memberArtwork[0].author
-        : null;
-    },
-    slides() {
-      let memberArtwork = this.memberArtwork.slice(
-        this.memberArtwork.length - 5,
-        this.memberArtwork.length
-      );
-      return memberArtwork.map(artwork => {
-        return {
-          title: artwork.title,
-          src: artwork.images[0].m,
-          isCensored: this.isCensored(artwork)
-        };
-      });
-    },
-    ...mapGetters(["isCensored"])
+  components: {
+    ImageCard,
+    ImageSlide,
   },
   props: {
     id: {
       type: Number,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
       memberArtwork: null,
       swiperOption: {
         freeMode: true,
-        slidesPerView: "auto"
-      }
-    };
+        slidesPerView: 'auto',
+        mousewheel: true,
+        scrollbar: {
+          el: '.swiper-scrollbar',
+          draggable: true,
+        },
+      },
+    }
+  },
+  computed: {
+    author() {
+      return this.memberArtwork && this.memberArtwork.length > 0
+        ? this.memberArtwork[0].author
+        : null
+    },
+    slides() {
+      const memberArtwork = this.memberArtwork.slice(
+        this.memberArtwork.length - 5,
+        this.memberArtwork.length
+      )
+      return memberArtwork.map(artwork => {
+        return {
+          title: artwork.title,
+          src: artwork.images[0].m,
+          isCensored: this.isCensored(artwork),
+        }
+      })
+    },
+    ...mapGetters(['isCensored']),
+  },
+  mounted() {
+    this.init()
   },
   methods: {
     init() {
       // this.memberArtwork = [];
-      this.getMemberArtwork(this.id);
+      this.getMemberArtwork(this.id)
     },
     async getMemberArtwork(id) {
-      let res = await api.getMemberArtwork(id);
+      const res = await api.getMemberArtwork(id)
       if (res.status === 0) {
-        this.memberArtwork = res.data;
-        this.$emit("loaded");
+        this.memberArtwork = res.data
+        this.$emit('loaded')
+        const i = res.data.findIndex(e => e.id == this.$route.params.id)
+        i && this.$nextTick(() => {
+          this.$refs.mySwiper?.$swiper?.slideTo(i)
+        })
       } else {
         this.$toast({
           message: res.msg,
-          icon: require("@/svg/error.svg")
-        });
+          icon: require('@/icons/error.svg'),
+        })
       }
     },
     toArtwork(id) {
       this.$router.push({
-        name: "Artwork",
-        params: { id, list: this.memberArtwork }
-      });
+        name: 'Artwork',
+        params: { id, list: this.memberArtwork },
+      })
     },
     toAuthor(id) {
       this.$router.push({
-        name: "Users",
-        params: { id }
-      });
+        name: 'Users',
+        params: { id },
+      })
     },
-    ...mapActions(["setGalleryList"])
+    ...mapActions(['setGalleryList']),
   },
-  mounted() {
-    this.init();
-  },
-  components: {
-    [Cell.name]: Cell,
-    ImageCard,
-    ImageSlide
-  }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -167,23 +175,24 @@ export default {
 
       .swiper-slide {
         &.image-card-slide {
-          width: 40%;
+          width: 240px;
         }
 
         &.image-slide-slide {
-          width: 70%;
+          width: 320px;
         }
 
         .image-card {
-          height: 330px !important;
+          height: 240px !important;
           border: 1px solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
           margin-right: 6px;
+          padding-bottom: 0 !important;
         }
 
         .image-slide {
-          height: 330px !important;
+          height: 240px !important;
           border: 1px solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;

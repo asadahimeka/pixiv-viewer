@@ -1,100 +1,105 @@
 <template>
-  <div class="tags">
-    <div class="top" v-if="tags.length>0">
-      <div class="tag" @click.stop="search(tags[0].name)">
-        <img :src="tags[0].pic" alt />
+  <div style="position: relative;">
+    <masonry class="tags" v-bind="$store.getters.wfProps" gutter="8px">
+      <div
+        v-for="(tag, index) in tags"
+        :key="index"
+        class="tag"
+        :style="{ backgroundImage: `linear-gradient(45deg, ${randColor()} 0%, ${randColor()} 100%)` }"
+        @click.stop="search(tag.name)"
+      >
+        <img :src="tag.pic" alt>
         <div class="meta">
           <div class="content">
-            <div
-              class="name"
-              v-if="tags[0].name"
-              :class="{s: tags[0].name.length>=10, m: tags[0].name.length>=6}"
-            >#{{tags[0].name}}</div>
-            <div
-              class="tname"
-              v-if="tags[0].tname"
-              :class="{s: tags[0].tname.length>=10, m: tags[0].tname.length>=6}"
-            >{{tags[0].tname}}</div>
+            <div v-if="tag.name" class="name" :class="[getLength(tag.name)]">#{{ tag.name }}</div>
+            <div v-if="tag.tname" class="tname" :class="[getLength(tag.tname)]">{{ tag.tname }}</div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="bottom" v-if="tags.length>3">
-      <div class="row">
-        <div
-          class="tag"
-          v-for="(tag,index) in tags.slice(1)"
-          :key="index"
-          @click.stop="search(tag.name)"
-        >
-          <img :src="tag.pic" alt />
-          <div class="meta">
-            <div class="content">
-              <div class="name" v-if="tag.name" :class="[getLength(tag.name)]">#{{tag.name}}</div>
-              <div class="tname" v-if="tag.tname" :class="[getLength(tag.tname)]">{{tag.tname}}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    </masonry>
+    <van-loading v-if="loading" class="loading" size="60px" />
   </div>
 </template>
 
 <script>
-import api from "@/api";
+import api from '@/api'
 export default {
+  components: {
+  },
   data() {
     return {
-      tags: []
-    };
-  },
-  methods: {
-    search(keywords) {
-      this.$emit("search", keywords);
-    },
-    async getTags() {
-      let res = await api.getTags();
-      if (res.status === 0) {
-        this.tags = res.data;
-      } else {
-        this.$toast({
-          message: res.msg
-        });
-        this.loading = false;
-        this.error = true;
-      }
-    },
-    getLength(val) {
-      if (val.length >= 10) {
-        return "s";
-      }
-      if (val.length >= 4) {
-        return "m";
-      }
-      return "l";
+      loading: false,
+      tags: [],
     }
   },
   mounted() {
-    this.getTags();
+    this.getTags()
   },
-  components: {}
-};
+  methods: {
+    search(keywords) {
+      this.$emit('search', keywords)
+    },
+    async getTags() {
+      this.loading = true
+      const res = await api.getTags()
+      if (res.status === 0) {
+        this.tags = res.data
+      } else {
+        this.$toast({
+          message: res.msg,
+        })
+        this.error = true
+      }
+      this.loading = false
+    },
+    getLength(val) {
+      if (val.length >= 10) {
+        return 's'
+      }
+      if (val.length >= 4) {
+        return 'm'
+      }
+      return 'l'
+    },
+    randColor() {
+      const characters = ['a', 'b', 'c', 'd', 'e', 'f', 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+      const randomColorArray = []
+      for (let i = 0; i < 6; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length)
+        randomColorArray.push(characters[randomIndex])
+      }
+      return `#${randomColorArray.join('')}`
+    },
+  },
+}
 </script>
 
 <style lang="stylus" scoped>
+.loading
+  position absolute
+  top 300px
+  left 50%
+  transform translateX(-50%)
+
 .tags {
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
 
   .tag {
     position: relative;
-    float: left;
-    width: 33.3%;
+    width: 100%;
+    margin-bottom: 10px;
+    padding-bottom: 100%;
+    border-radius: 8px;
 
     img {
+      position: absolute;
+      top: 0;
+      left: 0;
       display: block;
       width: 100%;
       height: 100%;
+      border-radius: 8px;
       object-fit: cover;
     }
 
@@ -106,12 +111,14 @@ export default {
       bottom: 0;
       text-align: center;
       color: #fff;
-      background: rgba(#000, 0.3);
+      background-image: linear-gradient(0deg, rgba(0,0,0,0.45) 0%, rgba(255,255,255,0) 60%);
+      border-radius: 8px;
 
       .content {
         position: absolute;
         bottom: 10%;
         width: 100%;
+        text-shadow: 0.05333rem 0.05333rem 0.05333rem #000;
 
         .name {
           font-size: 36px;

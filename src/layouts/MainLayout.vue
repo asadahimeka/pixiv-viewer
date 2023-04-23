@@ -2,59 +2,48 @@
   <div class="main-layout" :class="{'safe-area': safeArea}">
     <div class="app-main">
       <keep-alive>
-        <router-view></router-view>
+        <router-view />
       </keep-alive>
     </div>
-    <Nav v-if="showNav" />
+    <my-nav v-if="showNav" />
   </div>
 </template>
 
 <script>
-import Nav from "@/components/Nav";
+import Nav from '@/components/Nav'
 export default {
-  data() {
-    return {};
+  components: {
+    'my-nav': Nav,
   },
   props: {
     safeArea: {
       type: Boolean,
-      default: false
+      default: false,
     },
     showNav: {
       type: Boolean,
-      default: true
-    }
+      default: true,
+    },
   },
-  components: {
-    Nav
-  }
-};
+  data() {
+    return {}
+  },
+}
 </script>
 
 <style lang="stylus" scoped>
-.main-layout {
-  box-sizing: border-box;
+.main-layout
+  box-sizing border-box
 
-  &.safe-area {
-    padding-top: 60px;
-    height: calc(100vh - 60px);
-    padding-top: env(safe-area-inset-top);
-    height: calc(100vh - env(safe-area-inset-top));
-  }
-}
+  &.safe-area
+    // height 100vh
+    padding-top 0
 
-.app-main {
-  position: relative;
-  height: 100%;
-  // height: calc(100vh - 100px);
-  // padding-bottom: 100px;
-  // height: calc(100vh - env(safe-area-inset-bottom));
-  // padding-bottom: env(safe-area-inset-bottom);
-  overflow-y: scroll;
-  box-sizing: border-box;
+.app-main
+  position relative
+  // height 100vh
+  padding 10px 8px 0
+  box-sizing border-box
+  // overflow-y auto
 
-  &::-webkit-scrollbar {
-    width: 0;
-  }
-}
 </style>

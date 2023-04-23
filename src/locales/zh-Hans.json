@@ -1,0 +1,331 @@
+{
+  "common": {
+    "illust": "插画",
+    "manga": "漫画",
+    "novel": "小说",
+    "cancel": "取消",
+    "content": {
+      "hide": "根据当前设置，此内容将不予显示"
+    },
+    "download": "下载",
+    "view_more": "查看更多",
+    "words": "字",
+    "ai_gen": "AI 生成",
+    "related": "相关作品",
+    "discovery": "发现",
+    "new_art": "新作",
+    "recomm_art": "推荐作品",
+    "recomm": "推荐",
+    "rank": "排行榜",
+    "random_view": "随便看看",
+    "overall": "综合",
+    "ugoira": "动图",
+    "artwork": "作品",
+    "user": "用户",
+    "illust_manga": "插画·漫画",
+    "history": "历史记录",
+    "confirm": "确认",
+    "reset": "重置",
+    "date": "日期",
+    "save": "保存"
+  },
+  "artwork": {
+    "download": {
+      "zip": "原始序列帧归档文件",
+      "gif": "低画质，兼容性最佳",
+      "webm": "高画质，兼容性差",
+      "placeholder": "请选择下载格式",
+      "ugoira": {
+        "tip": "请先播放动图"
+      }
+    },
+    "share": {
+      "title": "立即分享给好友",
+      "share": "分享",
+      "of_art": "的作品",
+      "type": {
+        "web": "Web 分享",
+        "copylink": "复制链接",
+        "qrcode": "二维码",
+        "weibo": "微博",
+        "qzone": "QQ 空间",
+        "wechat": "微信"
+      }
+    },
+    "unfav_fail": "取消收藏失败",
+    "fav_fail": "收藏失败"
+  },
+  "tips": {
+    "copylink": {
+      "success": "已复制链接",
+      "error": "复制链接失败:",
+      "succ": "已复制"
+    },
+    "current_value": "当前值：",
+    "ios_webm": "iOS 设备暂不支持 WebM 格式下载",
+    "download_wait": "下载时间可能较长，请耐心等待",
+    "loading": "加载中...",
+    "no_more": "没有更多了",
+    "net_err": "网络异常，点击重新加载",
+    "no_data": "暂无数据",
+    "click_view": "点击查看"
+  },
+  "novel": {
+    "series": {
+      "prev": "上一话：",
+      "next": "下一话:"
+    },
+    "settings": {
+      "title": "小说设置",
+      "text": {
+        "size": "文字大小",
+        "font": "文字字体",
+        "sans": "黑体",
+        "serif": "宋体",
+        "direction": "文字方向",
+        "direct_h": "横向",
+        "direct_v": "纵向",
+        "height": "文字行高",
+        "weight": "文字字重",
+        "color": "文字颜色",
+        "bg": "文字背景"
+      }
+    }
+  },
+  "user": {
+    "of_other_art": "的其他作品",
+    "art_num": "{0}件作品",
+    "of": "的",
+    "fav": "收藏",
+    "art_title": "{0}作品",
+    "novel_art": "小说作品",
+    "novel_art_title": "{0}小说作品",
+    "fav_title": "插画·漫画收藏",
+    "fav_novel_title": "小说收藏",
+    "following": "关注",
+    "friend": "好P友",
+    "sess": {
+      "logout": "您确定要删除会话吗？",
+      "login": "登录",
+      "my_fav": "我的收藏",
+      "out": "退出"
+    },
+    "related": "相关用户",
+    "faved": "已收藏",
+    "view_comments": "查看评论"
+  },
+  "rank": {
+    "day": "日榜",
+    "week": "周榜",
+    "month": "月榜",
+    "rookie": "新人",
+    "original": "原创",
+    "male": "男性向",
+    "female": "女性向",
+    "day_x": "R18 日",
+    "week_x": "R18 周",
+    "day_x_male": "R18 男",
+    "day_x_female": "R18 女",
+    "r18g": "R18G 周"
+  },
+  "search": {
+    "placeholder": "请输入搜索关键词",
+    "seach_tag": "搜索标签",
+    "search_user": "搜索用户",
+    "autocomplete": "搜索建议",
+    "history": "历史搜索",
+    "search": "搜索",
+    "of_user_res": "{0}的搜索结果",
+    "img": {
+      "placeholder": "请选择图片文件",
+      "err": "返回结果解析失败"
+    },
+    "pop_preview": "热门预览",
+    "pop_preview_novel": "热门小说预览",
+    "mode": {
+      "partial": "标签部分一致",
+      "exact": "标签完全一致",
+      "title": "标题说明文"
+    },
+    "date": {
+      "desc": "按日期倒序",
+      "asc": "按日期正序",
+      "end": "止",
+      "start": "始"
+    },
+    "dura": {
+      "ph": "时段",
+      "day": "一天内",
+      "week": "一周内",
+      "month": "一个月内"
+    }
+  },
+  "about": {
+    "title": "关于",
+    "version": "版本",
+    "disclaimer": "免责声明",
+    "source": "源码",
+    "from": "修改自",
+    "origin_site": "原版网站",
+    "feedback": "反馈",
+    "disclaimer_text": "<b>NSFW 相关</b><br>本站默认不显示 NSFW 资源（例如 R-18 插画），任意访问此类资源的行为均是由用户在设置中设定的，并且用户已确保自身年龄已满18岁且未违反当地法律法规所规定的内容。对于可能出现的 NSFW 资源我们均有做出明显的警告标记，我们不鼓励访问或传播此类资源。<br><br><b>用户言论</b><br>“用户言论”指的是 Pixiv 源站用户通过自我介绍、插画简介、评论区等功能发布的言论。这部分属于发表者自身的行为，我们无法有效控制。我们不会发布也不鼓励传播不当言论。如果您在浏览过程中发现了不当内容，我们非常鼓励您前往源站进行举报。 <br><br><b>版权声明</b><br>请求得到的全部数据以及媒体资源，版权归 Pixiv 或其原作者所有。<br><br>Pixiv Viewer 程序通过 MIT 协议授权。<br><br>仅供交流与学习。"
+  },
+  "cache": {
+    "records": "条记录",
+    "title": "清除缓存",
+    "db": "持久化缓存",
+    "clear": "清理",
+    "local": "配置项缓存",
+    "session": "运行时缓存",
+    "success_tip": "清理完成",
+    "confirm": {
+      "first": "确定要清理{0}吗？",
+      "second": "清理后将重新从网络加载相关内容"
+    },
+    "mem": "内存占用"
+  },
+  "display": {
+    "title": "作品显示设置",
+    "r18": "R-18 作品显示",
+    "r18_label": "包含裸露内容或性描写",
+    "r18g": "R-18G 作品显示",
+    "r18g_label": "包含血腥或恶心内容",
+    "ai": "AI 生成作品显示",
+    "ai_label": "展示图片列表里的 AI 生成作品",
+    "confirm": "确定要开启{0}作品显示吗？\n请确保您的年龄已满18岁，\n且未违反当地法律法规所规定的内容。",
+    "confirm_g": "请注意，开启{0}开关可能会对您的身心健康造成不可逆的影响，如若感到不适，请立即关闭应用并寻求医学帮助",
+    "block_tags": "标签黑名单",
+    "block_uids": "画师黑名单",
+    "block_tags_ph": "请输入标签，英文逗号分隔",
+    "block_uids_ph": "请输入画师 ID，英文逗号分隔"
+  },
+  "setting": {
+    "about": "关于",
+    "other": {
+      "title": "其他设置",
+      "lang": "语言",
+      "lang_ph": "请选择语言"
+    },
+    "recomm": {
+      "title": "相关推荐",
+      "site": "网站",
+      "app": "应用",
+      "tm": "用户脚本"
+    },
+    "dark": {
+      "title": "深色模式"
+    },
+    "lab": {
+      "title": "实验性"
+    },
+    "layout": {
+      "title": "图片列表布局选择",
+      "ph": "请选择图片列表布局",
+      "m": "等宽不等高",
+      "g": "等宽等高",
+      "j": "等高不等宽"
+    },
+    "img_res": {
+      "title": "图片详情画质选择",
+      "ph": "请选择图片详情画质",
+      "m": "加载稍快",
+      "l": "加载稍慢",
+      "o": "加载更慢"
+    },
+    "img_proxy": {
+      "title": "pximg 图片代理设置",
+      "title2": "pximg 图片代理选择",
+      "title3": "图片代理",
+      "desc": "在下方输入 pixiv 图片代理地址，不需要加 https://",
+      "desc2": "例如：i-cf.pximg.net，保存后会清空本地缓存",
+      "title4": "pixiv 图片代理",
+      "ph": "请选择 pixiv 图片代理 (切换后会清空本地缓存)"
+    },
+    "api": {
+      "title": "HibiAPI 实例设置",
+      "title2": "HibiAPI 实例选择",
+      "title3": "HibiAPI 实例地址",
+      "desc": "在下方输入 HibiAPI 实例地址，需要加 https://，路径需填写到 `/api/pixiv` 部分",
+      "desc2": "例如：https://hibiapi.getloli.com/api/pixiv，保存后会清空本地缓存",
+      "desc3": "API 实例可前往",
+      "desc4": "查找或自行搭建",
+      "desc5": "API 实例地址需要支持跨域（CORS）访问",
+      "ph": "请选择 HibiAPI 实例 (切换后会清空本地缓存)",
+      "title4": "HibiAPI 实例"
+    },
+    "input": "输入：",
+    "down_app": "客户端下载"
+  },
+  "sp": {
+    "of_new": "的最新特辑",
+    "of_recomm": "的相关推荐",
+    "title": "特辑",
+    "all": "一览",
+    "rank": "本月排行榜",
+    "recomm_4u": "为你推荐",
+    "column": "专栏",
+    "interview": "采访",
+    "recomm": "推荐"
+  },
+  "nav": {
+    "home": "首页",
+    "search": "搜索",
+    "rank": "排行榜",
+    "setting": "设置",
+    "follow": "动态"
+  },
+  "history": {
+    "confirm": {
+      "i": "确定要清除插画·漫画历史记录吗",
+      "n": "确定要清除小说历史记录吗",
+      "u": "确定要清除用户历史记录吗"
+    }
+  },
+  "tip": {
+    "rate_limit": "API 超限，请稍后再试或到设置里更换 API 实例",
+    "unknown_err": "未知错误",
+    "down_wait": "处理中，请耐心等待",
+    "downloaded": "下载完成",
+    "downloading": "下载中"
+  },
+  "sess": {
+    "title": "设置 Pixiv Cookie",
+    "input": {
+      "ph": "请输入 Session ID",
+      "msg": "Session ID 格式不正确"
+    },
+    "save": "保存",
+    "ques1": "如何获取 Pixiv Session ID ？",
+    "ques2": "Pixiv Viewer 会窃取我的个人信息吗？",
+    "q1": {
+      "p1": "1. 访问 {0} 源站并登录",
+      "p4": "4. 展开 `pixiv.net` → `Cookie` 找到 {0} 项",
+      "p2": "2. 点击地址栏的小锁",
+      "p3": "3. 在弹出的界面选择「Cookie(正在使用 0 个 Cookie)」",
+      "p5": "5. 将它的「内容」复制后填写到这里"
+    },
+    "q2": {
+      "p2": "2. 按 F12 打开浏览器控制台",
+      "p3": "3. 点击「存储/storage」一栏",
+      "p5": "5. 将它的「值/value」复制后填写到这里",
+      "p4": "4. 在 cookie 列表里找到「键/key」为 {0} 的一栏"
+    },
+    "mobile_tip": "移动端自行寻找方法或者到电脑端获取",
+    "example": "Session ID 形如（无效，演示用）：",
+    "que2": {
+      "p1": "我们 不会 存储或转让您的个人信息以及 cookie。",
+      "p2": "不过我们建议妥善保存您的 cookie。您在此处保存的信息若被他人获取有被盗号的风险。"
+    },
+    "succ_msg": "Session ID 认证成功",
+    "warn": {
+      "title": "风险告知",
+      "text": "本功能为非正常方式登录，可能存在封号风险，使用本功能即视为使用者本人同意且已明确使用风险，如发生封号等情况与本项目作者无关。建议使用小号进行测试。"
+    }
+  },
+  "follow": {
+    "timeline": "动态",
+    "fav": "我的收藏",
+    "user": "已关注用户",
+    "latest": "全站最新"
+  }
+}

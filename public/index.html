@@ -3,46 +3,52 @@
 
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible"
-        content="IE=edge">
-  <link rel="icon"
-        href="<%= BASE_URL %>favicon.ico">
-  <title><%= htmlWebpackPlugin.options.title %></title>
-  <link rel="stylesheet"
-        type="text/css"
-        href="<%= BASE_URL %>static/css/normalize.css">
-  <link rel="stylesheet"
-        type="text/css"
-        href="<%= BASE_URL %>static/css/flexible.css">
-  <script src="<%= BASE_URL %>static/js/flexible.js"></script>
-  <script type="text/javascript">
-    document.addEventListener('plusready', function () {
-      plus.navigator.setStatusBarStyle('dark');
-      plus.navigator.setFullscreen(false);
-
-      var webview = plus.webview.currentWebview();
-      plus.key.addEventListener('backbutton', function () {
-        webview.canBack(function (e) {
-          if (e.canBack) {
-            webview.back();
-          } else {
-            //webview.close(); //hide,quit
-          }
-        })
-      });
-    });
-
-  </script>
-  <!--<script src="//cdn.jsdelivr.net/npm/eruda"></script>
-    <script>eruda.init();</script>-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+  <title>Pixiv Viewer</title>
+  <meta name="keywords" content="pixiv,pixiv-viewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv-ranking,pixiv每日排行,pixiv漫画,pixiv小说" />
+  <meta name="description" itemprop="description" content="又一个 Pixiv 插画/小说阅览工具，适配 PC 端展示，支持 PWA 安装。" />
+  <meta itemprop="name" content="Pixiv Viewer" />
+  <meta itemprop="image" content="<%= BASE_URL %>img/icons/192.png" />
+  <meta property="og:title" content="Pixiv Viewer" />
+  <meta property="og:description" content="又一个 Pixiv 阅览工具"/>
+  <meta property="og:image" content="<%= BASE_URL %>img/icons/192.png" />
+  <meta property="og:url" content="https://pixiv.pics" />
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="x-dns-prefetch-control" content="on" />
+  <link rel="dns-prefetch" href="https://cdn.staticfile.org">
+  <link rel="dns-prefetch" href="https://hibi.cocomi.cf">
+  <link rel="dns-prefetch" href="https://i-cf.pximg.net">
+  <link rel="preconnect" href="https://cdn.staticfile.org" crossorigin="anonymous" />
+  <link rel="preconnect" href="https://hibi.cocomi.cf" crossorigin="anonymous" />
+  <link rel="preconnect" href="https://i-cf.pximg.net" crossorigin="anonymous" />
+  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <link rel="manifest" href="<%= BASE_URL %>manifest.json">
+  <link rel="stylesheet" href="<%= BASE_URL %>static/css/flexible.css">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/vant/2.12.54/index.min.css">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/5.4.5/css/swiper.min.css">
+  <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-webfont/1.6.0/style.css">
+  <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
+  <% if (process.env.NODE_ENV === 'production') { %>
+  <script async defer src="https://um.nanoka.top/script.js" data-website-id="6eacf5b9-7db8-482f-b7ba-ff51d4dc38ce"></script>
+  <% } %>
 </head>
 
 <body>
   <noscript>
-    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled.
-      Please enable it to continue.</strong>
+    <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
   </noscript>
   <div id="app"></div>
+  <div id="ldio-loading">
+    <div class="loadingio-spinner-ball-49w6m6a8g28"><div class="ldio-2gd0gx3uwxq"><div></div></div></div>
+    <p style="margin-top: 30px;text-align: center;font-size: 24px;">Loading...</p>
+  </div>
+  <script>if(!!localStorage.__PXV_DARK)document.body.classList.add('dark');</script>
+  <% if (process.env.NODE_ENV === 'production') { %>
+  <% for (let it of htmlWebpackPlugin.options.cdn.js) { %>
+  <script src="<%= it %>"></script>
+  <% } %>
+  <% } %>
   <!-- built files will be auto injected -->
 </body>
 

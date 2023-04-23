@@ -1,47 +1,344 @@
-.icon {
+html, body
+  font-family: "LXGW WenKai", -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  color: #333;
+  overscroll-behavior: none;
+  user-select: none;
+
+.flex
+  display flex
+  align-items center
+
+.flex-c
+  display flex
+  justify-content center
+  align-items center
+
+.icon
   width: 1em;
   height: 1em;
   vertical-align: -0.15em;
   fill: currentColor;
   overflow: hidden;
-}
 
-html, body {
-  font-family: 'Noto Sans SC', sans-serif;
-  color: #333;
-  overscroll-behavior: none;
-  user-select: none;
-}
-
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap');
-
-.cell {
+.cell
   padding: 14px;
   margin-bottom: 12px;
   border-radius: 28px;
 
-  .icon {
+  .icon
     font-size: 50px;
     margin-top: -10px;
     margin-right: 4px;
     vertical-align: middle;
-  }
 
-  .title {
+  .title
     font-size: 32px;
-  }
-}
 
-.image-preview {
+.title,.author,.caption,.users .detail,.users .name
+  user-select text
+
+.image-preview
   background: #333;
-}
 
-.censored {
-  filter: blur(40px);
-  position: relative;
-}
+.censored
+  position: relative
+  filter: blur(60PX)
+  pointer-events none
 
-@font-face {
+.image-card:has(.censored)
+  pointer-events none
+
+.wf-grid .image-card:has(.censored),
+.flexbin .image-card:has(.censored),
+.image-card:has(.censored) .meta,
+.ia-left .censored
+  display none !important
+
+#app
+  .van-button
+    border-radius 4px
+
+.com_sel
+  &_tabs
+    width 100%
+    padding-bottom 20px
+    text-align center
+    .com_sel_tab:not(:last-child)
+      margin-right 18px
+  &_tab
+    display inline-flex
+    justify-content center
+    align-items center
+    height 60px
+    font-size 28px
+    padding 0 16px
+    border-radius 10px
+    color #333
+    background #eee
+    box-sizing border-box
+    cursor pointer
+    &.cur
+      cursor: auto
+      background: #f2c358;
+
+.user_avatar,
+.avatar,
+.avatar img,
+.author-card .cell .icon
+  object-fit: cover
+
+.setting-page
+  max-width 750px
+  margin 0 auto 160px
+
+  #top-bar-wrap
+    width 30%
+    height auto
+    padding-top 35px
+    background transparent
+
+  .hibiapi-actions .van-action-sheet__name
+    display inline-block
+    width 100%
+    white-space nowrap
+    text-overflow ellipsis
+    overflow hidden
+
+  .van-button
+    padding 0 0.3rem
+
+  .van-popup--bottom
+    width 10rem
+    left 50%
+    margin-left -5rem
+
+  .af_title
+    position relative
+    margin-top 40px
+    margin-bottom 60px
+    text-align center
+    font-size 28px
+
+  .api-chk .van-action-sheet__item, .img-chk .van-action-sheet__item
+    padding: 7px 16px
+  .api-chk .van-action-sheet__name, .img-chk .van-action-sheet__name
+    color #323233 !important
+  .api-chk .van-action-sheet__subname, .img-chk .van-action-sheet__subname
+    margin-top -3px
+    color inherit !important
+
+.swiper-container
+  --swiper-theme-color: #fcb93e
+
+.swiper-container-horizontal>.swiper-scrollbar
+  bottom: .04rem;
+  height: .06667rem;
+
+.swiper-container-initialized
+  .swiper-button-prev, .swiper-button-next
+    opacity: 1
+
+.swiper-button-prev, .swiper-button-next
+  top: 0
+  right: 0
+  width: 2rem
+  height: 97%
+  margin-top: 0
+  border-radius: 20px
+  color: #ffd745
+  background-image: linear-gradient(270deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0) 100%)
+  transition: opacity 0.2s
+  opacity: 0
+  &.swiper-button-disabled
+    opacity: 0
+  &:after
+    filter: drop-shadow(0.02667rem 0.05333rem 0.05333rem rgba(0,0,0,0.8));
+
+.swiper-button-prev
+  left: 0
+  right: auto
+  background-image: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0) 100%)
+
+@media screen and (max-width: 600px)
+  .swiper-button-prev, .swiper-button-next
+    display none
+
+
+@font-face
   font-family: 'Dosis';
   src: local('Dosis Regular'), local('Dosis-Regular'), url('./dosis-v7-latin-ext_latin-regular.woff') format('woff');
-}
+
+::-webkit-scrollbar
+  width: 13px;
+  height: 13px;
+
+::-webkit-scrollbar-track
+  background: #e6e6e6;
+  border-left: 1px solid #dadada;
+
+::-webkit-scrollbar-thumb
+  background: #b0b0b0;
+  border: solid 3px #e6e6e6;
+  border-radius: 7px;
+
+::-webkit-scrollbar-thumb:hover
+  background: black;
+
+@media screen and (max-width: 500px)
+  ::-webkit-scrollbar
+    width: 0;
+
+
+.dark
+  background #16161a
+  color #fff
+  .van-dialog,
+  .van-button
+    background #333
+    color #fff !important
+  ::-webkit-scrollbar
+    width: 10px;
+    height: 5px;
+  ::-webkit-scrollbar-thumb
+    border-color: transparent
+  ::-webkit-scrollbar-track
+    background transparent
+    border-color: transparent
+  ::-webkit-scrollbar-thumb:hover
+    background: #e6e6e6;
+.dark #app
+  min-height 100vh
+  &,
+  .app-main,
+  .home-i,
+  .home-m,
+  .home-n,
+  .van-cell,
+  .image-card,
+  .users,
+  .illusts,
+  .van-popup,
+  .van-calendar,
+  .van-tabs__nav,
+  .van-tab,
+  .van-button,
+  .van-share-sheet__cancel,
+  .van-action-sheet__cancel,
+  .van-action-sheet__item
+    background #16161a
+    color #fff
+
+  .user-wrap,
+  .illust-wrap
+    height auto
+
+  .sup_tags .van-tag
+    background none
+
+  .rank-card .spec_wp,
+  .image-card
+    border 1px solid #aaa
+    border-radius: 0.26667rem;
+
+  .nav-container
+    height 1rem
+  .nav-container .nav-bar
+    box-shadow 0 0 0.26667rem #555
+    background rgba(0,0,0,0.8)
+    li
+      display flex
+      justify-content center
+      align-items center
+      color #fff
+    .icon
+      display none
+
+  .com_sel_tab,
+  .rank .nav a
+    background #777
+    color #fff
+    &.cur
+      background: #f2c358;
+      color #333
+
+  .van-button--plain
+    background rgba(0,0,0,0)
+    border-color #aaa
+    color #fff
+
+  .van-share-sheet__cancel::before,
+  .van-action-sheet__gap
+    background #aaa
+    height 1px
+  .van-share-sheet__title,
+  .van-share-sheet__name
+    color #fff
+
+  .novel-card,
+  .search .keyword
+    background #333
+
+  .search .search-bar-wrap .search-bar,
+  .search .search-bar-wrap .van-search__content,
+  .rank .top,
+  .com_sel_tabs
+    background rgba(0,0,0,0.8)
+  .search-dropdown
+    background #16161a
+  .van-search__content
+    border 1px solid #aaa
+    margin-right 10px
+    &,
+    .van-cell
+      background-color: transparent !important
+
+  .rank .top .calendar .date
+    color #fff
+
+  .image-card .meta::before
+    height 100%
+
+  .setting .app-title img
+    display none
+
+  .van-switch
+    background #aaa
+  .van-switch--on
+    background #8ca8ff
+
+  .van-dialog
+    .van-cell,
+    .van-button
+      background #333 !important
+    .van-cell__value
+      color #fff
+
+  .van-radio__label,
+  .van-field__control
+      color #fff
+
+  a
+   color #dba5ff
+
+  .ia-cont .ia-right .artwork-meta
+    background none
+  .artwork-meta .tag-list
+    color #b79ffd
+  .artwork-meta .date .view
+    color #8ca8ff
+  .novel-view
+    background #16161a !important
+  .novel_text
+    color #b6b6b6 !important
+  .novel-view.shrink::after,
+  .image-view.shrink::after
+    background: linear-gradient(to top, #16161a, rgba(0,0,0,0));
+  .ia-right .shrink::after
+    background: linear-gradient(to top, #666, rgba(0,0,0,0));
+  .users .info-container .info .detail .content
+    color #ccc
+    &::after
+      background: linear-gradient(to top, #16161a, rgba(0,0,0,0));
+  .users .info-container .info .follow .num,
+  .users .info-container .info .friend .num
+    color #bbb

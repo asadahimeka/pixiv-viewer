@@ -4,19 +4,15 @@
   </div>
 </template>
 <script>
-import { Loading } from 'vant';
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
-  name: "PageLoading",
+  name: 'PageLoading',
   computed: {
     ...mapState({
-      color: "themeColor"
-    })
+      color: 'themeColor',
+    }),
   },
-  components: {
-    [Loading.name]: Loading
-  }
-};
+}
 </script>
 <style>
 .page-loading {

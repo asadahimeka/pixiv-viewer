@@ -2,92 +2,113 @@
   <div class="rank-card">
     <van-cell class="cell" :border="false" is-link to="/rank/daily">
       <template #title>
-        <Icon class="icon crown" name="crown"></Icon>
-        <span class="title">排行榜</span>
+        <Icon class="icon crown" name="crown" />
+        <span class="title">{{ $t('common.rank') }}</span>
       </template>
     </van-cell>
     <div class="card-box">
-      <van-swipe class="swipe-wrap" :loop="false" :show-indicators="false" :width="300">
-        <van-swipe-item class="swipe-item" v-for="art in artList.slice(0, 6)" :key="art.id">
+      <swiper class="swipe-wrap" :options="swiperOption">
+        <swiper-slide v-for="art in artList.slice(0, 10)" :key="art.id" class="swipe-item">
           <ImageCard mode="meta" :artwork="art" @click-card="toArtwork($event)" />
-        </van-swipe-item>
-        <van-swipe-item class="swipe-item more" @click.stop="$router.push('/rank/weekly')">
+        </swiper-slide>
+        <swiper-slide class="swipe-item more">
           <ImageSlide :images="slides">
-            <div class="link">
-              <Icon name="more" scale="20"></Icon>
-              <div>查看更多</div>
+            <div class="link" @click="$router.push('/rank/daily')">
+              <van-loading v-if="loading" class="d-loading" :size="'50px'" />
+              <template v-else>
+                <Icon name="more" scale="20" />
+                <div>{{ $t('common.view_more') }}</div>
+              </template>
             </div>
           </ImageSlide>
-          <!-- <router-link class="rank" :to="{name: 'Rank'}">
-            查看更多
-            <van-icon name="arrow" />
-          </router-link>-->
-        </van-swipe-item>
-      </van-swipe>
+        </swiper-slide>
+        <div slot="scrollbar" class="swiper-scrollbar"></div>
+        <div slot="button-prev" class="swiper-button-prev"></div>
+        <div slot="button-next" class="swiper-button-next"></div>
+      </swiper>
     </div>
   </div>
 </template>
 
 <script>
-import { Cell, Swipe, SwipeItem, Icon } from "vant";
-import ImageCard from "@/components/ImageCard";
-import ImageSlide from "@/components/ImageSlide";
-import api from "@/api";
+import ImageCard from '@/components/ImageCard'
+import ImageSlide from '@/components/ImageSlide'
+import api from '@/api'
+import { filterHomeIllust } from '@/utils/filter'
 export default {
-  name: "RankCard",
+  name: 'RankCard',
+  components: {
+    ImageCard,
+    ImageSlide,
+  },
   data() {
     return {
-      artList: []
-    };
+      artList: [],
+      loading: true,
+      swiperOption: {
+        freeMode: true,
+        slidesPerView: 'auto',
+        mousewheel: true,
+        scrollbar: {
+          el: '.swiper-scrollbar',
+          draggable: true,
+        },
+        navigation: {
+          nextEl: '.swiper-button-next',
+          prevEl: '.swiper-button-prev',
+        },
+      },
+    }
   },
   computed: {
     slides() {
-      let artList = this.artList.slice(6, 11);
+      const artList = this.artList.slice(10, 15)
       return artList.map(art => {
         return {
           title: art.title,
-          src: art.images[0].m
-        };
-      });
-    }
+          src: art.images[0].m,
+        }
+      })
+    },
+  },
+  created() {
+    this.getRankList()
   },
   methods: {
     async getRankList() {
-      let res = await api.getRankList("week");
+      this.loading = true
+      const res = await api.getRankList('day')
       if (res.status === 0) {
-        this.artList = res.data;
+        this.artList = res.data.filter(filterHomeIllust)
       } else {
         this.$toast({
           message: res.msg,
-          icon: require("@/svg/error.svg")
-        });
+          icon: require('@/icons/error.svg'),
+        })
       }
+      this.loading = false
     },
     toArtwork(id) {
       this.$router.push({
-        name: "Artwork",
-        params: { id, list: this.artList }
-      });
-    }
+        name: 'Artwork',
+        params: { id, list: this.artList },
+      })
+    },
   },
-  mounted() {
-    this.getRankList();
-  },
-  components: {
-    [Cell.name]: Cell,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [Icon.name]: Icon,
-    ImageCard,
-    ImageSlide
-  }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
 .rank-card {
   padding: 0 14px;
   margin-bottom: 24px;
+
+  .d-loading {
+    position absolute
+    top 50%
+    left 50%
+    transform translate(-50%, -50%) !important
+  }
 
   .card-box {
     // padding: 0 12px;
@@ -99,6 +120,9 @@ export default {
       overflow: hidden;
 
       .swipe-item {
+        width 450px;
+        margin-right: 12px;
+
         &:last-child {
           .image-card {
             margin-right: 0;
@@ -108,19 +132,18 @@ export default {
         .image-card {
           // width: 50vw;
           font-size: 0;
-          float: left;
-          margin-right: 12px;
           border: 1px solid #ebebeb;
-          border-radius: 18px;
           box-sizing: border-box;
-          width: calc(100% - 12px);
-          height: 100% !important;
+          width: 100%;
+          height: 97%;
+          padding-bottom: 0 !important;
         }
 
         .image-slide {
           border: 1px solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
+          height: 97%;
 
           .link {
             position: absolute;

@@ -1,59 +1,60 @@
 <template>
   <div class="nav">
     <router-link
-      :to="{name: 'Rank', params:{type: route}}"
       v-for="(item, route) in menu"
+      v-show="showModeNav(item)"
       :key="route"
-      tag="a"
+      replace
+      :to="{ name: isNovel ? 'RankNovel' : 'Rank', params: { type: route } }"
       class="normal"
-      :class="{cur: $route.params.type===route}"
-      v-show="!item.x || isShowR18"
-    >{{item.name}}</router-link>
+      :class="{ cur: $route.params.type === route }"
+    >
+      {{ item.name }}
+    </router-link>
   </div>
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState } from 'vuex'
 export default {
   props: {
     menu: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
+    isNovel: {
+      type: Boolean,
+      default: false,
+    },
   },
   computed: {
-    isShowR18() {
-      return this.SETTING.r18;
-    },
-    ...mapState(["SETTING"])
-  },
-  data() {
-    return {};
-  },
-  watch: {
-    $route() {
-      // this.init();
-    }
-  },
-  methods: {
-    init() {
-      let cur = document.querySelector(".cur");
-      cur && cur.scrollIntoView();
-    }
+    ...mapState(['SETTING']),
   },
   mounted() {
-    this.init();
+    this.init()
   },
   updated() {
-    this.init();
-  }
-};
+    this.init()
+  },
+  methods: {
+    showModeNav(item) {
+      if (item.x && !this.SETTING.r18) return false
+      if (item.ai && !this.SETTING.showAi) return false
+      if (item.xg && !this.SETTING.r18g) return false
+      return true
+    },
+    init() {
+      const cur = document.querySelector('.cur')
+      cur && cur.scrollIntoView()
+    },
+  },
+}
 </script>
 
 <style lang="stylus" scoped>
 .nav {
-  width: 90%;
-  overflow-x: scroll;
+  // width: 90%;
+  overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
 

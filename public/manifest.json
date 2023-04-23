@@ -1,35 +1,62 @@
 {
-  "id": "pixiv_viewer",
+  "$schema": "https://json.schemastore.org/web-manifest-combined.json",
   "name": "Pixiv Viewer",
-  "version": {
-    "name": "1.0.4",
-    "code": "104"
-  },
-  "description": "Pixiv Viewer",
-  "icons": {
-    "72": "icon.png"
-  },
-  "launch_path": "index.html",
-  "orientation": ["portrait-primary"],
-  "permissions": {
-    "XMLHttpRequest": {
-      "description": "CROS"
-    }
-  },
-  "plus": {
-    "splashscreen": {
-      "autoclose": true,
-      "waiting": true
+  "short_name": "Pixiv Viewer",
+  "description": "又一个 Pixiv 阅览工具",
+  "theme_color": "#FFFFFF",
+  "background_color": "#F6F8FB",
+  "display": "standalone",
+  "start_url": ".",
+  "icons": [
+    {
+      "src": "./img/icons/192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
-    "statusbar": {
-      "immersed": true
+    {
+      "src": "./img/icons/256.png",
+      "sizes": "256x256",
+      "type": "image/png"
     },
-    "popGesture": "close",
-    "runmode": "normal",
-    "useragent": {
-      "value": "useragent_app",
-      "concatenate": true
+    {
+      "src": "./img/icons/512.png",
+      "sizes": "512x512",
+      "type": "image/png"
     }
-  },
-  "screenOrientation": ["portrait-primary"]
+  ],
+  "shortcuts": [
+    {
+      "name": "搜索",
+      "url": "/search",
+      "icons": [
+        {
+          "src": "./img/icons/search.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "排行",
+      "url": "/rank/daily",
+      "icons": [
+        {
+          "src": "./img/icons/rank.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "设置",
+      "url": "/setting",
+      "icons": [
+        {
+          "src": "./img/icons/setting.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    }
+  ]
 }

@@ -1,127 +1,124 @@
 <template>
-  <div class="related">
+  <div ref="related" class="related">
     <van-cell class="cell" :border="false">
       <template #title>
-        <Icon class="icon heart" name="heart"></Icon>
-        <span class="title">相关作品</span>
+        <Icon class="icon heart" name="heart" />
+        <span class="title">{{ $t('common.related') }}</span>
       </template>
     </van-cell>
     <van-list
+      v-if="showList"
       v-model="loading"
+      :loading-text="$t('tips.loading')"
       :finished="finished"
-      finished-text="没有更多了"
+      :finished-text="$t('tips.no_more')"
       :error.sync="error"
-      error-text="网络异常，点击重新加载"
+      :offset="800"
+      :error-text="$t('tips.net_err')"
       @load="getRelated()"
     >
-      <div class="card-box">
-        <div class="column">
-          <ImageCard
-            mode="cover"
-            :artwork="art"
-            @click-card="toArtwork($event)"
-            v-for="art in odd(artList)"
-            :key="art.id"
-          />
-        </div>
-        <div class="column">
-          <ImageCard
-            mode="cover"
-            :artwork="art"
-            @click-card="toArtwork($event)"
-            v-for="art in even(artList)"
-            :key="art.id"
-          />
-        </div>
-      </div>
+      <wf-cont v-bind="$store.getters.wfProps">
+        <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork($event)" />
+      </wf-cont>
     </van-list>
+    <van-loading v-else size="64px" style="width: 64px;margin: 20px auto;" />
   </div>
 </template>
 
 <script>
-import { Cell, Swipe, SwipeItem, Icon, List, PullRefresh } from "vant";
-import ImageCard from "@/components/ImageCard";
-import api from "@/api";
-import _ from "lodash";
+import ImageCard from '@/components/ImageCard'
+import api from '@/api'
+import _ from 'lodash'
 export default {
-  name: "Related",
+  name: 'Related',
+  components: {
+    ImageCard,
+  },
   props: {
     artwork: {
       type: Object,
-      required: true
-    }
+      required: true,
+    },
   },
   data() {
     return {
+      showList: false,
       curPage: 1,
       artList: [],
       error: false,
       loading: false,
-      finished: false
-    };
-  },
-  methods: {
-    url(id, index) {
-      return api.url(id, index);
-    },
-    reset() {
-      this.curPage = 1;
-      this.artList = [];
-    },
-    getRelated: _.throttle(async function() {
-      if (!this.artwork.id) return;
-      let newList;
-      let res = await api.getRelated(this.artwork.id, this.curPage);
-      if (res.status === 0) {
-        newList = res.data;
-        let artList = JSON.parse(JSON.stringify(this.artList));
-
-        artList.push(...newList);
-        artList = _.uniqBy(artList, "id");
-
-        this.artList = artList;
-        this.loading = false;
-        this.curPage++;
-        if (this.curPage > 5) this.finished = true;
-      } else {
-        this.$toast({
-          message: res.msg
-        });
-        this.loading = false;
-        this.error = true;
-      }
-    }, 5000),
-    odd(list) {
-      return list.filter((_, index) => (index + 1) % 2);
-    },
-    even(list) {
-      return list.filter((_, index) => !((index + 1) % 2));
-    },
-    toArtwork(id) {
-      this.$router.push({
-        name: "Artwork",
-        params: { id, list: this.artList }
-      });
+      finished: false,
     }
   },
   mounted() {
-    this.reset();
-    this.getRelated();
+    this.setObserver()
   },
-  components: {
-    [Cell.name]: Cell,
-    [Swipe.name]: Swipe,
-    [SwipeItem.name]: SwipeItem,
-    [Icon.name]: Icon,
-    [List.name]: List,
-    [PullRefresh.name]: PullRefresh,
-    ImageCard
-  }
-};
+  methods: {
+    setObserver() {
+      const options = {
+        // root: document.querySelector('.app-main'),
+        rootMargin: '0px 0px 0px 0px',
+        threshold: [0.99],
+      }
+      const ob = new IntersectionObserver(entries => {
+        if (entries[0].isIntersecting) {
+          this.init()
+          ob.disconnect()
+        }
+      }, options)
+      ob.observe(this.$refs.related)
+    },
+    url(id, index) {
+      return api.url(id, index)
+    },
+    reset() {
+      this.curPage = 1
+      this.artList = []
+    },
+    getRelated: _.throttle(async function () {
+      if (!this.artwork.id) return
+      this.loading = true
+      let newList
+      const res = await api.getRelated(this.artwork.id, this.curPage)
+      if (res.status === 0) {
+        newList = res.data
+        if (newList.length) {
+          this.artList = _.uniqBy([
+            ...this.artList,
+            ...newList,
+          ], 'id')
+          this.curPage++
+          if (this.curPage > 2) this.finished = true
+        } else {
+          this.finished = true
+        }
+        this.loading = false
+      } else {
+        this.$toast({
+          message: res.msg,
+        })
+        this.loading = false
+        this.error = true
+      }
+    }, 1500),
+    toArtwork(id) {
+      this.$router.push({
+        name: 'Artwork',
+        params: { id, list: this.artList },
+      })
+    },
+    init() {
+      this.reset()
+      this.showList = true
+      this.getRelated()
+    },
+  },
+}
 </script>
 
 <style lang="stylus" scoped>
 .related {
+  min-height: 72vh;
   .cell {
     padding: 0 8px 20px 8px;
   }

@@ -1,149 +1,83 @@
 <template>
   <div class="setting">
-    <van-cell center title="持久化缓存" :label="size.local | bytes">
-      <template #right-icon>
-        <van-button type="primary" size="small" @click="clearCache('local')">清理</van-button>
+    <h2 class="app-title">
+      <img width="40" height="40" src="/app-icon.png" alt="">
+      <span>Pixiv Viewer</span>
+      <sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup>
+    </h2>
+    <van-cell v-if="isLoggedIn" size="large" center is-link :to="`/u/${user.id}`">
+      <template #title>
+        <div class="user_data">
+          <img v-lazy="userAvatar" width="50" height="50" alt="">
+          <div>
+            <div>{{ user.name }}</div>
+            <div style="color: #999">@{{ user.pixivId }}</div>
+          </div>
+        </div>
       </template>
     </van-cell>
-    <van-cell center title="运行时缓存" :label="size.session | bytes">
-      <template #right-icon>
-        <van-button type="info" size="small" @click="clearCache('session')">清理</van-button>
-      </template>
-    </van-cell>
-    <van-cell center title="R-18作品显示" label="包含裸露内容或性描写">
-      <template #right-icon>
-        <van-switch :value="currentSETTING.r18" @input="onR18Change($event, 1)" size="24" />
-      </template>
-    </van-cell>
-    <van-cell center title="R-18G作品显示" label="包含血腥或恶心内容">
-      <template #right-icon>
-        <van-switch :value="currentSETTING.r18g" @input="onR18Change($event, 2)" size="24" />
-      </template>
-    </van-cell>
+    <van-cell v-if="isLoggedIn" size="large" center :title="$t('user.sess.my_fav')" icon="star-o" is-link :to="`/users/${user.id}/favorites`" />
+    <van-cell v-else size="large" center :title="$t('user.sess.login')" icon="user-circle-o" is-link to="/account/session" />
+    <van-cell size="large" center :title="$t('common.history')" icon="underway-o" is-link to="/setting/history" />
+    <van-cell size="large" center :title="$t('display.title')" icon="eye-o" is-link to="/setting/contents_display" />
+    <van-cell size="large" center :title="$t('cache.title')" icon="delete-o" is-link to="/setting/clearcache" />
+    <van-cell size="large" center :title="$t('setting.other.title')" icon="setting-o" is-link to="/setting/others" />
+    <van-cell size="large" center :title="$t('setting.down_app')" icon="apps-o" is-link to="/setting/down_app" />
+    <van-cell size="large" center :title="$t('setting.recomm.title')" icon="bookmark-o" is-link to="/setting/recommend" />
+    <van-cell size="large" center :title="$t('setting.about')" icon="info-o" is-link to="/setting/about" />
+    <div v-if="isLoggedIn" style="width: 60%;margin: 1rem auto 0;">
+      <van-button round plain block type="danger" size="small" @click="logout">{{ $t('user.sess.out') }}</van-button>
+    </div>
   </div>
 </template>
 
 <script>
-import { Cell, Switch, Button, Dialog } from "vant";
-import { mapState, mapActions } from "vuex";
-import { LocalStorage, SessionStorage } from "@/utils/storage";
+import { mapGetters, mapState } from 'vuex'
+import { logout } from '@/api/user'
+
 export default {
-  name: "Setting",
-  data() {
-    return {
-      currentSETTING: {
-        r18: false,
-        r18g: false
-      },
-      size: {
-        local: 0,
-        session: 0
-      }
-    };
-  },
+  name: 'Setting',
   computed: {
-    ...mapState(["SETTING"])
-  },
-  watch: {
-    $route() {
-      this.calcCacheSize();
-    }
+    ...mapState(['user']),
+    ...mapGetters(['isLoggedIn']),
+    userAvatar() {
+      if (/^\/(-|~)\//.test(this.user.profileImg)) {
+        return `https://pixiv.js.org/${this.user.profileImg}`
+      }
+      return this.user.profileImg
+    },
   },
   methods: {
-    onR18Change(checked, type) {
-      let name;
-      if (type === 1) name = "R-18";
-      if (type === 2) name = "R-18G";
-
-      if (checked) {
-        Dialog.confirm({
-          message: `确定要开启${name}作品显示吗？请确保您的年龄已满18岁，且未违反当地法律法规所规定的内容`,
-          confirmButtonColor: "black",
-          cancelButtonColor: "#1989fa",
-          closeOnPopstate: true
-        })
-          .then(() => {
-            if (type === 1) this.currentSETTING.r18 = checked;
-            if (type === 2) {
-              this.currentSETTING.r18g = checked;
-              setTimeout(() => {
-                Dialog.alert({
-                  message: `请注意，开启${name}开关可能会对您的身心健康造成不可逆的影响，如若感到不适，请立即关闭应用并寻求医学帮助`
-                });
-              }, 200);
-            }
-          })
-          .catch(() => {
-            console.log("操作取消");
-          });
-      } else {
-        if (type === 1) this.currentSETTING.r18 = checked;
-        if (type === 2) this.currentSETTING.r18g = checked;
-      }
-    },
-    calcCacheSize() {
-      this.size.local = LocalStorage.size;
-      this.size.session = SessionStorage.size;
-    },
-    clearCache(type) {
-      let showName;
-      switch (type) {
-        case "local":
-          showName = "持久化缓存";
-          break;
-
-        case "session":
-          showName = "运行时缓存";
-          break;
-
-        default:
-          break;
-      }
-      Dialog.confirm({
-        message: `确定要清理${showName}吗？清理后将重新从网络加载相关内容`,
-        confirmButtonColor: "black",
-        cancelButtonColor: "#1989fa",
-        closeOnPopstate: true
-      }).then(() => {
-        if (type === "local") LocalStorage.clear();
-        if (type === "session") SessionStorage.clear();
-
-        this.calcCacheSize();
-        this.$toast.success("清理完成");
-      });
-    },
-    ...mapActions(["saveSETTING"])
+    logout,
   },
-  filters: {
-    bytes(bytes) {
-      bytes = Number(bytes);
-      if (bytes === 0) return "0 B";
-
-      const k = 1024;
-      const dm = 0;
-      const sizes = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
-
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + " " + sizes[i];
-    }
-  },
-  mounted() {
-    this.currentSETTING = JSON.parse(JSON.stringify(this.SETTING));
-    this.calcCacheSize();
-  },
-  updated() {
-    this.saveSETTING(JSON.parse(JSON.stringify(this.currentSETTING)));
-  },
-  components: {
-    [Cell.name]: Cell,
-    [Button.name]: Button,
-    [Switch.name]: Switch
-  }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
-.setting {
-}
+.setting
+  max-width 750px
+  margin 0 auto 160px
+
+  ::v-deep .van-cell__left-icon
+    margin-right 0.4rem
+    font-size 24px
+    transform: translateY(1px);
+
+.app-title
+  display flex
+  justify-content center
+  align-items center
+  margin 40px 0 50px
+  font-size 40px
+  text-align center
+
+  img
+    margin-right 20px
+
+.user_data
+  display flex
+  align-items center
+  img
+    margin-right 20px
+    border-radius 50%
 </style>

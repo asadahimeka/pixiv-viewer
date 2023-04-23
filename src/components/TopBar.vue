@@ -2,38 +2,36 @@
   <div class="top-bar-wrap">
     <van-nav-bar class="top-bar" left-arrow :border="false" @click-left="back">
       <template #left>
-        <Icon name="left-arrow" scale="2.6"></Icon>
+        <Icon name="left-arrow" scale="2.6" />
       </template>
     </van-nav-bar>
   </div>
 </template>
 
 <script>
-import { NavBar } from "vant";
 export default {
+  components: {
+  },
   props: {
     action: {
-      type: Function
-    }
+      type: Function,
+    },
   },
   methods: {
     back() {
       if (this.action) {
-        this.action();
-        return;
+        this.action()
+        return
       }
 
       if (history.length <= 2) {
-        this.$router.push({ name: "Home" });
+        this.$router.push({ name: 'Home' })
       } else {
-        this.$router.back();
+        this.$router.back()
       }
-    }
+    },
   },
-  components: {
-    [NavBar.name]: NavBar
-  }
-};
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -41,8 +39,8 @@ export default {
   position: fixed;
   top: 0;
   padding-top: 60px;
-  width: 100%;
-  max-width: 10rem;
+  width: 30%;
+  // max-width: 10rem;
   height: 160px;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(#fff, 0));
   z-index: 99;

@@ -1,8 +1,9 @@
 class Storage {
   get(key, def) {
-    let result = this.drive.getItem(key)
+    console.log('%c - storage get: ' + key, 'color:blueviolet')
+    const result = this.drive.getItem(key)
     if (result) {
-      let data = deserialize(result)
+      const data = deserialize(result)
 
       if (Math.floor(+new Date() / 1000) >= data.expires && data.expires !== -1) {
         data.data = def
@@ -10,13 +11,13 @@ class Storage {
       }
 
       return data.data
-
     } else {
       return def
     }
   }
 
   set(key, val, expires = -1) {
+    console.log('%c - storage set: ' + key, 'color:deeppink')
     try {
       if (val === undefined) {
         return this.remove(key)
@@ -28,15 +29,14 @@ class Storage {
         expires = -1
       }
 
-      let data = {
+      const data = {
         data: val,
-        expires
+        expires,
       }
 
       this.drive.setItem(key, serialize(data))
-    }
-    catch (e) {
-      console.log("Local Storage is full, Please empty data");
+    } catch (e) {
+      console.log('Local Storage is full, Please empty data')
     }
     return val
   }
@@ -54,15 +54,15 @@ class Storage {
   }
 
   get size() {
-    let total = 0;
-    for (let x in this.drive) {
+    let total = 0
+    for (const x in this.drive) {
       // Value is multiplied by 2 due to data being stored in `utf-16` format, which requires twice the space.
-      let amount = (this.drive[x].length * 2);
+      const amount = (this.drive[x].length * 2)
       if (!isNaN(amount) && Object.prototype.hasOwnProperty.call(this.drive, x)) {
-        total += amount;
+        total += amount
       }
     }
-    return total.toFixed(2);
+    return total.toFixed(2)
   }
 }
 

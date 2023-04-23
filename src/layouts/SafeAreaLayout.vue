@@ -2,22 +2,22 @@
   <div id="appSafeArea" class="app-safe-area">
     <transition>
       <keep-alive>
-        <router-view></router-view>
+        <router-view />
       </keep-alive>
     </transition>
   </div>
 </template>
 <script>
 export default {
-  name: "Safearea",
+  name: 'Safearea',
   mounted() {
-    if (window.plus) {
-      // let pt = plus.navigator.getStatusbarHeight();
-      // pt = pt + 5;
-      // $("#appSafeArea").css("padding-top", pt + "px");
-    }
-  }
-};
+    // if (window.plus) {
+    // let pt = plus.navigator.getStatusbarHeight();
+    // pt = pt + 5;
+    // $("#appSafeArea").css("padding-top", pt + "px");
+    // }
+  },
+}
 </script>
 
 <style>

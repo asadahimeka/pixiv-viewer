@@ -1,46 +1,98 @@
 <template>
-  <div class="nav-container">
+  <div class="nav-container" :class="{ showNav: showNav }">
     <ul class="nav-bar">
       <li @click="navigateTo('Home')">
-        <Icon class="icon home" name="home" index="Home" :currentIndex="$route.name" />
-        <span>首页</span>
+        <Icon
+          class="icon home"
+          :class="{ active: $route.name.startsWith('Home') }"
+          name="home"
+          index="Home"
+          :current-index="$route.name"
+        />
+        <span>{{ $t('nav.home') }}</span>
       </li>
       <li @click="navigateTo('Search')">
-        <Icon class="icon" name="search" index="Search" :currentIndex="$route.name" />
-        <span>搜索</span>
+        <Icon
+          class="icon"
+          :class="{ active: $route.name.startsWith('Search') }"
+          name="search"
+          index="Search"
+          :current-index="$route.name"
+        />
+        <span>{{ $t('nav.search') }}</span>
       </li>
-      <li @click="navigateTo('Rank', {type: 'daily'})">
-        <Icon class="icon" name="rank" index="Rank" :currentIndex="$route.name" />
-        <span>排行榜</span>
+      <li @click="navigateTo('Rank', { type: 'daily' })">
+        <Icon
+          class="icon"
+          :class="{ active: $route.name.startsWith('Rank') }"
+          name="rank"
+          index="Rank"
+          :current-index="$route.name"
+        />
+        <span>{{ $t('nav.rank') }}</span>
+      </li>
+      <li v-if="isLogin" @click="navigateTo('Following')">
+        <Icon class="icon" name="following" index="Following" :current-index="$route.name" />
+        <span>{{ $t('nav.follow') }}</span>
       </li>
       <li @click="navigateTo('Setting')">
-        <Icon class="icon" name="setting" index="Setting" :currentIndex="$route.name" />
-        <span>设置</span>
+        <Icon class="icon" name="setting" index="Setting" :current-index="$route.name" />
+        <span>{{ $t('nav.setting') }}</span>
       </li>
     </ul>
   </div>
 </template>
 
 <script>
+import { existsSessionId } from '@/api/user'
+
+function throttleScroll(el, downFn, upFn) {
+  let position = el.scrollTop
+  let ticking = false
+  return function (arg) {
+    if (ticking) return
+    ticking = true
+    window.requestAnimationFrame(() => {
+      const scroll = el.scrollTop
+      scroll > position ? downFn?.(scroll, arg) : upFn?.(scroll, arg)
+      position = scroll
+      ticking = false
+    })
+  }
+}
+
+const isLogin = existsSessionId()
+
 export default {
   data() {
-    return {};
-  },
-  methods: {
-    navigateTo(name, params) {
-      if (this.$route.name === name) {
-        document
-          .querySelector(".app-main")
-          .scrollTo({ top: 0, behavior: "smooth" });
-      } else {
-        this.$router.push({ name, params });
-      }
+    return {
+      isLogin,
+      showNav: true,
+      scrollFn: () => {},
     }
   },
   mounted() {
-    console.log(this.$route);
-  }
-};
+    console.log(this.$route)
+    this.scrollFn = throttleScroll(document.documentElement, scroll => {
+      if (scroll > 160) this.showNav = false
+    }, () => {
+      this.showNav = true
+    })
+    addEventListener('scroll', this.scrollFn)
+  },
+  destroyed() {
+    removeEventListener('scroll', this.scrollFn)
+  },
+  methods: {
+    navigateTo(name, params) {
+      if (this.$route.name.startsWith(name)) {
+        document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+      } else {
+        this.$router.push({ name, params })
+      }
+    },
+  },
+}
 </script>
 
 <style lang="stylus" scoped>
@@ -50,8 +102,17 @@ export default {
   left: 0;
   width: 100%;
   height: 100px;
-  height: calc(100px + env(safe-area-inset-bottom));
+  // height: calc(100px + env(safe-area-inset-bottom));
   z-index: 10;
+
+  opacity: 0;
+  transform: translateY(100%);
+  transition: 0.2s;
+
+  &.showNav {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   .nav-bar {
     display: flex;
@@ -63,6 +124,11 @@ export default {
     max-width: 750px;
     height: 100%;
     margin: 0 auto;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    // backdrop-filter: blur(6px);
+    backdrop-filter: saturate(200%) blur(6px);
+    background: rgba(255, 255, 255, 0.8);
 
     li {
       position: relative;

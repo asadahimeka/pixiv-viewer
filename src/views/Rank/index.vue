@@ -1,208 +1,258 @@
 <template>
   <div class="rank">
     <div class="top">
-      <Nav :menu="menu" />
-      <v-date-picker
-        :attributes="[{
-          key: 'today',
-          highlight: 'yellow',
-          dates: date
-        }]"
-        :min-date="minDate"
-        :max-date="maxDate"
-        v-model="date"
-        mode="single"
-        :popover="{
-          placement: 'bottom',
-          visibility: 'click' 
-        }"
+      <van-popover
+        v-model="showRankCat"
+        placement="bottom-start"
+        theme="dark"
+        trigger="click"
+        :actions="rankCatActions"
+        @select="onRankCatSel"
       >
-        <div class="calendar">
-          <div class="date">{{dateNum}}</div>
+        <template #reference>
+          <div class="com_sel_tab" style="margin-right: 2px;">{{ rankCatLabels[actRankCat] }}</div>
+        </template>
+      </van-popover>
+      <div class="nav_divi"></div>
+      <RankNav :menu="menu" />
+      <span style="display: inline-block;">
+        <div class="calendar" @click="isDatePickerShow = true">
+          <div class="date">{{ dateNum }}</div>
         </div>
-      </v-date-picker>
+      </span>
     </div>
-    <Top3 v-if="artList.length>=3" :artList="artList.slice(0,3)" />
     <van-list
-      v-if="artList.length>3"
-      class="rank-list"
       v-model="loading"
+      class="rank-list"
+      :loading-text="$t('tips.loading')"
       :finished="finished"
-      finished-text="没有更多了"
+      :finished-text="$t('tips.no_more')"
       :error.sync="error"
-      error-text="网络异常，点击重新加载"
+      :offset="800"
+      :error-text="$t('tips.net_err')"
       @load="getRankList"
     >
-      <div class="card-box">
-        <div class="column">
-          <ImageCard
-            mode="cover"
-            :artwork="art"
-            @click-card="toArtwork($event)"
-            v-for="art in odd(artList.slice(3))"
-            :key="art.id"
-          />
-        </div>
-        <div class="column">
-          <ImageCard
-            mode="cover"
-            :artwork="art"
-            @click-card="toArtwork($event)"
-            v-for="art in even(artList.slice(3))"
-            :key="art.id"
-          />
-        </div>
-      </div>
+      <wf-cont v-bind="$store.getters.wfProps">
+        <ImageCard
+          v-for="(art, i) in artList"
+          :key="art.id"
+          mode="all"
+          :artwork="art"
+          :index="i + 1"
+          @click-card="toArtwork($event)"
+        />
+      </wf-cont>
     </van-list>
-    <van-loading v-show="!artList || artList.length===0" class="loading" :size="'50px'" />
+    <van-calendar
+      ref="calendar"
+      v-model="isDatePickerShow"
+      color="#f2c358"
+      class="sel-rank-date"
+      row-height="1.5rem"
+      position="top"
+      :min-date="minDate"
+      :max-date="maxDate"
+      :default-date="date"
+      :poppable="true"
+      :show-title="false"
+      :show-confirm="false"
+      @confirm="v => { date = v; isDatePickerShow = false }"
+    />
+    <van-loading v-show="loading" class="loading" :size="'50px'" />
   </div>
 </template>
 
 <script>
-import moment from "moment";
-import { List, Loading, Empty } from "vant";
-import ImageCard from "@/components/ImageCard";
-import Nav from "./components/Nav";
-import Top3 from "./components/Top3";
-import _ from "lodash";
-import api from "@/api";
+import dayjs from 'dayjs'
+import ImageCard from '@/components/ImageCard'
+import Nav from './components/Nav'
+import _ from 'lodash'
+import api from '@/api'
+import { i18n } from '@/i18n'
+
+const rankMenus = {
+  daily: { name: i18n.t('rank.day'), io: 'day', cat: '0' },
+  weekly: { name: i18n.t('rank.week'), io: 'week', cat: '0' },
+  monthly: { name: i18n.t('rank.month'), io: 'month', cat: '0' },
+  rookie: { name: i18n.t('rank.rookie'), io: 'week_rookie', cat: '0' },
+  original: { name: i18n.t('rank.original'), io: 'week_original', cat: '0' },
+  daily_ai: { name: 'AI', io: 'day_ai', ai: true, cat: '0' },
+  male: { name: i18n.t('rank.male'), io: 'day_male', cat: '0' },
+  female: { name: i18n.t('rank.female'), io: 'day_female', cat: '0' },
+  r18: { name: i18n.t('rank.day_x'), io: 'day_r18', x: true, cat: '0' },
+  r18_w: { name: i18n.t('rank.week_x'), io: 'week_r18', x: true, cat: '0' },
+  r18_ai: { name: 'R18 AI', io: 'day_r18_ai', x: true, ai: true, cat: '0' },
+  r18_m: { name: i18n.t('rank.day_x_male'), io: 'day_male_r18', x: true, cat: '0' },
+  r18_f: { name: i18n.t('rank.day_x_female'), io: 'day_female_r18', x: true, cat: '0' },
+  r18g_w: { name: i18n.t('rank.r18g'), io: 'week_r18g', x: true, xg: true, cat: '0' },
+  daily_illust: { name: i18n.t('rank.day'), io: 'daily-illust-web', cat: '1' },
+  weekly_illust: { name: i18n.t('rank.week'), io: 'weekly-illust-web', cat: '1' },
+  monthly_illust: { name: i18n.t('rank.month'), io: 'monthly-illust-web', cat: '1' },
+  rookie_illust: { name: i18n.t('rank.rookie'), io: 'rookie-illust-web', cat: '1' },
+  daily_r18_illust: { name: i18n.t('rank.day_x'), io: 'daily_r18-illust-web', cat: '1', x: true },
+  weekly_r18_illust: { name: i18n.t('rank.week_x'), io: 'weekly_r18-illust-web', cat: '1', x: true },
+  daily_ugoira: { name: i18n.t('rank.day'), io: 'daily-ugoira-web', cat: '2' },
+  weekly_ugoira: { name: i18n.t('rank.week'), io: 'weekly-ugoira-web', cat: '2' },
+  daily_r18_ugoira: { name: i18n.t('rank.day_x'), io: 'daily_r18-ugoira-web', cat: '2', x: true },
+  weekly_r18_ugoira: { name: i18n.t('rank.week_x'), io: 'weekly_r18-ugoira-web', cat: '2', x: true },
+  daily_manga: { name: i18n.t('rank.day'), io: 'daily-manga-web', cat: '3' },
+  weekly_manga: { name: i18n.t('rank.week'), io: 'weekly-manga-web', cat: '3' },
+  monthly_manga: { name: i18n.t('rank.month'), io: 'monthly-manga-web', cat: '3' },
+  rookie_manga: { name: i18n.t('rank.rookie'), io: 'rookie-manga-web', cat: '3' },
+  daily_r18_manga: { name: i18n.t('rank.day_x'), io: 'daily_r18-manga-web', cat: '3', x: true },
+  weekly_r18_manga: { name: i18n.t('rank.week_x'), io: 'weekly_r18-manga-web', cat: '3', x: true },
+}
+
+const rankCatLabels = [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
+const rankCatActions = rankCatLabels.map((e, i) => ({ text: e, _v: i.toString() }))
+
 export default {
-  name: "Rank",
-  beforeRouteEnter(to, from, next) {
-    next(vm => {
-      document.querySelector(".app-main").scrollTo(0, vm.scrollTop);
-    });
-  },
-  beforeRouteLeave(to, from, next) {
-    this.scrollTop = document.querySelector(".app-main").scrollTop;
-    next();
+  name: 'Rank',
+  components: {
+    RankNav: Nav,
+    ImageCard,
   },
   data() {
+    const maxDate = dayjs().subtract(new Date().getHours() > 14 ? 1 : 2, 'days').toDate()
     return {
       scrollTop: 0,
-      minDate: moment("2007-09-13").toDate(),
-      maxDate: moment()
-        .subtract(2, "days")
-        .toDate(),
-      date: moment()
-        .subtract(2, "days")
-        .toDate(),
+      minDate: dayjs('2007-09-13').toDate(),
+      maxDate,
+      date: maxDate,
       isDatePickerShow: false,
-      curType: "daily",
+      curType: 'daily',
       curPage: 1,
       artList: [],
       error: false,
       loading: false,
       finished: false,
-      menu: {
-        daily: { name: "日榜", io: "day" },
-        weekly: { name: "周榜", io: "week" },
-        monthly: { name: "月榜", io: "month" },
-        rookie: { name: "新人榜", io: "week_rookie" },
-        original: { name: "原创榜", io: "week_original" },
-        male: { name: "男性向", io: "day_male" },
-        female: { name: "女性向", io: "day_female" },
-        r18: { name: "R-18 - 日榜", io: "day_r18", x: true },
-        "r18-w": { name: "R-18 - 周榜", io: "week_r18", x: true },
-        "r18-m": { name: "R-18 - 男性向", io: "day_male_r18", x: true },
-        "r18-f": { name: "R-18 - 女性向", io: "day_female_r18", x: true }
-      }
-    };
+      menus: rankMenus,
+      showRankCat: false,
+      actRankCat: '1',
+      rankCatLabels,
+      rankCatActions,
+    }
   },
   computed: {
+    menu() {
+      return _.pickBy(this.menus, o => o.cat == this.actRankCat)
+    },
     dateNum() {
-      return moment(this.date).date();
-    }
+      return dayjs(this.date).date()
+    },
   },
   watch: {
     $route() {
       if (
-        this.$route.name === "Rank" &&
-        this.$route.params.type !== this.curType
+        this.$route.name === 'Rank' &&
+        this.$route.params.type != this.curType
       ) {
-        this.init();
+        this.init()
       }
     },
     date(val, old) {
       if (val !== old) {
-        this.init();
+        this.init()
       }
-    }
-  },
-  methods: {
-    reset() {
-      this.curType = "daily";
-      this.curPage = 1;
-      this.artList = [];
     },
-    init() {
-      this.reset();
-      this.curType = this.$route.params.type;
-      // console.log(this.curType, this.$route);
-      this.getRankList();
-    },
-    getIOType(type) {
-      return this.menu[type] ? this.menu[type].io : null;
-    },
-    getRankList: _.throttle(async function() {
-      let type = this.getIOType(this.curType);
-      let res = await api.getRankList(type, this.curPage, this.date);
-      if (res.status === 0) {
-        let newList = res.data;
-        let artList = JSON.parse(JSON.stringify(this.artList));
-
-        artList.push(...newList);
-        artList = _.uniqBy(artList, "id");
-
-        this.artList = artList;
-        this.loading = false;
-        this.curPage++;
-        if (this.curPage > 5) this.finished = true;
-      } else {
-        this.$toast({
-          message: res.msg
-        });
-        this.loading = false;
-        this.error = true;
-      }
-      this.isLoading = false;
-    }, 5000),
-    odd(list) {
-      return list.filter((_, index) => (index + 1) % 2);
-    },
-    even(list) {
-      return list.filter((_, index) => !((index + 1) % 2));
-    },
-    toArtwork(id) {
-      this.$router.push({
-        name: "Artwork",
-        params: { id, list: this.artList }
-      });
-    },
-    showPopup() {
-      this.isDatePickerShow = true;
-    }
   },
   mounted() {
-    this.init();
+    this.init()
   },
-  components: {
-    Nav,
-    Top3,
-    [List.name]: List,
-    [Loading.name]: Loading,
-    [Empty.name]: Empty,
-    ImageCard
-  }
-};
+  activated() {
+    this.showRankCat = false
+  },
+  methods: {
+    onRankCatSel({ _v }) {
+      if (_v == '4') {
+        this.$router.replace('/rank_novel/day')
+        return
+      }
+      this.actRankCat = _v
+      const first = Object.keys(this.menu)[0]
+      this.$router.replace(`/rank/${first}`)
+    },
+    reset() {
+      const { type = 'daily' } = this.$route.params
+      this.actRankCat = this.menus[type].cat
+      this.curType = type
+      this.curPage = 1
+      this.finished = false
+      this.error = false
+      this.artList = []
+    },
+    init() {
+      this.reset()
+      this.getRankList()
+    },
+    getIOType(type) {
+      return this.menu[type] ? this.menu[type].io : null
+    },
+    getRankList: _.throttle(async function () {
+      this.loading = true
+      const type = this.getIOType(this.curType)
+      let res
+      if (type?.includes('-web')) {
+        const [mode, content] = type.replace('-web', '').split('-')
+        res = await api.getWebRankList(mode, this.curPage, this.date, content)
+      } else {
+        res = await api.getRankList(type, this.curPage, this.date)
+      }
+      if (res.status === 0) {
+        const newList = res.data
+        if (newList.length == 0) {
+          this.finished = true
+        } else {
+          this.artList = _.uniqBy([
+            ...this.artList,
+            ...newList,
+          ], 'id')
+          this.curPage++
+        }
+        this.loading = false
+      } else {
+        this.$toast({
+          message: res.msg,
+        })
+        this.loading = false
+        this.error = true
+      }
+    }, 500),
+    toArtwork(id) {
+      this.$router.push({
+        name: 'Artwork',
+        params: { id, list: this.artList },
+      })
+    },
+    showPopup() {
+      this.isDatePickerShow = true
+    },
+  },
+}
 </script>
 
+<style lang="stylus">
+.van-popover__arrow
+  display none !important
+.sel-rank-date
+  width 750px !important
+  height 680px !important
+  left 50% !important
+  margin-left -375px !important
+</style>
 <style lang="stylus" scoped>
+.nav_divi {
+  width 1px
+  height 24px
+  margin 0 15px
+  background #000
+}
+
 .rank {
+  min-height 72vh
   padding-top: 100px;
-  padding-top: env(safe-area-inset-top);
-  // height: 100%;
   box-sizing: border-box;
+  padding-bottom: 100px;
 
   .loading {
     position: absolute;
@@ -216,19 +266,26 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    top: 60px;
-    top: env(safe-area-inset-top);
-    width: 750px;
+    top: 0;
+    width: 100%;
     height: 100px;
-    padding: 0 12px;
+    padding: 0 32px 0 12px;
     box-sizing: border-box;
-    background: #fff;
+    // background: #fff;
     z-index: 1;
+    // backdrop-filter: blur(6px);
+    backdrop-filter: saturate(200%) blur(6px);
+    background: rgba(255, 255, 255, 0.8);
+
+    .nav {
+      flex 1
+    }
 
     .calendar {
       position: relative;
       width: 60px;
       height: 60px;
+      margin-left: 8px;
       background: url('~@/assets/images/calendar.png') center no-repeat;
       background-size: 100%;
       transform: translateY(-4px);
@@ -249,7 +306,7 @@ export default {
     ::v-deep .vc-popover-content-wrapper {
       top: 90px !important;
       left: auto !important;
-      right: 14px;
+      right: 36px;
       transform: none !important;
 
       .vc-popover-caret {

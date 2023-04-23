@@ -4,14 +4,15 @@
 if (!('createImageBitmap' in window)) {
   window.createImageBitmap = async function (blob) {
     return new Promise((resolve, reject) => {
-      let img = document.createElement('img');
+      const img = document.createElement('img')
       img.addEventListener('load', function () {
-        resolve(this);
-      });
+        resolve(this)
+      })
       img.addEventListener('error', function () {
-        reject(this);
-      });
-      img.src = URL.createObjectURL(blob);
-    });
+        // eslint-disable-next-line prefer-promise-reject-errors
+        reject(this)
+      })
+      img.src = URL.createObjectURL(blob)
+    })
   }
 }
