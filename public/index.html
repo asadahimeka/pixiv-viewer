@@ -29,8 +29,8 @@
   <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/5.4.5/css/swiper.min.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-webfont/1.6.0/style.css">
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
-  <% if (process.env.NODE_ENV === 'production') { %>
-  <script async defer src="https://um.nanoka.top/script.js" data-website-id="6eacf5b9-7db8-482f-b7ba-ff51d4dc38ce"></script>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
+  <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>"></script>
   <% } %>
 </head>
 
