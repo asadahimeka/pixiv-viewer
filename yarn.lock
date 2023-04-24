@@ -1491,11 +1491,6 @@
   resolved "https://registry.npmmirror.com/@vant/touch-emulator/-/touch-emulator-1.4.0.tgz#02420ca5f312a7eb6c36c349cbb8e80e6f29ff2f"
   integrity sha512-Zt+zISV0+wpOew2S1siOJ3G22y+hapHAKmXM+FhpvWzsRc4qahaYXatCAITuuXt0EcDp7WvEeTO4F7p9AtX/pw==
 
-"@vercel/analytics@^0.1.10":
-  version "0.1.10"
-  resolved "https://registry.npmmirror.com/@vercel/analytics/-/analytics-0.1.10.tgz#772ab975f1226b6db9632568299ead173c21da7d"
-  integrity sha512-jjJ8GzcPnQp0cMxpfYoUycMRBtDiaIeyVjZPiEPe99Dj1PdjMzAFYEASiV/hpNsXHkpcNYCveDFh6jnmh0YSDQ==
-
 "@vercel/build-utils@6.2.1":
   version "6.2.1"
   resolved "https://registry.npmmirror.com/@vercel/build-utils/-/build-utils-6.2.1.tgz#1b72ca18ed34589eb783e9f2050dda28a9b72a66"

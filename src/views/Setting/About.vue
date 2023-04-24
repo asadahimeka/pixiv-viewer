@@ -40,18 +40,10 @@
       label="t.me/pixiv_viewer_kai"
       @click="openLink('https://t.me/pixiv_viewer_kai')"
     />
-    <van-cell
-      center
-      title="QQ Group"
-      is-link
-      label="537247472"
-      @click="copyQQ"
-    />
   </div>
 </template>
 
 <script>
-import { copyText } from '@/utils'
 import { Dialog } from 'vant'
 
 export default {
@@ -64,9 +56,6 @@ export default {
     }
   },
   methods: {
-    copyQQ() {
-      copyText('537247472', () => this.$toast('已复制'))
-    },
     openLink(link) {
       window.open(link, '_blank', 'noopener noreferrer')
     },

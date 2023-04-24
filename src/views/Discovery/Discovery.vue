@@ -52,7 +52,7 @@ export default {
     async getArtList() {
       this.loading = true
       this.artList = []
-      const res = await api.getDiscoveryList('all', 20, true)
+      const res = await api.getDiscoveryList('safe', 18, true)
       if (res.status === 0) {
         this.artList = res.data
       } else {

@@ -962,7 +962,7 @@ const api = {
     return { status: 0, data: list }
   },
 
-  async getDiscoveryList(mode = 'all', max = 20, nocache = false) {
+  async getDiscoveryList(mode = 'safe', max = 18, nocache = false) {
     let list
 
     const params = { mode, max }
