@@ -16,7 +16,7 @@
     />
     <van-cell
       center
-      title="PixivMoe"
+      title="pixiv萌え"
       is-link
       label="https://moe.pixiv.pics"
       @click="openLink('https://moe.pixiv.pics')"
@@ -37,14 +37,7 @@
     />
     <van-cell
       center
-      title="PIXID"
-      is-link
-      label="https://pixid.top/ranking.php"
-      @click="openLink('https://pixid.top/ranking.php')"
-    />
-    <van-cell
-      center
-      title="pixivic"
+      title="Pixivic"
       is-link
       label="https://pixivic.com"
       @click="openLink('https://pixivic.com')"
@@ -65,6 +58,13 @@
     />
     <van-cell
       center
+      title="pixiv年鑑(β)"
+      is-link
+      label="https://pixiv.navirank.com/"
+      @click="openLink('https://pixiv.navirank.com/')"
+    />
+    <van-cell
+      center
       title="moeview"
       is-link
       label="https://moeview.kanata.ml"
@@ -76,13 +76,6 @@
       is-link
       label="https://booru.kanata.ml"
       @click="openLink('https://booru.kanata.ml')"
-    />
-    <van-cell
-      center
-      title="Pixiv Ranking"
-      is-link
-      label="https://www.nanoka.top/illust/pixiv/"
-      @click="openLink('https://www.nanoka.top/illust/pixiv/')"
     />
   </div>
 </template>

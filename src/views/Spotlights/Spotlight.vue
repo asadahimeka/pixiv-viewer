@@ -23,7 +23,7 @@
         @click-card="toArtwork($event)"
       />
     </div>
-    <masonry v-bind="recomMasonryProps">
+    <masonry class="spd_recomm" v-bind="recomMasonryProps">
       <SpotlightsRecom
         v-if="tagLatest.tag_name"
         :tag="tagLatest.tag_name"
@@ -137,26 +137,15 @@ export default {
 
 .Spotlight
   .flexbin:after {
-    min-width: 22vw !important;
+    min-width: 400PX !important;
   }
   .flexbin .image-card {
-    height: 22vw !important;
+    height: 400PX !important;
   }
   .flexbin .image {
-    height: 22vw !important;
+    height: 400PX !important;
   }
   @media (max-width: 1280px) {
-    .flexbin:after {
-      min-width: 30vw !important;
-    }
-    .flexbin .image-card {
-      height: 30vw !important;
-    }
-    .flexbin .image {
-      height: 30vw !important;
-    }
-  }
-  @media (max-width: 980px) {
     .flexbin:after {
       min-width: 40vw !important;
     }
@@ -168,18 +157,6 @@ export default {
     }
   }
   @media (max-width: 768px) {
-    .flexbin:after {
-      display none
-    }
-    .flexbin .image-card {
-      width 100% !important
-      height: auto !important;
-    }
-    .flexbin .image {
-      height: auto !important;
-    }
-  }
-  @media (max-width: 570px) {
     .flexbin:after {
       display none
     }
@@ -223,6 +200,13 @@ export default {
         top 50%
         left 50%
         transform translate(-50%, -50%)
+
+@media screen and (min-width: 1200px)
+  .Spotlight
+    .flexbin,.spd_recomm
+      max-width 1200PX
+      margin-left auto !important
+      margin-right auto !important
 
 @media screen and (max-width: 700px)
   .Spotlight
