@@ -3,7 +3,7 @@
     <masonry v-if="isMasonry" v-bind="masonryProps">
       <slot></slot>
     </masonry>
-    <div v-else class="flexbin">
+    <div v-else class="justified-container">
       <slot></slot>
     </div>
   </div>
@@ -57,6 +57,32 @@ export default {
 <style>
 .wf-grid .image-card {
   padding-bottom: 100% !important;
+}
+
+.justified-container {
+  display: flex !important;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.justified-container::after {
+  content: '';
+  flex-grow: 999999999;
+}
+
+.justified-container .image-card {
+  position: relative !important;
+  aspect-ratio: var(--w) / var(--h);
+  flex-grow: calc(var(--w) * 320 / var(--h));
+  width: calc(var(--w) * 320PX / var(--h));
+  margin-bottom: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.justified-container .image-card::before {
+  content: '';
+  display: block;
+  padding-bottom: calc(var(--h) / var(--w) * 100%) !important;
 }
 
 .flexbin {

@@ -1,5 +1,9 @@
 <template>
-  <div class="image-card" :style="{ paddingBottom: paddingBottom(artwork) }" @click.stop="click(artwork.id)">
+  <div
+    class="image-card"
+    :style="{ paddingBottom: paddingBottom(artwork), '--w': artwork.width, '--h': artwork.height }"
+    @click.stop="click(artwork.id)"
+  >
     <img v-if="lazy" v-lazy="imgSrc" :alt="artwork.title" class="image" :class="{ censored: isCensored(artwork) }">
     <img v-else :src="imgSrc" :alt="artwork.title" class="image" :class="{ censored: isCensored(artwork) }">
     <div class="tag-r18-ai">

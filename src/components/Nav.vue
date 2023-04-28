@@ -69,19 +69,22 @@ export default {
       isLogin,
       showNav: true,
       scrollFn: () => {},
+      notMobile: !/Mobile/i.test(navigator.userAgent),
     }
   },
   mounted() {
     console.log(this.$route)
-    this.scrollFn = throttleScroll(document.documentElement, scroll => {
-      if (scroll > 160) this.showNav = false
-    }, () => {
-      this.showNav = true
-    })
-    addEventListener('scroll', this.scrollFn)
+    if (this.notMobile) {
+      this.scrollFn = throttleScroll(document.documentElement, scroll => {
+        if (scroll > 160) this.showNav = false
+      }, () => {
+        this.showNav = true
+      })
+      addEventListener('scroll', this.scrollFn)
+    }
   },
   destroyed() {
-    removeEventListener('scroll', this.scrollFn)
+    this.notMobile && removeEventListener('scroll', this.scrollFn)
   },
   methods: {
     navigateTo(name, params) {

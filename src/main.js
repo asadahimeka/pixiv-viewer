@@ -1,5 +1,5 @@
 // import 'swiper/css/swiper.css'
-import '@/assets/css/base.styl'
+import '@/assets/style/base.styl'
 
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -7,7 +7,7 @@ import VueMasonry from 'vue-masonry-css'
 import Vant, { Toast, Lazyload, ImagePreview } from 'vant'
 
 import SvgIcon from '@/icons'
-import Masonry from './components/Masonry.vue'
+import ImageLayout from './components/ImageLayout.vue'
 import TopBar from '@/components/TopBar'
 import App from './App.vue'
 import router from './router'
@@ -38,7 +38,7 @@ Vue.use(VueAwesomeSwiper)
 Vue.use(VueMasonry)
 Vue.use(SvgIcon)
 
-Vue.component('WfCont', Masonry)
+Vue.component('WfCont', ImageLayout)
 Vue.component('TopBar', TopBar)
 
 Vue.config.productionTip = false
