@@ -268,7 +268,7 @@ export default {
       this.$toast(this.$t('tip.down_wait'))
       await sleep(1000)
 
-      const [width, height] = [this.displayWidth, this.displayHeight]
+      const { width, height } = this.artwork
 
       const cacheCanvas = document.createElement('canvas')
       cacheCanvas.width = width
@@ -312,7 +312,7 @@ export default {
         // .map(frame => URL.createObjectURL(frame.blob));
       }
 
-      const [width, height] = [this.displayWidth, this.displayHeight]
+      const { width, height } = this.artwork
 
       const cacheCanvas = document.createElement('canvas')
       cacheCanvas.width = width
