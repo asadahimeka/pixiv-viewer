@@ -4,7 +4,7 @@ import '@/assets/style/base.styl'
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMasonry from 'vue-masonry-css'
-import Vant, { Toast, Lazyload, ImagePreview } from 'vant'
+import Vant, { Toast, Lazyload, ImagePreview, Dialog } from 'vant'
 
 import SvgIcon from '@/icons'
 import ImageLayout from './components/ImageLayout.vue'
@@ -17,6 +17,12 @@ import { i18n } from './i18n'
 import '@vant/touch-emulator'
 import './polyfill'
 import './registerServiceWorker'
+
+Dialog.alert({
+  width: '9rem',
+  message: '<b style="font-size:.4rem">Pixiv 源站目前无法连接，请等待官方修复<b><br><img style="width:100%" src="https://upload-bbs.miyoushe.com/upload/2023/04/30/190122060/4b1f9f1ff58e76354f27b49f4864df93_7573079909252890752.png" alt>',
+  confirmButtonText: '我知道了',
+})
 
 Vue.use(Toast)
 Vue.use(ImagePreview)
