@@ -61,8 +61,4 @@ export default {
     margin-right 10px
     vertical-align -0.15rem
 
-  ::v-deep .discovery-icon
-    font-size: 0.8rem
-    vertical-align: -0.2rem
-
 </style>

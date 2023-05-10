@@ -1,5 +1,5 @@
 <template>
-  <div class="illust-wrap">
+  <div class="user-illusts">
     <div class="illusts">
       <TopBar />
       <AuthorNovels :id="+$route.params.id" key="multi-novel" :not-from-artwork="notFromArtwork" />
@@ -29,7 +29,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.illust-wrap
+.user-illusts
   height: 100vh
 
   ::v-deep .top-bar-wrap

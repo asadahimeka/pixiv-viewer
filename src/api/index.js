@@ -1227,7 +1227,8 @@ const api = {
         }
       } else {
         ugoira = {
-          zip: imgProxy(res.ugoira_metadata.zip_urls.medium),
+          // zip: imgProxy(res.ugoira_metadata.zip_urls.medium),
+          zip: imgProxy(res.ugoira_metadata.zip_urls.medium.replace('_ugoira600x600', '_ugoira1920x1080')),
           frames: res.ugoira_metadata.frames,
         }
       }

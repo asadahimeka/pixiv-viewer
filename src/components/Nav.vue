@@ -39,6 +39,10 @@
         <Icon class="icon" name="setting" index="Setting" :current-index="$route.name" />
         <span>{{ $t('nav.setting') }}</span>
       </li>
+      <li v-if="notMobile" class="nav_to_top" @click="scrollToTop()">
+        <Icon class="icon" name="to_top" />
+        <span>Top</span>
+      </li>
     </ul>
   </div>
 </template>
@@ -87,9 +91,12 @@ export default {
     this.notMobile && removeEventListener('scroll', this.scrollFn)
   },
   methods: {
+    scrollToTop() {
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+    },
     navigateTo(name, params) {
       if (this.$route.name.startsWith(name)) {
-        document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+        this.scrollToTop()
       } else {
         this.$router.push({ name, params })
       }
@@ -99,6 +106,9 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.nav_to_top
+  display none
+
 .nav-container {
   position: fixed;
   bottom: 0;

@@ -1,5 +1,5 @@
 <template>
-  <div class="illusts">
+  <div class="HomeRecommIllust illusts">
     <top-bar />
     <h3 class="af_title">{{ $t('common.recomm_art') }}</h3>
     <wf-cont layout="Grid">

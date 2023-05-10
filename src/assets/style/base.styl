@@ -229,7 +229,7 @@ html, body
     color #fff
 
   .user-wrap,
-  .illust-wrap
+  .user-illusts
     height auto
 
   .sup_tags .van-tag
@@ -240,8 +240,6 @@ html, body
     border 1px solid #aaa
     border-radius: 0.26667rem;
 
-  .nav-container
-    height 1rem
   .nav-container .nav-bar
     box-shadow 0 0 0.26667rem #555
     background rgba(0,0,0,0.8)
@@ -252,6 +250,8 @@ html, body
       color #fff
     .icon
       display none
+    span
+      display inline-block
 
   .com_sel_tab,
   .rank .nav a
@@ -280,8 +280,8 @@ html, body
 
   .search .search-bar-wrap .search-bar,
   .search .search-bar-wrap .van-search__content,
-  .rank .top,
-  .com_sel_tabs
+  .search .com_sel_tabs,
+  .rank .top
     background rgba(0,0,0,0.8)
   .search-dropdown
     background #16161a
@@ -292,8 +292,10 @@ html, body
     .van-cell
       background-color: transparent !important
 
-  .rank .top .calendar .date
-    color #fff
+  .rank .top
+    left 0
+    .calendar .date
+      color #fff
 
   .image-card .meta::before
     height 100%

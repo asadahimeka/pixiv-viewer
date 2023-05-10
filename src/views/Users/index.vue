@@ -292,7 +292,7 @@ export default {
 .user-container {
   height: 100%;
 
-  .illust-wrap, .user-wrap {
+  .user-illusts, .user-wrap {
     height: 100vh;
     // overflow-y: scroll;
   }
