@@ -267,6 +267,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     top: 0;
+    left 0
     width: 100%;
     height: 100px;
     padding: 0 32px 0 12px;
