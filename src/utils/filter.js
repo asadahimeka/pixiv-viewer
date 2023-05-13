@@ -35,13 +35,13 @@ export function filterCensoredIllust(artwork) {
 
   if (artwork.x_restrict == 1) {
     if (artwork.illust_ai_type == 2) {
-      return store.state.SETTING.r18 || store.state.SETTING.ai
+      return store.state.SETTING.r18 && store.state.SETTING.ai
     }
     return store.state.SETTING.r18
   }
   if (artwork.x_restrict == 2) {
     if (artwork.illust_ai_type == 2) {
-      return store.state.SETTING.r18g || store.state.SETTING.ai
+      return store.state.SETTING.r18g && store.state.SETTING.ai
     }
     return store.state.SETTING.r18g
   }
