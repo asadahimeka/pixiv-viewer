@@ -364,7 +364,7 @@ export default {
         }
         val += ' -R-18 -R18 -18+'
       }
-      if (!this.$store.state.SETTING.showAi) val += ' -AI'
+      if (!this.$store.state.SETTING.ai) val += ' -AI'
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       this.loading = true
       const res = await api.search(val, this.curPage, _.pickBy(this.searchParams, Boolean))

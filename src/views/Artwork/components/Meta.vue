@@ -78,7 +78,7 @@
       ></div>
       <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
     </div>
-    <div v-if="!isNovel " class="meta_btns">
+    <div v-if="!isNovel " class="meta_btns" :class="{ censored: isCensored(artwork) }">
       <van-button
         v-if="isLoggedIn"
         size="small"

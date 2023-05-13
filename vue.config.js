@@ -143,19 +143,27 @@ module.exports = {
           options: { cacheName: 'html-cache', cacheableResponse: { statuses: [200] } },
         },
         {
-          urlPattern: /\.(?:css|js)$/,
+          urlPattern: /^https:\/\/cdn\.staticfile\.org/,
+          handler: 'StaleWhileRevalidate',
+          options: { cacheName: 'cdn-cache', cacheableResponse: { statuses: [200] } },
+        },
+        {
+          urlPattern: /.*\.(css|js)$/,
           handler: 'CacheFirst',
           options: { cacheName: 'css-js-cache', cacheableResponse: { statuses: [200] } },
         },
         {
-          urlPattern: /\.(?:png|gif|jpg|jpeg|svg)$/,
+          urlPattern: /.*\.(png|jpg|jpeg|ico|svg|zip)$/,
           handler: 'CacheFirst',
           options: { cacheName: 'image-cache', cacheableResponse: { statuses: [200] } },
         },
         {
-          urlPattern: /^https:\/\/cdn\.staticfile\.org/,
-          handler: 'StaleWhileRevalidate',
-          options: { cacheName: 'cdn-cache', cacheableResponse: { statuses: [200] } },
+          urlPattern: /^https:\/\/(.*pximg.*)\/.*/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'pximg-cache',
+            cacheableResponse: { statuses: [0, 200] },
+          },
         },
       ],
     },

@@ -39,7 +39,7 @@ export default {
   methods: {
     showModeNav(item) {
       if (item.x && !this.SETTING.r18) return false
-      if (item.ai && !this.SETTING.showAi) return false
+      if (item.ai && !this.SETTING.ai) return false
       if (item.xg && !this.SETTING.r18g) return false
       return true
     },

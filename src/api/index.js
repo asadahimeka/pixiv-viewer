@@ -3,6 +3,7 @@ import { get } from './http'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/siteCache'
 import { i18n } from '@/i18n'
+import { filterCensoredIllusts } from '@/utils/filter'
 
 const isSupportWebP = (() => {
   const elem = document.createElement('canvas')
@@ -539,7 +540,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: relatedList }
+    return { status: 0, data: filterCensoredIllusts(relatedList) }
   },
 
   async getPopularPreviewNovel(word) {
@@ -907,7 +908,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: rankList }
+    return { status: 0, data: filterCensoredIllusts(rankList) }
   },
 
   async getWebRankList(mode = 'daily', page = 1, date = dayjs().subtract(2, 'days').format('YYYYMMDD'), content) {
@@ -936,7 +937,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: rankList }
+    return { status: 0, data: filterCensoredIllusts(rankList) }
   },
 
   async getDiscoveryArtworks(mode = 'all', limit = 60) {
@@ -959,7 +960,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: list }
+    return { status: 0, data: filterCensoredIllusts(list) }
   },
 
   async getDiscoveryList(mode = 'safe', max = 18, nocache = false) {
@@ -980,7 +981,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: list }
+    return { status: 0, data: filterCensoredIllusts(list) }
   },
 
   /**
@@ -1017,7 +1018,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: rankList }
+    return { status: 0, data: filterCensoredIllusts(rankList) }
   },
 
   async getNovelRankList(mode = 'day', page = 1, date = dayjs().subtract(2, 'days').format('YYYY-MM-DD')) {
@@ -1083,11 +1084,11 @@ const api = {
       }
     }
 
-    return { status: 0, data: searchList }
+    return { status: 0, data: filterCensoredIllusts(searchList) }
   },
 
   async searchNovel(word, page = 1) {
-    const cacheKey = `searchList_novel_${window.btoa(encodeURI(word))}_${page}`
+    const cacheKey = `searchList_novel_${word}_${page}`
     let searchList = SessionStorage.get(cacheKey)
 
     if (!searchList) {
@@ -1299,7 +1300,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: memberArtwork }
+    return { status: 0, data: filterCensoredIllusts(memberArtwork) }
   },
 
   async getMemberNovel(id, page = 1) {
@@ -1367,6 +1368,7 @@ const api = {
       }
     }
 
+    memberFavorite.illusts = filterCensoredIllusts(memberFavorite.illusts)
     return { status: 0, data: memberFavorite }
   },
 
