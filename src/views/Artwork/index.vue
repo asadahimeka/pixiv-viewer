@@ -69,6 +69,7 @@ const ugoiraDownloadPanelActions = [
   { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
   { name: 'GIF', subname: i18n.t('artwork.download.gif') },
   { name: 'WebM', subname: i18n.t('artwork.download.webm') }, // chrome only
+  { name: 'MP4', subname: i18n.t('artwork.download.mp4') },
 ]
 
 const shareOptions = [
