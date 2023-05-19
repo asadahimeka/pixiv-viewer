@@ -52,7 +52,7 @@ html,body
     display none
 
 .Home
-  padding-top 1.1rem
+  padding-top 1.2rem
   .com_sel_tabs
     position fixed
     z-index 1
@@ -61,4 +61,45 @@ html,body
     top 0.3rem
     margin-bottom 0
     padding 0
+
+@media screen and (min-width: 1280px)
+  .Home,
+  .search .tags,
+  .search .result-list,
+  .rank-list,
+  .users .user-tabs .van-tab__pane,
+  .user-illusts,
+  #app .related,
+  #app .Spotlights,
+  #app .Discovery,
+  #app .HomeRecommIllust
+    padding-left 5vw
+    padding-right 5vw
+  #app
+    .nav-container
+      left unset
+      right 0
+      bottom 42px
+      width 1.2rem
+      height auto
+      transform: translateX(100%);
+      &.showNav
+        transform: translateX(0);
+    .nav-bar
+      flex-direction: column
+      justify-content: center
+      align-items: center
+      padding-top 15px
+      border-top-left-radius: 0.21333rem;
+      border-top-right-radius: 0;
+      border-bottom-left-radius: 0.21333rem;
+      li
+        width 100%
+        margin-bottom 25px
+        &.nav_to_top
+          display list-item
+        .icon
+          font-size 0.72rem
+        span
+          display none
 </style>

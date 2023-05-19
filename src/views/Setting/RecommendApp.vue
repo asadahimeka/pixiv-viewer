@@ -30,9 +30,9 @@
     />
     <van-cell
       center
-      title="Pixiv Artvier (未发布)"
+      title="Pixiv Artvier (Android)"
       is-link
-      label="A third-party app for pixiv. 一个第三方pixiv App。还在开发中..."
+      label="A third-party app for pixiv. 一个第三方pixiv App。"
       @click="openLink('https://github.com/yleencc/pixiv-artvier')"
     />
     <van-cell
@@ -79,16 +79,16 @@
     />
     <van-cell
       center
-      title="ComicNyaa (Android, 预发布)"
+      title="ComicNyaa (Android)"
       is-link
       label=" 一个跨平台的漫画/图库聚合阅读器。"
       @click="openLink('https://github.com/tsukiseele/ComicNyaa')"
     />
     <van-cell
       center
-      title="MoeViewerN (Windows, 未发布)"
+      title="MoeViewerN (Windows)"
       is-link
-      label="一个可爱的二次元网络画廊浏览器，目前处在dev阶段。"
+      label="一个可爱的二次元网络画廊浏览器。"
       @click="openLink('https://github.com/tsukiseele/MoeViewerN')"
     />
     <van-cell

@@ -171,7 +171,7 @@ export default {
       axios
         .get(zipUrl, {
           responseType: 'blob',
-          timeout: 1000 * 30,
+          timeout: 1000 * 60,
           onDownloadProgress: progress => {
             this.progress = progress.loaded / progress.total
           },

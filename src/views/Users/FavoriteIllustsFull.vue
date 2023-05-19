@@ -1,5 +1,5 @@
 <template>
-  <div class="illust-wrap">
+  <div class="user-illusts">
     <div class="illusts">
       <TopBar />
       <FavoriteIllusts :id="+$route.params.id" key="multi-favorite" :not-from-artwork="notFromArtwork" />
@@ -28,7 +28,7 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.illust-wrap
+.user-illusts
   height: 100vh
 
   ::v-deep .top-bar-wrap

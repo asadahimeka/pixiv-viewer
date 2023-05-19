@@ -1,5 +1,5 @@
 <template>
-  <div class="illusts">
+  <div class="Discovery illusts">
     <top-bar />
     <h3 class="af_title">
       {{ $t('common.discovery') }}

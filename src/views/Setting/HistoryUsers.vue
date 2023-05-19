@@ -1,6 +1,6 @@
 <template>
   <div class="illusts">
-    <wf-cont>
+    <wf-cont layout="Masonry">
       <div
         v-for="u in artList"
         :key="u.id"

@@ -41,7 +41,7 @@ export default {
   },
   computed: {
     isMasonry() {
-      if (this.layout == 'Grid') return true
+      if (['Masonry', 'Grid'].includes(this.layout)) return true
       if (this.layout == 'Justified') return false
       return ['Masonry', 'Grid'].includes(this.wfType)
     },

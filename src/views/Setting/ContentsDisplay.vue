@@ -1,7 +1,7 @@
 <template>
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
-    <h3 class="af_title">{{ $t('display.title') }}</h3>
+    <h3 class="af_title" @dblclick="aiDisabled=false">{{ $t('display.title') }}</h3>
     <van-cell center :title="$t('display.r18')" :label="$t('display.r18_label')">
       <template #right-icon>
         <van-switch active-color="#fb7299" :value="currentSETTING.r18" size="24" @input="onR18Change($event, 1)" />
@@ -12,9 +12,9 @@
         <van-switch active-color="#ff3f3f" :value="currentSETTING.r18g" size="24" @input="onR18Change($event, 2)" />
       </template>
     </van-cell>
-    <van-cell center :title="$t('display.ai')" :label="$t('display.ai_label')">
+    <van-cell center :title="$t('display.ai')" :label="$t('display.ai_label')" @click="alertAI">
       <template #right-icon>
-        <van-switch active-color="#536cb8" :value="currentSETTING.showAi" size="24" @input="onAIChange($event)" />
+        <van-switch :disabled="aiDisabled" active-color="#536cb8" :value="currentSETTING.ai" size="24" @input="onAIChange($event)" />
       </template>
     </van-cell>
     <van-field
@@ -59,8 +59,9 @@ export default {
       currentSETTING: {
         r18: false,
         r18g: false,
-        showAi: false,
+        ai: false,
       },
+      aiDisabled: true,
     }
   },
   computed: {
@@ -88,8 +89,17 @@ export default {
       }, 100)
     },
     onAIChange(checked) {
-      this.$set(this.currentSETTING, 'showAi', checked)
+      this.$set(this.currentSETTING, 'ai', checked)
       this.saveSwitchValues()
+      setTimeout(() => {
+        location.reload()
+      }, 100)
+    },
+    alertAI() {
+      this.aiDisabled && Dialog.alert({
+        title: '提示',
+        message: '鉴于 AI 生成滥用问题的严重性，本站暂不支持打开此开关。详见<a href="https://www.pixiv.net/info.php?id=9557" rel="noreferrer">此页</a>',
+      })
     },
     onR18Change(checked, type) {
       let name
@@ -142,5 +152,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+.setting-page
+  #top-bar-wrap
+    width 1.4rem
 </style>

@@ -14,7 +14,7 @@
       >
       <div class="name-box">
         <div v-if="isNovel && artwork.series.id" class="series">{{ artwork.series.title }}</div>
-        <h2 class="title" :title="artwork.title">{{ artwork.title }}</h2>
+        <h2 class="title">{{ artwork.title }}</h2>
         <div class="author" @click="toAuthor(artwork.author.id)">{{ artwork.author.name }}</div>
       </div>
     </div>
@@ -78,7 +78,7 @@
       ></div>
       <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
     </div>
-    <div v-if="!isNovel " class="meta_btns">
+    <div v-if="!isNovel " class="meta_btns" :class="{ censored: isCensored(artwork) }">
       <van-button
         v-if="isLoggedIn"
         size="small"
@@ -403,12 +403,13 @@ export default {
   }
 
   .author-info {
-    height: 86px;
+    display flex
+    // height: 86px;
     margin: 10px 0 20px 0;
 
     .avatar {
-      float: left;
       width: 86px;
+      min-width: 86px;
       height: 86px;
       border-radius: 50%;
       overflow: hidden;
@@ -417,21 +418,21 @@ export default {
 
     .name-box {
       height: 100%;
-      white-space: nowrap;
+      // white-space: nowrap;
 
       .title {
         padding-top: 4px;
         margin-bottom: 8px;
         font-size: 32px;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
       }
 
       .author {
         font-size: 22px;
         color: #9b9b9b;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        // overflow: hidden;
+        // text-overflow: ellipsis;
       }
 
       .series {
