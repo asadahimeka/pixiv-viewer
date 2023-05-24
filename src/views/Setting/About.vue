@@ -2,8 +2,8 @@
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('about.title') }}</h3>
-    <van-cell center :title="$t('about.version')" clickable label="v1.8.15" />
-    <van-cell center :title="$t('about.disclaimer')" is-link :label="$t('tips.click_view')" @click="showDisclaimer" />
+    <van-cell center :title="$t('about.version')" clickable label="v1.8.16" />
+    <van-cell center :title="$t('about.disclaimer')" is-link :label="$t('tips.click_view')" to="/setting/about/disclaimer" />
     <van-cell
       center
       :title="$t('about.source')"
@@ -44,8 +44,6 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
-
 export default {
   name: 'SettingAbout',
   components: {
@@ -58,13 +56,6 @@ export default {
   methods: {
     openLink(link) {
       window.open(link, '_blank', 'noopener noreferrer')
-    },
-    showDisclaimer() {
-      Dialog.alert({
-        title: this.$t('about.disclaimer'),
-        message: this.$t('about.disclaimer_text'),
-        confirmButtonText: this.$t('common.confirm'),
-      })
     },
   },
 }

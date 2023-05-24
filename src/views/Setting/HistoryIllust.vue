@@ -11,6 +11,8 @@
 import { Dialog } from 'vant'
 import ImageCard from '@/components/ImageCard'
 import { getCache, setCache } from '@/utils/siteCache'
+import { filterCensoredIllusts } from '@/utils/filter'
+
 export default {
   name: 'SettingHistoryIllust',
   components: {
@@ -36,7 +38,7 @@ export default {
     },
     async getHistory() {
       const list = await getCache('illusts.history')
-      this.artList = list || []
+      this.artList = list ? filterCensoredIllusts(list) : []
     },
     clearHistory() {
       Dialog.confirm({

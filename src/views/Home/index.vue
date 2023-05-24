@@ -15,8 +15,8 @@
       </template>
       <template v-else>
         <div v-if="isSelfHibi" class="rec-cards">
-          <DiscoveryCard />
           <RecommendIllustCard />
+          <DiscoveryCard />
         </div>
         <lazy-component>
           <RandomIllust />
