@@ -134,7 +134,7 @@ export default {
     /* border-radius: .7rem .7rem 0 0; */
     box-shadow: 0px 0px 20px #dedede;
     width: 100%;
-    max-width: 750px;
+    // max-width: 750px;
     height: 100%;
     margin: 0 auto;
     border-top-left-radius: 16px;

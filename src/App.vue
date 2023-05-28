@@ -79,12 +79,15 @@ html,body
     .nav-container
       left unset
       right 0
-      bottom 42px
+      bottom 50%
       width 1.2rem
       height auto
-      transform: translateX(100%);
+      // transform: translateX(100%);
+      transform: translate(0, 50%);
+      opacity 1
       &.showNav
-        transform: translateX(0);
+        // transform: translateX(0);
+        transform: translate(0, 50%);
     .nav-bar
       flex-direction: column
       justify-content: center
@@ -99,7 +102,8 @@ html,body
         &.nav_to_top
           display list-item
         .icon
-          font-size 0.72rem
+          margin-bottom 4px
+          font-size 0.55rem
         span
-          display none
+          font-size 0.26rem
 </style>
