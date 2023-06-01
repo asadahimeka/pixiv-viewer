@@ -84,7 +84,7 @@ export default {
       }, () => {
         this.showNav = true
       })
-      addEventListener('scroll', this.scrollFn)
+      addEventListener('scroll', this.scrollFn, { passive: true })
     }
   },
   destroyed() {

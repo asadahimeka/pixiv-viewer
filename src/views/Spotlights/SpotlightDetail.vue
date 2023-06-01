@@ -74,7 +74,7 @@ export default {
     $route() {
       if (
         this.$route.name === 'SpotlightDetail' &&
-        this.$route.params.id != this.spid
+        this.$route.query.id != this.spid
       ) {
         this.spotlight = {}
         this.init()
@@ -109,10 +109,14 @@ export default {
       this.spid = this.$route.query.id
       this.getDetail()
     },
-    handleClick(/** @type {MouseEvent} */ e) {
-      if (e.target.tagName === 'A') {
-        e.preventDefault()
-        const url = e.target.href
+    handleClick(ev) {
+      ev.preventDefault()
+      let el = ev.target
+      while (el && !el.className.includes('sp_desc') && el.tagName != 'A') {
+        el = el.parentElement
+      }
+      if (el?.tagName === 'A') {
+        const url = el.href
         const pid = url.match(/https:\/\/www\.pixiv\.net\/artworks\/(\d+)/i)?.[1]
         if (pid) {
           this.$router.push(`/i/${pid}`)
@@ -121,6 +125,11 @@ export default {
         const uid = url.match(/https:\/\/www\.pixiv\.net\/users\/(\d+)/i)?.[1]
         if (uid) {
           this.$router.push(`/u/${uid}`)
+          return
+        }
+        const spid = url.match(/https:\/\/www\.pixivision\.net\/.+\/a\/(\d+)/i)?.[1]
+        if (spid) {
+          this.$router.push(`/spotlight_detail?id=${spid}`)
           return
         }
         window.open(url, '_blank', 'noreferrer')
@@ -251,7 +260,7 @@ export default {
     text-align: center;
 
   ::v-deep .top-bar-wrap
-    width 30%
+    width 2rem
     padding-top 40px
     background transparent
 

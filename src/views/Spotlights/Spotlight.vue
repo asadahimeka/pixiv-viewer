@@ -112,6 +112,9 @@ export default {
           },
         }))
         this.spotlight = res.data
+        if (!res.data.items.length) {
+          this.$router.replace(`/spotlight_detail?id=${this.spid}`)
+        }
       } else {
         this.$toast({
           message: res.msg,
