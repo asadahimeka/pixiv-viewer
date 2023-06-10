@@ -287,7 +287,8 @@
     "unknown_err": "알수없는 오류",
     "down_wait": "처리중이니 조금만 기다려주세요",
     "downloaded": "다운로드됨",
-    "downloading": "다운로드 중"
+    "downloading": "다운로드 중",
+    "connect_err": "연결에 실패했습니다. 이 항목을 사용할 수 없습니다."
   },
   "sess": {
     "example": "세션 ID는 다음과 같습니다(유효하지 않음, 데모용).",

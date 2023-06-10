@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 function fallbackCopyTextToClipboard(text, cb, errCb) {
   const textArea = document.createElement('textarea')
   textArea.value = text
@@ -80,4 +82,30 @@ export function objectToQueryString(queryParameters) {
       ''
     )
     : ''
+}
+
+export function isURL(s) {
+  return /^https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_+.~#?&/=]*)$/i.test(s)
+}
+
+export async function checkImgAvailable(src) {
+  return new Promise((resolve, reject) => {
+    let img = document.createElement('img')
+    img.referrerPolicy = 'no-referrer'
+    img.src = src
+    img.onload = () => {
+      resolve(true)
+      img = null
+    }
+    img.onerror = () => {
+      reject(new Error('Network error.'))
+      img = null
+    }
+  })
+}
+
+export async function checkUrlAvailable(url) {
+  const res = await axios.get(url, { timeout: 5000 })
+  if (res.data) return true
+  throw new Error('Resp not ok.')
 }

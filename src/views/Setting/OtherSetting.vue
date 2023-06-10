@@ -1,7 +1,7 @@
 <template>
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
-    <h3 class="af_title" @dblclick="showApSelect = !showApSelect">{{ $t('setting.other.title') }}</h3>
+    <h3 class="af_title" @dblclick="onTitleDblclick">{{ $t('setting.other.title') }}</h3>
     <van-cell center :title="$t('setting.other.lang')" is-link :label="lang.value" @click="lang.show = true" />
     <van-cell center :title="$t('setting.dark.title')" :label="$t('setting.lab.title')">
       <template #right-icon>
@@ -95,6 +95,8 @@ import { LocalStorage, SessionStorage } from '@/utils/storage'
 import localDb from '@/utils/localDb'
 import { getCache, setCache } from '@/utils/siteCache'
 import { i18n } from '@/i18n'
+import { isURL, checkImgAvailable, checkUrlAvailable } from '@/utils'
+import { Dialog } from 'vant'
 
 const PXIMG_PROXYS = process.env.VUE_APP_PXIMG_PROXYS || ''
 const HIBIAPI_ALTS = process.env.VUE_APP_HIBIAPI_ALTS || ''
@@ -178,6 +180,13 @@ export default {
   },
   methods: {
     async changePximgBed() {
+      const url = `https://${this.pximgBed.value}`
+      const res = await this.checkURL(url, () => {
+        if (url == 'https://i-cf.pximg.net') return true
+        return checkImgAvailable(`${url}/user-profile/img/2022/02/03/15/54/20/22159592_fce9f5c7a908c9b601dc7e9da7a412a3_50.jpg?_t=${Date.now()}`)
+      })
+      if (!res) return
+      window.umami?.track('set_pximg', { set_pximg: this.pximgBed.value })
       LocalStorage.set('PXIMG_PROXY', this.pximgBed.value)
       SessionStorage.clear()
       await localDb.clear()
@@ -187,6 +196,7 @@ export default {
     },
     async changePximgBed_({ _value }) {
       this.pximgBed_.value = _value
+      window.umami?.track('change_pximg', { change_pximg: _value })
       LocalStorage.set('PXIMG_PROXY', _value)
       SessionStorage.clear()
       await localDb.clear()
@@ -195,6 +205,12 @@ export default {
       }, 500)
     },
     async changeHibiapi() {
+      const url = this.hibiapi.value
+      const res = await this.checkURL(url, () => {
+        return checkUrlAvailable(`${url}/rank?_t=${Date.now()}`)
+      })
+      if (!res) return
+      window.umami?.track('set_hibiapi', { set_hibiapi: this.hibiapi.value })
       LocalStorage.set('HIBIAPI_BASE', this.hibiapi.value)
       SessionStorage.clear()
       await localDb.clear()
@@ -204,6 +220,7 @@ export default {
     },
     async changeHibiapi_({ _value }) {
       this.hibiapi_.value = _value
+      window.umami?.track('change_hibiapi', { change_hibiapi: _value })
       LocalStorage.set('HIBIAPI_BASE', _value)
       SessionStorage.clear()
       await localDb.clear()
@@ -213,6 +230,7 @@ export default {
     },
     changeWfType({ name }) {
       this.wfType.value = name
+      window.umami?.track('set_wf_type', { wf_type: name })
       LocalStorage.set('__WF_TYPE', name)
       setTimeout(() => {
         location.reload()
@@ -220,12 +238,14 @@ export default {
     },
     changeImgRes({ name }) {
       this.imgRes.value = name
+      window.umami?.track('set_img_res', { img_res: name })
       LocalStorage.set('__DTL_IMG_RES', name)
       setTimeout(() => {
         location.reload()
       }, 500)
     },
     onDarkChange(val) {
+      window.umami?.track(`set_dark_${val}`)
       this.isDark = val
       this.$nextTick(() => {
         localStorage.setItem('__PXV_DARK', val || '')
@@ -237,10 +257,46 @@ export default {
     changeLang({ name }) {
       this.lang.value = name
       i18n.locale = name
+      window.umami?.track('set_lang', { lang: name })
       localStorage.setItem('__PXV_LANG', name)
       setTimeout(() => {
         location.reload()
       }, 500)
+    },
+    onTitleDblclick() {
+      this.showApSelect = !this.showApSelect
+      window.umami?.track('show_ap_select')
+    },
+    async checkURL(val, checkFn) {
+      if (!isURL(val)) {
+        Dialog.alert({
+          title: 'Error',
+          confirmButtonText: 'Close',
+          message: 'Invalid URL input.',
+        }).then(() => {
+          location.reload()
+        })
+        return false
+      }
+      const loading = this.$toast.loading({
+        duration: 0,
+        forbidClick: true,
+        message: 'Loading',
+      })
+      try {
+        await checkFn(val)
+        loading.clear()
+        return true
+      } catch (error) {
+        loading.clear()
+        Dialog.alert({
+          message: this.$t('tip.connect_err'),
+          confirmButtonText: 'OK',
+        }).then(() => {
+          location.reload()
+        })
+        return false
+      }
     },
     async checkApiAvailable() {
       const ck = 'setting.apiChk'
@@ -280,6 +336,7 @@ export default {
         this.$set(e, 'loading', true)
         const startTime = Date.now()
         let img = document.createElement('img')
+        img.referrerPolicy = 'no-referrer'
         img.src = `https://${e._value}/user-profile/img/2022/02/03/15/54/20/22159592_fce9f5c7a908c9b601dc7e9da7a412a3_50.jpg?_t=${startTime}`
         img.onload = () => {
           const duration = Date.now() - startTime

@@ -143,27 +143,19 @@ module.exports = {
           options: { cacheName: 'html-cache', cacheableResponse: { statuses: [200] } },
         },
         {
-          urlPattern: /^https:\/\/cdn\.staticfile\.org/,
-          handler: 'StaleWhileRevalidate',
-          options: { cacheName: 'cdn-cache', cacheableResponse: { statuses: [200] } },
-        },
-        {
-          urlPattern: /.*\.(css|js)$/,
+          urlPattern: /^https:\/\/cdn\.staticfile\.org\/.*\.(css|js)$/,
           handler: 'CacheFirst',
-          options: { cacheName: 'css-js-cache', cacheableResponse: { statuses: [200] } },
-        },
-        {
-          urlPattern: /.*\.(png|jpg|jpeg|ico|svg|zip)$/,
-          handler: 'CacheFirst',
-          options: { cacheName: 'image-cache', cacheableResponse: { statuses: [200] } },
+          options: { cacheName: 'cdn-cache', cacheableResponse: { statuses: [200] }, expiration: { maxAgeSeconds: 86400 * 7 } },
         },
         {
           urlPattern: /^https:\/\/(.*pximg.*)\/.*/,
           handler: 'CacheFirst',
-          options: {
-            cacheName: 'pximg-cache',
-            cacheableResponse: { statuses: [0, 200] },
-          },
+          options: { cacheName: 'pximg-cache', cacheableResponse: { statuses: [0, 200] }, expiration: { maxAgeSeconds: 86400 * 7 } },
+        },
+        {
+          urlPattern: /.*\.(png|jpg|jpeg|ico|svg|zip)$/,
+          handler: 'CacheFirst',
+          options: { cacheName: 'image-cache', cacheableResponse: { statuses: [200] }, expiration: { maxAgeSeconds: 86400 * 7 } },
         },
       ],
     },

@@ -287,7 +287,8 @@
     "unknown_err": "未知錯誤",
     "down_wait": "處理中，請耐心等待",
     "downloaded": "下載完成",
-    "downloading": "下載中"
+    "downloading": "下載中",
+    "connect_err": "連接失敗，此項不可用。"
   },
   "sess": {
     "example": "Session ID 形如（無效，演示用）：",

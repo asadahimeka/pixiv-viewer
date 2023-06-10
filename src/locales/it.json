@@ -290,7 +290,8 @@
     "downloaded": "Download completato",
     "downloading": "Download",
     "rate_limit": "Limite API superato, riprova più tardi o vai alle impostazioni per modificare l'istanza API",
-    "unknown_err": "Errore sconosciuto"
+    "unknown_err": "Errore sconosciuto",
+    "connect_err": "Connessione fallita, questo elemento non è disponibile."
   },
   "tips": {
     "click_view": "Clicca per vedere",

@@ -287,7 +287,8 @@
     "unknown_err": "Unknown Error",
     "down_wait": "Processing, please be patient",
     "downloaded": "Download complete",
-    "downloading": "Downloading"
+    "downloading": "Downloading",
+    "connect_err": "Connection failed, this item is not available."
   },
   "sess": {
     "example": "Session ID looks like (invalid, for demo):",

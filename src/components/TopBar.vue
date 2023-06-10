@@ -38,10 +38,10 @@ export default {
 .top-bar-wrap {
   position: fixed;
   top: 0;
+  left 0;
   padding-top: 60px;
-  width: 30%;
-  // max-width: 10rem;
-  height: 160px;
+  width: 1.6rem;
+  height: 1.2rem;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(#fff, 0));
   z-index: 99;
 }

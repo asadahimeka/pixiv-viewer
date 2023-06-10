@@ -287,7 +287,8 @@
     "unknown_err": "未知错误",
     "down_wait": "处理中，请耐心等待",
     "downloaded": "下载完成",
-    "downloading": "下载中"
+    "downloading": "下载中",
+    "connect_err": "连接失败，此项不可用。"
   },
   "sess": {
     "title": "设置 Pixiv Cookie",

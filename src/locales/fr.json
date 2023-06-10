@@ -287,7 +287,8 @@
     "unknown_err": "Erreur inconnue",
     "down_wait": "Traitement, veuillez patienter",
     "downloaded": "Téléchargement complet",
-    "downloading": "Téléchargement"
+    "downloading": "Téléchargement",
+    "connect_err": "La connexion a échoué, cet élément n'est pas disponible."
   },
   "sess": {
     "example": "L'ID de session ressemble à (invalide, pour la démo) :",

@@ -12,16 +12,22 @@ export default {
 }
 </script>
 
+<style lang="stylus" scoped>
+.setting-page
+  .af_title
+    margin-top 0.6rem
+    font-size 16PX
+</style>
 <style lang="stylus">
 .disclaimer_text
   padding 0 20px
-  font-size 21px
+  font-size 15PX
   line-height 1.7
   br
     display none
   b
     display block
-    font-size 24px
+    font-size 16PX
     text-align center
     margin 20px 0
 </style>

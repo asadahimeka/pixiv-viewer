@@ -255,7 +255,7 @@ export default {
     text-align: center;
 
   ::v-deep .top-bar-wrap
-    width 30%
+    width 1.6rem
     padding-top 40px
     background transparent
 
@@ -272,7 +272,7 @@ export default {
   position: fixed;
   top: 0;
   right 0
-  padding: 0.7rem 0.5rem;
+  padding: 0.77rem 0.5rem;
   z-index: 99;
   font-size 2.2em
   cursor pointer

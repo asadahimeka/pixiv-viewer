@@ -287,7 +287,8 @@
     "unknown_err": "Unbekannter Fehler",
     "down_wait": "Verarbeitung, bitte haben Sie etwas Geduld",
     "downloaded": "Download abgeschlossen",
-    "downloading": "wird heruntergeladen"
+    "downloading": "wird heruntergeladen",
+    "connect_err": "Die Verbindung ist fehlgeschlagen. Dieses Element ist nicht verfügbar."
   },
   "sess": {
     "example": "Sitzungs-ID sieht so aus (ungültig, für Demo):",
