@@ -11,7 +11,10 @@ export async function setCache(key, val, expires) {
 
 export async function getCache(key, def) {
   let val = _siteCacheData.get(key)
-  if (!val) val = await localDb.get(key, def)
+  if (val == null) {
+    val = await localDb.get(key, def)
+    _siteCacheData.set(key, val)
+  }
   console.log('getCache', key, val)
   return val
 }

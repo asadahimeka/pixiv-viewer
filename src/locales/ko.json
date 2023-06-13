@@ -6,7 +6,7 @@
     "from": "본가 레포",
     "origin_site": "본가 링크",
     "source": "소스 코드",
-    "title": "아바웃",
+    "title": "사이트 정보",
     "version": "버전"
   },
   "artwork": {
@@ -229,7 +229,7 @@
     "recomm": {
       "app": "앱",
       "site": "웹사이트",
-      "title": "추천 물건",
+      "title": "추천 링크",
       "tm": "사용자 스크립트"
     },
     "down_app": "앱 다운로드"

@@ -104,7 +104,13 @@ export default {
         confirmButtonText: this.$t('common.confirm'),
         cancelButtonText: this.$t('common.cancel'),
       }).then(async () => {
-        if (type === 'db') await localDb.clear()
+        if (type === 'db') {
+          await localDb.clear()
+          const keyList = await caches.keys()
+          await Promise.all(keyList.map(async key => {
+            await caches.delete(key)
+          }))
+        }
         if (type === 'local') LocalStorage.clear()
         if (type === 'session') SessionStorage.clear()
 

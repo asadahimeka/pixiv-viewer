@@ -6,7 +6,7 @@
     "from": "Geändert von",
     "origin_site": "Ursprüngliche Seite",
     "source": "Quellcode",
-    "title": "um",
+    "title": "Über die Website",
     "version": "Ausführung"
   },
   "artwork": {
@@ -229,7 +229,7 @@
     "recomm": {
       "app": "Anwendungen",
       "site": "Webseite",
-      "title": "Verwandter Vorschlag",
+      "title": "Empfohlene Links",
       "tm": "UserScript"
     },
     "down_app": "Lade App herunter"

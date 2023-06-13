@@ -36,7 +36,7 @@
     "from": "Modified from",
     "origin_site": "Original Site",
     "source": "Source Code",
-    "title": "about",
+    "title": "About Site",
     "version": "Version"
   },
   "artwork": {
@@ -229,7 +229,7 @@
     "recomm": {
       "app": "Apps",
       "site": "Website",
-      "title": "Related Suggestion",
+      "title": "Recommended Links",
       "tm": "UserScript"
     },
     "down_app": "Download App"

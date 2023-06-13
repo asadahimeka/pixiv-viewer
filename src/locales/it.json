@@ -6,7 +6,7 @@
     "from": "Modificato da",
     "origin_site": "Sito originale",
     "source": "Codice sorgente",
-    "title": "Di",
+    "title": "Informazioni sul sito",
     "version": "Versione"
   },
   "artwork": {
@@ -270,7 +270,7 @@
     "recomm": {
       "app": "App",
       "site": "Sito web",
-      "title": "Suggerimento correlato",
+      "title": "Link consigliati",
       "tm": "UserScript"
     }
   },

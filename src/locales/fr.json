@@ -6,7 +6,7 @@
     "from": "Modifié à partir de",
     "origin_site": "Site d'origine",
     "source": "Code source",
-    "title": "à propos",
+    "title": "À propos du site",
     "version": "Version"
   },
   "artwork": {
@@ -229,7 +229,7 @@
     "recomm": {
       "app": "applications",
       "site": "Site Internet",
-      "title": "Suggestion connexe",
+      "title": "Liens recommandés",
       "tm": "Script utilisateur"
     },
     "down_app": "Télécharger l'application"
