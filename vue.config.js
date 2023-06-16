@@ -128,16 +128,6 @@ module.exports = {
       ],
       runtimeCaching: [
         {
-          urlPattern: /^https:\/\/.*\.kanata\.ml\/?$/,
-          handler: 'StaleWhileRevalidate',
-          options: { cacheName: 'index-cache', cacheableResponse: { statuses: [200] } },
-        },
-        {
-          urlPattern: /^https:\/\/pixiv\.pics\/?$/,
-          handler: 'StaleWhileRevalidate',
-          options: { cacheName: 'index-cache', cacheableResponse: { statuses: [200] } },
-        },
-        {
           urlPattern: /.*\.html$/,
           handler: 'StaleWhileRevalidate',
           options: { cacheName: 'html-cache', cacheableResponse: { statuses: [200] } },
