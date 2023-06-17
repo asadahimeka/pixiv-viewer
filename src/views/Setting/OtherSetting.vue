@@ -171,7 +171,7 @@ export default {
       },
       pximgChecked: true,
       apiChecked: true,
-      hideApSelect: true,
+      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
       isDark: !!localStorage.getItem('__PXV_DARK'),
     }
   },
@@ -185,6 +185,7 @@ export default {
   },
   watch: {
     hideApSelect(val) {
+      LocalStorage.set('__HIDE_AP_SEL', val)
       if (val) {
         LocalStorage.set('HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI_MAIN)
         LocalStorage.set('PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG_MAIN)
