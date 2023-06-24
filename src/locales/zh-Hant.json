@@ -224,7 +224,11 @@
     "other": {
       "lang": "語言",
       "lang_ph": "請選擇語言",
-      "title": "其他設置"
+      "title": "其他設置",
+      "manual_inp": {
+        "label": "下方圖片代理與 API 實例地址是否手動輸入",
+        "title": "手動輸入地址"
+      }
     },
     "recomm": {
       "app": "應用",
@@ -283,7 +287,7 @@
     "view_comments": "查看評論"
   },
   "tip": {
-    "rate_limit": "超出 API 限制，請稍後重試或前往設置更改 API 實例",
+    "rate_limit": "超出 API 限制，請稍後重試",
     "unknown_err": "未知錯誤",
     "down_wait": "處理中，請耐心等待",
     "downloaded": "下載完成",

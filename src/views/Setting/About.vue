@@ -33,26 +33,12 @@
       label="Github:asadahimeka/pixiv-viewer"
       @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
     />
-    <van-cell
-      center
-      title="Telegram Group"
-      is-link
-      label="t.me/pixiv_viewer_kai"
-      @click="openLink('https://t.me/pixiv_viewer_kai')"
-    />
   </div>
 </template>
 
 <script>
 export default {
   name: 'SettingAbout',
-  components: {
-  },
-  data() {
-    return {
-
-    }
-  },
   methods: {
     openLink(link) {
       window.open(link, '_blank', 'noopener noreferrer')

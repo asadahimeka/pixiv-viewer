@@ -205,7 +205,11 @@
     "other": {
       "title": "其他设置",
       "lang": "语言",
-      "lang_ph": "请选择语言"
+      "lang_ph": "请选择语言",
+      "manual_inp": {
+        "title": "手动输入地址",
+        "label": "下方图片代理与 API 实例地址是否手动输入"
+      }
     },
     "recomm": {
       "title": "相关推荐",
@@ -283,7 +287,7 @@
     }
   },
   "tip": {
-    "rate_limit": "API 超限，请稍后再试或到设置里更换 API 实例",
+    "rate_limit": "API 超限，请稍后再试",
     "unknown_err": "未知错误",
     "down_wait": "处理中，请耐心等待",
     "downloaded": "下载完成",

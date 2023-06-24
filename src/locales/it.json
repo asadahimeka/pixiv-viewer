@@ -265,7 +265,11 @@
     "other": {
       "lang": "Lingua",
       "lang_ph": "Seleziona la lingua",
-      "title": "Altre impostazioni"
+      "title": "Altre impostazioni",
+      "manual_inp": {
+        "label": "Indica se gli indirizzi proxy e dell'istanza API delle immagini seguenti vengono inseriti manualmente",
+        "title": "Inserisci il collegamento manualmente"
+      }
     },
     "recomm": {
       "app": "App",

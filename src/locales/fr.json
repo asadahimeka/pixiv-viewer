@@ -224,7 +224,11 @@
     "other": {
       "lang": "Langue",
       "lang_ph": "Veuillez sélectionner la langue",
-      "title": "Autres réglages"
+      "title": "Autres réglages",
+      "manual_inp": {
+        "label": "Si les adresses de proxy et d'instance d'API des images ci-dessous sont saisies manuellement",
+        "title": "Entrez le lien manuellement"
+      }
     },
     "recomm": {
       "app": "applications",

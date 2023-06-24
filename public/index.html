@@ -29,6 +29,16 @@
   <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/5.4.5/css/swiper.min.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-webfont/1.6.0/style.css">
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
+  <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>"></script>
+  <% } %>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CF_BEACON) { %>
+  <script async defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "<%= process.env.VUE_APP_CF_BEACON %>"}'></script>
+  <% } %>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>
+  <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '<%= process.env.VUE_APP_GA_ID %>');</script>
+  <% } %>
 </head>
 
 <body>
@@ -47,12 +57,6 @@
   <% } %>
   <% } %>
   <!-- built files will be auto injected -->
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CF_BEACON) { %>
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "<%= process.env.VUE_APP_CF_BEACON %>"}'></script>
-  <% } %>
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
-  <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>"></script>
-  <% } %>
 </body>
 
 </html>

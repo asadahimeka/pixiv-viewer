@@ -10,7 +10,7 @@
     </van-cell>
     <van-cell center :title="$t('setting.layout.title')" is-link :label="wfType.value" @click="wfType.show = true" />
     <van-cell center :title="$t('setting.img_res.title')" is-link :label="imgRes.value" @click="imgRes.show = true" />
-    <van-cell center :title="'手动输入地址'" :label="'下方图片代理与 API 实例地址是否手动输入'">
+    <van-cell center :title="$t('setting.other.manual_inp.title')" :label="$t('setting.other.manual_inp.label')">
       <template #right-icon>
         <van-switch v-model="hideApSelect" size="24" />
       </template>
