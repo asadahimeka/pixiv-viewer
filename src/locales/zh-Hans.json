@@ -69,7 +69,9 @@
     "no_more": "没有更多了",
     "net_err": "网络异常，点击重新加载",
     "no_data": "暂无数据",
-    "click_view": "点击查看"
+    "click_view": "点击查看",
+    "copy_err": "复制失败",
+    "tip": "提示"
   },
   "novel": {
     "series": {
@@ -113,7 +115,11 @@
     },
     "related": "相关用户",
     "faved": "已收藏",
-    "view_comments": "查看评论"
+    "view_comments": "查看评论",
+    "followed": "已关注",
+    "follow": "关注",
+    "unfollow_fail": "取消关注失败",
+    "follow_fail": "关注失败"
   },
   "rank": {
     "day": "日榜",
@@ -206,9 +212,34 @@
       "title": "其他设置",
       "lang": "语言",
       "lang_ph": "请选择语言",
-      "manual_inp": {
-        "title": "手动输入地址",
-        "label": "下方图片代理与 API 实例地址是否手动输入"
+      "manual_input": "手动输入地址",
+      "manual_input_label": "下方图片代理与 API 实例地址是否手动输入",
+      "cp_token_label": "复制当前 RefreshToken 到剪贴板",
+      "cp_token_title": "导出 RefreshToken",
+      "direct_mode": {
+        "title": "启用直连模式",
+        "label": "是否通过域前置绕过 SNI 嗅探",
+        "proxy": {
+          "title": "启用 AppApi 代理",
+          "label": "是否通过云服务代理本地 AppApi 请求"
+        },
+        "host": {
+          "title": "清除直连 hosts 缓存",
+          "label": "清除后将重新通过 DoH 查询"
+        },
+        "confirm": {
+          "title": "确认启用直连模式？",
+          "msg": "直连模式仅支持 Firefox 浏览器，需确保 Tampermonkey 与 Helper 脚本已安装，且速度较慢、不保证稳定性。不可与 AppApi 代理同时开启。开启直连后如果遇到网络错误的话，请手动打开下面的链接后，点击“高级” - “接受风险并继续”，出现 421 后回到本站刷新页面。",
+          "proxy_title": "确认启用 AppApi 代理？",
+          "proxy_msg": "通过第三方云服务转发本地 AppApi 请求，无法保证稳定性与安全性。不可与直连模式同时开启。"
+        },
+        "host_msg": "确认清除直连模式 hosts 缓存记录?"
+      },
+      "swipe_toggle": "详情页左右滑动浏览作品",
+      "api_proxy": {
+        "def_ph": "默认代理无法使用的话可以尝试其他代理",
+        "title": "选择 AppApi 代理",
+        "sel_desc": "请选择 AppApi 代理"
       }
     },
     "recomm": {
@@ -292,7 +323,9 @@
     "down_wait": "处理中，请耐心等待",
     "downloaded": "下载完成",
     "downloading": "下载中",
-    "connect_err": "连接失败，此项不可用。"
+    "connect_err": "连接失败，此项不可用。",
+    "browser_tip": "请使用 Chrome/Edge 浏览器访问本站",
+    "browser_latest": "请尽量使用最新的 Chrome/Edge 浏览器访问本站"
   },
   "sess": {
     "title": "设置 Pixiv Cookie",
@@ -333,5 +366,25 @@
     "fav": "我的收藏",
     "user": "已关注用户",
     "latest": "全站最新"
+  },
+  "login": {
+    "o": {
+      "desc1": "即将打开 Pixiv 源站进行登录，请确保可以访问 Pixiv",
+      "desc2": "请确保已安装 URLRedirector 浏览器插件并导入配置，否则将无法登录",
+      "desc3": "URLRedirector 安装地址：",
+      "desc4": "点击复制 URLRedirector 在线规则地址",
+      "desc5": "请确保已安装 Tampermonkey 浏览器插件并安装 Helper 用户脚本，否则将无法请求 API",
+      "desc6": "Tampermonkey 安装地址：",
+      "desc7": "点击安装 Helper 用户脚本"
+    },
+    "t": {
+      "d1": "请确保已安装 Tampermonkey 浏览器插件并安装 Helper 用户脚本，否则请打开 AppApi 代理",
+      "d2": "请填写 RefreshToken，获取方式参考如下链接",
+      "d3": "请填写 RefreshToken",
+      "d4": "RefreshToken 格式不正确"
+    },
+    "succ_tip": "登录成功",
+    "fail_tip": "登录失败",
+    "logout_tip": "确认退出？"
   }
 }

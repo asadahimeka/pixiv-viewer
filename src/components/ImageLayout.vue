@@ -11,7 +11,7 @@
 
 <script>
 import { LocalStorage } from '@/utils/storage'
-const wfType = LocalStorage.get('__WF_TYPE', 'Masonry')
+const wfType = LocalStorage.get('PXV_WF_TYPE', 'Masonry')
 export default {
   props: {
     layout: {

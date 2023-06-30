@@ -4,6 +4,8 @@
 
 Demo: 🔗 [pixiv.pics](https://pixiv.pics)
 
+Download: ⏬ [App Center](https://install.appcenter.ms/users/yumine/apps/pixiv-viewer/distribution_groups/beta) | [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
+
 ~~[APK(5+)](https://github.com/journey-ad/pixiv-viewer/raw/master/pics/pixiv_viewer_0607231648.apk)~~
 
 ## Features
@@ -30,12 +32,10 @@ Demo: 🔗 [pixiv.pics](https://pixiv.pics)
 - [x] Search Popular Works Preview
 - [x] Search Params Support
 - [x] Novel Support
-- [x] Cookie Login/Bookmark/Followed
+- [x] Login/Bookmark/Follow
 - [x] I18n Support
 - [x] Dark Mode
-
-## TODO
-- [ ] Swipe to toggle artworks
+- [x] Swipe to toggle artworks
 
 ## Preview
 

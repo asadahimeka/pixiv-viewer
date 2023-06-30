@@ -65,12 +65,10 @@ function throttleScroll(el, downFn, upFn) {
   }
 }
 
-const isLogin = existsSessionId()
-
 export default {
   data() {
     return {
-      isLogin,
+      isLogin: window.APP_CONFIG.useLocalAppApi || existsSessionId(),
       showNav: true,
       scrollFn: () => {},
       notMobile: !/Mobile/i.test(navigator.userAgent),
@@ -130,8 +128,7 @@ export default {
   .nav-bar {
     display: flex;
     justify-content: space-between;
-    background: #fff;
-    /* border-radius: .7rem .7rem 0 0; */
+    // border-radius: .7rem .7rem 0 0;
     box-shadow: 0px 0px 20px #dedede;
     width: 100%;
     // max-width: 750px;
@@ -155,9 +152,10 @@ export default {
 
       .icon {
         display: block;
-        font-size: 58px;
+        font-size: 50px;
         margin: 0 auto;
         margin-top: 0.1rem;
+        margin-bottom 3px
         color: #fffdf7;
 
         &.active {

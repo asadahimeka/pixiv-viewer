@@ -136,6 +136,8 @@ import dayjs from 'dayjs'
 import { copyText, sleep } from '@/utils'
 import { i18n } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
+import { localApi } from '@/api'
+import { toggleBookmarkCache } from '@/utils/siteCache'
 
 export default {
   filters: {
@@ -210,6 +212,10 @@ export default {
   methods: {
     checkBookmarked() {
       if (!this.artwork.id) return
+      if (window.APP_CONFIG.useLocalAppApi) {
+        this.bookmarkId = this.artwork.is_bookmarked
+        return
+      }
       this.favLoading = true
       isIllustBookmarked(this.artwork.id).then(id => {
         this.favLoading = false
@@ -219,23 +225,43 @@ export default {
     toggleBookmark() {
       this.favLoading = true
       if (this.bookmarkId) {
-        removeBookmark(this.bookmarkId).then(({ error }) => {
-          this.favLoading = false
-          if (error) {
-            this.$toast(this.$t('artwork.unfav_fail'))
-          } else {
-            this.bookmarkId = null
-          }
-        })
+        window.APP_CONFIG.useLocalAppApi
+          ? localApi.illustBookmarkDelete(this.artwork.id).then(isOk => {
+            this.favLoading = false
+            if (isOk) {
+              this.bookmarkId = null
+              toggleBookmarkCache(this.artwork, false)
+            } else {
+              this.$toast(this.$t('artwork.unfav_fail'))
+            }
+          })
+          : removeBookmark(this.bookmarkId).then(({ error }) => {
+            this.favLoading = false
+            if (error) {
+              this.$toast(this.$t('artwork.unfav_fail'))
+            } else {
+              this.bookmarkId = null
+            }
+          })
       } else {
-        addBookmark(this.artwork.id).then(({ data, error }) => {
-          this.favLoading = false
-          if (error) {
-            this.$toast(this.$t('artwork.fav_fail'))
-          } else {
-            this.bookmarkId = data?.last_bookmark_id || null
-          }
-        })
+        window.APP_CONFIG.useLocalAppApi
+          ? localApi.illustBookmarkAdd(this.artwork.id).then(isOk => {
+            this.favLoading = false
+            if (isOk) {
+              this.bookmarkId = true
+              toggleBookmarkCache(this.artwork, true)
+            } else {
+              this.$toast(this.$t('artwork.fav_fail'))
+            }
+          })
+          : addBookmark(this.artwork.id).then(({ data, error }) => {
+            this.favLoading = false
+            if (error) {
+              this.$toast(this.$t('artwork.fav_fail'))
+            } else {
+              this.bookmarkId = data?.last_bookmark_id || null
+            }
+          })
       }
     },
     drawMask() {
@@ -299,6 +325,7 @@ export default {
         this.$emit('ugoira-download')
         return
       }
+      // window.umami?.track('download_artwork')
       this.$toast(this.$t('tips.download_wait'))
       for (let index = 0; index < this.artwork.images.length; index++) {
         const item = this.artwork.images[index]

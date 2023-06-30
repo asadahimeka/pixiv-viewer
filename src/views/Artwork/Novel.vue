@@ -37,7 +37,7 @@
     </div>
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
-      <RelatedNovel :key="artwork.id" :artwork="artwork" />
+      <RelatedNovel v-if="artwork.x_restrict < 1" :key="artwork.id" :artwork="artwork" />
     </keep-alive>
     <van-share-sheet v-model="showShare" :title="$t('artwork.share.title')" :options="shareOptions" @select="onShareSel" />
     <van-action-sheet v-model="showSettings" class="setting-actions" :title="$t('novel.settings.title')" :overlay="false">
@@ -51,7 +51,7 @@
             <div class="conf-title">{{ $t('novel.settings.text.font') }}</div>
             <div class="conf-inp">
               <van-radio-group v-model="textConfig.font" direction="horizontal">
-                <van-radio name="inherit">inherit</van-radio>
+                <van-radio name="inherit">LXGW</van-radio>
                 <van-radio name="sans-serif">{{ $t('novel.settings.text.sans') }}</van-radio>
                 <van-radio name="serif">{{ $t('novel.settings.text.serif') }}</van-radio>
               </van-radio-group>
@@ -237,6 +237,7 @@ export default {
       }
     },
     onShareSel(_, index) {
+      // window.umami?.track('share_novel', { share_type: shareOptions[index]?.name })
       const actions = [
         async () => {
           const shareData = {
@@ -298,6 +299,7 @@ export default {
     },
     downloadNovel() {
       FileSaver.saveAs(new Blob([this.novelText.text]), `${this.artwork.id}_${this.artwork.title}.txt`)
+      // window.umami?.track('download_novel')
     },
     goYoudaoFanyi() {
       if (/Mobile/i.test(navigator.userAgent)) {

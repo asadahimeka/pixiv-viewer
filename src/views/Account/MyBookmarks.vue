@@ -22,6 +22,7 @@ import _ from 'lodash'
 import { mapState } from 'vuex'
 import ImageCard from '@/components/ImageCard'
 import { getBookmarkIllusts } from '@/api/user'
+import api from '@/api'
 
 export default {
   name: 'MyBookmarks',
@@ -30,6 +31,7 @@ export default {
   },
   data() {
     return {
+      next: 0,
       curPage: 1,
       artList: [],
       error: false,
@@ -50,12 +52,18 @@ export default {
   },
   methods: {
     reset() {
+      this.next = 0
       this.curPage = 0
       this.artList = []
       this.loading = false
       this.finished = false
     },
-    getMemberFavorite: _.throttle(async function () {
+    getMemberFavorite() {
+      window.APP_CONFIG.useLocalAppApi
+        ? this.getBookmarks()
+        : this.getBookmarksWeb()
+    },
+    getBookmarksWeb: _.throttle(async function () {
       if (!this.user?.id) return
       this.loading = true
       const res = await getBookmarkIllusts(this.curPage, this.user.id)
@@ -66,7 +74,28 @@ export default {
         ], 'id')
         this.loading = false
         this.curPage += 1
-        if (!res.data.length || this.curPage > 5) this.finished = true
+        if (!res.data.length) this.finished = true
+      } else {
+        this.$toast({
+          message: res.msg,
+        })
+        this.loading = false
+        this.error = true
+      }
+    }, 1500),
+    getBookmarks: _.throttle(async function () {
+      if (!this.user?.id) return
+      if (this.next == null) return
+      this.loading = true
+      const res = await api.getMemberFavorite(this.user.id, this.next, true)
+      if (res.status === 0) {
+        this.next = res.data.next
+        this.artList = _.uniqBy([
+          ...this.artList,
+          ...res.data.illusts,
+        ], 'id')
+        this.loading = false
+        if (!this.next) this.finished = true
       } else {
         this.$toast({
           message: res.msg,
@@ -76,6 +105,7 @@ export default {
       }
     }, 1500),
     toArtwork(id) {
+      this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
         params: { id },

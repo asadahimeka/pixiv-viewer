@@ -4,8 +4,7 @@
     :style="{ paddingBottom: paddingBottom(artwork), '--w': artwork.width, '--h': artwork.height }"
     @click.stop="click(artwork.id)"
   >
-    <img v-if="lazy" v-lazy="imgSrc" :alt="artwork.title" class="image" :class="{ censored: isCensored(artwork) }">
-    <img v-else :src="imgSrc" :alt="artwork.title" class="image" :class="{ censored: isCensored(artwork) }">
+    <img v-lazy="imgSrc" :alt="artwork.title" class="image" :class="{ censored: isCensored(artwork) }">
     <div class="tag-r18-ai">
       <van-tag v-if="index">#{{ index }}</van-tag>
       <van-tag v-if="tagText" :color="tagText === 'R-18' ? '#fb7299' : '#ff3f3f'">{{ tagText }}</van-tag>
@@ -14,6 +13,10 @@
     <div v-if="(mode == 'all' || mode === 'cover') && artwork.count > 1" class="layer-num">
       <Icon name="layer" scale="1.5" />
       {{ artwork.count }}
+    </div>
+    <div v-if="(mode == 'all' || mode == 'cover') && showBookmarkBtn" class="bookmark" @click.stop="toggleBookmark">
+      <van-loading v-if="bLoading" color="#e87a90" />
+      <van-icon v-else :name="isBookmarked?'like':'like-o'" color="#e87a90" />
     </div>
     <Icon
       v-if="(mode == 'all' || mode === 'cover') && artwork.type === 'ugoira'"
@@ -34,6 +37,8 @@
 </template>
 
 <script>
+import { localApi } from '@/api'
+import { getCache, toggleBookmarkCache } from '@/utils/siteCache'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -59,13 +64,13 @@ export default {
       type: Boolean,
       default: false,
     },
-    lazy: {
-      type: Boolean,
-      default: true,
-    },
   },
   data() {
-    return {}
+    return {
+      showBookmarkBtn: window.APP_CONFIG.useLocalAppApi,
+      bLoading: false,
+      isBookmarked: false,
+    }
   },
   computed: {
     imgSrc() {
@@ -88,6 +93,12 @@ export default {
     },
     ...mapGetters(['isCensored']),
   },
+  async mounted() {
+    if ((this.mode == 'all' || this.mode == 'cover') && this.showBookmarkBtn) {
+      const favMap = await getCache('local.fav.map', {})
+      this.isBookmarked = Boolean(favMap[this.artwork.id] || this.artwork.is_bookmarked)
+    }
+  },
   methods: {
     onAvatarErr() {
       const src = this.artwork.author.avatar
@@ -100,6 +111,31 @@ export default {
         this.artwork.author.avatar = u.href
       } catch (error) {
         console.log('error: ', error)
+      }
+    },
+    async toggleBookmark() {
+      if (this.bLoading) return
+      this.bLoading = true
+      try {
+        if (this.isBookmarked) {
+          const isOk = await localApi.illustBookmarkDelete(this.artwork.id)
+          if (isOk) {
+            this.isBookmarked = false
+            toggleBookmarkCache(this.artwork, false)
+          } else {
+            this.$toast(this.$t('artwork.unfav_fail'))
+          }
+        } else {
+          const isOk = await localApi.illustBookmarkAdd(this.artwork.id)
+          if (isOk) {
+            this.isBookmarked = true
+            toggleBookmarkCache(this.artwork, true)
+          } else {
+            this.$toast(this.$t('artwork.fav_fail'))
+          }
+        }
+      } finally {
+        this.bLoading = false
       }
     },
     click(id) {
@@ -171,6 +207,16 @@ export default {
       vertical-align: bottom;
       margin-right: 4px;
     }
+  }
+
+  .bookmark {
+    position absolute
+    bottom 0
+    right 0
+    z-index 9
+    padding: 20px 16px
+    font-size 0.5rem
+    cursor pointer
   }
 
   .btn-play {

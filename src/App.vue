@@ -7,24 +7,31 @@
 
 <script>
 import Preload from '@/components/Preload'
-import { existsSessionId, initUser } from '@/api/user'
 import { mapMutations } from 'vuex'
+import { existsSessionId, initUser } from '@/api/user'
+import { localApi } from './api'
 
 export default {
   components: {
     Preload,
   },
+  async created() {
+    let user = null
+    try {
+      if (window.APP_CONFIG.useLocalAppApi) {
+        user = await localApi.me()
+      } else if (existsSessionId()) {
+        user = await initUser()
+      }
+    } catch (err) {
+      console.log('err: ', err)
+    }
+    console.log('user: ', user)
+    this.setUser(user)
+  },
   mounted() {
     const loading = document.querySelector('#ldio-loading')
     loading && (loading.style.display = 'none')
-
-    if (!existsSessionId()) {
-      console.log('No session id found. Maybe you are not logged in?')
-      this.setUser(null)
-      return
-    }
-
-    initUser().then(this.setUser).catch(() => this.setUser(null))
   },
   methods: {
     ...mapMutations(['setUser']),
@@ -69,12 +76,13 @@ html,body
   .rank-list,
   .users .user-tabs .van-tab__pane,
   .user-illusts,
-  #app .related,
   #app .Spotlights,
   #app .Discovery,
-  #app .HomeRecommIllust
+  #app .HomeRecommIllust,
+  #app .related
     padding-left 5vw
     padding-right 5vw
+
   #app
     .nav-container
       left unset
@@ -106,4 +114,5 @@ html,body
           font-size 0.55rem
         span
           font-size 0.26rem
+
 </style>

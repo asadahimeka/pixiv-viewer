@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <title>Pixiv Viewer</title>
-  <meta name="keywords" content="pixiv,pixiv-viewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv-ranking,pixiv每日排行,pixiv漫画,pixiv小说" />
+  <meta name="keywords" content="pixiv,pixiv-viewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv每日排行,pixiv漫画,pixiv小说" />
   <meta name="description" itemprop="description" content="又一个 Pixiv 插画/小说阅览工具，适配 PC 端展示，支持 PWA 安装。" />
   <meta itemprop="name" content="Pixiv Viewer" />
   <meta itemprop="image" content="<%= BASE_URL %>img/icons/192.png" />
@@ -29,15 +29,9 @@
   <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/5.4.5/css/swiper.min.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-webfont/1.6.0/style.css">
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
-  <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>"></script>
-  <% } %>
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CF_BEACON) { %>
-  <script async defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "<%= process.env.VUE_APP_CF_BEACON %>"}'></script>
-  <% } %>
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>
-  <script>window.dataLayer = window.dataLayer || [];function gtag(){dataLayer.push(arguments);}gtag('js', new Date());gtag('config', '<%= process.env.VUE_APP_GA_ID %>');</script>
+  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= process.env.VUE_APP_GA_ID %>',{transport_type:'beacon'});</script>
   <% } %>
 </head>
 
@@ -50,13 +44,19 @@
     <div class="loadingio-spinner-ball-49w6m6a8g28"><div class="ldio-2gd0gx3uwxq"><div></div></div></div>
     <p style="margin-top: 30px;text-align: center;font-size: 24px;">Loading...</p>
   </div>
-  <script>if(!!localStorage.__PXV_DARK)document.body.classList.add('dark');</script>
+  <script>if(!!localStorage.PXV_DARK)document.body.classList.add('dark');</script>
   <% if (process.env.NODE_ENV === 'production') { %>
   <% for (let it of htmlWebpackPlugin.options.cdn.js) { %>
   <script src="<%= it %>"></script>
   <% } %>
   <% } %>
   <!-- built files will be auto injected -->
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CF_BEACON) { %>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "<%= process.env.VUE_APP_CF_BEACON %>"}'></script>
+  <% } %>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
+  <script defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>"></script>
+  <% } %>
 </body>
 
 </html>

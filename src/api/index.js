@@ -66,6 +66,7 @@ const parseUser = data => {
     twitter_url,
     webpage,
     workspace,
+    is_followed: user.is_followed,
   }
 }
 
@@ -112,6 +113,7 @@ const parseIllust = data => {
     x_restrict,
     illust_ai_type,
     type,
+    is_bookmarked: data.is_bookmarked,
   }
 
   return artwork
@@ -441,7 +443,7 @@ const api = {
       const res = await get('/illust_recommended')
 
       if (res.illusts) {
-        relatedList = res.illusts.map(art => parseIllust(art))
+        relatedList = res.illusts.map(art => parseIllust(art)).filter(e => e.like >= 1000)
         setCache(cacheKey, relatedList, 60 * 60 * 6)
       } else if (res.error) {
         return {
@@ -1337,17 +1339,20 @@ const api = {
    * @param {Number} id 画师ID
    * @param {Number} max_bookmark_id max_bookmark_id
    */
-  async getMemberFavorite(id, max_bookmark_id) {
+  async getMemberFavorite(id, max_bookmark_id, nocache) {
     const cacheKey = `memberFavorite_${id}_m${max_bookmark_id}`
     let memberFavorite = await getCache(cacheKey)
 
     if (!memberFavorite) {
       memberFavorite = {}
 
-      const res = await get('/favorite', {
-        id,
-        max_bookmark_id,
-      })
+      const params = { id, max_bookmark_id }
+      const headers = {}
+      if (nocache) {
+        params.t = Date.now()
+        headers['cache-control'] = 'no-cache'
+      }
+      const res = await get('/favorite', params, { headers })
 
       if (res.illusts) {
         const url = new URLSearchParams(res.next_url)
@@ -1475,3 +1480,150 @@ const api = {
   },
 }
 export default api
+
+function reqGet(path, params) {
+  return get('/req_get', {
+    path,
+    params: JSON.stringify(params),
+  })
+}
+
+function reqPost(path, data) {
+  return get('/req_post', {
+    path,
+    data: JSON.stringify(data),
+    t: Date.now(),
+  }, {
+    headers: {
+      'cache-control': 'no-cache',
+    },
+  })
+}
+
+export const localApi = {
+  async me() {
+    const res = await get('/me', { _t: Date.now() })
+    if (res?.id) {
+      return {
+        id: res.id,
+        pixivId: res.account,
+        name: res.name,
+        profileImg: imgProxy(res.profile_image_urls.px_170x170),
+        profileImgBig: imgProxy(res.profile_image_urls.px_170x170),
+        premium: res.is_premium,
+        xRestrict: res.x_restrict,
+      }
+    }
+    return null
+  },
+  async userFollowing(id, page = 1) {
+    let list = []
+    const res = await get('/following', {
+      id,
+      page,
+      t: Date.now(),
+    }, {
+      headers: {
+        'cache-control': 'no-cache',
+      },
+    })
+    if (res.user_previews) {
+      list = res.user_previews
+        .map(u => {
+          return {
+            id: u.user.id,
+            name: u.user.name,
+            avatar: imgProxy(u.user.profile_image_urls.medium),
+            illusts: u.illusts.map(i => ({
+              id: i.id,
+              title: i.title,
+              src: imgProxy(i.image_urls.medium),
+              x_restrict: i.x_restrict,
+              illust_ai_type: i.illust_ai_type,
+            })),
+          }
+        })
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: dealErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
+    }
+
+    return { status: 0, data: list }
+  },
+  async illustFollow(page = 1, restrict = 'all') {
+    let list = []
+    const res = await reqGet('v2/illust/follow', {
+      restrict,
+      offset: (page - 1) * 30,
+    })
+
+    if (res.illusts) {
+      list = res.illusts.map(art => parseIllust(art))
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: dealErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
+    }
+
+    return { status: 0, data: filterCensoredIllusts(list) }
+  },
+  async illustBookmarkAdd(id, restrict = 'public') {
+    if (!id) return false
+    try {
+      const res = await reqPost('v2/illust/bookmark/add', {
+        illust_id: `${id}`,
+        restrict,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async illustBookmarkDelete(id) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/illust/bookmark/delete', {
+        illust_id: `${id}`,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async userFollowAdd(id, restrict = 'public') {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/user/follow/add', {
+        user_id: `${id}`,
+        restrict,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async userFollowDelete(id) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/user/follow/delete', {
+        user_id: `${id}`,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+}

@@ -36,7 +36,7 @@ const langMap = {
   'it': 'it',
   'it-IT': 'it',
 }
-const language = localStorage.getItem('__PXV_LANG') || langMap[navigator.language]
+const language = localStorage.getItem('PXV_LANG') || langMap[navigator.language]
 console.log('language: ', language)
 
 export const i18n = new VueI18n({

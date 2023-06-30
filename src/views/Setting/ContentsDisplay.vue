@@ -1,7 +1,7 @@
 <template>
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
-    <h3 class="af_title" @dblclick="aiDisabled=false">{{ $t('display.title') }}</h3>
+    <h3 class="af_title">{{ $t('display.title') }}</h3>
     <van-cell center :title="$t('display.r18')" :label="$t('display.r18_label')">
       <template #right-icon>
         <van-switch active-color="#fb7299" :value="currentSETTING.r18" size="24" @input="onR18Change($event, 1)" />
@@ -12,9 +12,9 @@
         <van-switch active-color="#ff3f3f" :value="currentSETTING.r18g" size="24" @input="onR18Change($event, 2)" />
       </template>
     </van-cell>
-    <van-cell center :title="$t('display.ai')" :label="$t('display.ai_label')" @click="alertAI">
+    <van-cell center :title="$t('display.ai')" :label="$t('display.ai_label')">
       <template #right-icon>
-        <van-switch :disabled="aiDisabled" active-color="#536cb8" :value="currentSETTING.ai" size="24" @input="onAIChange($event)" />
+        <van-switch active-color="#536cb8" :value="currentSETTING.ai" size="24" @input="onAIChange($event)" />
       </template>
     </van-cell>
     <van-field
@@ -61,7 +61,6 @@ export default {
         r18g: false,
         ai: false,
       },
-      aiDisabled: true,
     }
   },
   computed: {
@@ -91,15 +90,7 @@ export default {
     onAIChange(checked) {
       this.$set(this.currentSETTING, 'ai', checked)
       this.saveSwitchValues()
-      setTimeout(() => {
-        location.reload()
-      }, 100)
-    },
-    alertAI() {
-      this.aiDisabled && Dialog.alert({
-        title: '提示',
-        message: '鉴于 AI 生成滥用问题的严重性，本站暂不支持打开此开关。详见<a href="https://www.pixiv.net/info.php?id=9557" rel="noreferrer">此页</a>',
-      })
+      window.umami?.track(`set_ai_switch_${checked}`)
     },
     onR18Change(checked, type) {
       let name
@@ -118,6 +109,7 @@ export default {
           .then(() => {
             if (type === 1) {
               this.currentSETTING.r18 = checked
+              window.umami?.track(`set_r18_switch_${checked}`)
             }
             if (type === 2) {
               this.currentSETTING.r18g = checked
@@ -129,18 +121,19 @@ export default {
                   location.reload()
                 })
               }, 200)
+              window.umami?.track(`set_r18g_switch_${checked}`)
             }
             this.saveSwitchValues()
-            // setCookieOnce('nsfw', '1')
+            LocalStorage.set('PXV_NSFW_ON', 1)
             type === 1 && setTimeout(() => {
               location.reload()
-            }, 500)
+            }, 200)
           })
           .catch(() => {
             console.log('操作取消')
           })
       } else {
-        // resetCookieOnce('nsfw')
+        LocalStorage.remove('PXV_NSFW_ON')
         if (type === 1) this.currentSETTING.r18 = checked
         if (type === 2) this.currentSETTING.r18g = checked
         this.saveSwitchValues()
@@ -152,7 +145,5 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.setting-page
-  #top-bar-wrap
-    width 1.4rem
+
 </style>

@@ -23,6 +23,7 @@
 </template>
 
 <script>
+import { localApi } from '@/api'
 import { getFollowingIllusts } from '@/api/user'
 import ImageCard from '@/components/ImageCard'
 import _ from 'lodash'
@@ -44,7 +45,9 @@ export default {
   methods: {
     getRankList: _.throttle(async function () {
       this.loading = true
-      const res = await getFollowingIllusts(this.curPage)
+      const res = window.APP_CONFIG.useLocalAppApi
+        ? await localApi.illustFollow(this.curPage)
+        : await getFollowingIllusts(this.curPage)
       if (res.status === 0) {
         this.artList = _.uniqBy([
           ...this.artList,
@@ -63,6 +66,7 @@ export default {
       }
     }, 1500),
     toArtwork(id) {
+      this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
         params: { id },

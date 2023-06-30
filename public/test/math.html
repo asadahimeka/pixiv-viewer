@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>Question</title>
+</head>
+
+<body>
+  <div id="app">
+    <p>回答下面的问题，答案按无空格格式判定，多个答案用英文逗号分隔，x<sup>2</sup> 记为 x^2，分数以 / 表示如：1/2</p>
+    <p>
+      <img id="q_img" src="" alt="">
+    </p>
+    <p>
+      输入答案：<input id="ans">&nbsp;&nbsp;<button id="sub_btn">提交</button>&nbsp;&nbsp;<button onclick="location.reload()">换一题</button>
+    </p>
+  </div>
+  <script>
+    window.onload = function () {
+      var ans = ''
+      fetch('./math.json').then(function (resp) {
+        return resp.json()
+      }).then(function (arr) {
+        const el = arr[parseInt(Math.random() * arr.length, 10)]
+        q('#q_img').src = el.q
+        ans = el.a
+      })
+      q('#sub_btn').onclick = function () {
+        if (q('#ans').value == ans) {
+          alert('回答正确')
+          localStorage.setItem('PXV_NSFW_ON', '{"data":0,"expires":-1}')
+          location.replace('/')
+        } else {
+          alert('回答错误')
+        }
+      }
+    }
+    function q(sel) {
+      return document.querySelector(sel)
+    }
+  </script>
+</body>
+
+</html>

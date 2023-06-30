@@ -4,23 +4,35 @@
     <div class="share_btn" @click="share">
       <Icon class="icon" name="share" />
     </div>
-    <div class="ia-cont">
-      <div class="ia-left">
-        <van-loading v-if="loading" size="50px" />
-        <ImageView ref="imgView" :artwork="artwork" :lazy="true" @open-download="ugoiraDownloadPanelShow = true" />
+    <van-swipe-cell ref="swipeCell" :disabled="disableSwipe" stop-propagation @open="onSwipeOpen">
+      <template #left>
+        <div class="ia-sc-btn">
+          <van-icon name="arrow-left" size="0.6rem" />
+        </div>
+      </template>
+      <div class="ia-cont">
+        <div class="ia-left">
+          <van-loading v-if="loading" size="50px" />
+          <ImageView ref="imgView" :artwork="artwork" :lazy="true" @open-download="ugoiraDownloadPanelShow = true" />
+        </div>
+        <div class="ia-right">
+          <van-skeleton class="skeleton" title avatar :row="5" avatar-size="42px" :loading="loading">
+            <ArtworkMeta ref="artworkMeta" :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
+          </van-skeleton>
+          <keep-alive>
+            <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
+          </keep-alive>
+        </div>
       </div>
-      <div class="ia-right">
-        <van-skeleton class="skeleton" title avatar :row="5" avatar-size="42px" :loading="loading">
-          <ArtworkMeta ref="artworkMeta" :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
-        </van-skeleton>
-        <keep-alive>
-          <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
-        </keep-alive>
-      </div>
-    </div>
+      <template #right>
+        <div class="ia-sc-btn">
+          <van-icon name="arrow" size="0.6rem" />
+        </div>
+      </template>
+    </van-swipe-cell>
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
-      <Related :key="artwork.id" :artwork="artwork" />
+      <Related v-if="artwork.x_restrict < 1" :key="artwork.id" :artwork="artwork" />
     </keep-alive>
     <van-action-sheet
       v-model="ugoiraDownloadPanelShow"
@@ -64,6 +76,7 @@ import IconWechat from '@/assets/images/share-sheet-wechat.png'
 import IconWeibo from '@/assets/images/share-sheet-weibo.png'
 import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
+import { LocalStorage } from '@/utils/storage'
 
 const ugoiraDownloadPanelActions = [
   { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
@@ -119,6 +132,7 @@ export default {
       ugoiraDownloadPanelActions,
       showShare: false,
       shareOptions,
+      disableSwipe: !LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
     }
   },
   computed: {
@@ -169,9 +183,9 @@ export default {
           icon: require('@/icons/error.svg'),
           duration: 3000,
         })
-        setTimeout(() => {
-          this.$router.back()
-        }, 500)
+        // setTimeout(() => {
+        //   this.$router.back()
+        // }, 500)
       }
     },
     showUgPanelFromDlBtn() {
@@ -184,7 +198,24 @@ export default {
     onUgoiraDownloadPanelSelect(item) {
       this.$refs.imgView.download(item.name)
     },
+    onSwipeOpen({ position }) {
+      this.$refs.swipeCell?.close()
+      const list = this.$store.state.galleryList || []
+      console.log('list: ', list)
+      const curr = list.findIndex(e => e == this.artwork.id)
+      console.log('curr: ', curr)
+      if (position == 'left') {
+        const prev = list[curr - 1]
+        console.log('prev: ', prev)
+        prev && this.$router.replace(`/artworks/${prev}`)
+      } else {
+        const next = list[curr + 1]
+        console.log('next: ', next)
+        next && this.$router.replace(`/artworks/${next}`)
+      }
+    },
     onShareSel(_, index) {
+      // window.umami?.track('share', { share_type: shareOptions[index]?.name })
       const shareUrl = `https://pixiv.pics/i/${this.artwork.id}`
       let imageUrl = this.artwork.images[0].l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/')
       if (imageUrl.includes('i-cf.pximg.net')) imageUrl = imageUrl.replace('i-cf.pximg.net', 'i.pixiv.re')
@@ -285,6 +316,15 @@ img[src*="/api/qrcode?text"]
     border-radius: 50%;
   ::v-deep .van-share-sheet__options::-webkit-scrollbar
     height 0.12rem
+  ::v-deep .van-swipe-cell
+    cursor auto
+
+.ia-sc-btn
+  display flex
+  justify-content center
+  align-items center
+  width 0.7rem
+  height 100%
 
 .ia-cont
   display flex
@@ -308,7 +348,7 @@ img[src*="/api/qrcode?text"]
       &:not(:last-child)
         margin-bottom 10px
 
-      .image,.van-image__img
+      .image
         width auto
         max-width 100%
         height auto
@@ -323,6 +363,7 @@ img[src*="/api/qrcode?text"]
 
 .artwork
   ::v-deep .top-bar-wrap
+    width 2rem
     background none
 
 @media screen and (max-width: 1200px)
@@ -334,8 +375,7 @@ img[src*="/api/qrcode?text"]
     margin 0 auto !important
     padding 0 !important
 
-    ::v-deep .image,
-    ::v-deep .van-image__img
+    ::v-deep .image
       max-width: 100% !important
       max-height: 90vh !important
 

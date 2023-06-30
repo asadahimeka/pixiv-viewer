@@ -2,7 +2,7 @@
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('about.title') }}</h3>
-    <van-cell center :title="$t('about.version')" clickable label="v1.8.21" />
+    <van-cell center :title="$t('about.version')" clickable label="v1.10.0" />
     <van-cell center :title="$t('about.disclaimer')" is-link :label="$t('tips.click_view')" to="/setting/about/disclaimer" />
     <van-cell
       center
@@ -41,6 +41,7 @@ export default {
   name: 'SettingAbout',
   methods: {
     openLink(link) {
+      window.umami?.track('open_link', { link: link.replace('https://', '') })
       window.open(link, '_blank', 'noopener noreferrer')
     },
   },

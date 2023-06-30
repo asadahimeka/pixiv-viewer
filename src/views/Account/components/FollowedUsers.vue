@@ -27,6 +27,7 @@
 import _ from 'lodash'
 import ImageSlide from '@/components/ImageSlide.vue'
 import { getFollowingUsers } from '@/api/user'
+import { localApi } from '@/api'
 
 export default {
   name: 'FollowedUsers',
@@ -63,7 +64,9 @@ export default {
     },
     getUserList: _.throttle(async function () {
       this.loading = true
-      const res = await getFollowingUsers(this.curPage)
+      const res = window.APP_CONFIG.useLocalAppApi
+        ? await localApi.userFollowing(this.$store.state.user.id, this.curPage)
+        : await getFollowingUsers(this.curPage)
       if (res.status === 0) {
         this.userList = _.uniqBy([
           ...this.userList,

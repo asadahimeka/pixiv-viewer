@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>You are blocked.</title>
+</head>
+
+<body>
+  <div style="text-align: center;">
+    <h2 style="padding-top: 50px;font-size: 20px;">H 是不行的！</h2>
+    <!-- <p style="margin-top: 10px;">
+      <a href="/">不，我有魔法，我就要色色！</a>
+    </p> -->
+    <p style="margin-top: 10px;">
+      <span>不妨来做道题，做对了就可以色色</span>
+      <button onclick="goTest()">去做题</button>
+    </p>
+    <p style="margin-top: 10px;">
+      <span>贤者时间到来，我不色色了</span>
+      <button onclick="closeSwitch()">返回</button>
+    </p>
+    <img id="a_img" style="max-width: 80%;margin-top: 10px;" src="" alt="">
+  </div>
+  <script>
+    window.onload = function() {
+      const images = [
+        'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/b8b72d059259260cabe9b6194373ee84_3762224610399620263.jpg',
+        'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/48f7d2c8cea7baa79e23df489f346c7e_8303701417762292474.jpg',
+        'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/00a00ef7cfa967d6514de3ebb4192f7d_5335898414897151377.jpg',
+        'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/6b47cbc7b94ab5fbcf75f2775fd1994e_4667366826840422642.jpg',
+        'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/dd1c3acc354a56ae5bd0d0c3e7c37ca4_3022946843102995377.gif',
+        'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/6d336bcef5e1954b86eb74d8cdc155cc_382507230837734102.jpg',
+        'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/eabf2a913a63f153721337e96857eb96_4351715884259466311.jpg'
+      ]
+      document.querySelector('#a_img').src = randomEl(images)
+    }
+    function randomEl(arr) {
+      return arr[parseInt(Math.random() * arr.length, 10)]
+    }
+    function goTest() {
+      const urls = ['./test/math.html', './test/pubchem.html', './test/b64.html', './test/zhuyin.html']
+      location.href = randomEl(urls)
+    }
+    function closeSwitch() {
+      // document.cookie = `nsfw=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; Secure`
+      localStorage.removeItem('PXV_NSFW_ON')
+      localStorage.removeItem('PXV_CNT_SHOW')
+      location.replace('/')
+    }
+  </script>
+</body>
+
+</html>

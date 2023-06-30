@@ -37,6 +37,8 @@ import UserNovels from '@/views/Users/AuthorNovelsFull.vue'
 import UserFavorites from '@/views/Users/FavoriteIllustsFull.vue'
 import UserFavoriteNovels from '@/views/Users/FavoriteNovelsFull.vue'
 import Session from '@/views/Account/Session.vue'
+import Login from '@/views/Account/Login.vue'
+import OAuthCallback from '@/views/Account/OAuthCallback.vue'
 import NotFound from '@/views/NotFound.vue'
 
 Vue.use(VueRouter)
@@ -237,6 +239,16 @@ const routes = [
             path: '/account/session',
             name: 'Session',
             component: Session,
+          },
+          {
+            path: '/account/login',
+            name: 'Login',
+            component: Login,
+          },
+          {
+            path: '/account/oauth',
+            name: 'OAuthCallback',
+            component: OAuthCallback,
           },
         ],
       },

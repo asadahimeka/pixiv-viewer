@@ -33,7 +33,7 @@
     <div v-if="focus" class="search-dropdown">
       <div v-if="keywords.trim()" class="pid-n-uid">
         <div class="keyword" @click="onSearch">{{ $t('search.seach_tag') }} {{ keywords.trim() }} </div>
-        <div v-if="isSelfHibi" class="keyword" @click="$router.push(`/search_user/${keywords.trim()}`)">
+        <div v-if="isSelfHibi" class="keyword" @click="searchUser">
           {{ $t('search.search_user') }} {{ keywords.trim() }}
         </div>
       </div>
@@ -140,8 +140,9 @@ import dayjs from 'dayjs'
 import api from '@/api'
 import { notSelfHibiApi } from '@/api/http'
 import PopularPreview from './components/PopularPreview.vue'
+import { mintVerify } from '@/utils/filter'
 
-const BLOCK_WORDS = [/r-?18/i, /18-?r|18\+/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]
+const BLOCK_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]
 
 export default {
   name: 'Search',
@@ -326,7 +327,7 @@ export default {
       this.$refs.selDate.scrollToDate(this.searchDateVals[0] || this.maxDate)
       // })
     },
-    search(keywords) {
+    async search(keywords) {
       keywords = keywords.trim()
       console.log('search keywords: ', keywords)
 
@@ -339,6 +340,7 @@ export default {
         // document.querySelector('.app-main')?.scrollTo(0, 0)
         return
       }
+
       this.$router.push(`/search/${keywords}`)
       this.showPopPreview = false
     },
@@ -352,6 +354,16 @@ export default {
         return
       }
       console.log(`doSearch: ${val}`)
+
+      if (
+        /スカラマシュ|散兵|スカ蛍|スカ空|スカナヒ|散荧|荧散|散空|空散|枫散|散枫|草散|散草|放浪者(原神)|流浪者(原神)|阿散|阿帽/i.test(val) ||
+        !(await mintVerify(val))
+      ) {
+        this.artList = []
+        this.finished = true
+        this.curPage = 1
+        return
+      }
 
       this.setSearchHistory(val)
 
@@ -388,9 +400,9 @@ export default {
           artList = artList.filter(e => {
             return !(
               e.like < 5 ||
-              /恋童|ペド|幼女/.test(JSON.stringify(e.tags)) ||
-              /恋童|幼女|进群|加好友|度盘/.test(e.title) ||
-              /恋童|幼女|进群|加好友|度盘/.test(e.caption)
+              /恋童|ペド|幼女|スカラマシュ|散兵/.test(JSON.stringify(e.tags)) ||
+              /恋童|幼女|进群|加好友|度盘|スカラマシュ|散兵/.test(e.title) ||
+              /恋童|幼女|进群|加好友|度盘|スカラマシュ|散兵/.test(e.caption)
             )
           })
 
@@ -409,11 +421,12 @@ export default {
         this.loading = false
         this.error = true
       }
-    }, 1500),
+    }, 2500),
     toArtwork(id) {
+      this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id, list: this.artList },
+        params: { id },
       })
     },
     onSearchInput: _.debounce(async function () {
@@ -427,6 +440,9 @@ export default {
         this.toPidPage(id)
         return
       }
+      if (/スカラマシュ|散|(^\d+$)/i.test(this.lastWord)) {
+        return
+      }
       const res = await api.getTagsAutocomplete(this.lastWord)
       if (res.status == 0) {
         this.autoCompleteTagList = res.data
@@ -435,7 +451,7 @@ export default {
     onFocus() {
       this.focus = true // 获取焦点
     },
-    onSearch() {
+    async onSearch() {
       console.log('onSearch: ', this.keywords)
       this.focus = false
       // document.querySelector('.app-main')?.scrollTo(0, 0)
@@ -452,6 +468,9 @@ export default {
         this.reset()
         this.search(keywords + ' ')
       }
+    },
+    async searchUser() {
+      this.$router.push(`/search_user/${this.keywords.trim()}`)
     },
     toPidPage(id) {
       this.keywords = ''

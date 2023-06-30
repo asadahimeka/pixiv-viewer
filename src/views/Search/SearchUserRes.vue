@@ -22,6 +22,7 @@ import TopBar from '@/components/TopBar'
 import api from '@/api'
 import _ from 'lodash'
 import ImageSlide from '@/components/ImageSlide.vue'
+import { mintVerify } from '@/utils/filter'
 
 export default {
   name: 'SearchUserRes',
@@ -62,7 +63,9 @@ export default {
     },
     getUserList: _.throttle(async function () {
       const { word } = this.$route.params
-      if (!word) return
+      if (!word || /スカラマシュ|散兵|放浪者|流浪者/i.test(word) || !(await mintVerify(word))) {
+        return
+      }
       this.loading = true
       this.userList = []
       const res = await api.searchUser(word)

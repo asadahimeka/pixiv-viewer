@@ -266,10 +266,35 @@
       "lang": "Lingua",
       "lang_ph": "Seleziona la lingua",
       "title": "Altre impostazioni",
-      "manual_inp": {
-        "label": "Indica se gli indirizzi proxy e dell'istanza API delle immagini seguenti vengono inseriti manualmente",
-        "title": "Inserisci il collegamento manualmente"
-      }
+      "manual_input_label": "Indica se gli indirizzi proxy e dell'istanza API delle immagini seguenti vengono inseriti manualmente",
+      "manual_input": "Inserisci il collegamento manualmente",
+      "api_proxy": {
+        "def_ph": "Se non è possibile utilizzare il proxy predefinito, puoi provare un altro proxy",
+        "sel_desc": "Seleziona AppApi Proxy",
+        "title": "Selezionare AppApi Proxy"
+      },
+      "cp_token_label": "Copia il RefreshToken corrente negli appunti",
+      "cp_token_title": "Esporta RefreshToken",
+      "direct_mode": {
+        "confirm": {
+          "msg": "La modalità di connessione diretta supporta solo il browser Firefox e devi assicurarti che Tampermonkey e Helper userscript siano installati e che la velocità sia lenta e la stabilità non sia garantita.\n\nNon può essere abilitato contemporaneamente al proxy AppApi.\n\nSe riscontri un errore di rete dopo aver abilitato la connessione diretta, apri manualmente il collegamento sottostante, fai clic su \"Avanzate\" - \"Accetta il rischio e continua\" e torna su questo sito per aggiornare la pagina dopo la visualizzazione del messaggio 421.",
+          "proxy_msg": "L'inoltro di richieste AppApi locali tramite servizi cloud di terze parti non può garantire stabilità e sicurezza.\n\nNon può essere attivato contemporaneamente alla modalità di connessione diretta.",
+          "proxy_title": "Sei sicuro di abilitare il proxy AppApi?",
+          "title": "Sei sicuro di abilitare la modalità diretta?"
+        },
+        "host": {
+          "label": "Ripasserà le query DoH dopo la cancellazione",
+          "title": "Cancella la cache degli host diretti"
+        },
+        "host_msg": "Sei sicuro di cancellare i record della cache degli host in modalità di connessione diretta?",
+        "label": "Se bypassare SNI tramite il fronting del dominio",
+        "proxy": {
+          "label": "Indica se inoltrare le richieste AppApi locali tramite i servizi cloud",
+          "title": "Abilita proxy AppApi"
+        },
+        "title": "Attiva la modalità diretta"
+      },
+      "swipe_toggle": "Scorri verso sinistra e verso destra nella pagina dei dettagli per sfogliare le opere"
     },
     "recomm": {
       "app": "App",
@@ -293,9 +318,11 @@
     "down_wait": "Elaborazione, si prega di pazientare",
     "downloaded": "Download completato",
     "downloading": "Download",
-    "rate_limit": "Limite API superato, riprova più tardi o vai alle impostazioni per modificare l'istanza API",
+    "rate_limit": "Limite API superato, riprova più tardi",
     "unknown_err": "Errore sconosciuto",
-    "connect_err": "Connessione fallita, questo elemento non è disponibile."
+    "connect_err": "Connessione fallita, questo elemento non è disponibile.",
+    "browser_latest": "Prova a utilizzare il browser Chrome/Edge più recente per visitare questo sito",
+    "browser_tip": "Utilizza il browser Chrome/Edge per visitare questo sito"
   },
   "tips": {
     "click_view": "Clicca per vedere",
@@ -310,7 +337,9 @@
     "loading": "Caricamento...",
     "net_err": "Eccezione di rete, fare clic per ricaricare",
     "no_data": "Nessun dato",
-    "no_more": "Non più"
+    "no_more": "Non più",
+    "copy_err": "Copia fallita",
+    "tip": "Suggerimenti"
   },
   "user": {
     "art_num": "{0} funziona",
@@ -332,6 +361,30 @@
       "my_fav": "I miei segnalibri",
       "out": "Disconnettersi"
     },
-    "view_comments": "Visualizza commenti"
+    "view_comments": "Visualizza commenti",
+    "follow": "Seguire",
+    "follow_fail": "Segui fallito",
+    "followed": "Seguito",
+    "unfollow_fail": "Smetti di seguire non è riuscito"
+  },
+  "login": {
+    "fail_tip": "Accesso non riuscito",
+    "logout_tip": "Confermi l'uscita?",
+    "o": {
+      "desc1": "Il sito di origine di Pixiv sta per essere aperto per accedere, assicurati di poter accedere a Pixiv",
+      "desc2": "Assicurati di aver installato il plug-in del browser URLRedirector e di aver importato la configurazione, altrimenti non sarai in grado di accedere",
+      "desc3": "Link di installazione URLRedirector:",
+      "desc4": "Fai clic per copiare l'indirizzo della regola online di URLRedirector",
+      "desc5": "Assicurati di aver installato il plug-in del browser Tampermonkey e lo script utente Helper installato, altrimenti le richieste API non funzioneranno",
+      "desc6": "Link per l'installazione di Tampermonkey:",
+      "desc7": "Fare clic su Installa Helper UserScript"
+    },
+    "succ_tip": "Accesso riuscito",
+    "t": {
+      "d1": "Assicurati di aver installato il plug-in del browser Tampermonkey e installa lo script utente Helper, altrimenti attiva il proxy AppApi",
+      "d2": "Si prega di compilare il RefreshToken, fare riferimento al link sottostante per come ottenerlo",
+      "d3": "Si prega di compilare RefreshToken",
+      "d4": "RefreshToken non è valido"
+    }
   }
 }

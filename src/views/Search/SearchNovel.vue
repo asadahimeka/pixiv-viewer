@@ -88,6 +88,7 @@ import api from '@/api'
 import { notSelfHibiApi } from '@/api/http'
 import NovelCard from '@/components/NovelCard.vue'
 import PopularPreviewNovel from './components/PopularPreviewNovel.vue'
+import { mintVerify } from '@/utils/filter'
 
 export default {
   name: 'Search',
@@ -225,6 +226,16 @@ export default {
       }
       console.log(`doSearch: ${val}`)
 
+      if (
+        /スカラマシュ|散兵|スカ蛍|スカ空|スカナヒ|散荧|荧散|散空|空散|枫散|散枫|草散|散草|放浪者(原神)|流浪者(原神)|阿散|阿帽/i.test(val) ||
+        !(await mintVerify(val))
+      ) {
+        this.artList = []
+        this.finished = true
+        this.curPage = 1
+        return
+      }
+
       this.setSearchHistory(val)
 
       this.loading = true
@@ -256,7 +267,7 @@ export default {
         this.loading = false
         this.error = true
       }
-    }, 1500),
+    }, 2500),
     toArtwork(id) {
       this.$router.push({
         name: 'NovelDetail',

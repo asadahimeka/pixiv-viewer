@@ -23,6 +23,18 @@
                 </span>
               </div>
             </h2>
+            <div class="follow_btn">
+              <van-button
+                v-if="showFollowBtn"
+                size="small"
+                :plain="!isFollowed"
+                :color="isFollowed ? 'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)' : '#4E4F97'"
+                :loading="favLoading"
+                @click="toggleFollow"
+              >
+                {{ isFollowed ? $t('user.followed') : $t('user.follow') }}
+              </van-button>
+            </div>
             <ul class="site-list">
               <li class="site">
                 <a target="_blank" rel="noreferrer" :href="'https://pixiv.me/' + userInfo.account">
@@ -143,7 +155,7 @@ import RecommUser from '../Search/components/RecommUser.vue'
 import AuthorNovels from './components/AuthorNovels.vue'
 import FavoriteNovels from './components/FavoriteNovels.vue'
 import _ from 'lodash'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import { getCache, setCache } from '@/utils/siteCache'
 
 export default {
@@ -182,9 +194,19 @@ export default {
       commentHeight: 0,
       notFromArtwork: true,
       activeTab: 'illusts',
+      favLoading: false,
     }
   },
-  computed: {},
+  computed: {
+    showFollowBtn() {
+      if (!window.APP_CONFIG.useLocalAppApi) return false
+      const id = this.$store.state?.user?.id
+      return id && id != this.userInfo.id
+    },
+    isFollowed() {
+      return this.userInfo.is_followed
+    },
+  },
   watch: {
     $route() {
       if (
@@ -205,6 +227,36 @@ export default {
       this.userInfo = {}
       this.activeTab = 'illusts'
       this.getMemberInfo(id)
+    },
+    async togggleFollowCache(bool) {
+      const itemKey = `memberInfo_${this.userInfo.id}`
+      const user = await getCache(itemKey)
+      if (user) {
+        user.is_followed = bool
+        await setCache(itemKey, user, 60 * 60 * 6)
+      }
+    },
+    async toggleFollow() {
+      this.favLoading = true
+      if (this.isFollowed) {
+        const isOk = localApi.userFollowDelete(this.userInfo.id)
+        this.favLoading = false
+        if (isOk) {
+          this.userInfo.is_followed = false
+          this.togggleFollowCache(false)
+        } else {
+          this.$toast(this.$t('user.unfollow_fail'))
+        }
+      } else {
+        const isOk = localApi.userFollowAdd(this.userInfo.id)
+        this.favLoading = false
+        if (isOk) {
+          this.userInfo.is_followed = true
+          this.togggleFollowCache(true)
+        } else {
+          this.$toast(this.$t('user.follow_fail'))
+        }
+      }
     },
     async getMemberInfo(id) {
       // console.log(id);
@@ -481,5 +533,10 @@ export default {
 
 ::v-deep .top-bar-wrap
   background none
+
+.follow_btn
+  margin 20px 0
+  ::v-deep .van-button
+    width 100px
 
 </style>

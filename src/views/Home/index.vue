@@ -10,7 +10,7 @@
         <RankCard />
         <SpotlightCard />
       </div>
-      <template v-if="isLogin">
+      <template v-if="isWebLogin">
         <Recomm4U />
       </template>
       <template v-else>
@@ -40,23 +40,23 @@ import Recomm4U from './components/Recomm4U.vue'
 import { notSelfHibiApi } from '@/api/http'
 import { existsSessionId } from '@/api/user'
 
-const isLogin = existsSessionId()
+const isWebLogin = existsSessionId()
 
 export default {
   name: 'HomeIllust',
   components: {
     RankCard,
-    RandomIllust,
+    SpotlightCard,
     DiscoveryCard,
     RecommendIllustCard,
-    SpotlightCard,
+    RandomIllust,
     LatestIllustCard,
     Recomm4U,
   },
   data() {
     return {
       isSelfHibi: !notSelfHibiApi,
-      isLogin,
+      isWebLogin,
     }
   },
 }
@@ -65,14 +65,18 @@ export default {
 <style lang="stylus">
 .rec-cards
   display flex
+
   .rank-card
     flex 1
     width 48%
+
 @media screen and (max-width: 767px)
   .rec-cards
     display block
+
     .rank-card
       width auto
+
 </style>
 <style lang="stylus" scoped>
 .home-i

@@ -153,6 +153,7 @@ export default {
     date(val, old) {
       if (val !== old) {
         this.init()
+        // window.umami?.track('change_rank_date', { rank_date: val?.toLocaleDateString() })
       }
     },
   },
@@ -219,9 +220,10 @@ export default {
       }
     }, 1500),
     toArtwork(id) {
+      this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id, list: this.artList },
+        params: { id },
       })
     },
     showPopup() {

@@ -93,6 +93,7 @@ export default {
   },
   methods: {
     toArtwork(id) {
+      this.$store.dispatch('setGalleryList', this.spotlight.items)
       this.$router.push({
         name: 'Artwork',
         params: { id },
@@ -258,7 +259,7 @@ export default {
     text-align: center;
 
   ::v-deep .top-bar-wrap
-    width 1.6rem
+    width 2rem
     padding-top 40px
     background transparent
 

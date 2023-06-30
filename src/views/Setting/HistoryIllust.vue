@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     toArtwork(id) {
+      this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
         params: { id },

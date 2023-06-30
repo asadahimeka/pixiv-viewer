@@ -225,10 +225,35 @@
       "lang": "Sprache",
       "lang_ph": "Bitte Sprache auswählen",
       "title": "Andere Einstellungen",
-      "manual_inp": {
-        "label": "Ob die Proxy- und API-Instanzadressen der folgenden Bilder manuell eingegeben werden",
-        "title": "Geben Sie den Link manuell ein"
-      }
+      "manual_input_label": "Ob die Proxy- und API-Instanzadressen der folgenden Bilder manuell eingegeben werden",
+      "manual_input": "Geben Sie den Link manuell ein",
+      "api_proxy": {
+        "def_ph": "Wenn der Standard-Proxy nicht verwendet werden kann, können Sie es mit einem anderen Proxy versuchen",
+        "sel_desc": "Bitte wählen Sie AppApi Proxy",
+        "title": "Wählen Sie AppApi-Proxy aus"
+      },
+      "cp_token_label": "Kopieren Sie das aktuelle RefreshToken in die Zwischenablage",
+      "cp_token_title": "RefreshToken exportieren",
+      "direct_mode": {
+        "confirm": {
+          "msg": "Der Direktverbindungsmodus unterstützt nur den Firefox-Browser. Sie müssen sicherstellen, dass Tampermonkey und Helper Userscript installiert sind. Die Geschwindigkeit ist langsam und die Stabilität ist nicht garantiert.\n\nEs kann nicht gleichzeitig mit dem AppApi-Proxy aktiviert werden.\n\nWenn nach der Aktivierung der Direktverbindung ein Netzwerkfehler auftritt, öffnen Sie bitte manuell den Link unten, klicken Sie auf „Erweitert“ – „Risiko akzeptieren und fortfahren“ und kehren Sie zu dieser Website zurück, um die Seite zu aktualisieren, nachdem 421 angezeigt wird.",
+          "proxy_msg": "Die Weiterleitung lokaler AppApi-Anfragen über Cloud-Dienste von Drittanbietern kann keine Stabilität und Sicherheit garantieren.\n\nEs kann nicht gleichzeitig mit dem Direktverbindungsmodus aktiviert werden.",
+          "proxy_title": "Sind Sie sicher, dass Sie den AppApi-Proxy aktivieren?",
+          "title": "Sind Sie sicher, dass Sie den Direktmodus aktivieren?"
+        },
+        "host": {
+          "label": "Nach der Freigabe werden DoH-Anfragen erneut weitergeleitet",
+          "title": "Leeren Sie den Cache für direkte Hosts"
+        },
+        "host_msg": "Sind Sie sicher, dass die Host-Cache-Datensätze im Direktverbindungsmodus gelöscht werden?",
+        "label": "Ob SNI über Domain-Fronting umgangen werden soll",
+        "proxy": {
+          "label": "Ob lokale AppApi-Anfragen über Cloud-Dienste weitergeleitet werden sollen",
+          "title": "Aktivieren Sie den AppApi-Proxy"
+        },
+        "title": "Aktivieren Sie den Direktmodus"
+      },
+      "swipe_toggle": "Wischen Sie auf der Detailseite nach links und rechts, um Werke zu durchsuchen"
     },
     "recomm": {
       "app": "Anwendungen",
@@ -262,7 +287,9 @@
     "loading": "Wird geladen...",
     "net_err": "Netzwerkausnahme, zum Neuladen klicken",
     "no_data": "Keine Daten",
-    "no_more": "Nicht mehr"
+    "no_more": "Nicht mehr",
+    "copy_err": "Das Kopieren ist fehlgeschlagen",
+    "tip": "Tipps"
   },
   "user": {
     "art_num": "{0} funktioniert",
@@ -284,15 +311,21 @@
     },
     "related": "Verwandte Benutzer",
     "faved": "Markiert",
-    "view_comments": "Kommentare ansehen"
+    "view_comments": "Kommentare ansehen",
+    "follow": "Folgen",
+    "follow_fail": "Verfolgen fehlgeschlagen",
+    "followed": "Gefolgt",
+    "unfollow_fail": "Das Entfolgen ist fehlgeschlagen"
   },
   "tip": {
-    "rate_limit": "API-Limit überschritten, bitte versuchen Sie es später erneut oder gehen Sie zu den Einstellungen, um die API-Instanz zu ändern",
+    "rate_limit": "API-Limit überschritten, bitte versuchen Sie es später noch einmal",
     "unknown_err": "Unbekannter Fehler",
     "down_wait": "Verarbeitung, bitte haben Sie etwas Geduld",
     "downloaded": "Download abgeschlossen",
     "downloading": "wird heruntergeladen",
-    "connect_err": "Die Verbindung ist fehlgeschlagen. Dieses Element ist nicht verfügbar."
+    "connect_err": "Die Verbindung ist fehlgeschlagen. Dieses Element ist nicht verfügbar.",
+    "browser_latest": "Bitte versuchen Sie, den neuesten Chrome/Edge-Browser zu verwenden, um diese Website zu besuchen",
+    "browser_tip": "Bitte verwenden Sie den Chrome/Edge-Browser, um diese Website zu besuchen"
   },
   "sess": {
     "example": "Sitzungs-ID sieht so aus (ungültig, für Demo):",
@@ -333,5 +366,25 @@
     "latest": "Neu",
     "timeline": "Füttern",
     "user": "Folgend"
+  },
+  "login": {
+    "fail_tip": "Fehler bei der Anmeldung",
+    "logout_tip": "Beenden bestätigen?",
+    "o": {
+      "desc1": "Die Pixiv-Quellseite wird gleich zum Anmelden geöffnet. Bitte stellen Sie sicher, dass Sie auf Pixiv zugreifen können",
+      "desc2": "Bitte stellen Sie sicher, dass Sie das URLRedirector-Browser-Plugin installiert und die Konfiguration importiert haben, sonst können Sie sich nicht anmelden",
+      "desc3": "URLRedirector-Installationslink:",
+      "desc4": "Klicken Sie hier, um die Adresse der URLRedirector-Onlineregel zu kopieren",
+      "desc5": "Stellen Sie sicher, dass das Tampermonkey-Browser-Plugin und das Helper-Benutzerskript installiert sind, da sonst API-Anfragen nicht funktionieren",
+      "desc6": "Tampermonkey-Installationslink:",
+      "desc7": "Klicken Sie auf „Helper-UserScript installieren“."
+    },
+    "succ_tip": "Einloggen erfolgreich",
+    "t": {
+      "d1": "Stellen Sie sicher, dass Sie das Tampermonkey-Browser-Plugin installiert haben und installieren Sie das Helper-Benutzerskript. Andernfalls schalten Sie den AppApi-Proxy ein",
+      "d2": "Bitte füllen Sie das RefreshToken aus. Klicken Sie auf den Link unten, um zu erfahren, wie Sie es erhalten",
+      "d3": "Bitte füllen Sie RefreshToken aus",
+      "d4": "RefreshToken ist fehlerhaft"
+    }
   }
 }

@@ -112,9 +112,10 @@ export default {
       }
     },
     toArtwork(id) {
+      this.setGalleryList(this.memberArtwork)
       this.$router.push({
         name: 'Artwork',
-        params: { id, list: this.memberArtwork },
+        params: { id },
       })
     },
     toAuthor(id) {

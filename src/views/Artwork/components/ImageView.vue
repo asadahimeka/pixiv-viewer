@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters } from 'vuex'
 import { ImagePreview } from 'vant'
 import axios from 'axios'
 import JSZip from 'jszip'
@@ -64,7 +64,7 @@ import api from '@/api'
 import { LocalStorage } from '@/utils/storage'
 import { sleep } from '@/utils'
 
-const imgResSel = LocalStorage.get('__DTL_IMG_RES', 'Medium')
+const imgResSel = LocalStorage.get('PXV_DTL_IMG_RES', 'Medium')
 export default {
   props: {
     artwork: {
@@ -92,7 +92,6 @@ export default {
     original() {
       return this.artwork.images.map(url => url.o)
     },
-    ...mapState(['$swiper']),
     ...mapGetters(['isCensored']),
   },
   watch: {
@@ -340,6 +339,7 @@ export default {
       gif.render()
     },
     download(type) {
+      // window.umami?.track('download_ugoira', { dl_type: type })
       switch (type) {
         case 'ZIP':
           this.downloadZIP()
@@ -463,7 +463,6 @@ export default {
       // max-height: 1000px;
       object-fit: cover;
 
-      &[src*="loading.svg"],
       &[lazy="loading"] {
         position: absolute;
         top: 50%;

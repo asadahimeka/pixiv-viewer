@@ -18,6 +18,7 @@ const cdn = {
     'https://cdn.staticfile.org/jszip/3.10.1/jszip.min.js',
     'https://cdn.staticfile.org/lodash.js/4.17.21/lodash.min.js',
     'https://cdn.staticfile.org/localforage/1.10.0/localforage.min.js',
+    'https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js',
   ],
 }
 
@@ -39,6 +40,11 @@ module.exports = {
         changeOrigin: true,
         pathRewrite: { '^/prks/now': '' },
       },
+      '/prks/obfs': {
+        target: 'https://api.obfs.dev',
+        changeOrigin: true,
+        pathRewrite: { '^/prks/obfs': '' },
+      },
     },
   },
   configureWebpack: config => {
@@ -55,6 +61,7 @@ module.exports = {
         'jszip': 'JSZip',
         'lodash': '_',
         'localforage': 'localforage',
+        'crypto-js': 'CryptoJS',
       }
     }
   },

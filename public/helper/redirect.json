@@ -1,0 +1,17 @@
+{
+  "version": "1.0",
+  "rules": [
+    {
+      "description": "pixiv",
+      "origin": "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback",
+      "exclude": "",
+      "methods": [],
+      "types": [],
+      "target": "https://pixiv.kanata.ml/account/oauth",
+      "example": "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback?state=123&code=456",
+      "enable": true,
+      "process": "",
+      "_originRe": {}
+    }
+  ]
+}

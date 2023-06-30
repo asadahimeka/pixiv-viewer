@@ -8,7 +8,7 @@
       </template>
       <template #right-icon>
         <van-button type="info" size="small" @click="clearCache('db')">
-          <span>{{ $t('cache.clear') }}</span>
+          <span data-umami-event="clear_db_cache">{{ $t('cache.clear') }}</span>
         </van-button>
       </template>
     </van-cell>
@@ -18,7 +18,7 @@
       </template>
       <template #right-icon>
         <van-button size="small" color="linear-gradient(to right, #ff6034, #ee0a24)" @click="clearCache('local')">
-          <span>{{ $t('cache.clear') }}</span>
+          <span data-umami-event="clear_local_cache">{{ $t('cache.clear') }}</span>
         </van-button>
       </template>
     </van-cell>
@@ -28,7 +28,7 @@
       </template>
       <template #right-icon>
         <van-button type="primary" size="small" @click="clearCache('session')">
-          <span>{{ $t('cache.clear') }}</span>
+          <span data-umami-event="clear_session_cache">{{ $t('cache.clear') }}</span>
         </van-button>
       </template>
     </van-cell>

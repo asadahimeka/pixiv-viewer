@@ -127,6 +127,7 @@ export default {
   },
   methods: {
     openLink(link) {
+      window.umami?.track('open_link', { link: link.replace('https://', '') })
       window.open(link, '_blank', 'noopener')
     },
   },

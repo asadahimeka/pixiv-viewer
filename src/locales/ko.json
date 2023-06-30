@@ -112,7 +112,7 @@
   "novel": {
     "series": {
       "next": "시모이치 :",
-      "prev": "上一话："
+      "prev": "이전 단어:"
     },
     "settings": {
       "text": {
@@ -225,10 +225,35 @@
       "lang": "언어",
       "lang_ph": "언어를 선택하세요",
       "title": "기타 설정",
-      "manual_inp": {
-        "label": "아래 이미지의 프록시 및 API 인스턴스 주소를 수동으로 입력했는지 여부",
-        "title": "수동으로 링크 입력"
-      }
+      "manual_input_label": "아래 이미지의 프록시 및 API 인스턴스 주소를 수동으로 입력했는지 여부",
+      "manual_input": "수동으로 링크 입력",
+      "api_proxy": {
+        "def_ph": "기본 프록시를 사용할 수 없는 경우 다른 프록시를 사용해 볼 수 있습니다.",
+        "sel_desc": "AppApi 프록시를 선택하세요.",
+        "title": "AppApi 프록시 선택"
+      },
+      "cp_token_label": "현재 RefreshToken을 클립보드에 복사",
+      "cp_token_title": "RefreshToken 내보내기",
+      "direct_mode": {
+        "confirm": {
+          "msg": "직접접속 모드는 파이어폭스 브라우저만 지원하며, Tampermonkey와 Helper userscript가 설치되어 있는지 확인이 필요하며, 속도가 느리고 안정성이 보장되지 않습니다.\n\nAppApi 프록시와 동시에 활성화할 수 없습니다.\n\n직접 연결을 활성화한 후 네트워크 오류가 발생하면 아래 링크를 수동으로 열고 \"고급\" - \"위험을 감수하고 계속\"을 클릭한 다음 421이 나타난 후 이 사이트로 돌아와 페이지를 새로 고치십시오.",
+          "proxy_msg": "타사 클라우드 서비스를 통해 로컬 AppApi 요청을 전달하는 것은 안정성과 보안을 보장할 수 없습니다.\n\n직접 연결 모드와 동시에 켤 수 없습니다.",
+          "proxy_title": "AppApi 프록시를 활성화하시겠습니까?",
+          "title": "직접 모드를 활성화하시겠습니까?"
+        },
+        "host": {
+          "label": "삭제 후 DoH 쿼리를 다시 전달합니다.",
+          "title": "직접 호스트 캐시 지우기"
+        },
+        "host_msg": "직접 연결 모드에서 호스트 캐시 레코드를 지우시겠습니까?",
+        "label": "도메인 프론팅을 통해 SNI를 우회할지 여부",
+        "proxy": {
+          "label": "클라우드 서비스를 통해 로컬 AppApi 요청을 프록시할지 여부",
+          "title": "AppApi 프록시 활성화"
+        },
+        "title": "다이렉트 모드 활성화"
+      },
+      "swipe_toggle": "세부정보 페이지에서 좌우로 스와이프하여 작품을 찾아보세요."
     },
     "recomm": {
       "app": "앱",
@@ -262,7 +287,9 @@
     "loading": "로드 중...",
     "net_err": "네트워크 예외입니다. \n클릭하여 다시 로드하세요.",
     "no_data": "데이터 없음",
-    "no_more": "이미 아니"
+    "no_more": "이미 아니",
+    "copy_err": "복사 실패",
+    "tip": "팁"
   },
   "user": {
     "art_num": "{0}개의 작품",
@@ -284,15 +311,21 @@
     },
     "related": "관련 사용자",
     "faved": "북마크됨",
-    "view_comments": "댓글 보기"
+    "view_comments": "댓글 보기",
+    "follow": "따르다",
+    "follow_fail": "팔로우 실패",
+    "followed": "팔로우",
+    "unfollow_fail": "팔로우 취소 실패"
   },
   "tip": {
-    "rate_limit": "API 제한을 초과했습니다. 나중에 다시 시도하거나 설정으로 이동하여 API 인스턴스를 변경하세요.",
+    "rate_limit": "API 한도를 초과했습니다. 나중에 다시 시도해 주세요.",
     "unknown_err": "알수없는 오류",
     "down_wait": "처리중이니 조금만 기다려주세요",
     "downloaded": "다운로드됨",
     "downloading": "다운로드 중",
-    "connect_err": "연결에 실패했습니다. 이 항목을 사용할 수 없습니다."
+    "connect_err": "연결에 실패했습니다. 이 항목을 사용할 수 없습니다.",
+    "browser_latest": "이 사이트를 방문하려면 최신 Chrome/Edge 브라우저를 사용해 보십시오.",
+    "browser_tip": "이 사이트를 방문하려면 Chrome/Edge 브라우저를 사용하세요."
   },
   "sess": {
     "example": "세션 ID는 다음과 같습니다(유효하지 않음, 데모용).",
@@ -333,5 +366,25 @@
     "latest": "새로운",
     "timeline": "밥을 먹이다",
     "user": "수행원"
+  },
+  "login": {
+    "fail_tip": "로그인 실패",
+    "logout_tip": "종료를 확인하시겠습니까?",
+    "o": {
+      "desc1": "로그인을 위해 Pixiv 소스 사이트가 곧 열립니다. Pixiv에 액세스할 수 있는지 확인하십시오.",
+      "desc2": "URLRedirector 브라우저 플러그인을 설치하고 구성을 가져왔는지 확인하십시오. 그렇지 않으면 로그인할 수 없습니다.",
+      "desc3": "URLRedirector 설치 링크:",
+      "desc4": "URLRedirector 온라인 규칙 주소를 복사하려면 클릭하십시오.",
+      "desc5": "Tampermonkey 브라우저 플러그인이 설치되어 있고 Helper 사용자 스크립트가 설치되어 있는지 확인하십시오. 그렇지 않으면 API 요청이 작동하지 않습니다.",
+      "desc6": "Tampermonkey 설치 링크:",
+      "desc7": "Helper UserScript 설치를 클릭합니다."
+    },
+    "succ_tip": "로그인 성공",
+    "t": {
+      "d1": "Tampermonkey 브라우저 플러그인이 설치되어 있는지 확인하고 Helper 사용자 스크립트를 설치하세요. 그렇지 않으면 AppApi 프록시를 켭니다.",
+      "d2": "RefreshToken을 입력하세요. 획득 방법은 아래 링크를 참조하세요.",
+      "d3": "RefreshToken을 입력하세요.",
+      "d4": "RefreshToken의 형식이 잘못되었습니다."
+    }
   }
 }

@@ -30,4 +30,5 @@ export default {
     font-size 16PX
     text-align center
     margin 20px 0
+
 </style>
