@@ -20,7 +20,7 @@
       <van-cell><i style="cursor: pointer;" @click="copyRule">{{ $t('login.o.desc4') }}</i></van-cell>
       <van-cell>{{ $t('login.o.desc5') }}</van-cell>
       <van-cell>{{ $t('login.o.desc6') }} <a href="https://www.tampermonkey.net/index.php" target="_blank">🔗www.tampermonkey.net</a></van-cell>
-      <van-cell><a href="/helper/helper.user.js" target="_blank">{{ $t('login.o.desc7') }}</a></van-cell>
+      <van-cell><a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank">{{ $t('login.o.desc7') }}</a></van-cell>
     </van-dialog>
     <van-dialog
       v-model="showTokenDialog"
@@ -33,7 +33,7 @@
     >
       <van-cell>{{ $t('login.t.d1') }}</van-cell>
       <van-cell>{{ $t('login.o.desc6') }} <a href="https://www.tampermonkey.net/index.php" target="_blank">🔗www.tampermonkey.net</a></van-cell>
-      <van-cell><a href="/helper/helper.user.js" target="_blank">{{ $t('login.o.desc7') }}</a></van-cell>
+      <van-cell><a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank">{{ $t('login.o.desc7') }}</a></van-cell>
       <van-cell>{{ $t('login.t.d2') }}</van-cell>
       <van-cell><a href="https://github.com/mixmoe/HibiAPI/issues/53" target="_blank">🔗https://github.com/mixmoe/HibiAPI/issues/53</a></van-cell>
       <van-cell><a href="https://github.com/Tsuk1ko/pxder#%E5%87%86%E5%A4%87" target="_blank">🔗https://github.com/Tsuk1ko/pxder</a></van-cell>
