@@ -253,7 +253,7 @@
         },
         "title": "Enable direct mode"
       },
-      "swipe_toggle": "Swipe left and right on the details page to browse works"
+      "swipe_toggle": "Swipe left or right on the details page to toggle artworks"
     },
     "recomm": {
       "app": "Apps",
