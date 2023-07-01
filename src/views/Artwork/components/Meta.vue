@@ -114,8 +114,9 @@
       </van-button>
       <van-popup
         v-model="showComments"
-        position="right"
         class="comments-popup"
+        position="right"
+        get-container="body"
         closeable
         :overlay="false"
       >

@@ -30,7 +30,7 @@
 import ImageSlide from '@/components/ImageSlide'
 import api from '@/api'
 import NovelCard from '@/components/NovelCard.vue'
-import { filterHomeNovel } from '@/utils/filter'
+import { filterHomeNovel, mintVerify } from '@/utils/filter'
 export default {
   name: 'RecommCardNovel',
   components: {
@@ -71,7 +71,13 @@ export default {
       this.loading = true
       const res = await api.getRecommendedNovel()
       if (res.status === 0) {
-        this.artList = res.data.filter(filterHomeNovel)
+        const arr = []
+        for (const e of res.data.filter(filterHomeNovel)) {
+          if (await mintVerify(e.title, true)) {
+            arr.push(e)
+          }
+        }
+        this.artList = arr
       } else {
         this.$toast({
           message: res.msg,
