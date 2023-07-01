@@ -396,7 +396,7 @@ export default {
     },
     async checkURL(val, checkFn) {
       if (!isURL(val)) {
-        const isOK = await mintVerify(val)
+        const isOK = await mintVerify(val, true)
         if (isOK) {
           Dialog.alert({
             title: 'Error',

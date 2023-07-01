@@ -70,18 +70,20 @@ html,body
     padding 0
 
 @media screen and (min-width: 1280px)
-  .Home,
-  .search .tags,
-  .search .result-list,
-  .rank-list,
-  .users .user-tabs .van-tab__pane,
-  .user-illusts,
-  #app .Spotlights,
-  #app .Discovery,
-  #app .HomeRecommIllust,
-  #app .related
-    padding-left 5vw
-    padding-right 5vw
+  #app
+    .Home,
+    .search .tags,
+    .search .result-list,
+    .rank-list,
+    .users .user-tabs .van-tab__pane,
+    .user-illusts,
+    .Spotlights,
+    .Discovery,
+    .HomeRecommIllust,
+    .related,
+    .Following
+      padding-left 5vw
+      padding-right 5vw
 
   #app
     .nav-container
