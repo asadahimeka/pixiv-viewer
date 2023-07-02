@@ -37,7 +37,7 @@
     </div>
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
-      <RelatedNovel v-if="artwork.x_restrict < 1" :key="artwork.id" :artwork="artwork" />
+      <RelatedNovel :key="artwork.id" :artwork="artwork" />
     </keep-alive>
     <van-share-sheet v-model="showShare" :title="$t('artwork.share.title')" :options="shareOptions" @select="onShareSel" />
     <van-action-sheet v-model="showSettings" class="setting-actions" :title="$t('novel.settings.title')" :overlay="false">

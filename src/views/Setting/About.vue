@@ -33,6 +33,7 @@
       label="Github:asadahimeka/pixiv-viewer"
       @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
     />
+    <van-cell center title="QQ Group" label="537247472" />
   </div>
 </template>
 
