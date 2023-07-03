@@ -7,7 +7,9 @@
     "origin_site": "Site d'origine",
     "source": "Code source",
     "title": "À propos du site",
-    "version": "Version"
+    "version": "Version",
+    "about_site": "À propos de ce site",
+    "credits": "Remerciements"
   },
   "artwork": {
     "download": {
@@ -261,7 +263,8 @@
       "title": "Liens recommandés",
       "tm": "Script utilisateur"
     },
-    "down_app": "Télécharger l'application"
+    "down_app": "Télécharger l'application",
+    "app_desc": "Un autre outil de navigateur d'illustrations/romans Pixiv"
   },
   "sp": {
     "all": "Aperçu",

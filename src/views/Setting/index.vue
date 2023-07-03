@@ -2,8 +2,10 @@
   <div class="setting">
     <h2 class="app-title">
       <img width="40" height="40" src="/app-icon.png" alt="">
-      <span>Pixiv Viewer</span>
-      <sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup>
+      <div class="app-title-desc">
+        <span>Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup></span>
+        <small>{{ $t('setting.app_desc') }}</small>
+      </div>
     </h2>
     <van-cell v-if="isLoggedIn" size="large" center is-link :to="`/u/${user.id}`">
       <template #title>
@@ -82,8 +84,17 @@ export default {
   justify-content center
   align-items center
   margin 40px 0 50px
+  padding-right 10px
   font-size 40px
   text-align center
+
+  &-desc
+    display flex
+    flex-direction column
+    max-width 6rem
+    small
+      margin-top 0.2rem
+      font-size 0.24rem
 
   img
     margin-right 20px

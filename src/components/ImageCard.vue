@@ -15,8 +15,8 @@
       {{ artwork.count }}
     </div>
     <div v-if="(mode == 'all' || mode == 'cover') && showBookmarkBtn" class="bookmark" @click.stop="toggleBookmark">
-      <van-loading v-if="bLoading" color="#e87a90" />
-      <van-icon v-else :name="isBookmarked?'like':'like-o'" color="#e87a90" />
+      <van-loading v-if="bLoading" color="#ff4060" />
+      <van-icon v-else :name="isBookmarked?'like':'like-o'" color="#ff4060" />
     </div>
     <Icon
       v-if="(mode == 'all' || mode === 'cover') && artwork.type === 'ugoira'"
@@ -213,10 +213,11 @@ export default {
     position absolute
     bottom 0
     right 0
-    z-index 9
+    z-index 1
     padding: 20px 16px
     font-size 0.5rem
     cursor pointer
+    filter: drop-shadow(0.02667rem 0.05333rem 0.05333rem #e87a90)
   }
 
   .btn-play {

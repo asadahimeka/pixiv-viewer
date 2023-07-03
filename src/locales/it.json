@@ -7,7 +7,9 @@
     "origin_site": "Sito originale",
     "source": "Codice sorgente",
     "title": "Informazioni sul sito",
-    "version": "Versione"
+    "version": "Versione",
+    "about_site": "A proposito di questo sito",
+    "credits": "Ringraziamenti"
   },
   "artwork": {
     "download": {
@@ -301,7 +303,8 @@
       "site": "Sito web",
       "title": "Link consigliati",
       "tm": "UserScript"
-    }
+    },
+    "app_desc": "Un altro browser per illustrazioni/romanzi di Pixiv"
   },
   "sp": {
     "all": "Panoramica",

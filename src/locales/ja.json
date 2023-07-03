@@ -37,7 +37,9 @@
     "origin_site": "本家サイト",
     "source": "ソースコード",
     "title": "サイトについて",
-    "version": "バージョン"
+    "version": "バージョン",
+    "about_site": "このサイトについて",
+    "credits": "感謝"
   },
   "artwork": {
     "download": {
@@ -261,7 +263,8 @@
       "title": "おすすめもの",
       "tm": "ユーザースクリプト"
     },
-    "down_app": "アプリダウンロード"
+    "down_app": "アプリダウンロード",
+    "app_desc": "もう一つのPixivイラスト・小説ブラウザツール"
   },
   "sp": {
     "all": "まとめ",
