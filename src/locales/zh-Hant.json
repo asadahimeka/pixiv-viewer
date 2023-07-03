@@ -7,7 +7,9 @@
     "origin_site": "原版網站",
     "source": "原始碼",
     "title": "關於",
-    "version": "版本"
+    "version": "版本",
+    "about_site": "關於本站",
+    "credits": "鳴謝"
   },
   "artwork": {
     "download": {
@@ -261,7 +263,8 @@
       "title": "相關推薦",
       "tm": "用戶腳本"
     },
-    "down_app": "下載應用程序"
+    "down_app": "下載應用程序",
+    "app_desc": "又一個 Pixiv 插畫/小說閱覽工具"
   },
   "sp": {
     "all": "一覽",

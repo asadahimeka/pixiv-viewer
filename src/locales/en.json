@@ -37,7 +37,9 @@
     "origin_site": "Original Site",
     "source": "Source Code",
     "title": "About Site",
-    "version": "Version"
+    "version": "Version",
+    "about_site": "About this site",
+    "credits": "Acknowledgements"
   },
   "artwork": {
     "download": {
@@ -261,7 +263,8 @@
       "title": "Recommended Links",
       "tm": "UserScript"
     },
-    "down_app": "Download App"
+    "down_app": "Download App",
+    "app_desc": "Another Pixiv illustration/novel browser tool"
   },
   "sp": {
     "all": "Overview",

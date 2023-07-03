@@ -7,7 +7,9 @@
     "origin_site": "본가 링크",
     "source": "소스 코드",
     "title": "사이트 정보",
-    "version": "버전"
+    "version": "버전",
+    "about_site": "이 사이트 정보",
+    "credits": "감사의 말"
   },
   "artwork": {
     "download": {
@@ -261,7 +263,8 @@
       "title": "추천 링크",
       "tm": "사용자 스크립트"
     },
-    "down_app": "앱 다운로드"
+    "down_app": "앱 다운로드",
+    "app_desc": "또 다른 Pixiv 일러스트레이션/소설 브라우저 도구"
   },
   "sp": {
     "all": "요약",
