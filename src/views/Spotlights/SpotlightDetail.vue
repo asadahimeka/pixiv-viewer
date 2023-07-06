@@ -6,7 +6,7 @@
     </div>
     <div class="title_wp">
       <div class="title_cnt">
-        <p class="sp_date">{{ spotlight.date }}</p>
+        <p class="sp_date" :class="{hide_date:!showDate}">{{ spotlight.date }}</p>
         <h1 class="title">{{ spotlight.title }}</h1>
       </div>
     </div>
@@ -69,6 +69,9 @@ export default {
     tagLatest() {
       return this.spotlight.related_latest || {}
     },
+    showDate() {
+      return this.spotlight.date?.length == 10
+    },
   },
   watch: {
     $route() {
@@ -117,20 +120,19 @@ export default {
       }
       if (el?.tagName === 'A') {
         const url = el.href
-        const pid = url.match(/https:\/\/www\.pixiv\.net\/artworks\/(\d+)/i)?.[1]
-        if (pid) {
-          this.$router.push(`/i/${pid}`)
-          return
-        }
-        const uid = url.match(/https:\/\/www\.pixiv\.net\/users\/(\d+)/i)?.[1]
-        if (uid) {
-          this.$router.push(`/u/${uid}`)
-          return
-        }
-        const spid = url.match(/https:\/\/www\.pixivision\.net\/.+\/a\/(\d+)/i)?.[1]
-        if (spid) {
-          this.$router.push(`/spotlight_detail?id=${spid}`)
-          return
+        console.log('url: ', url)
+        const actionMap = [
+          [/^https:\/\/www\.pixiv\.net\/artworks\/(\d+)/i, m => this.$router.push(`/i/${m}`)],
+          [/^https:\/\/www\.pixiv\.net\/users\/(\d+)/i, m => this.$router.push(`/u/${m}`)],
+          [/^https:\/\/www\.pixivision\.net\/.+\/a\/(\d+)/i, m => this.$router.push(`/spd?id=${m}`)],
+          [new RegExp(`${location.origin}/.+/a/(\\d+)`, 'i'), m => this.$router.push(`/spd?id=${m}`)],
+        ]
+        for (const act of actionMap) {
+          const match = url.match(act[0])?.[1]
+          if (match) {
+            act[1](match)
+            return
+          }
         }
         window.open(url, '_blank', 'noreferrer')
       }
@@ -148,8 +150,10 @@ export default {
 
 .Spotlight
   user-select text
+  .hide_date
+    opacity 0
   .sp_desc
-    max-width 72vw
+    max-width 60vw
     margin 30px auto 90px
     padding 0 20px
     font-size 0.36rem
@@ -229,6 +233,118 @@ export default {
         border-radius 50%
         margin 0
         margin-right 40px
+
+    ._article-card
+      width: 100%;
+      display: flex;
+      flex-flow: column nowrap;
+      margin 0 auto 20px
+      max-width 10rem
+      background: #fff;
+      box-shadow: 0 1PX 1PX 0 rgba(131,131,131,0.5);
+      border-radius: 5px;
+      overflow: hidden;
+      &.spotlight
+        border-top: 11px solid #0096fa;
+      .arc__thumbnail-container
+        height: 5rem;
+        overflow: hidden;
+        position: relative;
+        ._thumbnail
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-size: cover;
+          background-position: top center;
+          &:hover
+            filter: saturate(1.4);
+            &::after
+              opacity 1
+          &::after
+            content: "";
+            top: 0;
+            left: 0;
+            display: block;
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transition: opacity 0.15s ease;
+            opacity: 0;
+            background-color: rgba(255,255,255,0.3);
+
+        ._category-label
+          padding: 5px 11px;
+          display: inline-block;
+          color: #fff;
+          line-height: 1em;
+          &.spotlight
+            background-color: #0096fa;
+          &.large
+            font-size: 0.28rem;
+            line-height: 0.36rem;
+            letter-spacing: 0;
+            padding: 7px 22px;
+            text-align: center;
+            min-width: 140px;
+        .arc__thumbnail-label
+          position: absolute;
+          bottom: 0;
+          left: 0;
+
+      .arc__title-container
+        color: #323232;
+        flex 1
+        .arc__title
+          font-weight: bold;
+          font-size: 0.3rem;
+          letter-spacing: 0;
+          line-height: 26px;
+          margin: 15px;
+
+      .arc__footer-container
+        display: flex;
+        align-content: space-between;
+        align-items: baseline;
+        flex-wrap: nowrap;
+        margin-left: 15px;
+        margin-right: 15px;
+        margin-bottom: 26px;
+        ._tag-list
+          flex 1
+          line-height 20px
+        .tls__list-item-container
+          display: inline;
+          margin-right: 14px;
+        .tls__list-item
+          display: inline;
+          color: #ff007a;
+          border-bottom: 1PX solid;
+          border-color: rgba(255,0,122,0);
+          transition: border-color 0.15s ease;
+          font-weight: bold;
+          letter-spacing: 0;
+          line-height: 14px;
+          &:hover
+            border-color: #ff007a;
+          &::before
+            content: '#';
+          &.small
+            font-size: 0.26rem;
+            font-weight: normal;
+
+        .arc__footer-date-pr
+          display: flex;
+          flex-direction: column;
+          margin-left 16px
+          text-align: right;
+          line-height: 12px;
+          ._date
+            letter-spacing: .05em;
+            font-weight: bold;
+            &.small
+              font-size: 0.24rem;
+            &.light-gray
+              color: #a1a1a1;
 
 </style>
 <style lang="stylus" scoped>

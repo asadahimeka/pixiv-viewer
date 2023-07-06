@@ -226,13 +226,14 @@ const routes = [
           },
           {
             path: '/spotlight/:id',
-            alias: ['/pixivision/:id'],
+            alias: ['/pixivision/:id', '/sp/:id'],
             name: 'Spotlight',
             component: Spotlight,
           },
           {
             path: '/spotlight_detail',
             name: 'SpotlightDetail',
+            alias: ['/spd'],
             component: SpotlightDetail,
           },
           {
