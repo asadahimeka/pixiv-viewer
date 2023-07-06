@@ -1,14 +1,16 @@
 <template>
   <div class="illusts">
-    <van-cell v-if="once" class="cell" :border="false" is-link @click="onClick()">
-      <template #title>
-        <span class="title">
-          {{ $t('user.novel_art') }}
-          <span v-if="num" class="num">{{ $t('user.art_num', [num]) }}</span>
-        </span>
-      </template>
-    </van-cell>
-    <h3 v-else class="af_title">{{ $t('user.novel_art_title', [authorName]) }}</h3>
+    <template v-if="showTitle">
+      <van-cell v-if="once" class="cell" :border="false" is-link @click="onClick()">
+        <template #title>
+          <span class="title">
+            {{ $t('user.novel_art') }}
+            <span v-if="num" class="num">{{ $t('user.art_num', [num]) }}</span>
+          </span>
+        </template>
+      </van-cell>
+      <h3 v-else class="af_title">{{ $t('user.novel_art_title', [authorName]) }}</h3>
+    </template>
     <van-list
       v-model="loading"
       :loading-text="$t('tips.loading')"
@@ -48,6 +50,10 @@ export default {
       default: false,
     },
     notFromArtwork: {
+      type: Boolean,
+      default: true,
+    },
+    showTitle: {
       type: Boolean,
       default: true,
     },

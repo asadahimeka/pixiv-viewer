@@ -12,15 +12,17 @@
               <img :src="userInfo.avatar" :alt="userInfo.name">
             </div>
             <h2 class="name">
-              {{ userInfo.name }}
-              <div class="sup_tags">
-                <span class="is_premium">
-                  <van-tag v-if="userInfo.is_premium" plain color="#fc9d2b">P</van-tag>
-                </span>
-                <span v-if="userInfo.gender" class="gender">
-                  <van-tag v-if="userInfo.gender == 'male'" plain color="#005CAF">♂</van-tag>
-                  <van-tag v-if="userInfo.gender == 'female'" plain color="#F596AA">♀</van-tag>
-                </span>
+              <div class="user_name">
+                {{ userInfo.name }}
+                <div class="sup_tags">
+                  <span class="is_premium">
+                    <van-tag v-if="userInfo.is_premium" plain color="#fc9d2b">P</van-tag>
+                  </span>
+                  <span v-if="userInfo.gender" class="gender">
+                    <van-tag v-if="userInfo.gender == 'male'" plain color="#005CAF">♂</van-tag>
+                    <van-tag v-if="userInfo.gender == 'female'" plain color="#F596AA">♀</van-tag>
+                  </span>
+                </div>
               </div>
             </h2>
             <div class="follow_btn">
@@ -84,7 +86,8 @@
               :id="userInfo.id"
               key="once-illust"
               :num="userInfo.illusts"
-              :once="true"
+              :once="false"
+              :show-title="false"
               :not-from-artwork="notFromArtwork"
               @onCilck="showSub('illusts')"
             />
@@ -96,7 +99,8 @@
               key="once-manga"
               i-type="manga"
               :num="userInfo.mangas"
-              :once="true"
+              :once="false"
+              :show-title="false"
               :not-from-artwork="notFromArtwork"
               @onCilck="showSub('manga')"
             />
@@ -107,28 +111,32 @@
               :id="userInfo.id"
               key="once-novel"
               :num="userInfo.novels"
-              :once="true"
+              :once="false"
+              :show-title="false"
               :not-from-artwork="notFromArtwork"
               @onCilck="showSub('novel')"
             />
           </van-tab>
-          <van-tab v-if="userInfo.bookmarks > 0" :title="$t('user.fav')" name="favorite">
+          <van-tab v-if="userInfo.bookmarks > 0" :title="`${$t('user.fav')}(${$t('common.illust')})`" name="favorite">
             <FavoriteIllusts
               v-if="userInfo.bookmarks > 0"
               :id="userInfo.id"
               key="once-favorite"
               :num="userInfo.bookmarks"
               :not-from-artwork="notFromArtwork"
-              :once="true"
+              :once="false"
+              :show-title="false"
               @onCilck="showSub('favorite')"
             />
+          </van-tab>
+          <van-tab v-if="userInfo.bookmarks > 0 && userInfo.novels > 0" :title="`${$t('user.fav')}(${$t('common.novel')})`" name="favorite">
             <FavoriteNovels
-              v-if="userInfo.novels > 0"
               :id="userInfo.id"
               key="once-fav-novel"
               :num="0"
               :not-from-artwork="notFromArtwork"
-              :once="true"
+              :once="false"
+              :show-title="false"
               @onCilck="showSub('fav_novel')"
             />
           </van-tab>
@@ -137,9 +145,9 @@
           </van-tab>
         </van-tabs>
 
-        <div v-show="activeTab != 'related' && !loading" style="margin-top: 10px;text-align: center;">
+        <!-- <div v-show="activeTab != 'related' && !loading" style="margin-top: 10px;text-align: center;">
           <van-button size="small" @click="showSub(activeTab)">{{ $t('common.view_more') }}</van-button>
-        </div>
+        </div> -->
 
         <van-loading v-show="loading" class="loading" size="60px" />
       </div>
@@ -411,22 +419,29 @@ export default {
       }
 
       .name {
-        position relative
+        max-width 7.2rem
+        margin: 10px auto;
         font-size: 46px;
         font-weight: bold;
-        margin: 10px 0;
+
+        .user_name {
+          display inline-block
+          position relative
+        }
 
         .sup_tags {
           position absolute
-          top 0px
-          padding-left 8PX
-          display inline-block
+          top 0
+          right 0
+          transform translateX(120%)
+          display flex
           .van-tag {
             height 16PX
             vertical-align super
           }
         }
         .gender {
+          margin-left 10px
           .van-tag {
             padding 0 2PX
             line-height 0.9
@@ -538,5 +553,9 @@ export default {
   margin 20px 0
   ::v-deep .van-button
     width 100px
+
+@media screen and (min-width 768px)
+  .users .info-container .info .name
+    max-width unset
 
 </style>
