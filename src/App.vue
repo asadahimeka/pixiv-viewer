@@ -62,12 +62,16 @@ html,body
   padding-top 1.2rem
   .com_sel_tabs
     position fixed
-    z-index 1
+    z-index 9
     left 50%
     transform translateX(-50%)
-    top 0.3rem
+    top 0
+    // top 0.3rem
     margin-bottom 0
-    padding 0
+    // padding 0
+    padding 0.3rem 0
+    background: rgba(255,255,255,0.8)
+    backdrop-filter: saturate(200%) blur(6px);
 
 @media screen and (min-width: 1280px)
   #app
