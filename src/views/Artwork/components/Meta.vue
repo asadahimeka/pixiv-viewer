@@ -459,6 +459,7 @@ export default {
       .author {
         font-size: 22px;
         color: #9b9b9b;
+        cursor pointer
         // overflow: hidden;
         // text-overflow: ellipsis;
       }

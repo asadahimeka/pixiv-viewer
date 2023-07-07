@@ -79,10 +79,23 @@
             </div>
           </div>
         </div>
-        <van-tabs v-if="userInfo.id" v-model="activeTab" class="user-tabs" sticky animated swipeable color="#F2C358">
-          <van-tab v-if="userInfo.illusts > 0" :title="$t('common.illust')" name="illusts">
+        <van-tabs
+          v-if="userInfo.id"
+          v-model="activeTab"
+          class="user-tabs"
+          sticky
+          animated
+          swipeable
+          swipe-threshold="4"
+          color="#F2C358"
+        >
+          <van-tab v-if="userInfo.illusts > 0" name="illusts">
+            <template #title>
+              <span>{{ $t('common.illust') }}</span>
+              <van-tag mark color="#cdeefe" text-color="#0b6aaf">{{ userInfo.illusts }}</van-tag>
+            </template>
             <AuthorIllusts
-              v-if="userInfo.id && userInfo.illusts > 0"
+              v-if="activeTab == 'illusts' && userInfo.id && userInfo.illusts > 0"
               :id="userInfo.id"
               key="once-illust"
               :num="userInfo.illusts"
@@ -92,9 +105,13 @@
               @onCilck="showSub('illusts')"
             />
           </van-tab>
-          <van-tab v-if="userInfo.mangas > 0" :title="$t('common.manga')" name="manga">
+          <van-tab v-if="userInfo.mangas > 0" name="manga">
+            <template #title>
+              <span>{{ $t('common.manga') }}</span>
+              <van-tag mark color="#cdeefe" text-color="#0b6aaf">{{ userInfo.mangas }}</van-tag>
+            </template>
             <AuthorIllusts
-              v-if="userInfo.id && userInfo.mangas > 0"
+              v-if="activeTab == 'manga' && userInfo.id && userInfo.mangas > 0"
               :id="userInfo.id"
               key="once-manga"
               i-type="manga"
@@ -105,9 +122,13 @@
               @onCilck="showSub('manga')"
             />
           </van-tab>
-          <van-tab v-if="userInfo.novels > 0" :title="$t('common.novel')" name="novel">
+          <van-tab v-if="userInfo.novels > 0" name="novel">
+            <template #title>
+              <span>{{ $t('common.novel') }}</span>
+              <van-tag mark color="#cdeefe" text-color="#0b6aaf">{{ userInfo.novels }}</van-tag>
+            </template>
             <AuthorNovels
-              v-if="userInfo.id && userInfo.novels > 0"
+              v-if="activeTab == 'novel' && userInfo.id && userInfo.novels > 0"
               :id="userInfo.id"
               key="once-novel"
               :num="userInfo.novels"
@@ -117,9 +138,13 @@
               @onCilck="showSub('novel')"
             />
           </van-tab>
-          <van-tab v-if="userInfo.bookmarks > 0" :title="`${$t('user.fav')}(${$t('common.illust')})`" name="favorite">
+          <van-tab v-if="userInfo.bookmarks > 0" name="favorite">
+            <template #title>
+              <span>{{ $t('user.fav') }}({{ $t('common.illust') }})</span>
+              <van-tag mark color="#cdeefe" text-color="#0b6aaf">{{ userInfo.bookmarks }}</van-tag>
+            </template>
             <FavoriteIllusts
-              v-if="userInfo.bookmarks > 0"
+              v-if="activeTab == 'favorite' && userInfo.bookmarks > 0"
               :id="userInfo.id"
               key="once-favorite"
               :num="userInfo.bookmarks"
@@ -129,8 +154,9 @@
               @onCilck="showSub('favorite')"
             />
           </van-tab>
-          <van-tab v-if="userInfo.bookmarks > 0 && userInfo.novels > 0" :title="`${$t('user.fav')}(${$t('common.novel')})`" name="favorite">
+          <van-tab v-if="userInfo.bookmarks > 0 && userInfo.novels > 0" :title="`${$t('user.fav')}(${$t('common.novel')})`" name="fav_novel">
             <FavoriteNovels
+              v-if="activeTab == 'fav_novel' && userInfo.novels > 0"
               :id="userInfo.id"
               key="once-fav-novel"
               :num="0"

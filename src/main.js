@@ -34,7 +34,7 @@ async function setupApp() {
   Vue.use(Toast)
   Vue.use(ImagePreview)
   Vue.use(Lazyload, {
-    observer: true,
+    // observer: true,
     lazyComponent: true,
     loading: require('@/icons/loading.svg'),
     adapter: {
