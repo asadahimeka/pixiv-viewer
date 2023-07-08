@@ -43,7 +43,7 @@ export default {
   width: 1.6rem;
   height: 1.2rem;
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0.3), rgba(#fff, 0));
-  z-index: 99;
+  z-index: 999;
 }
 
 .top-bar {

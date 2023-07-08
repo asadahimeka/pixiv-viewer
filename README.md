@@ -56,13 +56,13 @@ https://github.com/asadahimeka/pixiv-viewer/issues
 
 - 桌面端
 
-<kbd><img src="docs/w1.png" width="390"></kbd>  <kbd><img src="docs/w2.png" width="390"></kbd>
+<kbd><img src="docs/w9.png" width="390"></kbd>  <kbd><img src="docs/w10.png" width="390"></kbd>
 
-<kbd><img src="docs/w3.png" width="390"></kbd>  <kbd><img src="docs/w4.png" width="390"></kbd>
+<kbd><img src="docs/w11.png" width="390"></kbd>  <kbd><img src="docs/w12.png" width="390"></kbd>
 
-<kbd><img src="docs/w5.png" width="390"></kbd>  <kbd><img src="docs/w6.png" width="390"></kbd>　
+<kbd><img src="docs/w13.png" width="390"></kbd>  <kbd><img src="docs/w14.png" width="390"></kbd>　
 
-<kbd><img src="docs/w7.png" width="390"></kbd>  <kbd><img src="docs/w8.png" width="390"></kbd>
+<kbd><img src="docs/w15.png" width="390"></kbd>  <kbd><img src="docs/w16.png" width="390"></kbd>
 
 ## Alternatives
 
