@@ -86,7 +86,7 @@
           sticky
           animated
           swipeable
-          swipe-threshold="4"
+          swipe-threshold="3"
           color="#F2C358"
         >
           <van-tab v-if="userInfo.illusts > 0" name="illusts">
@@ -386,7 +386,7 @@ export default {
 
 .loading {
   position: absolute;
-  top: 30%;
+  top: 3rem;
   left: 50%;
   transform: translateX(-50%);
 }

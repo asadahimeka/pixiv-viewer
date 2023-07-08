@@ -4,43 +4,49 @@
       <li @click="navigateTo('Home')">
         <Icon
           class="icon home"
-          :class="{ active: $route.name.startsWith('Home') }"
+          :class="{ active: isActive('Home') }"
           name="home"
           index="Home"
           :current-index="$route.name"
         />
+        <van-icon v-if="isDark" :class="{ active: isActive('Home') }" name="wap-home-o" />
         <span>{{ $t('nav.home') }}</span>
       </li>
       <li @click="navigateTo('Search')">
         <Icon
           class="icon"
-          :class="{ active: $route.name.startsWith('Search') }"
+          :class="{ active: isActive('Search') }"
           name="search"
           index="Search"
           :current-index="$route.name"
         />
+        <van-icon v-if="isDark" :class="{ active: isActive('Search') }" name="search" />
         <span>{{ $t('nav.search') }}</span>
       </li>
       <li @click="navigateTo('Rank', { type: 'daily' })">
         <Icon
           class="icon"
-          :class="{ active: $route.name.startsWith('Rank') }"
+          :class="{ active: isActive('Rank') }"
           name="rank"
           index="Rank"
           :current-index="$route.name"
         />
+        <van-icon v-if="isDark" :class="{ active: isActive('Rank') }" name="bar-chart-o" />
         <span>{{ $t('nav.rank') }}</span>
       </li>
       <li v-if="isLogin" @click="navigateTo('Following')">
         <Icon class="icon" name="following" index="Following" :current-index="$route.name" />
+        <van-icon v-if="isDark" :class="{ active: isActive('Following') }" name="star-o" />
         <span>{{ $t('nav.follow') }}</span>
       </li>
       <li @click="navigateTo('Setting')">
         <Icon class="icon" name="setting" index="Setting" :current-index="$route.name" />
+        <van-icon v-if="isDark" :class="{ active: isActive('Setting') }" name="setting-o" />
         <span>{{ $t('nav.setting') }}</span>
       </li>
       <li v-if="notMobile" class="nav_to_top" @click="scrollToTop()">
         <Icon class="icon" name="to_top" />
+        <van-icon v-if="isDark" name="back-top" />
         <span>Top</span>
       </li>
     </ul>
@@ -72,6 +78,7 @@ export default {
       showNav: true,
       scrollFn: () => {},
       notMobile: !/Mobile/i.test(navigator.userAgent),
+      isDark: !!localStorage.PXV_DARK,
     }
   },
   mounted() {
@@ -89,6 +96,9 @@ export default {
     this.notMobile && removeEventListener('scroll', this.scrollFn)
   },
   methods: {
+    isActive(name) {
+      return this.$route.name.startsWith(name)
+    },
     scrollToTop() {
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
     },
