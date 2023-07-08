@@ -64,7 +64,7 @@ import api from '@/api'
 import { LocalStorage } from '@/utils/storage'
 import { sleep } from '@/utils'
 
-const imgResSel = LocalStorage.get('PXV_DTL_IMG_RES', 'Medium')
+const imgResSel = LocalStorage.get('PXV_DTL_IMG_RES', 'Large')
 export default {
   props: {
     artwork: {

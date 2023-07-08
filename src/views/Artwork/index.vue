@@ -16,9 +16,8 @@
           <ImageView ref="imgView" :artwork="artwork" :lazy="true" @open-download="ugoiraDownloadPanelShow = true" />
         </div>
         <div class="ia-right">
-          <van-skeleton class="skeleton" title avatar :row="5" avatar-size="42px" :loading="loading">
-            <ArtworkMeta ref="artworkMeta" :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
-          </van-skeleton>
+          <van-skeleton v-show="loading" class="skeleton" title avatar :row="5" avatar-size="42px" :loading="true" />
+          <ArtworkMeta ref="artworkMeta" :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
           <keep-alive>
             <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
           </keep-alive>
@@ -354,6 +353,7 @@ img[src*="/api/qrcode?text"]
         height auto
         max-height 96vh
         margin 0 auto
+        border-radius 5px
 
   .ia-right
     max-width 28%
@@ -378,6 +378,7 @@ img[src*="/api/qrcode?text"]
     ::v-deep .image
       max-width: 100% !important
       max-height: 90vh !important
+      border-radius 0 !important
 
   .ia-right
     max-width unset !important

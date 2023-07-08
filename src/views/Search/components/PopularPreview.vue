@@ -2,7 +2,9 @@
   <div class="rank-card">
     <van-cell class="cell" :border="false">
       <template #title>
-        <Icon class="icon" name="popular" />
+        <span class="search_popular_icon">
+          <Icon class="icon " name="popular" />
+        </span>
         <span class="title">{{ $t('search.pop_preview') }}</span>
       </template>
     </van-cell>
