@@ -56,7 +56,7 @@ export default {
 
         this.loading = false
         this.curPage++
-        if (this.curPage > 5) this.finished = true
+        if (!res.data?.length) this.finished = true
       } else {
         this.$toast({
           message: res.msg,
