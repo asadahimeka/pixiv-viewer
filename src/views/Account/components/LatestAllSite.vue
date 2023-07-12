@@ -54,7 +54,7 @@ export default {
         this.lastId = res.data._lastId || 0
         this.loading = false
         this.curPage++
-        if (this.curPage > 10) this.finished = true
+        if (!res.data?.length) this.finished = true
       } else {
         this.$toast({
           message: res.msg,
