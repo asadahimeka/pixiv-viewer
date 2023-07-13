@@ -1,7 +1,7 @@
 <template>
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
-    <h3 class="af_title">{{ $t('setting.other.title') }}</h3>
+    <h3 class="af_title" @dblclick="hideApSelect=false">{{ $t('setting.other.title') }}</h3>
     <van-cell center :title="$t('setting.other.lang')" is-link :label="lang.value" @click="lang.show = true" />
     <van-cell center :title="$t('setting.dark.title')" :label="$t('setting.lab.title')">
       <template #right-icon>
@@ -15,11 +15,11 @@
     </van-cell>
     <van-cell center :title="$t('setting.layout.title')" is-link :label="wfType.value" @click="wfType.show = true" />
     <van-cell center :title="$t('setting.img_res.title')" is-link :label="imgRes.value" @click="imgRes.show = true" />
-    <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
+    <!-- <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
       <template #right-icon>
         <van-switch v-model="hideApSelect" size="24" />
       </template>
-    </van-cell>
+    </van-cell> -->
     <van-cell v-if="hideApSelect" center :title="$t('setting.img_proxy.title')" is-link :label="pximgBed.value" @click="pximgBed.show = true" />
     <van-cell v-if="!appConfig.useLocalAppApi && hideApSelect" center :title="$t('setting.api.title')" is-link :label="hibiapi.value" @click="hibiapi.show = true" />
     <van-cell v-if="!hideApSelect" center :title="$t('setting.img_proxy.title2')" is-link :label="pximgBedLabel" @click="pximgBed_.show = true" />
@@ -210,7 +210,8 @@ export default {
       },
       pximgChecked: true,
       apiChecked: true,
-      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
+      // hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
+      hideApSelect: true,
       isDark: !!localStorage.getItem('PXV_DARK'),
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
     }
@@ -223,18 +224,18 @@ export default {
       return this.hibiapi_.actions.find(e => e._value == this.hibiapi_.value)?.name || ''
     },
   },
-  watch: {
-    hideApSelect(val) {
-      LocalStorage.set('__HIDE_AP_SEL', val)
-      if (val) {
-        LocalStorage.set('HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI_MAIN)
-        LocalStorage.set('PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG_MAIN)
-      }
-      setTimeout(() => {
-        location.reload()
-      }, 500)
-    },
-  },
+  // watch: {
+  //   hideApSelect(val) {
+  //     LocalStorage.set('__HIDE_AP_SEL', val)
+  //     if (val) {
+  //       LocalStorage.set('HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI_MAIN)
+  //       LocalStorage.set('PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG_MAIN)
+  //     }
+  //     setTimeout(() => {
+  //       location.reload()
+  //     }, 500)
+  //   },
+  // },
   methods: {
     copyToken() {
       const t = this.appConfig.refreshToken
