@@ -122,6 +122,17 @@
               @onCilck="showSub('manga')"
             />
           </van-tab>
+          <van-tab v-if="userInfo.illust_series > 0" name="illust_series">
+            <template #title>
+              <span>{{ $t('iAH7adsXaqWMXEi3TOuwS') }}({{ $t('common.manga') }})</span>
+              <van-tag mark color="#cdeefe" text-color="#0b6aaf">{{ userInfo.illust_series }}</van-tag>
+            </template>
+            <AuthorIllustSeries
+              v-if="activeTab == 'illust_series' && userInfo.id && userInfo.illust_series > 0"
+              :id="userInfo.id"
+              key="illust_series"
+            />
+          </van-tab>
           <van-tab v-if="userInfo.novels > 0" name="novel">
             <template #title>
               <span>{{ $t('common.novel') }}</span>
@@ -136,6 +147,17 @@
               :show-title="false"
               :not-from-artwork="notFromArtwork"
               @onCilck="showSub('novel')"
+            />
+          </van-tab>
+          <van-tab v-if="userInfo.novel_series > 0" name="novel_series">
+            <template #title>
+              <span>{{ $t('iAH7adsXaqWMXEi3TOuwS') }}({{ $t('common.novel') }})</span>
+              <van-tag mark color="#cdeefe" text-color="#0b6aaf">{{ userInfo.novel_series }}</van-tag>
+            </template>
+            <AuthorNovelSeries
+              v-if="activeTab == 'novel_series' && userInfo.id && userInfo.novel_series > 0"
+              :id="userInfo.id"
+              key="novel_series"
             />
           </van-tab>
           <van-tab v-if="userInfo.bookmarks > 0" name="favorite">
@@ -184,6 +206,8 @@
 <script>
 import TopBar from '@/components/TopBar'
 import AuthorIllusts from './components/AuthorIllusts'
+import AuthorIllustSeries from './components/AuthorIllustSeries'
+import AuthorNovelSeries from './components/AuthorNovelSeries.vue'
 import FavoriteIllusts from './components/FavoriteIllusts'
 import RecommUser from '../Search/components/RecommUser.vue'
 import AuthorNovels from './components/AuthorNovels.vue'
@@ -208,6 +232,8 @@ export default {
     AuthorNovels,
     FavoriteNovels,
     RecommUser,
+    AuthorIllustSeries,
+    AuthorNovelSeries,
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {

@@ -36,6 +36,8 @@ import UserIllusts from '@/views/Users/AuthorIllustsFull.vue'
 import UserNovels from '@/views/Users/AuthorNovelsFull.vue'
 import UserFavorites from '@/views/Users/FavoriteIllustsFull.vue'
 import UserFavoriteNovels from '@/views/Users/FavoriteNovelsFull.vue'
+import IllustSeries from '@/views/Users/IllustSeries.vue'
+import NovelSeries from '@/views/Users/NovelSeries.vue'
 import Session from '@/views/Account/Session.vue'
 import Login from '@/views/Account/Login.vue'
 import OAuthCallback from '@/views/Account/OAuthCallback.vue'
@@ -162,6 +164,16 @@ const routes = [
             path: '/users/:id/favorite_novels',
             name: 'AuthorFavoriteNovels',
             component: UserFavoriteNovels,
+          },
+          {
+            path: '/user/:uid/series/:sid',
+            name: 'IllustSeries',
+            component: IllustSeries,
+          },
+          {
+            path: '/novel/series/:id',
+            name: 'NovelSeries',
+            component: NovelSeries,
           },
           {
             path: '/search_user/:word',

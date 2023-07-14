@@ -114,6 +114,7 @@ const parseIllust = data => {
     illust_ai_type,
     type,
     is_bookmarked: data.is_bookmarked,
+    series: data.series,
   }
 
   return artwork
@@ -732,10 +733,9 @@ const api = {
     let spotlights = await getCache(cacheKey)
 
     if (!spotlights) {
-      let url = 'https://www.pixivs.cn/api/pixivision'
+      const url = 'https://now.pixiv.pics/api/pixivision'
       const params = { page }
       if (lang != 'zh-Hans') {
-        url = 'https://now.pixiv.pics/api/pixivision'
         params.lang = lang
       }
       const res = await get(url, params)
@@ -844,10 +844,9 @@ const api = {
     let spotlight = await getCache(cacheKey)
 
     if (!spotlight) {
-      let domain = 'www.pixivs.cn'
+      const domain = 'now.pixiv.pics'
       const params = {}
       if (lang != 'zh-Hans') {
-        domain = 'now.pixiv.pics'
         params.lang = lang
       }
       const res = await get(`https://${domain}/api/pixivision/${id}`, params)
@@ -892,7 +891,7 @@ const api = {
     let rankList = await getCache(cacheKey)
 
     if (!rankList) {
-      const res = await get('https://www.pixivs.cn/api/ranking', {
+      const res = await get('https://now.pixiv.pics/api/ranking', {
         format: 'json',
         p: page,
         mode,
@@ -919,7 +918,7 @@ const api = {
     let rankList = await getCache(cacheKey)
 
     if (!rankList) {
-      const domain = mode.includes('r18') ? 'now.pixiv.pics' : 'www.pixivs.cn'
+      const domain = 'now.pixiv.pics'
       const res = await get(`https://${domain}/api/ranking`, {
         format: 'json',
         p: page,
@@ -1303,6 +1302,114 @@ const api = {
     }
 
     return { status: 0, data: filterCensoredIllusts(memberArtwork) }
+  },
+
+  async getMemberIllustSeries(id) {
+    const cacheKey = `member_illust_series_${id}`
+    let memberArtwork = await getCache(cacheKey)
+
+    if (!memberArtwork) {
+      const res = await get('/member_illust_series', { id })
+
+      if (res.illust_series_details) {
+        res.illust_series_details.forEach(e => { e.cover_image_urls.medium = imgProxy(e.cover_image_urls.medium) })
+        memberArtwork = res.illust_series_details
+        setCache(cacheKey, memberArtwork, 60 * 60 * 24)
+      } else if (res.error) {
+        return {
+          status: -1,
+          msg: dealErrMsg(res),
+        }
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    return { status: 0, data: memberArtwork }
+  },
+
+  async getIllustSeries(id) {
+    const cacheKey = `illust_series_${id}`
+    let data = await getCache(cacheKey)
+
+    if (!data) {
+      const res = await get('/illust_series', { id })
+
+      if (res.illusts) {
+        data = res.illusts.map(art => parseIllust(art))
+        data.detail = res.illust_series_detail
+        data.detail.cover = imgProxy(res.illust_series_detail.cover_image_urls.medium)
+        setCache(cacheKey, data, 60 * 60 * 12)
+      } else if (res.error) {
+        return {
+          status: -1,
+          msg: dealErrMsg(res),
+        }
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    return { status: 0, data }
+  },
+
+  async getMemberNovelSeries(id) {
+    const cacheKey = `member_novel_series_${id}`
+    let memberArtwork = await getCache(cacheKey)
+
+    if (!memberArtwork) {
+      const res = await get('/member_novel_series', { id })
+
+      if (res.novel_series_details) {
+        memberArtwork = res.novel_series_details
+        setCache(cacheKey, memberArtwork, 60 * 60 * 24)
+      } else if (res.error) {
+        return {
+          status: -1,
+          msg: dealErrMsg(res),
+        }
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    return { status: 0, data: memberArtwork }
+  },
+
+  async getNovelSeries(id) {
+    const cacheKey = `novel_series_${id}`
+    let data = await getCache(cacheKey)
+
+    if (!data) {
+      const res = await get('/novel_series', { id })
+
+      if (res.novels) {
+        data = res.novels.map(art => parseNovel(art))
+        data.detail = res.novel_series_detail
+        setCache(cacheKey, data, 60 * 60 * 12)
+      } else if (res.error) {
+        return {
+          status: -1,
+          msg: dealErrMsg(res),
+        }
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    return { status: 0, data }
   },
 
   async getMemberNovel(id, page = 1) {

@@ -147,8 +147,8 @@ export default {
       isHelperInst: !!window.__httpRequest__,
       apiProxySel: {
         show: false,
-        actions: APP_API_PROXYS.split(',').map(name => {
-          return { name }
+        actions: APP_API_PROXYS.split(',').map((_value, i) => {
+          return { name: `Proxy ${i}`, _value }
         }),
       },
       pximgBed: {
@@ -296,9 +296,9 @@ export default {
       delete this.appConfig.apiHosts
       await this.saveConfig()
     },
-    async changeApiProxy({ name }) {
-      this.appConfig.apiProxy = name
-      window.umami?.track('set_api_proxy', { name })
+    async changeApiProxy({ _value }) {
+      this.appConfig.apiProxy = _value
+      window.umami?.track('set_api_proxy', { _value })
       await this.saveConfig()
     },
     async changePximgBed() {

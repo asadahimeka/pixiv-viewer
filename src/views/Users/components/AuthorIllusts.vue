@@ -116,7 +116,7 @@ export default {
 
         this.loading = false
         this.curPage++
-        if (this.once || !newList.length || this.curPage > 20) this.finished = true
+        if (this.once || !newList.length) this.finished = true
       } else {
         this.$toast({
           message: res.msg,

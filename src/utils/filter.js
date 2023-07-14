@@ -2,8 +2,8 @@ import Mint from 'mint-filter'
 import store, { blockTags, blockUids } from '@/store'
 import { getCache, setCache } from './siteCache'
 
-const re1 = /漫画|描き方|お絵かきTIPS|manga|BL/
-const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐/
+const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵/
+const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐|スカラマシュ|散兵/
 
 const blockedUserIds = [24517, 14002767, 16776564, 33333, 423251, 27526, 13150573]
 export function filterHomeIllust(e) {
