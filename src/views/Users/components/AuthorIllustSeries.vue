@@ -1,27 +1,35 @@
 <template>
   <div class="series">
-    <masonry v-bind="masonryProps">
-      <div v-for="s in artList" :key="s.id" class="series-cont" @click="toArtwork(s.id)">
-        <img class="series-bg" :src="s.cover_image_urls.medium" alt="">
-        <div class="series-title">
-          <p>
-            <span>{{ s.title }}</span>
-            <van-tag color="#ffe1e1" text-color="#ad0000" style="vertical-align: 0.06rem;">
-              {{ s.series_work_count }}
-            </van-tag>
-          </p>
-          <p class="series-caption">{{ s.caption }}</p>
+    <van-list
+      v-model="loading"
+      :loading-text="$t('tips.loading')"
+      :finished="finished"
+      :finished-text="$t('tips.no_more')"
+      :error.sync="error"
+      :offset="800"
+      :error-text="$t('tips.net_err')"
+      @load="getMemberArtwork()"
+    >
+      <masonry v-bind="masonryProps">
+        <div v-for="s in artList" :key="s.id" class="series-cont" @click="toArtwork(s.id)">
+          <img class="series-bg" :src="s.cover_image_urls.medium" alt="">
+          <div class="series-title">
+            <p>
+              <span>{{ s.title }}</span>
+              <van-tag color="#ffe1e1" text-color="#ad0000" style="vertical-align: 0.06rem;">
+                {{ s.series_work_count }}
+              </van-tag>
+            </p>
+            <p class="series-caption">{{ s.caption }}</p>
+          </div>
         </div>
-      </div>
-    </masonry>
-    <div class="flex-c">
-      <van-loading v-show="loading" class="loading" :size="'50px'" style="margin-top: 1rem;" />
-      <van-empty v-if="!loading && !artList.length" :description="$t('tips.no_data')" />
-    </div>
+      </masonry>
+    </van-list>
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import api from '@/api'
 
 export default {
@@ -34,8 +42,11 @@ export default {
   },
   data() {
     return {
+      curPage: 1,
       artList: [],
+      error: false,
       loading: false,
+      finished: false,
       masonryProps: {
         gutter: '8px',
         cols: {
@@ -46,24 +57,30 @@ export default {
       },
     }
   },
-  mounted() {
-    this.getMemberArtwork()
-  },
   methods: {
-    getMemberArtwork: async function () {
+    getMemberArtwork: _.throttle(async function () {
       if (!this.id) return
       this.loading = true
-      this.artList = []
-      const res = await api.getMemberIllustSeries(this.id)
+      const res = await api.getMemberIllustSeries(this.id, this.curPage)
       if (res.status === 0) {
-        this.artList = res.data
+        this.artList = _.uniqBy([
+          ...this.artList,
+          ...res.data,
+        ], 'id')
+        this.loading = false
+        if (res.data.next) {
+          this.curPage++
+        } else {
+          this.finished = true
+        }
       } else {
         this.$toast({
           message: res.msg,
         })
+        this.loading = false
+        this.error = true
       }
-      this.loading = false
-    },
+    }, 1500),
     toArtwork(id) {
       this.$router.push(`/user/${this.id}/series/${id}`)
     },
@@ -73,6 +90,7 @@ export default {
 
 <style lang="stylus" scoped>
 .series
+  padding 0 20px
   &-cont
     position relative
     width: 100%

@@ -2,34 +2,44 @@
   <div class="HomeRecommIllust illusts">
     <top-bar />
     <h3 class="af_title">{{ $t('iAH7adsXaqWMXEi3TOuwS') }}({{ $t('common.manga') }})</h3>
-    <template v-if="artList.detail">
-      <img class="ss-cover" :src="artList.detail.cover" alt="">
+    <template v-if="detail">
+      <img class="ss-cover" :src="detail.cover" alt="">
       <p class="ss-title">
-        {{ artList.detail.title }}
+        {{ detail.title }}
         <van-tag color="#ffe1e1" text-color="#ad0000" style="vertical-align: 0.06rem;">
-          {{ artList.detail.series_work_count }}
+          {{ detail.series_work_count }}
         </van-tag>
       </p>
-      <p class="ss-author"><i>by</i> {{ artList.detail.user.name }}</p>
-      <p class="ss-caption">{{ artList.detail.caption }}</p>
+      <p class="ss-author"><i>by</i> {{ detail.user.name }}</p>
+      <p class="ss-caption">{{ detail.caption }}</p>
     </template>
-    <wf-cont layout="Grid">
-      <ImageCard
-        v-for="(art, i) in artList"
-        :key="art.id"
-        :index="artList.length - i"
-        mode="all"
-        square
-        :artwork="art"
-        @click-card="toArtwork($event)"
-      />
-    </wf-cont>
-    <van-loading v-show="loading" class="loading" :size="'50px'" />
-    <van-empty v-if="!loading && !artList.length" :description="$t('tips.no_data')" />
+    <van-list
+      v-model="loading"
+      :loading-text="$t('tips.loading')"
+      :finished="finished"
+      :finished-text="$t('tips.no_more')"
+      :error.sync="error"
+      :offset="800"
+      :error-text="$t('tips.net_err')"
+      @load="getArtList()"
+    >
+      <wf-cont layout="Grid">
+        <ImageCard
+          v-for="(art, i) in artList"
+          :key="art.id"
+          :index="getIndex(i)"
+          mode="all"
+          square
+          :artwork="art"
+          @click-card="toArtwork($event)"
+        />
+      </wf-cont>
+    </van-list>
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import TopBar from '@/components/TopBar'
 import ImageCard from '@/components/ImageCard'
 import api from '@/api'
@@ -42,25 +52,32 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      curPage: 1,
       artList: [],
-      series: {},
+      error: false,
+      loading: false,
+      finished: false,
+      detail: null,
     }
   },
   watch: {
     $route() {
       if (
         this.$route.name == 'IllustSeries' &&
-        this.$route.params.sid != this.artList.detail.id
+        this.$route.params.sid != this.detail?.id
       ) {
+        this.curPage = 1
+        this.artList = []
+        this.detail = null
         this.getArtList()
       }
     },
   },
-  created() {
-    this.getArtList()
-  },
   methods: {
+    getIndex(i) {
+      const len = this.detail?.series_work_count
+      return len ? len - i : 0
+    },
     toArtwork(id) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
@@ -68,22 +85,33 @@ export default {
         params: { id },
       })
     },
-    async getArtList() {
+    getArtList: _.throttle(async function () {
       const { sid } = this.$route.params
       if (!sid) return
       this.loading = true
-      this.artList = []
-      const res = await api.getIllustSeries(sid)
+      const res = await api.getIllustSeries(sid, this.curPage)
       if (res.status === 0) {
-        this.artList = res.data
+        this.artList = _.uniqBy([
+          ...this.artList,
+          ...res.data,
+        ], 'id')
+
+        this.detail = res.data.detail
+        this.loading = false
+        if (res.data.next) {
+          this.curPage++
+        } else {
+          this.finished = true
+        }
       } else {
         this.$toast({
           message: res.msg,
           icon: require('@/icons/error.svg'),
         })
+        this.loading = false
+        this.error = true
       }
-      this.loading = false
-    },
+    }, 1500),
   },
 }
 </script>
@@ -98,7 +126,7 @@ export default {
 
 .illusts
   position relative
-  padding-bottom 40px
+  padding 0 20px 40px
 
   .ss-cover
     display block

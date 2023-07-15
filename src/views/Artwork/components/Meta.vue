@@ -4,9 +4,6 @@
     <div class="mask">
       <canvas ref="mask" class="mask-text"></canvas>
     </div>
-    <div v-if="!isNovel && artwork.series.id" class="series is_illust" :title="artwork.series.title">
-      <router-link :to="`/user/${artwork.author.id}/series/${artwork.series.id}`">{{ artwork.series.title }}</router-link>
-    </div>
     <div class="author-info" :class="{ is_novel: isNovel }">
       <img
         v-if="!isNovel"
@@ -16,10 +13,13 @@
         @click="toAuthor(artwork.author.id)"
       >
       <div class="name-box">
-        <div v-if="isNovel && artwork.series.id" class="series">
+        <div v-if="isNovel && artwork.series && artwork.series.id" class="series">
           <router-link :to="`/novel/series/${artwork.series.id}`">{{ artwork.series.title }}</router-link>
         </div>
         <h2 class="title">{{ artwork.title }}</h2>
+        <div v-if="!isNovel && artwork.series && artwork.series.id" class="series is_illust" :title="artwork.series.title">
+          <router-link :to="`/user/${artwork.author.id}/series/${artwork.series.id}`">{{ artwork.series.title }}</router-link>
+        </div>
         <div class="author" @click="toAuthor(artwork.author.id)">{{ artwork.author.name }}</div>
       </div>
     </div>
@@ -442,6 +442,8 @@ export default {
       color: #faa200 !important
     }
     &.is_illust {
+      margin-top 5px
+      // margin-left 105px
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;

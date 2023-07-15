@@ -4,7 +4,7 @@
       <img v-lazy="imgSrc" :alt="artwork.title" class="image" :class="{ censored: isCensored(artwork) }">
     </div>
     <div class="meta" :class="{ censored: isCensored(artwork) }">
-      <div v-if="artwork.series.id" class="series">{{ artwork.series.title }}</div>
+      <div v-if="artwork.series && artwork.series.id" class="series">{{ artwork.series.title }}</div>
       <div class="content">
         <h2 class="title">{{ artwork.title }}</h2>
         <div class="author"><span style="color:#999">by</span>&nbsp;{{ artwork.author.name }}</div>

@@ -919,12 +919,39 @@ class PixivApi {
     return this.requestUrl(`/v2/novel/comment/replies?${queryString}`)
   }
 
-  novelSeries(id) {
+  userIllustSeries(id, options) {
+    if (!id) {
+      return Promise.reject(new Error('user_id required'))
+    }
+
+    const queryString = qs.stringify({ user_id: id, ...options })
+    return this.requestUrl(`/v1/user/illust-series?${queryString}`)
+  }
+
+  userNovelSeries(id, options) {
+    if (!id) {
+      return Promise.reject(new Error('user_id required'))
+    }
+
+    const queryString = qs.stringify({ user_id: id, ...options })
+    return this.requestUrl(`/v1/user/novel-series?${queryString}`)
+  }
+
+  illustSeries(id, options) {
+    if (!id) {
+      return Promise.reject(new Error('illust_series_id required'))
+    }
+
+    const queryString = qs.stringify({ illust_series_id: id, ...options })
+    return this.requestUrl(`/v1/illust/series?${queryString}`)
+  }
+
+  novelSeries(id, options) {
     if (!id) {
       return Promise.reject(new Error('series_id required'))
     }
 
-    const queryString = qs.stringify({ series_id: id })
+    const queryString = qs.stringify({ series_id: id, ...options })
     return this.requestUrl(`/v1/novel/series?${queryString}`)
   }
 

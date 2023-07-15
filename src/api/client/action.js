@@ -258,8 +258,28 @@ function initApp(pixiv) {
     return pixiv.novelRecommended(req.query)
   })
   app.get('/novel_series', async req => {
-    const { id } = req.query
-    return pixiv.novelSeries(id)
+    const { page = 1, size = 30, id } = req.query
+    return pixiv.novelSeries(id, {
+      last_order: (page - 1) * size,
+    })
+  })
+  app.get('/illust_series', async req => {
+    const { page = 1, size = 30, id } = req.query
+    return pixiv.illustSeries(id, {
+      offset: (page - 1) * size,
+    })
+  })
+  app.get('/member_illust_series', async req => {
+    const { page = 1, size = 30, id } = req.query
+    return pixiv.userIllustSeries(id, {
+      offset: (page - 1) * size,
+    })
+  })
+  app.get('/member_novel_series', async req => {
+    const { page = 1, size = 30, id } = req.query
+    return pixiv.userNovelSeries(id, {
+      offset: (page - 1) * size,
+    })
   })
   app.get('/novel_detail', async req => {
     const { id } = req.query

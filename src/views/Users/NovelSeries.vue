@@ -3,36 +3,46 @@
     <top-bar />
     <h3 class="af_title">{{ $t('iAH7adsXaqWMXEi3TOuwS') }}({{ $t('common.novel') }})</h3>
     <div style="max-width: 16rem;margin: 0 auto;padding: 0 0.2rem;">
-      <template v-if="artList.detail">
-        <img class="ss-cover" :src="artList.detail.cover" alt="">
+      <template v-if="detail">
+        <img class="ss-cover" :src="detail.cover" alt="">
         <p class="ss-title">
-          {{ artList.detail.title }}
+          {{ detail.title }}
         </p>
-        <p class="ss-author"><i>by</i> {{ artList.detail.user.name }}</p>
-        <p class="ss-caption">{{ artList.detail.caption }}</p>
+        <p class="ss-author"><i>by</i> {{ detail.user.name }}</p>
+        <p class="ss-caption">{{ detail.caption }}</p>
         <p style="text-align: center;margin: -0.2rem auto 0.4rem;">
           <van-tag color="#ffe1e1" text-color="#ad0000">
             <van-icon name="orders-o" style="margin-right: 2px;" />
-            {{ artList.detail.content_count }}
+            {{ detail.content_count }}
           </van-tag>
-          <van-tag color="#cdeefe" text-color="#0b6aaf">{{ artList.detail.total_character_count }}{{ $t('common.words') }}</van-tag>
+          <van-tag color="#cdeefe" text-color="#0b6aaf">{{ detail.total_character_count }}{{ $t('common.words') }}</van-tag>
         </p>
       </template>
-      <NovelCard
-        v-for="(art,i) in artList"
-        :key="art.id"
-        mode="all"
-        :index="i+1"
-        :artwork="art"
-        @click-card="toArtwork($event)"
-      />
+      <van-list
+        v-model="loading"
+        :loading-text="$t('tips.loading')"
+        :finished="finished"
+        :finished-text="$t('tips.no_more')"
+        :error.sync="error"
+        :offset="800"
+        :error-text="$t('tips.net_err')"
+        @load="getArtList()"
+      >
+        <NovelCard
+          v-for="(art,i) in artList"
+          :key="art.id"
+          mode="all"
+          :index="i+1"
+          :artwork="art"
+          @click-card="toArtwork($event)"
+        />
+      </van-list>
     </div>
-    <van-loading v-show="loading" class="loading" :size="'50px'" />
-    <van-empty v-if="!loading && !artList.length" :description="$t('tips.no_data')" />
   </div>
 </template>
 
 <script>
+import _ from 'lodash'
 import TopBar from '@/components/TopBar'
 import NovelCard from '@/components/NovelCard.vue'
 import api from '@/api'
@@ -45,23 +55,26 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      curPage: 1,
       artList: [],
-      series: {},
+      error: false,
+      loading: false,
+      finished: false,
+      detail: null,
     }
   },
   watch: {
     $route() {
       if (
         this.$route.name == 'NovelSeries' &&
-        this.$route.params.id != this.artList.detail.id
+        this.$route.params.id != this.detail?.id
       ) {
+        this.curPage = 1
+        this.artList = []
+        this.detail = null
         this.getArtList()
       }
     },
-  },
-  created() {
-    this.getArtList()
   },
   methods: {
     toArtwork(id) {
@@ -70,22 +83,33 @@ export default {
         params: { id },
       })
     },
-    async getArtList() {
+    getArtList: _.throttle(async function () {
       const { id } = this.$route.params
       if (!id) return
       this.loading = true
-      this.artList = []
-      const res = await api.getNovelSeries(id)
+      const res = await api.getNovelSeries(id, this.curPage)
       if (res.status === 0) {
-        this.artList = res.data
+        this.artList = _.uniqBy([
+          ...this.artList,
+          ...res.data,
+        ], 'id')
+
+        this.detail = res.data.detail
+        this.loading = false
+        if (res.data.next) {
+          this.curPage++
+        } else {
+          this.finished = true
+        }
       } else {
         this.$toast({
           message: res.msg,
           icon: require('@/icons/error.svg'),
         })
+        this.loading = false
+        this.error = true
       }
-      this.loading = false
-    },
+    }, 1500),
   },
 }
 </script>
@@ -100,7 +124,7 @@ export default {
 
 .illusts
   position relative
-  padding-bottom 40px
+  padding 0 20px 40px
 
   ::v-deep .novel-card
     .series, .img-cont, .author
