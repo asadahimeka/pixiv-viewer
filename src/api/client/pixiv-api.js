@@ -952,7 +952,7 @@ class PixivApi {
     }
 
     const queryString = qs.stringify({ series_id: id, ...options })
-    return this.requestUrl(`/v1/novel/series?${queryString}`)
+    return this.requestUrl(`/v2/novel/series?${queryString}`)
   }
 
   novelDetail(id) {

@@ -148,7 +148,7 @@ export default {
     },
     paddingBottom(artwork) {
       const pb = artwork.height / artwork.width * 100
-      if (pb < 45) return '45%'
+      if (pb < 50) return '50%'
       if (pb > 160) return '160%'
       return pb.toFixed(2) + '%'
     },

@@ -464,6 +464,10 @@ export default {
       margin-right: 18px;
     }
 
+    &:not(.is_novel) .name-box {
+      max-width calc(100% - 90px)
+    }
+
     .name-box {
       height: 100%;
       // white-space: nowrap;
@@ -551,6 +555,7 @@ export default {
   .whid {
     display flex
     align-items center
+    flex-wrap wrap
     margin 16px 0 -4px
     font-size 20px
     color #7c8f99

@@ -23,20 +23,6 @@
     />
     <van-cell
       center
-      title="Pixivic"
-      is-link
-      label="https://pixivic.com"
-      @click="openLink('https://pixivic.com')"
-    />
-    <van-cell
-      center
-      title="vilipix"
-      is-link
-      label="https://www.vilipix.com/ranking"
-      @click="openLink('https://www.vilipix.com/ranking')"
-    />
-    <van-cell
-      center
       title="pixiv年鑑(β)"
       is-link
       label="https://pixiv.navirank.com/"

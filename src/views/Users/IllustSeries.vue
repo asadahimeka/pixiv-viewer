@@ -68,6 +68,8 @@ export default {
       ) {
         this.curPage = 1
         this.artList = []
+        this.error = false
+        this.finished = false
         this.detail = null
         this.getArtList()
       }

@@ -4,7 +4,6 @@
     <h3 class="af_title">{{ $t('iAH7adsXaqWMXEi3TOuwS') }}({{ $t('common.novel') }})</h3>
     <div style="max-width: 16rem;margin: 0 auto;padding: 0 0.2rem;">
       <template v-if="detail">
-        <img class="ss-cover" :src="detail.cover" alt="">
         <p class="ss-title">
           {{ detail.title }}
         </p>
@@ -71,6 +70,8 @@ export default {
       ) {
         this.curPage = 1
         this.artList = []
+        this.error = false
+        this.finished = false
         this.detail = null
         this.getArtList()
       }
