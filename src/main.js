@@ -5,22 +5,22 @@ import '@vant/touch-emulator'
 import './polyfill'
 import './registerServiceWorker'
 
+import { init } from 'console-ban'
+import Vant, { Dialog, ImagePreview, Lazyload, Notify, Toast } from 'vant'
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMasonry from 'vue-masonry-css'
-import Vant, { Toast, Lazyload, ImagePreview, Dialog, Notify } from 'vant'
-import { init } from 'console-ban'
 
-import SvgIcon from '@/icons'
-import ImageLayout from './components/ImageLayout.vue'
-import TopBar from '@/components/TopBar'
 import App from './App.vue'
+import { getActionMap } from './api/client/action'
+import ImageLayout from './components/ImageLayout.vue'
+import TopBar from './components/TopBar'
+import { i18n } from './i18n'
+import SvgIcon from './icons'
 import router from './router'
 import store from './store'
-import { i18n } from './i18n'
-import { LocalStorage } from '@/utils/storage'
-import { getActionMap } from '@/api/client/action'
 import { initBookmarkCache } from './utils/siteCache'
+import { LocalStorage } from './utils/storage'
 
 setupApp()
 
@@ -128,6 +128,9 @@ async function checkBrowser() {
 // }
 
 async function checkSetting() {
+  if (location.href.includes('pixiv.pics')) {
+    return true
+  }
   let flag = false
   const setting = LocalStorage.get('PXV_CNT_SHOW', {})
   const isOn = () => LocalStorage.get('PXV_NSFW_ON', null)

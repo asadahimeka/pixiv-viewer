@@ -35,7 +35,7 @@
           <van-switch :value="appConfig.useApiProxy" :disabled="appConfig.directMode" size="24" @change="setUseApiProxy" />
         </template>
       </van-cell>
-      <van-cell v-if="appConfig.useApiProxy" center :title="$t('setting.other.api_proxy.title')" is-link :label="appConfig.apiProxy||$t('setting.other.api_proxy.def_ph')" @click="apiProxySel.show = true" />
+      <van-cell v-if="appConfig.useApiProxy" center :title="$t('setting.other.api_proxy.title')" is-link :label="apiProxyLabel||$t('setting.other.api_proxy.def_ph')" @click="apiProxySel.show = true" />
       <!-- <van-cell v-if="appConfig.directMode" center :title="$t('setting.other.direct_mode.host.title')" is-link :label="$t('setting.other.direct_mode.host.label')" @click="clearApiHosts" /> -->
       <van-cell v-if="appConfig.refreshToken" center :title="$t('setting.other.cp_token_title')" is-link :label="$t('setting.other.cp_token_label')" @click="copyToken" />
     </template>
@@ -125,13 +125,13 @@
 
 <script>
 import { Dialog } from 'vant'
-import { i18n } from '@/i18n'
-import localDb from '@/utils/localDb'
-import { LocalStorage, SessionStorage } from '@/utils/storage'
-import { getCache, setCache } from '@/utils/siteCache'
-import { mintVerify } from '@/utils/filter'
-import { isURL, checkImgAvailable, checkUrlAvailable, copyText } from '@/utils'
 import PixivAuth from '@/api/client/pixiv-auth'
+import { i18n } from '@/i18n'
+import { checkImgAvailable, checkUrlAvailable, copyText, isURL } from '@/utils'
+import { mintVerify } from '@/utils/filter'
+import localDb from '@/utils/localDb'
+import { getCache, setCache } from '@/utils/siteCache'
+import { LocalStorage, SessionStorage } from '@/utils/storage'
 
 const PXIMG_PROXYS = process.env.VUE_APP_PXIMG_PROXYS || ''
 const HIBIAPI_ALTS = process.env.VUE_APP_HIBIAPI_ALTS || ''
@@ -222,6 +222,9 @@ export default {
     },
     hibiapiLabel() {
       return this.hibiapi_.actions.find(e => e._value == this.hibiapi_.value)?.name || ''
+    },
+    apiProxyLabel() {
+      return this.appConfig.apiProxy?.split?.('.')?.[0]
     },
   },
   // watch: {
