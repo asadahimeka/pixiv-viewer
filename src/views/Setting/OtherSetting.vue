@@ -148,7 +148,7 @@ export default {
       apiProxySel: {
         show: false,
         actions: APP_API_PROXYS.split(',').map((_value, i) => {
-          return { name: _value?.split?.('.')?.[0] || `Proxy ${i}`, _value }
+          return { name: `Proxy ${i}`, _value }
         }),
       },
       pximgBed: {
@@ -224,7 +224,7 @@ export default {
       return this.hibiapi_.actions.find(e => e._value == this.hibiapi_.value)?.name || ''
     },
     apiProxyLabel() {
-      return this.appConfig.apiProxy?.split?.('.')?.[0]
+      return this.apiProxySel.actions.find(e => e._value == this.appConfig.apiProxy)?.name || ''
     },
   },
   // watch: {

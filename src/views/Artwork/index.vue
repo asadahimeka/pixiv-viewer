@@ -16,8 +16,9 @@
           <ImageView ref="imgView" :artwork="artwork" :lazy="true" @open-download="ugoiraDownloadPanelShow = true" />
         </div>
         <div class="ia-right">
-          <van-skeleton v-show="loading" class="skeleton" title avatar :row="5" avatar-size="42px" :loading="true" />
-          <ArtworkMeta ref="artworkMeta" :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
+          <van-skeleton class="skeleton" title avatar :row="5" row-width="200px" avatar-size="42px" :loading="loading">
+            <ArtworkMeta ref="artworkMeta" :artwork="artwork" @ugoira-download="showUgPanelFromDlBtn" />
+          </van-skeleton>
           <keep-alive>
             <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
           </keep-alive>
@@ -125,7 +126,7 @@ export default {
   },
   data() {
     return {
-      loading: false,
+      loading: true,
       artwork: {},
       ugoiraDownloadPanelShow: false,
       ugoiraDownloadPanelActions,
