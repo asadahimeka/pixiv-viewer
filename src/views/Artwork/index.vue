@@ -301,7 +301,7 @@ img[src*="/api/qrcode?text"]
     top: 0.9rem;
     right 0.5rem;
     z-index: 99;
-    font-size 2.6em
+    font-size 0.675rem
     cursor pointer
     .svg-icon
       color: #fafafa;

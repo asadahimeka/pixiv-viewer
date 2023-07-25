@@ -2,7 +2,7 @@
   <div class="top-bar-wrap">
     <van-nav-bar class="top-bar" left-arrow :border="false" @click-left="back">
       <template #left>
-        <Icon name="left-arrow" scale="2.6" />
+        <Icon name="left-arrow" />
       </template>
     </van-nav-bar>
   </div>
@@ -50,7 +50,7 @@ export default {
   background: rgba(#000, 0);
 
   svg {
-    font-size: 22px;
+    font-size: 0.675rem;
     color: #fafafa;
     filter: drop-shadow(2px 4px 4px rgba(#000, 0.8));
   }

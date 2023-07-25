@@ -18,7 +18,7 @@ const langMap = {
   'zh-CN': 'zh-Hans',
   'zh-TW': 'zh-Hant',
   'zh-HK': 'zh-Hant',
-  'zh-MO': 'zh-Hans',
+  'zh-MO': 'zh-Hant',
   'zh-SG': 'zh-Hans',
   'ja': 'ja',
   'ja-JP': 'ja',

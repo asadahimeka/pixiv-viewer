@@ -39,8 +39,8 @@
       center
       title="Pixivel Kai"
       is-link
-      label="https://pixivel.kanata.ml"
-      @click="openLink('https://pixivel.kanata.ml')"
+      label="https://pxelk.pixiv.pics"
+      @click="openLink('https://pxelk.pixiv.pics')"
     />
     <van-cell
       center
@@ -67,15 +67,15 @@
       center
       title="Moeview"
       is-link
-      label="https://moeview.kanata.ml"
-      @click="openLink('https://moeview.kanata.ml')"
+      label="https://moeview.pixiv.pics"
+      @click="openLink('https://moeview.pixiv.pics')"
     />
     <van-cell
       center
       title="Booru Masonry"
       is-link
-      label="https://booru.kanata.ml"
-      @click="openLink('https://booru.kanata.ml')"
+      label="https://booru.pixiv.pics"
+      @click="openLink('https://booru.pixiv.pics')"
     />
     <van-cell
       center

@@ -299,7 +299,7 @@ export default {
     async toggleFollow() {
       this.favLoading = true
       if (this.isFollowed) {
-        const isOk = localApi.userFollowDelete(this.userInfo.id)
+        const isOk = await localApi.userFollowDelete(this.userInfo.id)
         this.favLoading = false
         if (isOk) {
           this.userInfo.is_followed = false
@@ -308,7 +308,7 @@ export default {
           this.$toast(this.$t('user.unfollow_fail'))
         }
       } else {
-        const isOk = localApi.userFollowAdd(this.userInfo.id)
+        const isOk = await localApi.userFollowAdd(this.userInfo.id)
         this.favLoading = false
         if (isOk) {
           this.userInfo.is_followed = true

@@ -61,8 +61,8 @@ Download: ⏬ [App Center](https://install.appcenter.ms/users/yumine/apps/pixiv-
 - [PIXID](https://pixid.top/ranking.php)
 - [pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
-- [moeview](https://moeview.kanata.ml)
-- [booruwf](https://booru.kanata.ml)
+- [moeview](https://moeview.pixiv.pics)
+- [booruwf](https://booru.pixiv.pics)
 - [Ranking](https://www.nanoka.top/illust/pixiv/)
 
 ## Project setup
