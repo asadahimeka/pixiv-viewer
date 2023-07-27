@@ -48,7 +48,11 @@ export default {
     }
   },
   mounted() {
-    this.init()
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.init()
+      })
+    })
   },
   methods: {
     toUserPage(id) {

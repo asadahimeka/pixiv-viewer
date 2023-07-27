@@ -13,6 +13,11 @@
         <van-switch :value="enableSwipe" size="24" @change="changeEnableSwipe" />
       </template>
     </van-cell>
+    <van-cell center :title="$t('eioSClGw9BqryzojTwr8j')" :label="$t('setting.lab.title')">
+      <template #right-icon>
+        <van-switch :value="isPageEffectOn" size="24" @change="changePageEffect" />
+      </template>
+    </van-cell>
     <van-cell center :title="$t('setting.layout.title')" is-link :label="wfType.value" @click="wfType.show = true" />
     <van-cell center :title="$t('setting.img_res.title')" is-link :label="imgRes.value" @click="imgRes.show = true" />
     <!-- <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
@@ -214,6 +219,7 @@ export default {
       hideApSelect: true,
       isDark: !!localStorage.getItem('PXV_DARK'),
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
+      isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', true),
     }
   },
   computed: {
@@ -384,6 +390,15 @@ export default {
       this.enableSwipe = val
       this.$nextTick(() => {
         LocalStorage.set('PXV_IMG_DTL_SWIPE', val)
+        setTimeout(() => {
+          location.reload()
+        }, 500)
+      })
+    },
+    changePageEffect(val) {
+      this.isPageEffectOn = val
+      this.$nextTick(() => {
+        LocalStorage.set('PXV_PAGE_EFFECT', val)
         setTimeout(() => {
           location.reload()
         }, 500)

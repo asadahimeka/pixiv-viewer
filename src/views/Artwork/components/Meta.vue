@@ -324,6 +324,7 @@ export default {
       })
     },
     toSearch(keyword) {
+      keyword = encodeURIComponent(keyword)
       this.$router.push(this.isNovel ? `/search_novel/${keyword}` : `/search/${keyword}`)
     },
     async downloadArtwork() {

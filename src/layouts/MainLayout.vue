@@ -1,8 +1,13 @@
 <template>
   <div class="main-layout" :class="{'safe-area': safeArea}">
     <div class="app-main">
-      <keep-alive>
-        <router-view />
+      <transition v-if="isPageEffectOn" :name="transitionName" mode="out-in">
+        <keep-alive>
+          <router-view :key="$route.fullPath" />
+        </keep-alive>
+      </transition>
+      <keep-alive v-else>
+        <router-view :key="$route.fullPath" />
       </keep-alive>
     </div>
     <my-nav v-if="showNav" />
@@ -11,6 +16,10 @@
 
 <script>
 import Nav from '@/components/Nav'
+import { LocalStorage } from '@/utils/storage'
+
+const isPageEffectOn = LocalStorage.get('PXV_PAGE_EFFECT', true)
+
 export default {
   components: {
     'my-nav': Nav,
@@ -26,7 +35,23 @@ export default {
     },
   },
   data() {
-    return {}
+    return {
+      isPageEffectOn,
+      transitionName: isPageEffectOn ? 'fade' : '',
+    }
+  },
+  watch: {
+    '$route'(to, from) {
+      if (!isPageEffectOn) return
+      const toDepth = to.meta.__depth
+      const fromDepth = from.meta.__depth
+      if (toDepth == fromDepth) {
+        this.transitionName = 'fade'
+      } else {
+        this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
+      }
+      console.log('this.transitionName: ', this.transitionName)
+    },
   },
 }
 </script>
@@ -45,5 +70,4 @@ export default {
   padding 10px 8px 0
   box-sizing border-box
   // overflow-y auto
-
 </style>
