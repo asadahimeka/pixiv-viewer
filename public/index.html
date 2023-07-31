@@ -7,13 +7,15 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <title>Pixiv Viewer</title>
   <meta name="keywords" content="pixiv,pixiv-viewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv每日排行,pixiv漫画,pixiv小说" />
-  <meta name="description" itemprop="description" content="又一个 Pixiv 插画/小说阅览工具，适配 PC 端展示，支持 PWA 安装。" />
+  <meta name="description" itemprop="description" content="又一个Pixiv插画/小说阅览工具，适配PC端展示，支持PWA安装。" />
   <meta itemprop="name" content="Pixiv Viewer" />
-  <meta itemprop="image" content="<%= BASE_URL %>img/icons/192.png" />
+  <meta itemprop="image" content="https://pixiv.pics/img/icons/192.png" />
+  <meta property="og:type" content="website" />
   <meta property="og:title" content="Pixiv Viewer" />
-  <meta property="og:description" content="又一个 Pixiv 阅览工具"/>
-  <meta property="og:image" content="<%= BASE_URL %>img/icons/192.png" />
+  <meta property="og:description" content="又一个Pixiv插画小说阅览工具，适配PC端展示，支持PWA安装。" />
   <meta property="og:url" content="https://pixiv.pics" />
+  <meta property="og:image" content="https://pixiv.pics/img/icons/192.png" />
+  <meta property="og:site_name" content="Pxve" />
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="x-dns-prefetch-control" content="on" />
   <link rel="dns-prefetch" href="https://cdn.staticfile.org">
@@ -22,7 +24,7 @@
   <link rel="preconnect" href="https://cdn.staticfile.org" crossorigin="anonymous" />
   <link rel="preconnect" href="https://hibi.cocomi.cf" crossorigin="anonymous" />
   <link rel="preconnect" href="https://i-cf.pximg.net" crossorigin="anonymous" />
-  <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico" type="image/x-icon">
   <link rel="manifest" href="<%= BASE_URL %>manifest.json">
   <link rel="stylesheet" href="<%= BASE_URL %>static/css/flexible.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/vant/2.12.54/index.min.css">
@@ -32,6 +34,12 @@
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= process.env.VUE_APP_GA_ID %>',{transport_type:'beacon'});</script>
+  <% } %>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CF_BEACON) { %>
+  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "<%= process.env.VUE_APP_CF_BEACON %>"}'></script>
+  <% } %>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
+  <script defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>"></script>
   <% } %>
 </head>
 
@@ -51,12 +59,6 @@
   <% } %>
   <% } %>
   <!-- built files will be auto injected -->
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CF_BEACON) { %>
-  <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "<%= process.env.VUE_APP_CF_BEACON %>"}'></script>
-  <% } %>
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
-  <script defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>"></script>
-  <% } %>
 </body>
 
 </html>
