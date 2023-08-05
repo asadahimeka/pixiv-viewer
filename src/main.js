@@ -6,7 +6,7 @@ import './polyfill'
 import './registerServiceWorker'
 
 import { init } from 'console-ban'
-import Vant, { Dialog, ImagePreview, Lazyload, Notify, Toast } from 'vant'
+import Vant, { /* Dialog,  */ImagePreview, Lazyload, /*  Notify,  */Toast } from 'vant'
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMasonry from 'vue-masonry-css'
@@ -25,8 +25,8 @@ import { LocalStorage } from './utils/storage'
 setupApp()
 
 async function setupApp() {
-  await checkWechat()
-  await checkBrowser()
+  // await checkWechat()
+  // await checkBrowser()
   // await checkIncognito()
   await checkSetting()
   await checkLocalApi()
@@ -76,39 +76,39 @@ async function checkLocalApi() {
   await initBookmarkCache()
 }
 
-async function checkWechat() {
-  if (/MicroMessenger/i.test(navigator.userAgent)) {
-    document.body.innerHTML = '<h1 style="margin:10px">FUCK WECHAT</h1>'
-    Dialog.alert({
-      message: i18n.t('tip.browser_tip'),
-      theme: 'round-button',
-    })
-    throw new Error('BLOCKED.')
-  }
-  return true
-}
+// async function checkWechat() {
+//   if (/MicroMessenger/i.test(navigator.userAgent)) {
+//     document.body.innerHTML = '<h1 style="margin:10px">FUCK WECHAT</h1>'
+//     Dialog.alert({
+//       message: i18n.t('tip.browser_tip'),
+//       theme: 'round-button',
+//     })
+//     throw new Error('BLOCKED.')
+//   }
+//   return true
+// }
 
-async function checkBrowser() {
-  const message = i18n.t('tip.browser_latest')
-  if (/Quark|QQBrowser|baidu|NewsArticle|UCBrowser|Huawei|HeyTap|Miui|Vivo|Oppo|360se|Sogou/i.test(navigator.userAgent)) {
-    Notify({
-      message,
-      color: '#fff',
-      background: '#f1c25f',
-      duration: 2500,
-    })
-  }
-  const chromeVer = parseInt(navigator.userAgent.match(/Chrome\/([\d.]+)/)?.[1])
-  if (chromeVer && chromeVer < 100) {
-    Notify({
-      message,
-      color: '#fff',
-      background: '#f1c25f',
-      duration: 2500,
-    })
-  }
-  return true
-}
+// async function checkBrowser() {
+//   const message = i18n.t('tip.browser_latest')
+//   if (/Quark|QQBrowser|baidu|NewsArticle|UCBrowser|Huawei|HeyTap|Miui|Vivo|Oppo|360se|Sogou/i.test(navigator.userAgent)) {
+//     Notify({
+//       message,
+//       color: '#fff',
+//       background: '#f1c25f',
+//       duration: 2500,
+//     })
+//   }
+//   const chromeVer = parseInt(navigator.userAgent.match(/Chrome\/([\d.]+)/)?.[1])
+//   if (chromeVer && chromeVer < 100) {
+//     Notify({
+//       message,
+//       color: '#fff',
+//       background: '#f1c25f',
+//       duration: 2500,
+//     })
+//   }
+//   return true
+// }
 
 // async function checkIncognito() {
 //   let flag = false
@@ -128,9 +128,6 @@ async function checkBrowser() {
 // }
 
 async function checkSetting() {
-  if (location.href.includes('pixiv.pics')) {
-    return true
-  }
   let flag = false
   const setting = LocalStorage.get('PXV_CNT_SHOW', {})
   const isOn = () => LocalStorage.get('PXV_NSFW_ON', null)

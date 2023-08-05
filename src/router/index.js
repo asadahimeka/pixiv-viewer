@@ -314,7 +314,7 @@ const routes = [
   },
 ]
 
-const isPageEffectOn = LocalStorage.get('PXV_PAGE_EFFECT', true)
+const isPageEffectOn = LocalStorage.get('PXV_PAGE_EFFECT', false)
 
 const router = new VueRouter({
   routes,

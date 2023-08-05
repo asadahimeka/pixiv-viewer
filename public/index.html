@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh">
 
 <head>
   <meta charset="utf-8">
@@ -7,29 +7,26 @@
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover">
   <title>Pixiv Viewer</title>
   <meta name="keywords" content="pixiv,pixiv-viewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv每日排行,pixiv漫画,pixiv小说" />
-  <meta name="description" itemprop="description" content="又一个Pixiv插画/小说阅览工具，适配PC端展示，支持PWA安装。" />
-  <meta itemprop="name" content="Pixiv Viewer" />
-  <meta itemprop="image" content="https://pixiv.pics/img/icons/192.png" />
-  <meta property="og:type" content="website" />
+  <meta name="description" itemprop="description" content="又一个Pixiv插画小说阅览工具，适配PC端展示，支持PWA安装。" />
   <meta property="og:title" content="Pixiv Viewer" />
   <meta property="og:description" content="又一个Pixiv插画小说阅览工具，适配PC端展示，支持PWA安装。" />
   <meta property="og:url" content="https://pixiv.pics" />
-  <meta property="og:image" content="https://pixiv.pics/img/icons/192.png" />
-  <meta property="og:site_name" content="Pxve" />
+  <meta property="og:image" content="https://pixiv.pics/img/icons/256.png" />
+  <meta property="og:site_name" content="Pixiv Viewer" />
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="x-dns-prefetch-control" content="on" />
+  <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico" type="image/x-icon">
   <link rel="dns-prefetch" href="https://cdn.staticfile.org">
   <link rel="dns-prefetch" href="https://hibi.cocomi.cf">
   <link rel="dns-prefetch" href="https://i-cf.pximg.net">
   <link rel="preconnect" href="https://cdn.staticfile.org" crossorigin="anonymous" />
   <link rel="preconnect" href="https://hibi.cocomi.cf" crossorigin="anonymous" />
   <link rel="preconnect" href="https://i-cf.pximg.net" crossorigin="anonymous" />
-  <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico" type="image/x-icon">
-  <link rel="manifest" href="<%= BASE_URL %>manifest.json">
   <link rel="stylesheet" href="<%= BASE_URL %>static/css/flexible.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/vant/2.12.54/index.min.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/5.4.5/css/swiper.min.css">
   <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-webfont/1.6.0/style.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixiv Viewer","alternateName":"Pxve","url":"https://pixiv.pics"}</script>
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>

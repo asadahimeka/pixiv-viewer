@@ -27,7 +27,6 @@ import HistoryIllust from './HistoryIllust.vue'
 import HistoryNovel from './HistoryNovel.vue'
 import HistoryUsers from './HistoryUsers.vue'
 
-const tabNames = ['i', 'n', 'u']
 export default {
   name: 'SettingHistory',
   components: {
@@ -38,13 +37,8 @@ export default {
   },
   data() {
     return {
-      activeTab: tabNames.find(e => e == this.$route.query.t) || 'i',
+      activeTab: 'i',
     }
-  },
-  watch: {
-    activeTab() {
-      this.$router.replace(this.$route.path + '?t=' + this.activeTab)
-    },
   },
   methods: {
     clearHistory() {

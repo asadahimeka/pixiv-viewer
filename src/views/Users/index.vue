@@ -4,7 +4,7 @@
       <div class="users">
         <TopBar />
         <div v-if="userInfo.id" class="info-container">
-          <div class="bg-cover">
+          <div class="bg-cover" :class="{ hasbgcover: !!userInfo.bgcover }">
             <img v-lazy="userInfo.bgcover || userInfo.avatar" :class="{ nobg: !userInfo.bgcover }" :alt="userInfo.name">
           </div>
           <div class="info">
@@ -428,15 +428,20 @@ export default {
   .info-container {
     margin-bottom 40px
     .bg-cover {
-      display: flex;
-      justify-content: center;
-      align-items: center;
       height: 300px;
       overflow: hidden;
+
+      &.hasbgcover {
+        height: 50vw;
+        min-height: 300px;
+        max-height: 60vh;
+      }
 
       img {
         display: block;
         width: 100%;
+        height 100%
+        object-fit: cover;
         &[lazy="loading"] {
           opacity 0
         }

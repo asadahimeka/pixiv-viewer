@@ -3,11 +3,11 @@
     <div class="app-main">
       <transition v-if="isPageEffectOn" :name="transitionName" mode="out-in">
         <keep-alive>
-          <router-view :key="$route.fullPath" />
+          <router-view />
         </keep-alive>
       </transition>
       <keep-alive v-else>
-        <router-view :key="$route.fullPath" />
+        <router-view />
       </keep-alive>
     </div>
     <my-nav v-if="showNav" />
@@ -18,7 +18,7 @@
 import Nav from '@/components/Nav'
 import { LocalStorage } from '@/utils/storage'
 
-const isPageEffectOn = LocalStorage.get('PXV_PAGE_EFFECT', true)
+const isPageEffectOn = LocalStorage.get('PXV_PAGE_EFFECT', false)
 
 export default {
   components: {

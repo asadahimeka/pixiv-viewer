@@ -47,6 +47,7 @@ module.exports = {
       },
     },
   },
+  transpileDependencies: ['mint-filter'],
   configureWebpack: config => {
     if (isProduction) {
       config.optimization.minimizer[0].options.minimizer.options.compress.drop_console = true
@@ -126,6 +127,11 @@ module.exports = {
   pwa: {
     name: 'Pixiv Viewer',
     themeColor: '#FFFFFF',
+    iconPaths: {
+      faviconSVG: null,
+      favicon32: null,
+      favicon16: null,
+    },
     workboxPluginMode: 'GenerateSW',
     workboxOptions: {
       skipWaiting: true,

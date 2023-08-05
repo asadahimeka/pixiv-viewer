@@ -1,6 +1,6 @@
 {
   "name": "pixiv-viewer",
-  "version": "1.11.6",
+  "version": "1.11.7",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -35,6 +35,7 @@
     "vuex": "3.6.2"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-optional-chaining": "7.21.0",
     "@rushstack/eslint-patch": "1.2.0",
     "@types/crypto-js": "4.1.1",
     "@types/file-saver": "2.0.5",

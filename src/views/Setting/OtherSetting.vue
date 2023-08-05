@@ -219,7 +219,7 @@ export default {
       hideApSelect: true,
       isDark: !!localStorage.getItem('PXV_DARK'),
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
-      isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', true),
+      isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', false),
     }
   },
   computed: {
