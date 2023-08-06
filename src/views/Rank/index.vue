@@ -70,7 +70,7 @@ import _ from 'lodash'
 import api from '@/api'
 import { i18n } from '@/i18n'
 
-const rankMenus = {
+const getRankMenus = () => ({
   daily: { name: i18n.t('rank.day'), io: 'day', cat: '0' },
   weekly: { name: i18n.t('rank.week'), io: 'week', cat: '0' },
   monthly: { name: i18n.t('rank.month'), io: 'month', cat: '0' },
@@ -101,10 +101,10 @@ const rankMenus = {
   rookie_manga: { name: i18n.t('rank.rookie'), io: 'rookie-manga-web', cat: '3' },
   daily_r18_manga: { name: i18n.t('rank.day_x'), io: 'daily_r18-manga-web', cat: '3', x: true },
   weekly_r18_manga: { name: i18n.t('rank.week_x'), io: 'weekly_r18-manga-web', cat: '3', x: true },
-}
+})
 
-const rankCatLabels = [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
-const rankCatActions = rankCatLabels.map((e, i) => ({ text: e, _v: i.toString() }))
+const getRankCatLabels = () => [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
+const getRankCatActions = () => getRankCatLabels().map((e, i) => ({ text: e, _v: i.toString() }))
 
 export default {
   name: 'Rank',
@@ -126,11 +126,11 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      menus: rankMenus,
+      menus: getRankMenus(),
       showRankCat: false,
       actRankCat: '1',
-      rankCatLabels,
-      rankCatActions,
+      rankCatLabels: getRankCatLabels(),
+      rankCatActions: getRankCatActions(),
     }
   },
   computed: {

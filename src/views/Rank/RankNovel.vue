@@ -69,7 +69,7 @@ import api from '@/api'
 import NovelCard from '@/components/NovelCard.vue'
 import { i18n } from '@/i18n'
 
-const rankMenus = {
+const getRankMenus = () => ({
   day: { name: i18n.t('rank.day'), io: 'day', cat: '4' },
   week: { name: i18n.t('rank.week'), io: 'week', cat: '4' },
   week_rookie: { name: i18n.t('rank.rookie'), io: 'week_rookie', cat: '4' },
@@ -81,11 +81,11 @@ const rankMenus = {
   week_ai_r18: { name: 'R18 AI', io: 'week_ai_r18', x: true, ai: true, cat: '4' },
   day_male_r18: { name: i18n.t('rank.day_x_male'), io: 'day_male_r18', x: true, cat: '4' },
   day_female_r18: { name: i18n.t('rank.day_x_female'), io: 'day_female_r18', x: true, cat: '4' },
-}
+})
 
-const rankCatLabels = [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
+const getRankCatLabels = () => [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
 const rankCatLinks = ['/rank/daily', '/rank/daily_illust', '/rank/daily_ugoira', '/rank/daily_manga', '/rank_novel/day']
-const rankCatActions = rankCatLabels.map((e, i) => ({ text: e, _v: i.toString() }))
+const getRankCatActions = () => getRankCatLabels().map((e, i) => ({ text: e, _v: i.toString() }))
 
 export default {
   name: 'RankNovel',
@@ -107,11 +107,11 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      menu: rankMenus,
+      menu: getRankMenus(),
       showRankCat: false,
       actRankCat: '4',
-      rankCatLabels,
-      rankCatActions,
+      rankCatLabels: getRankCatLabels(),
+      rankCatActions: getRankCatActions(),
     }
   },
   computed: {

@@ -119,18 +119,6 @@ import IconWeibo from '@/assets/images/share-sheet-weibo.png'
 import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 
-const shareOptions = [
-  { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
-  { name: i18n.t('artwork.share.type.copylink'), icon: IconLink },
-  { name: i18n.t('artwork.share.type.qrcode'), icon: IconQrcode },
-  { name: i18n.t('artwork.share.type.weibo'), icon: IconWeibo },
-  { name: i18n.t('artwork.share.type.qzone'), icon: IconQzone },
-  { name: 'QQ', icon: IconQQ },
-  { name: i18n.t('artwork.share.type.wechat'), icon: IconWechat },
-  { name: 'Twitter', icon: IconTwitter },
-  { name: 'Facebook', icon: IconFacebook },
-]
-
 const textConfig = LocalStorage.get('PXV_TEXT_CONFIG', {
   size: 16,
   height: 2,
@@ -156,7 +144,17 @@ export default {
       artwork: {},
       novelText: {},
       showShare: false,
-      shareOptions,
+      shareOptions: [
+        { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
+        { name: i18n.t('artwork.share.type.copylink'), icon: IconLink },
+        { name: i18n.t('artwork.share.type.qrcode'), icon: IconQrcode },
+        { name: i18n.t('artwork.share.type.weibo'), icon: IconWeibo },
+        { name: i18n.t('artwork.share.type.qzone'), icon: IconQzone },
+        { name: 'QQ', icon: IconQQ },
+        { name: i18n.t('artwork.share.type.wechat'), icon: IconWechat },
+        { name: 'Twitter', icon: IconTwitter },
+        { name: 'Facebook', icon: IconFacebook },
+      ],
       showSettings: false,
       textConfig,
     }
@@ -237,7 +235,6 @@ export default {
       }
     },
     onShareSel(_, index) {
-      // window.umami?.track('share_novel', { share_type: shareOptions[index]?.name })
       const actions = [
         async () => {
           const shareData = {

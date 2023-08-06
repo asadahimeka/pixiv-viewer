@@ -78,25 +78,6 @@ import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { LocalStorage } from '@/utils/storage'
 
-const ugoiraDownloadPanelActions = [
-  { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
-  { name: 'GIF', subname: i18n.t('artwork.download.gif') },
-  { name: 'WebM', subname: i18n.t('artwork.download.webm') }, // chrome only
-  { name: 'MP4', subname: i18n.t('artwork.download.mp4') },
-]
-
-const shareOptions = [
-  { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
-  { name: i18n.t('artwork.share.type.copylink'), icon: IconLink },
-  { name: i18n.t('artwork.share.type.qrcode'), icon: IconQrcode },
-  { name: i18n.t('artwork.share.type.weibo'), icon: IconWeibo },
-  { name: i18n.t('artwork.share.type.qzone'), icon: IconQzone },
-  { name: 'QQ', icon: IconQQ },
-  { name: i18n.t('artwork.share.type.wechat'), icon: IconWechat },
-  { name: 'Twitter', icon: IconTwitter },
-  { name: 'Facebook', icon: IconFacebook },
-]
-
 export default {
   name: 'Artwork',
   components: {
@@ -129,9 +110,24 @@ export default {
       loading: true,
       artwork: {},
       ugoiraDownloadPanelShow: false,
-      ugoiraDownloadPanelActions,
+      ugoiraDownloadPanelActions: [
+        { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
+        { name: 'GIF', subname: i18n.t('artwork.download.gif') },
+        { name: 'WebM', subname: i18n.t('artwork.download.webm') }, // chrome only
+        { name: 'MP4', subname: i18n.t('artwork.download.mp4') },
+      ],
       showShare: false,
-      shareOptions,
+      shareOptions: [
+        { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
+        { name: i18n.t('artwork.share.type.copylink'), icon: IconLink },
+        { name: i18n.t('artwork.share.type.qrcode'), icon: IconQrcode },
+        { name: i18n.t('artwork.share.type.weibo'), icon: IconWeibo },
+        { name: i18n.t('artwork.share.type.qzone'), icon: IconQzone },
+        { name: 'QQ', icon: IconQQ },
+        { name: i18n.t('artwork.share.type.wechat'), icon: IconWechat },
+        { name: 'Twitter', icon: IconTwitter },
+        { name: 'Facebook', icon: IconFacebook },
+      ],
       disableSwipe: !LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
     }
   },
@@ -215,7 +211,6 @@ export default {
       }
     },
     onShareSel(_, index) {
-      // window.umami?.track('share', { share_type: shareOptions[index]?.name })
       const shareUrl = `https://pixiv.pics/i/${this.artwork.id}`
       let imageUrl = this.artwork.images[0].l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/')
       if (imageUrl.includes('i-cf.pximg.net')) imageUrl = imageUrl.replace('i-cf.pximg.net', 'i.pixiv.re')

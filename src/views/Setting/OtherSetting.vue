@@ -406,7 +406,7 @@ export default {
     },
     changeLang({ name }) {
       this.lang.value = name
-      i18n.locale = name
+      // i18n.locale = name
       window.umami?.track('set_lang', { lang: name })
       localStorage.setItem('PXV_LANG', name)
       setTimeout(() => {

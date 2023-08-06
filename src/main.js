@@ -15,7 +15,7 @@ import App from './App.vue'
 import { getActionMap } from './api/client/action'
 import ImageLayout from './components/ImageLayout.vue'
 import TopBar from './components/TopBar'
-import { i18n } from './i18n'
+import { i18n, DEFAULT_LANG, getSelectedLang, loadLanguageAsync } from './i18n'
 import SvgIcon from './icons'
 import router from './router'
 import store from './store'
@@ -28,8 +28,9 @@ async function setupApp() {
   // await checkWechat()
   // await checkBrowser()
   // await checkIncognito()
-  await checkSetting()
-  await checkLocalApi()
+  await initSetting()
+  await initLocalApi()
+  await initLocale()
 
   Vue.use(Toast)
   Vue.use(ImagePreview)
@@ -68,12 +69,37 @@ async function setupApp() {
   }
 }
 
-async function checkLocalApi() {
+async function initLocale() {
+  const lang = getSelectedLang()
+  if (lang != DEFAULT_LANG) {
+    await loadLanguageAsync(lang)
+  }
+}
+
+async function initLocalApi() {
   const config = LocalStorage.get('PXV_CLIENT_CONFIG', {})
   window.APP_CONFIG = config
   if (!config.useLocalAppApi) return
   window.__localApiMap__ = await getActionMap()
   await initBookmarkCache()
+}
+
+async function initSetting() {
+  let flag = false
+  const setting = LocalStorage.get('PXV_CNT_SHOW', {})
+  const isOn = () => LocalStorage.get('PXV_NSFW_ON', null)
+  if (isOn() == null && (setting.r18 || setting.r18g)) {
+    LocalStorage.set('PXV_NSFW_ON', 1)
+  }
+  try {
+    if (!isOn()) return true
+    document.documentElement.innerHTML = ''
+    location.replace('/block.html')
+    flag = true
+  } catch (error) {
+    return true
+  }
+  if (flag) throw new Error('BLOCKED.')
 }
 
 // async function checkWechat() {
@@ -126,21 +152,3 @@ async function checkLocalApi() {
 //   }
 //   if (flag) throw new Error('BLOCKED.')
 // }
-
-async function checkSetting() {
-  let flag = false
-  const setting = LocalStorage.get('PXV_CNT_SHOW', {})
-  const isOn = () => LocalStorage.get('PXV_NSFW_ON', null)
-  if (isOn() == null && (setting.r18 || setting.r18g)) {
-    LocalStorage.set('PXV_NSFW_ON', 1)
-  }
-  try {
-    if (!isOn()) return true
-    document.documentElement.innerHTML = ''
-    location.replace('/block.html')
-    flag = true
-  } catch (error) {
-    return true
-  }
-  if (flag) throw new Error('BLOCKED.')
-}
