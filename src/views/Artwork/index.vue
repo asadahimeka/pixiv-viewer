@@ -349,7 +349,8 @@ img[src*="/api/qrcode?text"]
         height auto
         max-height 96vh
         margin 0 auto
-        border-radius 5px
+        border-radius 5PX
+        box-shadow: 0 0 transparent, 0 0 transparent, 0 1PX 3PX 0 rgba(0,0,0,.1), 0 1PX 2PX -1PX rgba(0,0,0,.1)
 
   .ia-right
     max-width 28%
@@ -375,6 +376,7 @@ img[src*="/api/qrcode?text"]
       max-width: 100% !important
       max-height: 90vh !important
       border-radius 0 !important
+      box-shadow none !important
 
   .ia-right
     max-width unset !important
