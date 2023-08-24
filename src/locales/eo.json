@@ -1,0 +1,395 @@
+{
+  "about": {
+    "about_site": "Pri ĉi tiu retejo",
+    "credits": "Dankon",
+    "disclaimer": "Malgarantio",
+    "disclaimer_text": "<b>NSFW-rilata</b><br>Ĉi tiu retejo ne montras NSFW-rimedojn (kiel ekzemple R-18-ilustraĵoj) defaŭlte, ajna aliro al tiaj rimedoj estas agordita de la uzanto en la agordoj, kaj la uzanto certigis \nke\n\nTiuj, kiuj estas pli ol 18-jaraj kaj ne malobservas la enhavon kondiĉitan de lokaj leĝoj kaj regularoj.\n\nNi klare markis NSFW-resursojn kiel ili povas aperi, kaj ni malinstigas aliri aŭ distribui tiajn rimedojn.\n\n<br><b>Uzantkomentoj</b><br>\"Uzantkomentoj\" rilatas al la komentoj afiŝitaj de uzantoj de la fonto retejo de Pixiv per funkcioj kiel mem-enkonduko, ilustraĵenkonduko kaj komenta areo.\n\nĈi tiu parto apartenas al la propra konduto de la eldonejo, kaj ni ne povas efike kontroli ĝin.\n\nNi ne afiŝas aŭ instigas la disvastigon de netaŭga parolado.\n\nSe vi trovas netaŭgan enhavon dum foliumado, ni forte instigas vin raporti ĝin al la fonta retejo.\n\n<br><b>Deklaro pri kopirajto</b><br>Ĉi tiu retejo ne havas rilaton kun pixiv.net (ピクシブ Co., Ltd.). Ĉiuj datumoj kaj amaskomunikilaj rimedoj petitaj estas kopirajtigitaj de Pixiv aŭ ĝiaj originalaj aŭtoroj.\n\n<br>La programo Pixiv Viewer estas licencita sub la permesilo MIT.\n\n<br>Nur por komunikado kaj lernado.",
+    "feedback": "Reago",
+    "from": "Modifita de",
+    "origin_site": "Originala Retejo",
+    "source": "Fontkodo",
+    "title": "Pri Retejo",
+    "version": "Versio"
+  },
+  "artwork": {
+    "download": {
+      "gif": "Malalta kvalito, plej bona kongruo",
+      "mp4": "Iru al ugoira.com por konverti",
+      "placeholder": "Bonvolu elekti elŝutan formaton",
+      "ugoira": {
+        "tip": "Bonvolu unue ludi la animacion"
+      },
+      "webm": "Altkvalita, malbona kongruo",
+      "zip": "Kruda Sekvenca Kadra Arkivo"
+    },
+    "fav_fail": "Aldoni al legosignoj malsukcesis",
+    "share": {
+      "of_art": "la Artaĵoj de",
+      "share": "Kunhavigi",
+      "title": "Kunhavigu kun amikoj nun",
+      "type": {
+        "copylink": "Kopiu Ligo",
+        "qrcode": "QR-kodo",
+        "qzone": "Qzono",
+        "web": "Reta kundivido",
+        "wechat": "WeChat",
+        "weibo": "Weibo"
+      }
+    },
+    "unfav_fail": "Forigi legosignon malsukcesis"
+  },
+  "cache": {
+    "clear": "Purigu",
+    "confirm": {
+      "first": "Ĉu vi certas, ke vi volas forigi {0}?",
+      "second": "Reŝargos koncernan enhavon de la reto post purigado"
+    },
+    "db": "Konstanta kaŝmemoro",
+    "local": "Kaŝmemoro de agordoj",
+    "mem": "Memoro Uzita",
+    "records": "Rekordo(j)",
+    "session": "Rultempa kaŝmemoro",
+    "success_tip": "Purigado finiĝis",
+    "title": "Malplenigi Kaŝmemoron"
+  },
+  "common": {
+    "ai_gen": "AI-generita",
+    "artwork": "Artaĵo",
+    "cancel": "Nuligi",
+    "confirm": "Konfirmu",
+    "content": {
+      "hide": "Surbaze de aktualaj agordoj, ĉi tiu enhavo ne estos montrata"
+    },
+    "date": "dato",
+    "discovery": "Malkovro",
+    "download": "Elŝutu",
+    "history": "Historio",
+    "illust": "Ilusts",
+    "illust_manga": "Ilusts",
+    "manga": "Mangaoj",
+    "new_art": "Novaj Artaĵoj",
+    "novel": "Romanoj",
+    "overall": "Entute",
+    "random_view": "Hazardaj Artaĵoj",
+    "rank": "Ranking",
+    "recomm": "Rekomendita",
+    "recomm_art": "Rekomenditaj Artaĵoj",
+    "related": "Rilataj Artaĵoj",
+    "reset": "Restarigi",
+    "save": "Savi",
+    "ugoira": "Ugoira",
+    "user": "Uzanto",
+    "view_more": "Vidu pli",
+    "words": "Vortoj"
+  },
+  "display": {
+    "ai": "AI generita laborekrano",
+    "ai_label": "Montrante AI-generitajn artaĵojn en la bildlisto",
+    "block_tags": "Etikedo Nigra Listo",
+    "block_tags_ph": "Bonvolu enigi etikedojn, apartigitajn per komoj",
+    "block_uids": "Nigra Listo de artistoj",
+    "block_uids_ph": "Bonvolu enigi artistidentojn, apartigitajn per komoj",
+    "confirm": "Ĉu vi certas, ke vi volas ebligi la montradon de {0} verkoj? \nBonvolu certigi, ke vi estas pli ol 18-jara, kaj ne malobservu la dispoziciojn de lokaj leĝoj kaj regularoj.",
+    "confirm_g": "Bonvolu noti, ke ŝalti la ŝaltilon {0} povas havi nemaligeblajn efikojn al via fizika kaj mensa sano. \nSe vi sentas malbonon, bonvolu fermi la aplikaĵon tuj kaj serĉi medicinan helpon",
+    "r18": "R-18-ekspozicio de verkoj",
+    "r18_label": "Enhavas nudecon aŭ seksajn priskribojn",
+    "r18g": "R-18G funkcias ekrano",
+    "r18g_label": "Enhavas sangan aŭ abomenan enhavon",
+    "title": "Artaĵoj Montraj Agordoj"
+  },
+  "eioSClGw9BqryzojTwr8j": "Paĝa transira efiko",
+  "follow": {
+    "fav": "Legosignoj",
+    "latest": "Nova",
+    "timeline": "Nutrado",
+    "user": "Sekvante"
+  },
+  "history": {
+    "confirm": {
+      "i": "Ĉu vi certas, ke vi volas purigi la historion de ilustraĵo kaj mangao?",
+      "n": "Ĉu vi certas, ke vi volas purigi la romanhistorion",
+      "u": "Ĉu vi certas, ke vi volas malplenigi la uzanthistorion"
+    }
+  },
+  "iAH7adsXaqWMXEi3TOuwS": "Serio",
+  "login": {
+    "fail_tip": "Ensaluto malsukcesis",
+    "logout_tip": "Ĉu konfirmi eliro?",
+    "o": {
+      "desc1": "La fonto retejo de Pixiv estas malfermonta por ensaluti, bonvolu certigi, ke vi povas aliri Pixiv",
+      "desc2": "Bonvolu certigi, ke vi instalis la retumilon URLRedirector kaj importis la agordon, alie vi ne povos ensaluti",
+      "desc3": "URLRedirector instala ligilo:",
+      "desc4": "Klaku por kopii URLRedirector reta regulo adreso",
+      "desc5": "Certigu, ke vi havas instalitan la kromprogramon de la retumilo Tampermonkey kaj la helpan uzantan skripton instalita, alie API-petoj ne funkcios",
+      "desc6": "Instala ligilo de Tampermonkey:",
+      "desc7": "Alklaku Instali Helperan UserScript"
+    },
+    "succ_tip": "Sukceso de ensaluto",
+    "t": {
+      "d1": "Certigu, ke vi havas la retumilon Tampermonkey instalita kaj instalu la helpan uzantskripton, alie ŝaltu la prokurilon AppApi.",
+      "d2": "Bonvolu plenigi la RefreshToken, konsulti la suban ligilon por kiel akiri ĝin",
+      "d3": "Bonvolu plenigi RefreshToken",
+      "d4": "RefreshToken estas misformita"
+    }
+  },
+  "nav": {
+    "follow": "Nutrado",
+    "home": "Hejmo",
+    "rank": "Ranking",
+    "search": "Serĉu",
+    "setting": "Agordoj"
+  },
+  "novel": {
+    "series": {
+      "next": "Sekva Ĉapitro:",
+      "prev": "Antaŭa Ĉapitro:"
+    },
+    "settings": {
+      "text": {
+        "bg": "Teksta fono",
+        "color": "Teksta koloro",
+        "direct_h": "Horizontala",
+        "direct_v": "Vertikala",
+        "direction": "Teksta direkto",
+        "font": "Teksta tiparo",
+        "height": "Teksta linio alteco",
+        "sans": "Sans",
+        "serif": "Serif",
+        "size": "Grando de tiparo",
+        "weight": "Teksta pezo"
+      },
+      "title": "Novaj Agordoj"
+    }
+  },
+  "rank": {
+    "day": "Ĉiutage",
+    "day_x": "R18 Ĉiutage",
+    "day_x_female": "R18 Ino",
+    "day_x_male": "R18 Vira",
+    "female": "Populara inter inoj",
+    "male": "Populara inter maskloj",
+    "month": "Monata",
+    "original": "Originala",
+    "r18g": "R18G",
+    "rookie": "Novulo",
+    "week": "Ĉiusemajne",
+    "week_x": "R18 Semajna"
+  },
+  "search": {
+    "autocomplete": "Serĉa Sugesto",
+    "date": {
+      "asc": "kreskanta ordo laŭ dato",
+      "desc": "malkreskanta ordo laŭ dato",
+      "end": "Fino",
+      "start": "Komencu"
+    },
+    "dura": {
+      "day": "en unu tago",
+      "month": "ene de monato",
+      "ph": "periodo de tempo",
+      "week": "ene de semajno"
+    },
+    "history": "Serĉhistorio",
+    "img": {
+      "err": "Resenda analizo de rezulto malsukcesis",
+      "placeholder": "Bonvolu elekti bildodosieron"
+    },
+    "mode": {
+      "exact": "ĝusta kongruo por etikedoj",
+      "partial": "parta kongruo por etikedoj",
+      "title": "titolo kaj bildoteksto"
+    },
+    "of_user_res": "Serĉrezultoj por {0}",
+    "placeholder": "Enigu ŝlosilvortojn",
+    "pop_preview": "Populara antaŭvido",
+    "pop_preview_novel": "Populara Romana Antaŭprezento",
+    "seach_tag": "Serĉu etikedojn",
+    "search": "Serĉu",
+    "search_user": "Serĉu uzanton"
+  },
+  "sess": {
+    "example": "Sesia ID aspektas kiel (nevalida, por pruvo):",
+    "input": {
+      "msg": "Sesia ID-formato estas malĝusta",
+      "ph": "Bonvolu enigi ID de la Sesio"
+    },
+    "mobile_tip": "Trovu la metodon mem sur la movebla terminalo aŭ akiru ĝin sur la komputila terminalo",
+    "q1": {
+      "p1": "1. Vizitu la originejon de {0} kaj ensalutu",
+      "p2": "2. Alklaku la seruron en la adresbreto",
+      "p3": "3. En la ŝprucfenestra interfaco, elektu \"Kuketo (0 kuketoj estas uzataj)\"",
+      "p4": "4. Vastigu `pixiv.net` → `Kuketoj` por trovi la {0} eron",
+      "p5": "5. Kopiu ĝian \"enhavon\" kaj plenigu ĝin ĉi tie"
+    },
+    "q2": {
+      "p2": "2. Premu F12 por malfermi la retumilon",
+      "p3": "3. Alklaku la kolumnon \"stokado\".",
+      "p4": "4. Trovu la kolumnon, kies \"ŝlosilo\" estas {0} en la kuketlisto",
+      "p5": "5. Kopiu ĝian \"valoron\" kaj plenigu ĝin ĉi tie"
+    },
+    "que2": {
+      "p1": "Ni ne stokos aŭ transdonos viajn personajn informojn kaj kuketojn.",
+      "p2": "Tamen ni rekomendas konservi viajn kuketojn sekuraj.\n\nSe la informoj, kiujn vi konservas ĉi tie, estas akiritaj de aliaj, ekzistas risko de ŝtelo de konto."
+    },
+    "ques1": "Kiel akiri Pixiv Session ID?",
+    "ques2": "Ĉu Pixiv Viewer ŝtelos miajn personajn informojn?",
+    "save": "savi",
+    "succ_msg": "Sesia ID-aŭtentikigo sukcesis",
+    "title": "Agordu Pixiv Kuketon",
+    "warn": {
+      "text": "Ĉi tiu funkcio estas nenormala maniero ensaluti, kaj povas esti risko malpermesi la konton. \nUzado de ĉi tiu funkcio estas konsiderata kiel la propra konsento de la uzanto kaj klara uzo de la risko. \nSe la konto estas malpermesita, ktp, la aŭtoro de ĉi tiu projekto havas nenion komunan kun ĝi.\n\nOni rekomendas uzi trumpeton por testado.",
+      "title": "Riska Avizo"
+    }
+  },
+  "setting": {
+    "about": "Pri",
+    "api": {
+      "desc": "Enigu la kazo-adreson de HibiAPI sube, vi devas aldoni https://, kaj la vojo devas esti plenigita en la parto `/api/pixiv`",
+      "desc2": "Ekzemple: https://hibiapi.getloli.com/api/pixiv, la loka kaŝmemoro estos forigita post konservado",
+      "desc3": "API-instancoj povas iri al",
+      "desc4": "trovi aŭ konstrui vian propran",
+      "desc5": "La API-instancadreso devas subteni trans-devenan (CORS) aliron",
+      "ph": "Bonvolu elekti ekzemplon de HibiAPI (la loka kaŝmemoro estos forigita post ŝanĝado)",
+      "title": "HibiAPI Instanca Agordo",
+      "title2": "Elekto de ekzemplo de HibiAPI",
+      "title3": "HibiAPI-instanca ligilo",
+      "title4": "HibiAPI-instanco"
+    },
+    "app_desc": "Alia Pixiv-ilustraĵo/nova retumila ilo",
+    "dark": {
+      "title": "Malhela Reĝimo"
+    },
+    "down_app": "Elŝutu Apon",
+    "img_proxy": {
+      "desc": "Enigu la pixiv-bildan prokuradreson sube, ne bezonas aldoni https://",
+      "desc2": "Ekzemple: i-cf.pximg.net, la loka kaŝmemoro estos forigita post konservado",
+      "ph": "Bonvolu elekti pixiv-bildan prokurilon (la loka kaŝmemoro estos forigita post ŝanĝado)",
+      "title": "pximg Prokura Agordo",
+      "title2": "pximg bildo prokurilo elektu",
+      "title3": "Bilda Prokurilo",
+      "title4": "pixiv bildagentejo"
+    },
+    "img_res": {
+      "l": "Malrapida ŝarĝo",
+      "m": "Ŝarĝu iomete pli rapide",
+      "o": "Ŝarĝu pli malrapide",
+      "ph": "Bonvolu elekti kvaliton de bildaj detaloj",
+      "title": "Bildaj Detaloj kaj Kvalito Elekto"
+    },
+    "input": "Enigu:",
+    "lab": {
+      "title": "Eksperimenta"
+    },
+    "layout": {
+      "g": "Egala larĝo kaj alteco",
+      "j": "Egala alteco kaj malsama larĝo",
+      "m": "Egala larĝo kaj malsama alteco",
+      "ph": "Bonvolu elekti bildolistan aranĝon",
+      "title": "Elekto de Aranĝo de Bilda Listo"
+    },
+    "other": {
+      "api_proxy": {
+        "def_ph": "Se la defaŭlta prokurilo ne povas esti uzata, vi povas provi alian prokurilon",
+        "sel_desc": "Bonvolu elekti AppApi Proxy",
+        "title": "Elektu AppApi Proxy"
+      },
+      "cp_token_label": "Kopiu la aktualan RefreshToken al la tondujo",
+      "cp_token_title": "Eksportu RefreshToken",
+      "direct_mode": {
+        "confirm": {
+          "msg": "La rekta koneksa reĝimo nur subtenas la retumilon Firefox, kaj vi devas certigi, ke Tampermonkey kaj Helper-uskripto estas instalitaj, kaj la rapideco estas malrapida kaj la stabileco ne estas garantiita.\n\nĜi ne povas esti ebligita samtempe kun la prokurilo AppApi.\n\nSe vi renkontas retan eraron post ebligo de rekta konekto, bonvolu mane malfermi la suban ligilon, alklaku \"Altnivela\" - \"Akceptu la riskon kaj daŭrigu\", kaj revenu al ĉi tiu retejo por refreŝigi la paĝon post kiam 421 aperos.",
+          "proxy_msg": "Sendi lokajn AppApi-petojn per triaj nubaj servoj ne povas garantii stabilecon kaj sekurecon.\n\nĜi ne povas esti ŝaltita samtempe kun la rekta koneksa reĝimo.",
+          "proxy_title": "Ĉu vi certe ebligos AppApi-prokurilon?",
+          "title": "Ĉu vi certe ebligos rektan reĝimon?"
+        },
+        "host": {
+          "label": "Repasos demandojn de DoH post forigo",
+          "title": "Forigi rektajn gastigajn kaŝmemoron"
+        },
+        "host_msg": "Ĉu vi certe forigas la kaŝmemorajn rekordojn de la gastigantoj en rekta koneksa reĝimo?",
+        "label": "Ĉu preteriri SNI per domajna frontado",
+        "proxy": {
+          "label": "Ĉu prokurigi lokajn AppApi-petojn per nubaj servoj",
+          "title": "Ebligu AppApi Proxy"
+        },
+        "title": "Ebligu rektan reĝimon"
+      },
+      "lang": "Lingvo",
+      "lang_ph": "Bonvolu elekti lingvon",
+      "manual_input": "Enigu ligilon permane",
+      "manual_input_label": "Ĉu la prokurilo kaj API-instancadresoj de la bildoj malsupraj estas enmetitaj permane",
+      "swipe_toggle": "Glitu maldekstren aŭ dekstren sur la detalpaĝo por ŝanĝi artaĵojn",
+      "title": "Aliaj Agordoj"
+    },
+    "recomm": {
+      "app": "Aplikoj",
+      "site": "Retejo",
+      "title": "Rekomenditaj Ligiloj",
+      "tm": "UserScript"
+    }
+  },
+  "sp": {
+    "all": "Superrigardo",
+    "column": "Kolumno",
+    "interview": "Intervjuo",
+    "of_new": "Plej lasta",
+    "of_recomm": "Rilata",
+    "rank": "Monata Rangotabelo",
+    "recomm": "Rekomendi",
+    "recomm_4u": "Rekomendita al Vi",
+    "title": "Pixivision"
+  },
+  "tip": {
+    "browser_latest": "Bonvolu provi uzi la plej novan retumilon Chrome/Edge por viziti ĉi tiun retejon",
+    "browser_tip": "Bonvolu uzi Chrome/Edge-retumilon por viziti ĉi tiun retejon",
+    "connect_err": "Konekto malsukcesis, ĉi tiu ero ne disponeblas.",
+    "down_wait": "Prilaborado, bonvolu pacienci",
+    "downloaded": "Elŝuto kompleta",
+    "downloading": "Elŝutante",
+    "rate_limit": "API-limo superita, bonvolu provi denove poste",
+    "unknown_err": "Nekonata eraro"
+  },
+  "tips": {
+    "click_view": "Klaku por vidi",
+    "copy_err": "Kopio malsukcesis",
+    "copylink": {
+      "error": "Malsukcesis kopii ligilon:",
+      "succ": "Kopiita",
+      "success": "Ligo kopiita"
+    },
+    "current_value": "La nuna valoro:",
+    "download_wait": "Eble necesas longa tempo por elŝuti, bonvolu pacienci",
+    "ios_webm": "iOS-aparatoj nuntempe ne subtenas WebM-formatajn elŝutojn",
+    "loading": "Ŝarĝante...",
+    "net_err": "Reta escepto, alklaku por reŝargi",
+    "no_data": "Neniuj datumoj",
+    "no_more": "Ne plu",
+    "tip": "Konsiletoj"
+  },
+  "user": {
+    "art_num": "{0} funkcias",
+    "art_title": "{0} Artaĵo",
+    "fav": "Legomarko",
+    "fav_novel_title": "Romana Legomarko",
+    "fav_title": "Ilusts",
+    "faved": "Legosignita",
+    "follow": "Sekvu",
+    "follow_fail": "Sekvu malsukcesis",
+    "followed": "Sekvis",
+    "following": "Sekvante",
+    "friend": "MiaPixiv",
+    "novel_art": "Romanoj",
+    "novel_art_title": "Romanoj de {0}",
+    "of": "'s",
+    "of_other_art": "la aliaj verkoj de",
+    "related": "Rilataj uzantoj",
+    "sess": {
+      "login": "Ensaluti",
+      "logout": "Ĉu vi certe forigos seancon?",
+      "my_fav": "Miaj Legosignoj",
+      "out": "Elsaluti"
+    },
+    "unfollow_fail": "Malsukceso malsukcesis",
+    "view_comments": "Rigardu Komentojn"
+  }
+}

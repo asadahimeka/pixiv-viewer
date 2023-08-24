@@ -1,0 +1,395 @@
+{
+  "about": {
+    "about_site": "Acerca de este sitio",
+    "credits": "Agradecimientos",
+    "disclaimer": "Descargo de responsabilidad",
+    "disclaimer_text": "<b>Relacionado con NSFW</b><br>Este sitio no muestra recursos NSFW (como ilustraciones de R-18) de forma predeterminada, cualquier acceso a dichos recursos lo establece el usuario en la configuración y el usuario se ha asegurado \neso\n\nQuienes sean mayores de 18 años y no violen el contenido estipulado por las leyes y regulaciones locales.\n\nHemos marcado claramente los recursos NSFW tal como pueden aparecer y desaconsejamos el acceso o la distribución de dichos recursos.\n\n<br><b>Comentarios de usuarios</b><br>Los \"comentarios de usuarios\" se refieren a los comentarios publicados por los usuarios del sitio fuente de Pixiv a través de funciones como la autopresentación, la introducción de ilustraciones y el área de comentarios.\n\nEsta parte pertenece al comportamiento del propio editor y no podemos controlarla de manera efectiva.\n\nNo publicamos ni fomentamos la difusión de discursos inapropiados.\n\nSi encuentra contenido inapropiado durante la navegación, le recomendamos encarecidamente que lo informe al sitio de origen.\n\n<br><b>Declaración de derechos de autor</b><br>Este sitio no tiene relación con pixiv.net (ピクシブ Co., Ltd.). Todos los datos y recursos multimedia solicitados tienen derechos de autor de Pixiv o sus autores originales.\n\n<br>El programa Pixiv Viewer tiene la licencia MIT.\n\n<br>Solo para comunicación y aprendizaje.",
+    "feedback": "Comentario",
+    "from": "Modificado de",
+    "origin_site": "Sitio original",
+    "source": "Código fuente",
+    "title": "Acerca del sitio",
+    "version": "Versión"
+  },
+  "artwork": {
+    "download": {
+      "gif": "Baja calidad, mejor compatibilidad",
+      "mp4": "Vaya a ugoira.com para convertir",
+      "placeholder": "Por favor seleccione un formato de descarga",
+      "ugoira": {
+        "tip": "Por favor reproduzca la animación primero."
+      },
+      "webm": "Alta calidad, mala compatibilidad.",
+      "zip": "Archivo de cuadros de secuencia sin procesar"
+    },
+    "fav_fail": "Error al agregar a favoritos",
+    "share": {
+      "of_art": "Las obras de arte",
+      "share": "Compartir",
+      "title": "Comparte con amigos ahora",
+      "type": {
+        "copylink": "Copiar link",
+        "qrcode": "Código QR",
+        "qzone": "zona q",
+        "web": "compartir web",
+        "wechat": "WeChat",
+        "weibo": "Weibo"
+      }
+    },
+    "unfav_fail": "Error al eliminar el marcador"
+  },
+  "cache": {
+    "clear": "Limpiar",
+    "confirm": {
+      "first": "¿Está seguro de que desea borrar {0}?",
+      "second": "Recargará contenido relevante de la red después de la limpieza."
+    },
+    "db": "Caché persistente",
+    "local": "Caché de elementos de configuración",
+    "mem": "Memoria usada",
+    "records": "Registros)",
+    "session": "Caché de tiempo de ejecución",
+    "success_tip": "Limpieza completada",
+    "title": "Limpiar cache"
+  },
+  "common": {
+    "ai_gen": "generado por IA",
+    "artwork": "Obra de arte",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "content": {
+      "hide": "Según la configuración actual, este contenido no se mostrará"
+    },
+    "date": "fecha",
+    "discovery": "Descubrimiento",
+    "download": "Descargar",
+    "history": "Historia",
+    "illust": "ilustraciones",
+    "illust_manga": "ilustraciones",
+    "manga": "mangas",
+    "new_art": "Nuevas obras de arte",
+    "novel": "Novelas",
+    "overall": "En general",
+    "random_view": "Obras de arte aleatorias",
+    "rank": "Clasificación",
+    "recomm": "Recomendado",
+    "recomm_art": "Obras recomendadas",
+    "related": "Obras de arte relacionadas",
+    "reset": "Reiniciar",
+    "save": "Ahorrar",
+    "ugoira": "Ugoira",
+    "user": "Usuario",
+    "view_more": "Ver más",
+    "words": "Palabras"
+  },
+  "display": {
+    "ai": "Pantalla de trabajo generada por IA",
+    "ai_label": "Mostrando obras de arte generadas por IA en la lista de imágenes",
+    "block_tags": "Lista negra de etiquetas",
+    "block_tags_ph": "Por favor ingrese etiquetas, separadas por comas",
+    "block_uids": "Lista negra de artistas",
+    "block_uids_ph": "Introduce los ID de los artistas, separados por comas.",
+    "confirm": "¿Estás seguro de que quieres habilitar la visualización de {0} obras? \nAsegúrese de ser mayor de 18 años y de no violar las disposiciones de las leyes y regulaciones locales.",
+    "confirm_g": "Tenga en cuenta que activar el interruptor {0} puede tener efectos irreversibles en su salud física y mental. \nSi no se siente bien, cierre la aplicación inmediatamente y busque ayuda médica.",
+    "r18": "Exposición de obras del R-18",
+    "r18_label": "Contiene desnudez o descripciones sexuales.",
+    "r18g": "Exhibición de obras R-18G",
+    "r18g_label": "Contiene contenido sangriento o repugnante.",
+    "title": "Configuración de visualización de ilustraciones"
+  },
+  "eioSClGw9BqryzojTwr8j": "Efecto de transición de página",
+  "follow": {
+    "fav": "Marcadores",
+    "latest": "Nuevo",
+    "timeline": "Alimentar",
+    "user": "Siguiente"
+  },
+  "history": {
+    "confirm": {
+      "i": "¿Estás seguro de que quieres borrar el historial de ilustraciones y manga?",
+      "n": "¿Estás seguro de que quieres borrar el historial de la novela?",
+      "u": "¿Estás seguro de que deseas borrar el historial del usuario?"
+    }
+  },
+  "iAH7adsXaqWMXEi3TOuwS": "Serie",
+  "login": {
+    "fail_tip": "error de inicio de sesion",
+    "logout_tip": "¿Confirmar salida?",
+    "o": {
+      "desc1": "El sitio fuente de Pixiv está a punto de abrirse para iniciar sesión. Asegúrese de poder acceder a Pixiv.",
+      "desc2": "Asegúrese de haber instalado el complemento del navegador URLRedirector e importado la configuración; de lo contrario, no podrá iniciar sesión",
+      "desc3": "Enlace de instalación de URLRedirector:",
+      "desc4": "Haga clic para copiar la dirección de la regla en línea de URLRedirector",
+      "desc5": "Asegúrese de tener instalado el complemento del navegador Tampermonkey y el script de usuario auxiliar; de lo contrario, las solicitudes de API no funcionarán",
+      "desc6": "Enlace de instalación de Tampermonkey:",
+      "desc7": "Haga clic en Instalar UserScript auxiliar"
+    },
+    "succ_tip": "Acceso exitoso",
+    "t": {
+      "d1": "Asegúrese de tener instalado el complemento del navegador Tampermonkey e instale el script de usuario auxiliar; de lo contrario, active el proxy AppApi",
+      "d2": "Complete el RefreshToken; consulte el enlace a continuación para saber cómo obtenerlo.",
+      "d3": "Por favor complete RefreshToken",
+      "d4": "RefreshToken tiene un formato incorrecto"
+    }
+  },
+  "nav": {
+    "follow": "Alimentar",
+    "home": "Hogar",
+    "rank": "Clasificación",
+    "search": "Buscar",
+    "setting": "Ajustes"
+  },
+  "novel": {
+    "series": {
+      "next": "Siguiente capítulo:",
+      "prev": "Capítulo previo:"
+    },
+    "settings": {
+      "text": {
+        "bg": "Fondo del texto",
+        "color": "Color de texto",
+        "direct_h": "Horizontal",
+        "direct_v": "Vertical",
+        "direction": "Dirección del texto",
+        "font": "Tipografía del texto",
+        "height": "Altura de la línea de texto",
+        "sans": "sin",
+        "serif": "Serifa",
+        "size": "Tamaño de fuente",
+        "weight": "Peso del texto"
+      },
+      "title": "Configuraciones novedosas"
+    }
+  },
+  "rank": {
+    "day": "A diario",
+    "day_x": "R18 diario",
+    "day_x_female": "R18 Hembra",
+    "day_x_male": "R18 macho",
+    "female": "Popular entre las mujeres",
+    "male": "Popular entre los hombres",
+    "month": "Mensual",
+    "original": "Original",
+    "r18g": "R18G",
+    "rookie": "Novato",
+    "week": "Semanalmente",
+    "week_x": "R18 Semanal"
+  },
+  "search": {
+    "autocomplete": "Sugerencia de búsqueda",
+    "date": {
+      "asc": "orden ascendente por fecha",
+      "desc": "orden descendente por fecha",
+      "end": "Fin",
+      "start": "Comenzar"
+    },
+    "dura": {
+      "day": "En un día",
+      "month": "dentro de un mes",
+      "ph": "período de tiempo",
+      "week": "dentro de una semana"
+    },
+    "history": "Buscar Historia",
+    "img": {
+      "err": "Error al analizar el resultado devuelto",
+      "placeholder": "Por favor seleccione un archivo de imagen"
+    },
+    "mode": {
+      "exact": "coincidencia exacta de etiquetas",
+      "partial": "coincidencia parcial de etiquetas",
+      "title": "título y leyenda"
+    },
+    "of_user_res": "Resultados de búsqueda para {0}",
+    "placeholder": "Ingrese palabras claves",
+    "pop_preview": "Vista previa popular",
+    "pop_preview_novel": "Vista previa de novela popular",
+    "seach_tag": "Buscar etiquetas",
+    "search": "Buscar",
+    "search_user": "Buscar usuario"
+  },
+  "sess": {
+    "example": "El ID de sesión tiene este aspecto (no válido, para demostración):",
+    "input": {
+      "msg": "El formato de ID de sesión es incorrecto",
+      "ph": "Por favor ingrese el ID de sesión"
+    },
+    "mobile_tip": "Encuentre el método usted mismo en el terminal móvil o consígalo en el terminal de computadora",
+    "q1": {
+      "p1": "1. Visite el sitio de origen {0} e inicie sesión",
+      "p2": "2. Haga clic en el candado en la barra de direcciones.",
+      "p3": "3. En la interfaz emergente, seleccione \"Cookie (se están utilizando 0 cookies)\"",
+      "p4": "4. Expanda `pixiv.net` → `Cookies` para encontrar el elemento {0}",
+      "p5": "5. Copia su \"contenido\" y complétalo aquí."
+    },
+    "q2": {
+      "p2": "2. Presione F12 para abrir la consola del navegador.",
+      "p3": "3. Haga clic en la columna \"almacenamiento\"",
+      "p4": "4. Busque la columna cuya \"clave\" sea {0} en la lista de cookies",
+      "p5": "5. Copia su \"valor\" y complétalo aquí."
+    },
+    "que2": {
+      "p1": "No almacenaremos ni transferiremos su información personal ni cookies.",
+      "p2": "Sin embargo, recomendamos mantener sus cookies seguras.\n\nSi otros obtienen la información que guarda aquí, existe el riesgo de robo de cuenta."
+    },
+    "ques1": "¿Cómo obtener el ID de sesión de Pixiv?",
+    "ques2": "¿Pixiv Viewer robará mi información personal?",
+    "save": "ahorrar",
+    "succ_msg": "La autenticación de ID de sesión se realizó correctamente",
+    "title": "Establecer galleta Pixiv",
+    "warn": {
+      "text": "Esta función es una forma anormal de iniciar sesión y puede existir el riesgo de que se prohíba la cuenta. \nEl uso de esta función se considera como consentimiento del propio usuario y uso claro del riesgo. \nSi la cuenta está prohibida, etc., el autor de este proyecto no tiene nada que ver con eso.\n\nSe recomienda utilizar trompeta para realizar pruebas.",
+      "title": "Aviso de riesgo"
+    }
+  },
+  "setting": {
+    "about": "Acerca de",
+    "api": {
+      "desc": "Ingrese la dirección de instancia de HibiAPI a continuación, debe agregar https:// y la ruta debe completarse en la parte `/api/pixiv`",
+      "desc2": "Por ejemplo: https://hibiapi.getloli.com/api/pixiv, el caché local se borrará después de guardar",
+      "desc3": "Las instancias de API pueden ir a",
+      "desc4": "encontrar o construir el tuyo propio",
+      "desc5": "La dirección de la instancia de API debe admitir el acceso entre orígenes (CORS)",
+      "ph": "Seleccione una instancia de HibiAPI (el caché local se borrará después de cambiar)",
+      "title": "Configuración de instancia HibiAPI",
+      "title2": "Seleccionar instancia de HibiAPI",
+      "title3": "Enlace de instancia de HibiAPI",
+      "title4": "Instancia HibiAPI"
+    },
+    "app_desc": "Otra herramienta de navegación de ilustraciones/novedosas de Pixiv",
+    "dark": {
+      "title": "Modo oscuro"
+    },
+    "down_app": "Descargar aplicación",
+    "img_proxy": {
+      "desc": "Ingrese la dirección proxy de la imagen pixiv a continuación, no es necesario agregar https://",
+      "desc2": "Por ejemplo: i-cf.pximg.net, el caché local se borrará después de guardar",
+      "ph": "Seleccione el proxy de imagen pixiv (el caché local se borrará después de cambiar)",
+      "title": "Configuración de proxy pxig",
+      "title2": "selección de proxy de imagen pxig",
+      "title3": "Proxy de imagen",
+      "title4": "agencia de imagen pixiv"
+    },
+    "img_res": {
+      "l": "Carga lenta",
+      "m": "Carga un poco más rápido",
+      "o": "Cargar más lento",
+      "ph": "Por favor seleccione la calidad de los detalles de la imagen.",
+      "title": "Detalles de imagen y selección de calidad"
+    },
+    "input": "Ingresar:",
+    "lab": {
+      "title": "Experimental"
+    },
+    "layout": {
+      "g": "Igual ancho y alto",
+      "j": "Igual altura y diferente ancho",
+      "m": "Igual ancho y diferente altura",
+      "ph": "Seleccione un diseño de lista de imágenes",
+      "title": "Selección de diseño de lista de imágenes"
+    },
+    "other": {
+      "api_proxy": {
+        "def_ph": "Si no se puede utilizar el proxy predeterminado, puede probar con otro proxy.",
+        "sel_desc": "Seleccione el proxy AppApi",
+        "title": "Seleccione el proxy AppApi"
+      },
+      "cp_token_label": "Copie el RefreshToken actual al portapapeles",
+      "cp_token_title": "Exportar token de actualización",
+      "direct_mode": {
+        "confirm": {
+          "msg": "El modo de conexión directa solo es compatible con el navegador Firefox y debe asegurarse de que Tampermonkey y el script de usuario Helper estén instalados, que la velocidad sea lenta y no se garantice la estabilidad.\n\nNo se puede habilitar al mismo tiempo que el proxy AppApi.\n\nSi encuentra un error de red después de habilitar la conexión directa, abra manualmente el enlace a continuación, haga clic en \"Avanzado\" - \"Aceptar el riesgo y continuar\" y regrese a este sitio para actualizar la página después de que aparezca 421.",
+          "proxy_msg": "El reenvío de solicitudes de AppApi locales a través de servicios en la nube de terceros no puede garantizar la estabilidad y la seguridad.\n\nNo se puede activar al mismo tiempo que el modo de conexión directa.",
+          "proxy_title": "¿Está seguro de habilitar el proxy AppApi?",
+          "title": "¿Estás seguro de habilitar el modo directo?"
+        },
+        "host": {
+          "label": "Volverá a aprobar las consultas del DoH después de la limpieza",
+          "title": "Borrar caché de hosts directos"
+        },
+        "host_msg": "¿Está seguro de borrar los registros de caché de los hosts en el modo de conexión directa?",
+        "label": "Si se debe omitir SNI a través del dominio frontal",
+        "proxy": {
+          "label": "Si enviar solicitudes locales de AppApi a través de servicios en la nube",
+          "title": "Habilitar el proxy AppApi"
+        },
+        "title": "Habilitar modo directo"
+      },
+      "lang": "Idioma",
+      "lang_ph": "Por favor seleccione idioma",
+      "manual_input": "Ingresar enlace manualmente",
+      "manual_input_label": "Si las direcciones de instancia de API y proxy de las imágenes siguientes se ingresan manualmente",
+      "swipe_toggle": "Deslícese hacia la izquierda o hacia la derecha en la página de detalles para alternar obras de arte",
+      "title": "Otros ajustes"
+    },
+    "recomm": {
+      "app": "Aplicaciones",
+      "site": "Sitio web",
+      "title": "Enlaces recomendados",
+      "tm": "Guión de usuario"
+    }
+  },
+  "sp": {
+    "all": "Descripción general",
+    "column": "Columna",
+    "interview": "Entrevista",
+    "of_new": "El último",
+    "of_recomm": "Relacionado",
+    "rank": "Clasificación mensual",
+    "recomm": "Recomendar",
+    "recomm_4u": "Recomendado para ti",
+    "title": "Pixivisión"
+  },
+  "tip": {
+    "browser_latest": "Intente utilizar la última versión del navegador Chrome/Edge para visitar este sitio.",
+    "browser_tip": "Utilice el navegador Chrome/Edge para visitar este sitio.",
+    "connect_err": "La conexión falló, este artículo no está disponible.",
+    "down_wait": "Procesando, tenga paciencia",
+    "downloaded": "Descarga completa",
+    "downloading": "Descargando",
+    "rate_limit": "Se superó el límite de API. Vuelve a intentarlo más tarde.",
+    "unknown_err": "Error desconocido"
+  },
+  "tips": {
+    "click_view": "Click para ver",
+    "copy_err": "Copia fallida",
+    "copylink": {
+      "error": "No se pudo copiar el enlace:",
+      "succ": "copiado",
+      "success": "Enlace copiado"
+    },
+    "current_value": "El valor actual:",
+    "download_wait": "La descarga puede tardar mucho tiempo, tenga paciencia.",
+    "ios_webm": "Los dispositivos iOS actualmente no admiten descargas en formato WebM",
+    "loading": "Cargando...",
+    "net_err": "Excepción de red, haga clic para recargar",
+    "no_data": "Sin datos",
+    "no_more": "No más",
+    "tip": "Consejos"
+  },
+  "user": {
+    "art_num": "{0} funciona",
+    "art_title": "{0} Obra de arte",
+    "fav": "Marcador",
+    "fav_novel_title": "Marcador de novela",
+    "fav_title": "ilustraciones",
+    "faved": "Marcado como favorito",
+    "follow": "Seguir",
+    "follow_fail": "Seguir falló",
+    "followed": "Seguido",
+    "following": "Siguiente",
+    "friend": "MiPixiv",
+    "novel_art": "Novelas",
+    "novel_art_title": "Novelas de {0}",
+    "of": "'s",
+    "of_other_art": "Otras obras de",
+    "related": "Usuarios relacionados",
+    "sess": {
+      "login": "Acceso",
+      "logout": "¿Estás seguro de eliminar la sesión?",
+      "my_fav": "Mis marcadores",
+      "out": "Cerrar sesión"
+    },
+    "unfollow_fail": "Dejar de seguir falló",
+    "view_comments": "Ver comentarios"
+  }
+}

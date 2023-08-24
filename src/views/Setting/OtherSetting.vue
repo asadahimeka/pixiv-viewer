@@ -20,11 +20,11 @@
     </van-cell>
     <van-cell center :title="$t('setting.layout.title')" is-link :label="wfType.value" @click="wfType.show = true" />
     <van-cell center :title="$t('setting.img_res.title')" is-link :label="imgRes.value" @click="imgRes.show = true" />
-    <!-- <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
+    <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
       <template #right-icon>
         <van-switch v-model="hideApSelect" size="24" />
       </template>
-    </van-cell> -->
+    </van-cell>
     <van-cell v-if="hideApSelect" center :title="$t('setting.img_proxy.title')" is-link :label="pximgBed.value" @click="pximgBed.show = true" />
     <van-cell v-if="!appConfig.useLocalAppApi && hideApSelect" center :title="$t('setting.api.title')" is-link :label="hibiapi.value" @click="hibiapi.show = true" />
     <van-cell v-if="!hideApSelect" center :title="$t('setting.img_proxy.title2')" is-link :label="pximgBedLabel" @click="pximgBed_.show = true" />
@@ -204,19 +204,22 @@ export default {
         actions: [
           { name: 'zh-Hans', subname: '简体中文' },
           { name: 'zh-Hant', subname: '繁體中文' },
-          { name: 'ja', subname: '日本語' },
           { name: 'en', subname: 'English' },
+          { name: 'ja', subname: '日本語' },
           { name: 'ko', subname: '한국어' },
-          { name: 'fr', subname: 'Français' },
           { name: 'de', subname: 'Deutsch' },
+          { name: 'fr', subname: 'Français' },
           { name: 'ru', subname: 'Русский' },
           { name: 'it', subname: 'Italiano' },
+          { name: 'es', subname: 'Español' },
+          { name: 'pt', subname: 'Português' },
+          { name: 'el', subname: 'Ελληνικά' },
+          { name: 'eo', subname: 'Esperanto' },
         ],
       },
       pximgChecked: true,
       apiChecked: true,
-      // hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
-      hideApSelect: true,
+      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
       isDark: !!localStorage.getItem('PXV_DARK'),
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
       isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', false),
@@ -233,18 +236,18 @@ export default {
       return this.apiProxySel.actions.find(e => e._value == this.appConfig.apiProxy)?.name || ''
     },
   },
-  // watch: {
-  //   hideApSelect(val) {
-  //     LocalStorage.set('__HIDE_AP_SEL', val)
-  //     if (val) {
-  //       LocalStorage.set('HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI_MAIN)
-  //       LocalStorage.set('PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG_MAIN)
-  //     }
-  //     setTimeout(() => {
-  //       location.reload()
-  //     }, 500)
-  //   },
-  // },
+  watch: {
+    hideApSelect(val) {
+      LocalStorage.set('__HIDE_AP_SEL', val)
+      if (val) {
+        LocalStorage.set('HIBIAPI_BASE', process.env.VUE_APP_DEF_HIBIAPI_MAIN)
+        LocalStorage.set('PXIMG_PROXY', process.env.VUE_APP_DEF_PXIMG_MAIN)
+      }
+      setTimeout(() => {
+        location.reload()
+      }, 500)
+    },
+  },
   methods: {
     copyToken() {
       const t = this.appConfig.refreshToken

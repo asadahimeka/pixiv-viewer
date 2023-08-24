@@ -126,6 +126,9 @@ export default {
           [/^https:\/\/www\.pixiv\.net\/users\/(\d+)/i, m => this.$router.push(`/u/${m}`)],
           [/^https:\/\/www\.pixivision\.net\/.+\/a\/(\d+)/i, m => this.$router.push(`/spd?id=${m}`)],
           [new RegExp(`${location.origin}/.+/a/(\\d+)`, 'i'), m => this.$router.push(`/spd?id=${m}`)],
+          [new RegExp(`${location.origin}/.+?id=\\d+#(id-\\w+)`, 'i'), m => {
+            document.getElementById(m)?.scrollIntoView({ behavior: 'smooth' })
+          }],
         ]
         for (const act of actionMap) {
           const match = url.match(act[0])?.[1]
@@ -170,6 +173,34 @@ export default {
       height auto
       margin 20px auto
 
+    ._article-illust-eyecatch img
+      max-width 100%
+    .am__work__main img
+      border-radius: 4PX
+      box-shadow: 0 3PX 1PX -2PX rgba(0, 0, 0, .2), 0 2PX 2PX 0 rgba(0, 0, 0, .14), 0 1PX 5PX 0 rgba(0, 0, 0, .12)
+    ._feature-article-body__movie
+      margin 40px 0
+      text-align center
+    ._feature-article-body__widget
+      margin-bottom 40px
+      padding 20px
+      border 1px solid #ccc
+      border-radius 5PX
+    ._feature-article-body__pixiv_illust
+      position relative
+      margin-bottom 80px
+      & + ._feature-article-body__caption
+        position relative
+        top -25px
+      &::after
+        content: ''
+        position absolute
+        bottom -0.6rem
+        left 50%
+        transform translateX(-50%)
+        width 60px
+        height 1px
+        background #808080
     .fab__credit
       font-size: 0.32rem;
       text-align: right;
@@ -364,7 +395,7 @@ export default {
       text-align: center;
       font-size: 0.35rem;
     .title
-      margin: 10px 0 20px;
+      margin: 10px 0;
       font-size: 48px;
       text-align center
 

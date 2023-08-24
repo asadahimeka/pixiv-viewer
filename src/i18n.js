@@ -12,6 +12,7 @@ export function getSelectedLang() {
     'zh-HK': 'zh-Hant',
     'zh-MO': 'zh-Hant',
     'zh-SG': 'zh-Hans',
+    'zh-MY': 'zh-Hans',
     'ja': 'ja',
     'ja-JP': 'ja',
     'en': 'en',
