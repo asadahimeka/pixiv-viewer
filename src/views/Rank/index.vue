@@ -69,6 +69,7 @@ import Nav from './components/Nav'
 import _ from 'lodash'
 import api from '@/api'
 import { i18n } from '@/i18n'
+import { LocalStorage } from '@/utils/storage'
 
 const getRankMenus = () => ({
   daily: { name: i18n.t('rank.day'), io: 'day', cat: '0' },
@@ -105,6 +106,9 @@ const getRankMenus = () => ({
 
 const getRankCatLabels = () => [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
 const getRankCatActions = () => getRankCatLabels().map((e, i) => ({ text: e, _v: i.toString() }))
+
+const isHideManga = LocalStorage.get('PXV_HIDE_RANK_MANGA', false)
+const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923]
 
 export default {
   name: 'Rank',
@@ -193,7 +197,8 @@ export default {
       this.loading = true
       const type = this.getIOType(this.curType)
       let res
-      if (type?.includes('-web')) {
+      const isWebRank = !!type?.includes('-web')
+      if (isWebRank) {
         const [mode, content] = type.replace('-web', '').split('-')
         res = await api.getWebRankList(mode, this.curPage, this.date, content)
       } else {
@@ -208,6 +213,14 @@ export default {
             ...this.artList,
             ...newList,
           ], 'id')
+          if (!isWebRank && isHideManga) {
+            this.artList = this.artList.filter(e => {
+              if (e.type == 'manga') return false
+              if (/漫画|描き方|お絵かきTIPS|manga/.test(JSON.stringify(e))) return false
+              if (AUTHORS_NO_TYPE_MANGA.includes(+e.author.id)) return false
+              return true
+            })
+          }
           this.curPage++
         }
         this.loading = false

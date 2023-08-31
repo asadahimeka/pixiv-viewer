@@ -228,7 +228,7 @@
       "lang_ph": "Veuillez sélectionner la langue",
       "title": "Autres réglages",
       "manual_input_label": "Si les adresses de proxy et d'instance d'API des images ci-dessous sont saisies manuellement",
-      "manual_input": "Entrez le lien manuellement",
+      "manual_input": "Saisissez manuellement le lien proxy/API",
       "api_proxy": {
         "def_ph": "Si le proxy par défaut ne peut pas être utilisé, vous pouvez essayer un autre proxy",
         "sel_desc": "Veuillez sélectionner le proxy AppApi",
@@ -391,5 +391,6 @@
     }
   },
   "iAH7adsXaqWMXEi3TOuwS": "série",
-  "eioSClGw9BqryzojTwr8j": "Effet de transition de page"
+  "eioSClGw9BqryzojTwr8j": "Effet de transition de page",
+  "qmd5JADeSGtrvucK3TnGb": "Masquer les mangas dans la page de classement général selon le type d'œuvre, il peut y avoir quelques omissions"
 }

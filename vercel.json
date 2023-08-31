@@ -30,6 +30,12 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/~/:match*",
+      "destination": "https://s.pximg.net/:match"
+    }
+  ],
   "rewrites": [
     {
       "source": "/prks/obfs/:match*",

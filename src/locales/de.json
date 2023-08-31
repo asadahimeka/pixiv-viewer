@@ -228,7 +228,7 @@
       "lang_ph": "Bitte Sprache auswählen",
       "title": "Andere Einstellungen",
       "manual_input_label": "Ob die Proxy- und API-Instanzadressen der folgenden Bilder manuell eingegeben werden",
-      "manual_input": "Geben Sie den Link manuell ein",
+      "manual_input": "Geben Sie den Proxy-/API-Link manuell ein",
       "api_proxy": {
         "def_ph": "Wenn der Standard-Proxy nicht verwendet werden kann, können Sie es mit einem anderen Proxy versuchen",
         "sel_desc": "Bitte wählen Sie AppApi Proxy",
@@ -391,5 +391,6 @@
     }
   },
   "iAH7adsXaqWMXEi3TOuwS": "Serie",
-  "eioSClGw9BqryzojTwr8j": "Seitenübergangseffekt"
+  "eioSClGw9BqryzojTwr8j": "Seitenübergangseffekt",
+  "qmd5JADeSGtrvucK3TnGb": "Verstecken Sie Mangas auf der Seite mit der Gesamtrangliste entsprechend der Art des Werks, es kann zu Auslassungen kommen"
 }

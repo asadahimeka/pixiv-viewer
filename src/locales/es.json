@@ -316,7 +316,7 @@
       },
       "lang": "Idioma",
       "lang_ph": "Por favor seleccione idioma",
-      "manual_input": "Ingresar enlace manualmente",
+      "manual_input": "Ingrese manualmente el enlace proxy/API",
       "manual_input_label": "Si las direcciones de instancia de API y proxy de las imágenes siguientes se ingresan manualmente",
       "swipe_toggle": "Deslícese hacia la izquierda o hacia la derecha en la página de detalles para alternar obras de arte",
       "title": "Otros ajustes"
@@ -391,5 +391,6 @@
     },
     "unfollow_fail": "Dejar de seguir falló",
     "view_comments": "Ver comentarios"
-  }
+  },
+  "qmd5JADeSGtrvucK3TnGb": "Ocultar mangas en la página de la lista de clasificación general según el tipo de trabajo, puede haber algunas omisiones"
 }

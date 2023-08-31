@@ -20,6 +20,11 @@
     </van-cell>
     <van-cell center :title="$t('setting.layout.title')" is-link :label="wfType.value" @click="wfType.show = true" />
     <van-cell center :title="$t('setting.img_res.title')" is-link :label="imgRes.value" @click="imgRes.show = true" />
+    <van-cell center :title="$t('3HnNTIScyvd1cNc2qAh7X')" :label="$t('qmd5JADeSGtrvucK3TnGb')">
+      <template #right-icon>
+        <van-switch v-model="isHideRankManga" size="24" @change="changeHideRankManga" />
+      </template>
+    </van-cell>
     <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
       <template #right-icon>
         <van-switch v-model="hideApSelect" size="24" />
@@ -220,6 +225,7 @@ export default {
       pximgChecked: true,
       apiChecked: true,
       hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
+      isHideRankManga: LocalStorage.get('PXV_HIDE_RANK_MANGA', false),
       isDark: !!localStorage.getItem('PXV_DARK'),
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
       isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', false),
@@ -402,6 +408,15 @@ export default {
       this.isPageEffectOn = val
       this.$nextTick(() => {
         LocalStorage.set('PXV_PAGE_EFFECT', val)
+        setTimeout(() => {
+          location.reload()
+        }, 500)
+      })
+    },
+    changeHideRankManga(val) {
+      this.isHideRankManga = val
+      this.$nextTick(() => {
+        LocalStorage.set('PXV_HIDE_RANK_MANGA', val)
         setTimeout(() => {
           location.reload()
         }, 500)

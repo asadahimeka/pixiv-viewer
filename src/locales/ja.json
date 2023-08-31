@@ -228,7 +228,7 @@
       "lang": "言語",
       "lang_ph": "言語を選択してください",
       "manual_input_label": "以下の画像のプロキシおよび API インスタンスのアドレスが手動で入力されているかどうか",
-      "manual_input": "リンクを手動で入力",
+      "manual_input": "プロキシ/API リンクを手動で入力します",
       "api_proxy": {
         "def_ph": "デフォルトのプロキシを使用できない場合は、別のプロキシを試すことができます",
         "sel_desc": "AppApi プロキシを選択してください",
@@ -391,5 +391,6 @@
     }
   },
   "iAH7adsXaqWMXEi3TOuwS": "シリーズ",
-  "eioSClGw9BqryzojTwr8j": "ページ遷移効果"
+  "eioSClGw9BqryzojTwr8j": "ページ遷移効果",
+  "qmd5JADeSGtrvucK3TnGb": "総合ランキング一覧ページの漫画を作品の種類に応じて非表示にします、一部漏れがある場合があります"
 }

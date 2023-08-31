@@ -7,10 +7,10 @@
 // @license      MIT
 // @match        https://www.pixiv.pics/*
 // @match        https://pixiv.pics/*
-// @match        https://pixiv.kanata.ml/*
 // @connect      pixiv.net
-// @connect      kanata.ml
 // @connect      cocomi.cf
+// @connect      cocomi.eu.org
+// @connect      pixiv.pics
 // @connect      deno.dev
 // @connect      210.140.92.180
 // @grant        unsafeWindow

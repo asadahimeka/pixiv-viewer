@@ -237,7 +237,7 @@
     "succ_msg": "Sesia ID-aŭtentikigo sukcesis",
     "title": "Agordu Pixiv Kuketon",
     "warn": {
-      "text": "Ĉi tiu funkcio estas nenormala maniero ensaluti, kaj povas esti risko malpermesi la konton. \nUzado de ĉi tiu funkcio estas konsiderata kiel la propra konsento de la uzanto kaj klara uzo de la risko. \nSe la konto estas malpermesita, ktp, la aŭtoro de ĉi tiu projekto havas nenion komunan kun ĝi.\n\nOni rekomendas uzi trumpeton por testado.",
+      "text": "Ĉi tiu funkcio estas nenormala maniero ensaluti, kaj povas esti risko malpermesi la konton. \nUzado de ĉi tiu funkcio estas konsiderata kiel la propra konsento de la uzanto kaj klara uzo de la risko. \nSe la konto estas malpermesita, ktp, la aŭtoro de ĉi tiu projekto havas nenion komunan kun ĝi.\n\nOni rekomendas uzi alt por testado.",
       "title": "Riska Avizo"
     }
   },
@@ -316,7 +316,7 @@
       },
       "lang": "Lingvo",
       "lang_ph": "Bonvolu elekti lingvon",
-      "manual_input": "Enigu ligilon permane",
+      "manual_input": "Mane enigu la prokurilon/API-ligilon",
       "manual_input_label": "Ĉu la prokurilo kaj API-instancadresoj de la bildoj malsupraj estas enmetitaj permane",
       "swipe_toggle": "Glitu maldekstren aŭ dekstren sur la detalpaĝo por ŝanĝi artaĵojn",
       "title": "Aliaj Agordoj"
@@ -391,5 +391,6 @@
     },
     "unfollow_fail": "Malsukceso malsukcesis",
     "view_comments": "Rigardu Komentojn"
-  }
+  },
+  "qmd5JADeSGtrvucK3TnGb": "Kaŝu mangaojn en la ĝenerala rangolisto-paĝo laŭ la speco de laboro, povas esti iuj preterlasoj"
 }

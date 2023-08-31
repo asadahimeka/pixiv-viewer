@@ -227,7 +227,7 @@
       "lang": "語言",
       "lang_ph": "請選擇語言",
       "title": "其他設置",
-      "manual_input": "手動輸入地址",
+      "manual_input": "手動輸入代理/API鏈接",
       "manual_input_label": "下方圖片代理與 API 實例地址是否手動輸入",
       "api_proxy": {
         "def_ph": "默認代理無法使用的話可以嘗試其他代理",
@@ -391,5 +391,6 @@
     }
   },
   "iAH7adsXaqWMXEi3TOuwS": "系列",
-  "eioSClGw9BqryzojTwr8j": "頁面過渡效果"
+  "eioSClGw9BqryzojTwr8j": "頁面過渡效果",
+  "qmd5JADeSGtrvucK3TnGb": "根據作品類型在綜合排行榜列表頁面隱藏漫畫作品，可能會有遺漏"
 }
