@@ -4,6 +4,9 @@ import defaultMessages from './locales/zh-Hans.json'
 
 Vue.use(VueI18n)
 
+export const DEFAULT_LANG = 'zh-Hans'
+
+const splitLang = s => typeof s == 'string' && s.split('-')[0]
 export function getSelectedLang() {
   const langMap = {
     'zh': 'zh-Hans',
@@ -13,28 +16,27 @@ export function getSelectedLang() {
     'zh-MO': 'zh-Hant',
     'zh-SG': 'zh-Hans',
     'zh-MY': 'zh-Hans',
-    'ja': 'ja',
-    'ja-JP': 'ja',
-    'en': 'en',
-    'en-US': 'en',
-    'en-GB': 'en',
-    'ko': 'ko',
-    'ko-KR': 'ko',
     'de': 'de',
-    'de-DE': 'de',
+    'el': 'el',
+    'en': 'en',
+    'eo': 'eo',
+    'es': 'es',
     'fr': 'fr',
-    'fr-FR': 'fr',
-    'ru': 'ru',
-    'ru-RU': 'ru',
     'it': 'it',
-    'it-IT': 'it',
+    'ja': 'ja',
+    'ko': 'ko',
+    'pt': 'pt',
+    'ru': 'ru',
   }
-  const language = localStorage.getItem('PXV_LANG') || langMap[navigator.language]
-  console.log('language: ', language)
+
+  const language = localStorage.getItem('PXV_LANG') ||
+    langMap[navigator.language] ||
+    langMap[splitLang(navigator.language)] ||
+    langMap[splitLang(navigator.languages.find(e => langMap[splitLang(e)]))] ||
+    DEFAULT_LANG
+
   return language
 }
-
-export const DEFAULT_LANG = 'zh-Hans'
 
 export const i18n = new VueI18n({
   locale: DEFAULT_LANG,
