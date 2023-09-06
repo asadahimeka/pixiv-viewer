@@ -97,6 +97,8 @@ export default {
       if (type === 1) name = 'R-18'
       if (type === 2) name = 'R-18G'
 
+      window.umami?.track(`set_${name}_switch_${checked}`)
+
       if (checked) {
         Dialog.confirm({
           message: this.$t('display.confirm', [name]),
@@ -109,7 +111,7 @@ export default {
           .then(() => {
             if (type === 1) {
               this.currentSETTING.r18 = checked
-              window.umami?.track(`set_r18_switch_${checked}`)
+              // LocalStorage.set('PXV_NSFW_ON', 1)
             }
             if (type === 2) {
               this.currentSETTING.r18g = checked
@@ -121,10 +123,9 @@ export default {
                   location.reload()
                 })
               }, 200)
-              window.umami?.track(`set_r18g_switch_${checked}`)
+              LocalStorage.set('PXV_NSFW_ON', 1)
             }
             this.saveSwitchValues()
-            LocalStorage.set('PXV_NSFW_ON', 1)
             type === 1 && setTimeout(() => {
               location.reload()
             }, 200)
@@ -137,6 +138,9 @@ export default {
         if (type === 1) this.currentSETTING.r18 = checked
         if (type === 2) this.currentSETTING.r18g = checked
         this.saveSwitchValues()
+        setTimeout(() => {
+          location.reload()
+        }, 200)
       }
     },
     ...mapActions(['saveSETTING']),

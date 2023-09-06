@@ -88,7 +88,8 @@ async function initSetting() {
   let flag = false
   const setting = LocalStorage.get('PXV_CNT_SHOW', {})
   const isOn = () => LocalStorage.get('PXV_NSFW_ON', null)
-  if (isOn() == null && (setting.r18 || setting.r18g)) {
+  // if (isOn() == null && (setting.r18 || setting.r18g)) {
+  if (isOn() == null && setting.r18g) {
     LocalStorage.set('PXV_NSFW_ON', 1)
   }
   try {

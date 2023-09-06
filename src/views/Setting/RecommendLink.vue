@@ -5,28 +5,28 @@
       title="PixivNow"
       is-link
       label="https://pixiv.js.org"
-      @click="openLink('https://pixiv.js.org')"
+      @click="openLink('https://pixiv.js.org/?ref=pixiv.pics')"
     />
     <van-cell
       center
       title="Pixivel"
       is-link
       label="https://pixivel.moe"
-      @click="openLink('https://pixivel.moe')"
+      @click="openLink('https://pixivel.moe/?ref=pixiv.pics')"
     />
     <van-cell
       center
       title="Pixiviz"
       is-link
       label="https://pixiviz.xyz"
-      @click="openLink('https://pixiviz.xyz')"
+      @click="openLink('https://pixiviz.xyz/?ref=pixiv.pics')"
     />
     <van-cell
       center
       title="pixiv年鑑(β)"
       is-link
       label="https://pixiv.navirank.com/"
-      @click="openLink('https://pixiv.navirank.com/')"
+      @click="openLink('https://pixiv.navirank.com/?ref=pixiv.pics')"
     />
     <van-cell
       center

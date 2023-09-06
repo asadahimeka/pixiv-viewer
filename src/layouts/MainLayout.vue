@@ -2,11 +2,11 @@
   <div class="main-layout" :class="{'safe-area': safeArea}">
     <div class="app-main">
       <transition v-if="isPageEffectOn" :name="transitionName" mode="out-in">
-        <keep-alive>
+        <keep-alive :max="10">
           <router-view />
         </keep-alive>
       </transition>
-      <keep-alive v-else>
+      <keep-alive v-else :max="10">
         <router-view />
       </keep-alive>
     </div>
