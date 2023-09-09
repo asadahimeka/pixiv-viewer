@@ -113,8 +113,10 @@ export default {
           },
         }))
         this.spotlight = res.data
-        if (!res.data.items.length) {
-          this.$router.replace(`/spotlight_detail?id=${this.spid}`)
+        if (!res.data.desc) {
+          this.spotlight.related_recommend = null
+          this.spotlight.related_latest = null
+          this.$router.replace(`/pixivision/${this.spid}`)
         }
       } else {
         this.$toast({

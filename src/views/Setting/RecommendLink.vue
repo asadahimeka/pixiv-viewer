@@ -25,7 +25,7 @@
       center
       title="pixiv年鑑(β)"
       is-link
-      label="https://pixiv.navirank.com/"
+      label="https://pixiv.navirank.com"
       @click="openLink('https://pixiv.navirank.com/?ref=pixiv.pics')"
     />
     <van-cell

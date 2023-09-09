@@ -17,6 +17,7 @@ export default {
       const { code } = this.$route.query
       const v = LocalStorage.get('PXV_LOGIN_CODEV')
       await login(code, v)
+      window.umami?.track('oauth_login_success')
       this.$toast.success(this.$t('login.succ_tip'))
       setTimeout(() => {
         location.replace('/')

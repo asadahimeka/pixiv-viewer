@@ -111,7 +111,7 @@ export default {
       } else {
         this.$router.push({
           name: 'SpotlightDetail',
-          query: { id },
+          params: { id },
         })
       }
     },

@@ -6,8 +6,6 @@ Demo: 🔗 [pixiv.pics](https://pixiv.pics)
 
 Download: ⏬ [App Center](https://install.appcenter.ms/users/yumine/apps/pixiv-viewer/distribution_groups/beta) | [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
 
-~~[APK(5+)](https://github.com/journey-ad/pixiv-viewer/raw/master/pics/pixiv_viewer_0607231648.apk)~~
-
 ## Features
 - [x] Basic Pages
   - [x] Home Waterfall Layout
@@ -53,11 +51,11 @@ Download: ⏬ [App Center](https://install.appcenter.ms/users/yumine/apps/pixiv-
 
 ## Alternatives
 
-- [Pixiviz](https://z.pixiv.pics/rank)
+- [Pixiviz](https://z.pixiv.pics)
+- [Pixivel](https://pxelk.pixiv.pics)
 - [PixivNow](https://now.pixiv.pics/ranking)
 - [PixivMoe](https://moe.pixiv.pics)
 - [PixivLxns](https://lxns.pixiv.pics)
-- [Pixivel](https://pixivel.moe/rank)
 - [PIXID](https://pixid.top/ranking.php)
 - [pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
@@ -92,7 +90,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 This project uses [Vue I18n](https://kazupon.github.io/vue-i18n/) for internationalization, other language translations are mainly from machine translation, if there is anything wrong, welcome [contribute translation](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales)
 
-## Credit
+## Credits
 - [pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)
 - [Vue](https://vuejs.org/)
 - [Vant UI](https://vant-ui.github.io/vant/v2/)

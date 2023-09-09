@@ -74,7 +74,7 @@ export default {
       if (this.isTypeDetail) {
         this.$router.push({
           name: 'SpotlightDetail',
-          query: { id },
+          params: { id },
         })
       } else {
         this.$router.push({

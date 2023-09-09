@@ -13,7 +13,7 @@
         <van-tab :title="$t('setting.recomm.tm')" name="tm">
           <RecommendUserscript />
         </van-tab>
-        <van-tab v-if="showMhLink" title="🪄" name="mh">
+        <van-tab v-if="showMhLink" title="🪜" name="mh">
           <div class="setting-page">
             <van-cell v-for="a in mhLinks" :key="a[0]" center :title="a[0]" is-link @click="openLink(a[1])" />
           </div>

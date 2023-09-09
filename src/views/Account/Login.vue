@@ -80,6 +80,7 @@ export default {
       if (this.appConfig.refreshToken?.length == 43) {
         this.appConfig.useLocalAppApi = true
         PixivAuth.writeConfig(this.appConfig)
+        window.umami?.track('token_login')
         setTimeout(() => {
           location.assign('/')
         }, 500)
