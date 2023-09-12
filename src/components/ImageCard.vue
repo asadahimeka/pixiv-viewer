@@ -1,6 +1,5 @@
 <template>
   <div
-    v-longpress="downloadArtwork"
     class="image-card"
     :style="{ paddingBottom: paddingBottom(artwork), '--w': artwork.width, '--h': artwork.height }"
     @click.stop="click(artwork.id)"
@@ -31,7 +30,7 @@
       name="play"
       scale="8"
     />
-    <div v-if="mode == 'all' || mode === 'meta'" class="meta">
+    <div v-if="mode == 'all' || mode === 'meta'" v-longpress="downloadArtwork" class="meta">
       <div class="content">
         <h2 class="title" :title="artwork.title">{{ artwork.title }}</h2>
         <div class="author-cont">
