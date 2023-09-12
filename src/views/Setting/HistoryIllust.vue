@@ -10,7 +10,7 @@
 <script>
 import { Dialog } from 'vant'
 import ImageCard from '@/components/ImageCard'
-import { getCache, setCache } from '@/utils/siteCache'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 import { filterCensoredIllusts } from '@/utils/filter'
 
 export default {

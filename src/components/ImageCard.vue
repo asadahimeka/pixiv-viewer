@@ -1,10 +1,17 @@
 <template>
   <div
+    v-longpress="downloadArtwork"
     class="image-card"
     :style="{ paddingBottom: paddingBottom(artwork), '--w': artwork.width, '--h': artwork.height }"
     @click.stop="click(artwork.id)"
+    @contextmenu="preventContext"
   >
-    <img v-lazy="imgSrc" :alt="artwork.title" class="image" :class="{ censored: isCensored(artwork) }">
+    <img
+      v-lazy="imgSrc"
+      class="image"
+      :class="{ censored: isCensored(artwork) }"
+      :alt="artwork.title"
+    >
     <div class="tag-r18-ai">
       <van-tag v-if="index">#{{ index }}</van-tag>
       <van-tag v-if="tagText" :color="tagText === 'R-18' ? '#fb7299' : '#ff3f3f'">{{ tagText }}</van-tag>
@@ -38,7 +45,9 @@
 
 <script>
 import { localApi } from '@/api'
-import { getCache, toggleBookmarkCache } from '@/utils/siteCache'
+import { getCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
+import FileSaver from 'file-saver'
+import { Dialog } from 'vant'
 import { mapGetters } from 'vuex'
 
 export default {
@@ -151,6 +160,30 @@ export default {
       if (pb < 50) return '50%'
       if (pb > 160) return '160%'
       return pb.toFixed(2) + '%'
+    },
+    preventContext(/** @type {Event} */ event) {
+      event.preventDefault()
+      return false
+    },
+    async downloadArtwork(/** @type {Event} */ ev) {
+      console.log('ev: ', ev)
+      if (this.artwork.type == 'ugoira') {
+        return
+      }
+      ev.preventDefault()
+      ev.stopPropagation()
+      const src = this.artwork.images[0].o
+      const fileName = `${this.artwork.author.name}_${this.artwork.title}_${this.artwork.id}_p0.${src.split('.').pop()}`
+      const res = await Dialog.confirm({
+        title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
+        message: fileName,
+        closeOnPopstate: true,
+        cancelButtonText: this.$t('common.cancel'),
+        confirmButtonText: this.$t('common.confirm'),
+      }).catch(() => 'cancel')
+      if (res != 'confirm') return
+      await this.$nextTick()
+      FileSaver.saveAs(src, fileName)
     },
   },
 }

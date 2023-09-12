@@ -38,7 +38,7 @@
 <script>
 import { Dialog } from 'vant'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
-import localDb from '@/utils/localDb'
+import localDb from '@/utils/storage/localDb'
 
 export default {
   name: 'SettingClearCache',

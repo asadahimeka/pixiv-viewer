@@ -19,7 +19,8 @@ import { i18n, DEFAULT_LANG, getSelectedLang, loadLanguageAsync } from './i18n'
 import SvgIcon from './icons'
 import router from './router'
 import store from './store'
-import { initBookmarkCache } from './utils/siteCache'
+import longpress from './directives/longpress'
+import { initBookmarkCache } from './utils/storage/siteCache'
 import { LocalStorage } from './utils/storage'
 
 setupApp()
@@ -51,6 +52,7 @@ async function setupApp() {
   Vue.use(VueAwesomeSwiper)
   Vue.use(VueMasonry)
   Vue.use(SvgIcon)
+  Vue.use(longpress)
 
   Vue.component('WfCont', ImageLayout)
   Vue.component('TopBar', TopBar)

@@ -3,7 +3,7 @@ import { Dialog } from 'vant'
 import { i18n } from '@/i18n'
 import { getCookie, objectToQueryString, removeCookie, setCookie } from '@/utils'
 import { imgProxy, parseWebApiIllust } from '.'
-import { getCache, setCache } from '@/utils/siteCache'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 import store from '@/store'
 
 /**

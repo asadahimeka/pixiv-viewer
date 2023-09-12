@@ -1,7 +1,7 @@
 import dayjs from 'dayjs'
 import { get } from './http'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
-import { getCache, setCache } from '@/utils/siteCache'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { filterCensoredIllusts } from '@/utils/filter'
 

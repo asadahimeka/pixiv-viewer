@@ -22,7 +22,7 @@
 
 <script>
 import { Dialog } from 'vant'
-import { getCache, setCache } from '@/utils/siteCache'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 
 export default {
   name: 'SettingHistoryUsers',

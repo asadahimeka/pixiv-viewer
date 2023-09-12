@@ -214,7 +214,7 @@ import AuthorNovels from './components/AuthorNovels.vue'
 import FavoriteNovels from './components/FavoriteNovels.vue'
 import _ from 'lodash'
 import api, { localApi } from '@/api'
-import { getCache, setCache } from '@/utils/siteCache'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 
 export default {
   name: 'Users',

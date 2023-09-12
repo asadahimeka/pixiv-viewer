@@ -15,9 +15,11 @@
       <img
         v-if="lazy"
         v-lazy="getImgUrl(url)"
+        v-longpress="e => downloadArtwork(e, index)"
         :alt="`${artwork.title} - Page ${index + 1}`"
         class="image"
         @click.stop="view(index, isCensored(artwork))"
+        @contextmenu="preventContext"
       >
       <img
         v-else
@@ -54,7 +56,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { ImagePreview } from 'vant'
+import { Dialog, ImagePreview } from 'vant'
 import axios from 'axios'
 import JSZip from 'jszip'
 import GIF from 'gif.js'
@@ -131,6 +133,29 @@ export default {
           closeable: true,
         })
       }
+    },
+    preventContext(/** @type {Event} */ event) {
+      event.preventDefault()
+      return false
+    },
+    async downloadArtwork(/** @type {Event} */ ev, index) {
+      console.log('index: ', index)
+      if (this.artwork.type == 'ugoira') {
+        return
+      }
+      ev.preventDefault()
+      const src = this.artwork.images[index].o
+      const fileName = `${this.artwork.author.name}_${this.artwork.title}_${this.artwork.id}_p${index}.${src.split('.').pop()}`
+      const res = await Dialog.confirm({
+        title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
+        message: fileName,
+        closeOnPopstate: true,
+        cancelButtonText: this.$t('common.cancel'),
+        confirmButtonText: this.$t('common.confirm'),
+      }).catch(() => 'cancel')
+      if (res != 'confirm') return
+      await this.$nextTick()
+      FileSaver.saveAs(src, fileName)
     },
     showFull() {
       if (this.isShrink) this.isShrink = false

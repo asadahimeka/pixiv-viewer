@@ -34,8 +34,12 @@ html, body
   .title
     font-size: 32px;
 
-.title,.author,.caption,.users .detail,.users .name
-  user-select text
+.artwork
+  .title,.author,.caption
+    user-select text
+.users
+  .detail,.name
+    user-select text
 
 .image-preview
   background: #333;
@@ -193,6 +197,11 @@ html, body
 @media screen and (max-width: 500px)
   ::-webkit-scrollbar
     width: 0;
+
+  .image-card
+    .title, .author
+      user-select none
+
 
 html:has(.dark)
   ::-webkit-scrollbar

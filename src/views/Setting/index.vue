@@ -1,7 +1,7 @@
 <template>
   <div class="setting">
     <h2 class="app-title">
-      <img v-if="!isLoggedIn" width="40" height="40" src="/app-icon.png" alt="">
+      <img v-if="!isLoggedIn" src="/app-icon.png" alt="">
       <div class="app-title-desc">
         <span>Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup></span>
         <small>{{ $t('setting.app_desc') }}</small>
@@ -97,6 +97,8 @@ export default {
       font-size 0.24rem
 
   img
+    width 64px
+    height 64px
     margin-right 20px
 
 .user_data

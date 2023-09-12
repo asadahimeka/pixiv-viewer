@@ -143,7 +143,7 @@ import { copyText, sleep } from '@/utils'
 import { i18n } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
 import { localApi } from '@/api'
-import { toggleBookmarkCache } from '@/utils/siteCache'
+import { toggleBookmarkCache } from '@/utils/storage/siteCache'
 
 export default {
   filters: {

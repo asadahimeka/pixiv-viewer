@@ -98,7 +98,9 @@ export default {
       this.loading = true
       const res = await api.getSpotlightTypeDetail(this.spid)
       if (res.status === 0) {
-        res.data.content = res.data.content?.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
+        res.data.content = res.data.content
+          ?.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
+          ?.replace(/src="https:\/\/embed\.pixiv\.net\/(.*)"/i, `src="${process.env.VUE_APP_COMMON_PROXY}https://embed.pixiv.net/$1"`)
         this.spotlight = res.data
       } else {
         this.$toast({
