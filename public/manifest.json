@@ -30,7 +30,7 @@
       "url": "/search",
       "icons": [
         {
-          "src": "./img/icons/search.png",
+          "src": "./img/icons/sc_search.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -41,7 +41,18 @@
       "url": "/rank/daily",
       "icons": [
         {
-          "src": "./img/icons/rank.png",
+          "src": "./img/icons/sc_rank.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "动态",
+      "url": "/following",
+      "icons": [
+        {
+          "src": "./img/icons/sc_feeds.png",
           "sizes": "96x96",
           "type": "image/png"
         }
@@ -52,7 +63,7 @@
       "url": "/setting",
       "icons": [
         {
-          "src": "./img/icons/setting.png",
+          "src": "./img/icons/sc_setting.png",
           "sizes": "96x96",
           "type": "image/png"
         }
