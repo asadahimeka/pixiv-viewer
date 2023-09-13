@@ -258,7 +258,7 @@ export default {
     }
   },
   head() {
-    return { title: this.userInfo.name ? { title: this.userInfo.name } : {} }
+    return { title: this.userInfo.name ? this.userInfo.name : {} }
   },
   computed: {
     showFollowBtn() {
