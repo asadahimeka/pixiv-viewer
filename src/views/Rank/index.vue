@@ -137,6 +137,11 @@ export default {
       rankCatActions: getRankCatActions(),
     }
   },
+  head() {
+    return {
+      title: `${this.$t('nav.rank')} - ${this.rankCatLabels[this.actRankCat]}`,
+    }
+  },
   computed: {
     menu() {
       return _.pickBy(this.menus, o => o.cat == this.actRankCat)

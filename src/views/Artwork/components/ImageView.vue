@@ -67,6 +67,8 @@ import { LocalStorage } from '@/utils/storage'
 import { sleep } from '@/utils'
 
 const imgResSel = LocalStorage.get('PXV_DTL_IMG_RES', 'Large')
+const isLongpressDL = LocalStorage.get('PXV_LONGPRESS_DL', false)
+
 export default {
   props: {
     artwork: {
@@ -135,12 +137,12 @@ export default {
       }
     },
     preventContext(/** @type {Event} */ event) {
+      if (!isLongpressDL) return true
       event.preventDefault()
       return false
     },
     async downloadArtwork(/** @type {Event} */ ev, index) {
-      console.log('index: ', index)
-      if (this.artwork.type == 'ugoira') {
+      if (!isLongpressDL || this.artwork.type == 'ugoira') {
         return
       }
       ev.preventDefault()
@@ -150,6 +152,7 @@ export default {
         title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
         message: fileName,
         closeOnPopstate: true,
+        lockScroll: false,
         cancelButtonText: this.$t('common.cancel'),
         confirmButtonText: this.$t('common.confirm'),
       }).catch(() => 'cancel')

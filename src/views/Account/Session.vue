@@ -82,6 +82,9 @@ export default {
       },
     }
   },
+  head() {
+    return { title: this.$t('sess.title') }
+  },
   methods: {
     async onSubmit() {
       try {

@@ -8,17 +8,17 @@ const svgIconDir = path.join(__dirname, 'src/icons/svg')
 const cdn = {
   css: [],
   js: [
-    'https://cdn.staticfile.org/vue/2.6.14/vue.min.js',
-    'https://cdn.staticfile.org/vue-i18n/8.28.2/vue-i18n.min.js',
-    'https://cdn.staticfile.org/vue-router/3.6.5/vue-router.min.js',
-    'https://cdn.staticfile.org/vuex/3.6.2/vuex.min.js',
-    'https://cdn.staticfile.org/axios/0.27.2/axios.min.js',
-    'https://cdn.staticfile.org/vant/2.12.54/vant.min.js',
-    'https://cdn.staticfile.org/Swiper/5.4.5/js/swiper.min.js',
-    'https://cdn.staticfile.org/jszip/3.10.1/jszip.min.js',
-    'https://cdn.staticfile.org/lodash.js/4.17.21/lodash.min.js',
-    'https://cdn.staticfile.org/localforage/1.10.0/localforage.min.js',
-    'https://cdn.staticfile.org/crypto-js/4.1.1/crypto-js.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/vue-i18n/8.28.2/vue-i18n.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/vue-router/3.6.5/vue-router.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/vuex/3.6.2/vuex.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/axios/0.27.2/axios.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/vant/2.12.54/vant.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/Swiper/5.4.5/js/swiper.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/jszip/3.10.1/jszip.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/lodash.js/4.17.21/lodash.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/localforage/1.10.0/localforage.min.js',
+    'https://cdn.bootcdn.net/ajax/libs/crypto-js/4.1.1/crypto-js.min.js',
   ],
 }
 
@@ -146,7 +146,7 @@ module.exports = {
           options: { cacheName: 'html-cache', cacheableResponse: { statuses: [200] } },
         },
         {
-          urlPattern: /^https:\/\/cdn\.staticfile\.org\/.*\.(css|js)$/,
+          urlPattern: /^https:\/\/cdn\.bootcdn\.net\/.*\.(css|js)$/,
           handler: 'CacheFirst',
           options: { cacheName: 'cdn-cache', cacheableResponse: { statuses: [200] }, expiration: { maxAgeSeconds: 86400 * 7 } },
         },

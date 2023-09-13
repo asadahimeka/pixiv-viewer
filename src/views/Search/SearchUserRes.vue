@@ -23,6 +23,7 @@ import api from '@/api'
 import _ from 'lodash'
 import ImageSlide from '@/components/ImageSlide.vue'
 import { mintVerify } from '@/utils/filter'
+import { i18n } from '@/i18n'
 
 export default {
   name: 'SearchUserRes',
@@ -50,6 +51,9 @@ export default {
         },
       },
     }
+  },
+  head: {
+    title: i18n.t('search.search_user'),
   },
   activated() {
     this.init()

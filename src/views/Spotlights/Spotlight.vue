@@ -69,6 +69,9 @@ export default {
       },
     }
   },
+  head() {
+    return { title: this.spotlight.title }
+  },
   computed: {
     tagRecomm() {
       return this.spotlight.related_recommend || {}

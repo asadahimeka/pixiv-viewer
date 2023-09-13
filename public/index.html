@@ -5,24 +5,25 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-  <title>Pixiv Viewer</title>
+  <title>Pixiv Viewer - Yet Another Pixiv Illustration & Novel Viewer</title>
   <meta name="keywords" content="pixiv,pixiv-viewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv每日排行,pixiv漫画,pixiv小说" />
-  <meta name="description" itemprop="description" content="又一个Pixiv插画小说阅览工具，适配PC端展示，支持PWA安装。" />
+  <meta name="description" itemprop="description" content="又一个Pixiv插画小说阅览工具，适配多端展示，支持PWA安装。" />
   <meta property="og:title" content="Pixiv Viewer" />
-  <meta property="og:description" content="又一个Pixiv插画小说阅览工具，适配PC端展示，支持PWA安装。" />
+  <meta property="og:description" content="又一个Pixiv插画小说阅览工具，适配多端展示，支持PWA安装。" />
   <meta property="og:url" content="https://pixiv.pics" />
   <meta property="og:image" content="https://pixiv.pics/img/icons/256.png" />
   <meta property="og:site_name" content="Pixiv Viewer" />
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="x-dns-prefetch-control" content="on" />
   <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico" type="image/x-icon">
-  <link rel="dns-prefetch" href="https://cdn.staticfile.org">
-  <link rel="preconnect" href="https://cdn.staticfile.org" crossorigin="anonymous" />
+  <link rel="dns-prefetch" href="https://cdn.bootcdn.net">
+  <link rel="preconnect" href="https://cdn.bootcdn.net" crossorigin="anonymous" />
   <link rel="stylesheet" href="<%= BASE_URL %>static/css/flexible.css">
-  <link rel="stylesheet" href="https://cdn.staticfile.org/vant/2.12.54/index.min.css">
-  <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/5.4.5/css/swiper.min.css">
-  <link rel="stylesheet" href="https://cdn.staticfile.org/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixiv Viewer","alternateName":"Pxve","url":"https://pixiv.pics"}</script>
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/vant/2.12.54/index.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/5.4.5/css/swiper.min.css">
+  <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixiv Viewer","alternateName":"Pxve","url":"https://pixiv.pics/"}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","url":"https://pixiv.pics/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixiv.pics/search/{search_term_string}"},"query-input":"required name=search_term_string"}}</script>
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>

@@ -1,6 +1,6 @@
 {
   "name": "pixiv-viewer",
-  "version": "1.12.1",
+  "version": "1.12.2",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -31,11 +31,11 @@
     "vue-awesome-swiper": "4.1.1",
     "vue-i18n": "8.28.2",
     "vue-masonry-css": "1.0.3",
+    "vue-meta": "2.4.0",
     "vue-router": "3.6.5",
     "vuex": "3.6.2"
   },
   "devDependencies": {
-    "@babel/plugin-proposal-optional-chaining": "7.21.0",
     "@rushstack/eslint-patch": "1.2.0",
     "@types/crypto-js": "4.1.1",
     "@types/file-saver": "2.0.5",

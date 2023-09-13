@@ -63,6 +63,9 @@ export default {
       },
     }
   },
+  head() {
+    return { title: this.$t('display.title') }
+  },
   computed: {
     ...mapState(['SETTING']),
   },

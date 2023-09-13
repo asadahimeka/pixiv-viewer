@@ -159,6 +159,13 @@ export default {
       textConfig,
     }
   },
+  head() {
+    return this.artwork.title
+      ? {
+          title: this.artwork.title + ' - ' + this.artwork.author?.name,
+        }
+      : {}
+  },
   computed: {
     ...mapGetters(['isCensored']),
     showPntBtn() {

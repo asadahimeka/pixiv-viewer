@@ -40,6 +40,9 @@ export default {
       activeTab: 'i',
     }
   },
+  head() {
+    return { title: this.$t('common.history') }
+  },
   methods: {
     clearHistory() {
       this.$refs[`h${this.activeTab}`]?.clearHistory()

@@ -38,6 +38,9 @@ export default {
       notFromDetail: true,
     }
   },
+  head() {
+    return { title: this.$t('common.discovery') }
+  },
   activated() {
     // document.querySelector('.app-main')?.scrollTo({ top: 0 })
     this.init()

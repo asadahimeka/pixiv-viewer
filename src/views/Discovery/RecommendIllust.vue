@@ -35,6 +35,9 @@ export default {
       notFromDetail: true,
     }
   },
+  head() {
+    return { title: this.$t('common.recomm_art') }
+  },
   activated() {
     // document.querySelector('.app-main')?.scrollTo({ top: 0 })
     this.init()

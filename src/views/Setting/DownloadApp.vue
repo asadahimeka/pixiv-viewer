@@ -29,12 +29,8 @@
 <script>
 export default {
   name: 'SettingAbout',
-  components: {
-  },
-  data() {
-    return {
-
-    }
+  head() {
+    return { title: this.$t('setting.down_app') }
   },
   methods: {
     openLink(link) {

@@ -62,6 +62,9 @@ export default {
       detail: null,
     }
   },
+  head() {
+    return { title: this.$t('iAH7adsXaqWMXEi3TOuwS') }
+  },
   watch: {
     $route() {
       if (

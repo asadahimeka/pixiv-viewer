@@ -43,11 +43,14 @@
 </template>
 
 <script>
-import { localApi } from '@/api'
-import { getCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import FileSaver from 'file-saver'
 import { Dialog } from 'vant'
 import { mapGetters } from 'vuex'
+import { localApi } from '@/api'
+import { LocalStorage } from '@/utils/storage'
+import { getCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
+
+const isLongpressDL = LocalStorage.get('PXV_LONGPRESS_DL', false)
 
 export default {
   props: {
@@ -161,21 +164,21 @@ export default {
       return pb.toFixed(2) + '%'
     },
     preventContext(/** @type {Event} */ event) {
+      if (!isLongpressDL) return true
       event.preventDefault()
       return false
     },
     async downloadArtwork(/** @type {Event} */ ev) {
-      console.log('ev: ', ev)
-      if (this.artwork.type == 'ugoira') {
+      if (!isLongpressDL || this.artwork.type == 'ugoira') {
         return
       }
       ev.preventDefault()
-      ev.stopPropagation()
       const src = this.artwork.images[0].o
       const fileName = `${this.artwork.author.name}_${this.artwork.title}_${this.artwork.id}_p0.${src.split('.').pop()}`
       const res = await Dialog.confirm({
         title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
         message: fileName,
+        lockScroll: false,
         closeOnPopstate: true,
         cancelButtonText: this.$t('common.cancel'),
         confirmButtonText: this.$t('common.confirm'),

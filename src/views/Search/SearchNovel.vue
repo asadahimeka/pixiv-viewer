@@ -89,6 +89,7 @@ import { notSelfHibiApi } from '@/api/http'
 import NovelCard from '@/components/NovelCard.vue'
 import PopularPreviewNovel from './components/PopularPreviewNovel.vue'
 import { mintVerify } from '@/utils/filter'
+import { i18n } from '@/i18n'
 
 export default {
   name: 'Search',
@@ -114,6 +115,9 @@ export default {
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
     }
+  },
+  head: {
+    title: i18n.t('search.search'),
   },
   computed: {
     ...mapState(['searchHistory']),

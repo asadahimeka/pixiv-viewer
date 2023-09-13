@@ -9,6 +9,9 @@
 <script>
 export default {
   name: 'SettingDisclaimer',
+  head() {
+    return { title: this.$t('about.disclaimer') }
+  },
 }
 </script>
 

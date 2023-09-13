@@ -24,6 +24,7 @@ import LatestMangaCard from './components/LatestMangaCard.vue'
 import MangaRankCard from './components/MangaRankCard.vue'
 import MangaRecommendCard from './components/MangaRecommendCard.vue'
 import RandomManga from './components/RandomManga.vue'
+import { i18n } from '@/i18n'
 
 export default {
   name: 'HomeIllust',
@@ -37,6 +38,9 @@ export default {
     return {
       isSelfHibi: !notSelfHibiApi,
     }
+  },
+  head: {
+    title: i18n.t('common.manga'),
   },
 }
 </script>

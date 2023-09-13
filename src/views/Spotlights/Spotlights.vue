@@ -91,6 +91,9 @@ export default {
       },
     }
   },
+  head() {
+    return { title: this.$t('sp.title') }
+  },
   watch: {
     activeTab() {
       this.curPage = 1

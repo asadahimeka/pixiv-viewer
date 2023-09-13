@@ -26,6 +26,9 @@ export default {
       notFromArtwork: true,
     }
   },
+  head() {
+    return { title: this.$t('common.artwork') }
+  },
 }
 </script>
 <style lang="stylus" scoped>

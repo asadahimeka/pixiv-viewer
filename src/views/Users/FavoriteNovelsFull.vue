@@ -25,6 +25,9 @@ export default {
       notFromArtwork: true,
     }
   },
+  head() {
+    return this.$t('user.fav_novel_title')
+  },
 }
 </script>
 <style lang="stylus" scoped>

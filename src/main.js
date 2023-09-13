@@ -10,6 +10,7 @@ import Vant, { /* Dialog,  */ImagePreview, Lazyload, /*  Notify,  */Toast } from
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMasonry from 'vue-masonry-css'
+import VueMeta from 'vue-meta'
 
 import App from './App.vue'
 import { getActionMap } from './api/client/action'
@@ -51,6 +52,7 @@ async function setupApp() {
   Vue.use(Vant)
   Vue.use(VueAwesomeSwiper)
   Vue.use(VueMasonry)
+  Vue.use(VueMeta, { keyName: 'head' })
   Vue.use(SvgIcon)
   Vue.use(longpress)
 

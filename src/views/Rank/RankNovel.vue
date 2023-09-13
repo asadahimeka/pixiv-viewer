@@ -114,6 +114,11 @@ export default {
       rankCatActions: getRankCatActions(),
     }
   },
+  head() {
+    return {
+      title: `${this.$t('nav.rank')} - ${this.rankCatLabels[this.actRankCat]}`,
+    }
+  },
   computed: {
     dateNum() {
       return dayjs(this.date).date()

@@ -1,12 +1,12 @@
 <template>
   <div class="setting">
-    <h2 class="app-title">
+    <h1 class="app-title">
       <img v-if="!isLoggedIn" src="/app-icon.png" alt="">
       <div class="app-title-desc">
-        <span>Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup></span>
+        <span class="title-font">Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup></span>
         <small>{{ $t('setting.app_desc') }}</small>
       </div>
-    </h2>
+    </h1>
     <van-cell v-if="isLoggedIn" size="large" center is-link :to="`/u/${user.id}`">
       <template #title>
         <div class="user_data">
@@ -41,6 +41,11 @@ import PixivAuth from '@/api/client/pixiv-auth'
 
 export default {
   name: 'Setting',
+  head() {
+    return {
+      title: this.$t('nav.setting'),
+    }
+  },
   computed: {
     ...mapState(['user']),
     ...mapGetters(['isLoggedIn']),
@@ -87,6 +92,10 @@ export default {
   padding-right 10px
   font-size 40px
   text-align center
+
+  .title-font
+    font-family "Georgia Pro", Georgia, "Times New Roman", serif
+    font-weight bold
 
   &-desc
     display flex

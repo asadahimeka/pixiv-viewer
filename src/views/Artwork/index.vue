@@ -131,6 +131,13 @@ export default {
       disableSwipe: !LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
     }
   },
+  head() {
+    return this.artwork.title
+      ? {
+          title: this.artwork.title + ' - ' + this.artwork.author?.name,
+        }
+      : {}
+  },
   computed: {
     ...mapGetters(['isCensored']),
   },

@@ -48,6 +48,9 @@ export default {
       showMhLink: Boolean(mhLinks) && navigator.language.includes('zh'),
     }
   },
+  head() {
+    return { title: this.$t('setting.recomm.title') }
+  },
   methods: {
     openLink(link) {
       window.umami?.track('open_link', { link: link.replace('https://', '') })

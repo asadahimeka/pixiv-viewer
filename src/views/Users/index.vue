@@ -257,6 +257,9 @@ export default {
       favLoading: false,
     }
   },
+  head() {
+    return { title: this.userInfo.name ? { title: this.userInfo.name } : {} }
+  },
   computed: {
     showFollowBtn() {
       if (!window.APP_CONFIG.useLocalAppApi) return false

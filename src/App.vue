@@ -12,8 +12,15 @@ import { existsSessionId, initUser } from '@/api/user'
 import { localApi } from './api'
 
 export default {
+  name: 'App',
   components: {
     Preload,
+  },
+  head: {
+    // if no subcomponents specify a metaInfo.title, this title will be used
+    title: 'Pxve',
+    // all titles will be injected into this template
+    titleTemplate: '%s | Pixiv Viewer',
   },
   async created() {
     let user = null
@@ -66,10 +73,43 @@ html,body
     left 50%
     transform translateX(-50%)
     top 0
+    width 100vw
     margin-bottom 0
     padding 0.3rem 0
     background: rgba(255,255,255,0.8)
-    backdrop-filter: saturate(200%) blur(6px);
+    backdrop-filter: saturate(200%) blur(6px)
+    .home-title
+      display flex
+      align-items center
+    .app-logo,.home-search
+      height 0.8rem
+    .home-search
+      display flex
+      align-items center
+      .van-search
+        width 5rem
+        padding 0
+        background transparent
+    .app-title
+      margin-left 10px
+      font-size 32px
+      font-family "Lucida Handwriting", "Georgia Pro", Georgia, "Times New Roman", serif
+      font-weight bold
+
+@media screen and (max-width: 999px)
+  .Home .home-i-tabs
+    .home-title,.home-search
+      display none
+
+@media screen and (min-width: 1000px)
+  #app
+    .Home
+      padding-top 1.4rem
+      .home-i-tabs
+        justify-content space-between
+        align-items center
+        padding-left 6vw
+        padding-right 6vw
 
 @media screen and (min-width: 1280px)
   #app
@@ -94,11 +134,9 @@ html,body
       bottom 50%
       width 1.2rem
       height auto
-      // transform: translateX(100%);
       transform: translate(0, 50%);
       opacity 1
       &.showNav
-        // transform: translateX(0);
         transform: translate(0, 50%);
     .nav-bar
       flex-direction: column

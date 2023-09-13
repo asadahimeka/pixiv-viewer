@@ -141,6 +141,7 @@ import api from '@/api'
 import { notSelfHibiApi } from '@/api/http'
 import PopularPreview from './components/PopularPreview.vue'
 import { mintVerify } from '@/utils/filter'
+import { i18n } from '@/i18n'
 
 const BLOCK_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]
 
@@ -209,6 +210,9 @@ export default {
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
     }
+  },
+  head: {
+    title: i18n.t('search.search'),
   },
   computed: {
     ...mapState(['searchHistory']),

@@ -64,6 +64,9 @@ export default {
       showTokenDialog: false,
     }
   },
+  head() {
+    return { title: this.$t('user.sess.login') }
+  },
   methods: {
     async openConfirmDialog(showKey) {
       const res = await Dialog.confirm({

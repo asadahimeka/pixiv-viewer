@@ -33,6 +33,11 @@ export default {
       activeTab: '1',
     }
   },
+  head() {
+    return {
+      title: this.$t('follow.timeline'),
+    }
+  },
   computed: {
     ...mapState(['user']),
     isLogin() {

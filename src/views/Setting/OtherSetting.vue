@@ -3,6 +3,8 @@
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title" @dblclick="hideApSelect=false">{{ $t('setting.other.title') }}</h3>
     <van-cell center :title="$t('setting.other.lang')" is-link :label="lang.value" @click="lang.show = true" />
+    <van-cell center :title="$t('setting.layout.title')" is-link :label="wfType.value" @click="wfType.show = true" />
+    <van-cell center :title="$t('setting.img_res.title')" is-link :label="imgRes.value" @click="imgRes.show = true" />
     <van-cell center :title="$t('setting.dark.title')" :label="$t('setting.lab.title')">
       <template #right-icon>
         <van-switch :value="isDark" size="24" @change="onDarkChange" />
@@ -18,8 +20,11 @@
         <van-switch :value="isPageEffectOn" size="24" @change="changePageEffect" />
       </template>
     </van-cell>
-    <van-cell center :title="$t('setting.layout.title')" is-link :label="wfType.value" @click="wfType.show = true" />
-    <van-cell center :title="$t('setting.img_res.title')" is-link :label="imgRes.value" @click="imgRes.show = true" />
+    <van-cell center :title="$t('5syY7l774noiN5LHKUnqF')" :label="$t('setting.lab.title')">
+      <template #right-icon>
+        <van-switch :value="isLongpressDL" size="24" @change="changeLongpressDL" />
+      </template>
+    </van-cell>
     <van-cell center :title="$t('3HnNTIScyvd1cNc2qAh7X')" :label="$t('qmd5JADeSGtrvucK3TnGb')">
       <template #right-icon>
         <van-switch v-model="isHideRankManga" size="24" @change="changeHideRankManga" />
@@ -229,7 +234,11 @@ export default {
       isDark: !!localStorage.getItem('PXV_DARK'),
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
       isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', false),
+      isLongpressDL: LocalStorage.get('PXV_LONGPRESS_DL', false),
     }
+  },
+  head() {
+    return { title: this.$t('setting.other.title') }
   },
   computed: {
     pximgBedLabel() {
@@ -408,6 +417,15 @@ export default {
       this.isPageEffectOn = val
       this.$nextTick(() => {
         LocalStorage.set('PXV_PAGE_EFFECT', val)
+        setTimeout(() => {
+          location.reload()
+        }, 500)
+      })
+    },
+    changeLongpressDL(val) {
+      this.isLongpressDL = val
+      this.$nextTick(() => {
+        LocalStorage.set('PXV_LONGPRESS_DL', val)
         setTimeout(() => {
           location.reload()
         }, 500)

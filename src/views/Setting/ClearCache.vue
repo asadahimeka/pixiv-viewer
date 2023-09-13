@@ -67,6 +67,9 @@ export default {
       },
     }
   },
+  head() {
+    return { title: this.$t('cache.title') }
+  },
   activated() {
     this.calcCacheSize()
   },
