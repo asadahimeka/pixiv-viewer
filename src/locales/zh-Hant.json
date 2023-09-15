@@ -198,7 +198,7 @@
     },
     "img_proxy": {
       "desc": "在下方輸入 pixiv 圖片代理地址，不需要加 https://",
-      "desc2": "例如：i-cf.pximg.net，保存後會清空本地緩存",
+      "desc2": "例如：i.pixiv.re，保存後會清空本地緩存",
       "ph": "請選擇 pixiv 圖片代理 (切換後會清空本地緩存)",
       "title": "pximg 圖片代理設置",
       "title2": "pximg 圖片代理選擇",

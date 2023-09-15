@@ -262,7 +262,7 @@
     "down_app": "Elŝutu Apon",
     "img_proxy": {
       "desc": "Enigu la pixiv-bildan prokuradreson sube, ne bezonas aldoni https://",
-      "desc2": "Ekzemple: i-cf.pximg.net, la loka kaŝmemoro estos forigita post konservado",
+      "desc2": "Ekzemple: i.pixiv.re, la loka kaŝmemoro estos forigita post konservado",
       "ph": "Bonvolu elekti pixiv-bildan prokurilon (la loka kaŝmemoro estos forigita post ŝanĝado)",
       "title": "pximg Prokura Agordo",
       "title2": "pximg bildo prokurilo elektu",

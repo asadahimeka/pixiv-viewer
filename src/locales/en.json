@@ -198,7 +198,7 @@
     },
     "img_proxy": {
       "desc": "Enter the pixiv image proxy address below, no need to add https://",
-      "desc2": "For example: i-cf.pximg.net, the local cache will be cleared after saving",
+      "desc2": "For example: i.pixiv.re, the local cache will be cleared after saving",
       "ph": "Please select pixiv image proxy (the local cache will be cleared after switching)",
       "title": "pximg Proxy Setting",
       "title2": "pximg image proxy select",

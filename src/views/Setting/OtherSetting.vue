@@ -201,7 +201,7 @@ export default {
       },
       imgRes: {
         show: false,
-        value: LocalStorage.get('PXV_DTL_IMG_RES', 'Large'),
+        value: LocalStorage.get('PXV_DTL_IMG_RES', navigator.userAgent.includes('Mobile') ? 'Medium' : 'Large'),
         actions: [
           { name: 'Medium', subname: this.$t('setting.img_res.m') },
           { name: 'Large', subname: this.$t('setting.img_res.l') },

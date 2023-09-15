@@ -198,7 +198,7 @@
     },
     "img_proxy": {
       "desc": "Entrez l'adresse proxy de l'image pixiv ci-dessous, pas besoin d'ajouter https://",
-      "desc2": "Par exemple : i-cf.pximg.net, le cache local sera vidé après l'enregistrement",
+      "desc2": "Par exemple : i.pixiv.re, le cache local sera vidé après l'enregistrement",
       "ph": "Veuillez sélectionner le proxy d'image pixiv (le cache local sera vidé après le changement)",
       "title": "Paramètre proxy pximg",
       "title2": "sélection du proxy d'image pximg",

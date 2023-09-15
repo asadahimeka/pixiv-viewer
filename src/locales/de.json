@@ -198,7 +198,7 @@
     },
     "img_proxy": {
       "desc": "Geben Sie unten die Pixiv-Bild-Proxy-Adresse ein, ohne dass https:// hinzugefügt werden muss",
-      "desc2": "Beispiel: i-cf.pximg.net, der lokale Cache wird nach dem Speichern gelöscht",
+      "desc2": "Beispiel: i.pixiv.re, der lokale Cache wird nach dem Speichern gelöscht",
       "ph": "Bitte pixiv-Bildproxy auswählen (der lokale Cache wird nach dem Wechsel gelöscht)",
       "title": "pximg-Proxy-Einstellung",
       "title2": "pximg-Bild-Proxy auswählen",

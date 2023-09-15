@@ -275,7 +275,7 @@
       "title2": "pximg 图片代理选择",
       "title3": "图片代理",
       "desc": "在下方输入 pixiv 图片代理地址，不需要加 https://",
-      "desc2": "例如：i-cf.pximg.net，保存后会清空本地缓存",
+      "desc2": "例如：i.pixiv.re，保存后会清空本地缓存",
       "title4": "pixiv 图片代理",
       "ph": "请选择 pixiv 图片代理 (切换后会清空本地缓存)"
     },

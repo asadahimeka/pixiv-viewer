@@ -239,7 +239,7 @@
     "down_app": "Scarica l'app",
     "img_proxy": {
       "desc": "Inserisci l'indirizzo proxy dell'immagine pixiv di seguito, non è necessario aggiungere https://",
-      "desc2": "Ad esempio: i-cf.pximg.net, la cache locale verrà cancellata dopo il salvataggio",
+      "desc2": "Ad esempio: i.pixiv.re, la cache locale verrà cancellata dopo il salvataggio",
       "ph": "Seleziona il proxy dell'immagine pixiv (la cache locale verrà cancellata dopo il passaggio)",
       "title": "pximg Impostazioni proxy",
       "title2": "selezione del proxy dell'immagine pximg",
