@@ -131,7 +131,7 @@ export default {
           [/^https:\/\/www\.pixiv\.net\/users\/(\d+)/i, m => this.$router.push(`/u/${m}`)],
           [/^https:\/\/www\.pixivision\.net\/.+\/a\/(\d+)/i, m => this.$router.push(`/a/${m}`)],
           [new RegExp(`${location.origin}/.+/a/(\\d+)`, 'i'), m => this.$router.push(`/a/${m}`)],
-          [new RegExp(`${location.origin}/.+?id=\\d+#(id-\\w+)`, 'i'), m => {
+          [new RegExp(`${location.origin}/.+/\\d+#(id-\\w+)`, 'i'), m => {
             document.getElementById(m)?.scrollIntoView({ behavior: 'smooth' })
           }],
         ]

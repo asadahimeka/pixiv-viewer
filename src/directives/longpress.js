@@ -10,6 +10,10 @@ export default {
         }
 
         let pressTimer = null
+        let startX = 0
+        let startY = 0
+        const disX = 10
+        const disY = 10
 
         const start = e => {
           if (e.type === 'click' && e.button !== 0) {
@@ -28,8 +32,27 @@ export default {
           }
         }
 
-        ;['mousedown', 'touchstart'].forEach(e => el.addEventListener(e, start))
-        ;['click', 'mouseout', 'touchend', 'touchcancel'].forEach(e => el.addEventListener(e, cancel))
+        el.addEventListener('mousedown', start)
+        el.addEventListener('touchstart', event => {
+          const touch = event.changedTouches[0]
+          startX = touch.clientX
+          startY = touch.clientY
+          start(event)
+        })
+
+        el.addEventListener('touchmove', event => {
+          const touch = event.changedTouches[0]
+          const diffX = Math.abs(touch.clientX - startX)
+          const diffY = Math.abs(touch.clientY - startY)
+          if ((disX > 0 && diffX > disX) || (disY > 0 && diffY > disY)) {
+            cancel()
+          }
+        }, false)
+
+        el.addEventListener('click', cancel)
+        el.addEventListener('mouseout', cancel)
+        el.addEventListener('touchend', cancel)
+        el.addEventListener('touchcancel', cancel)
       },
     })
   },

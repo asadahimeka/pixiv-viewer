@@ -139,6 +139,7 @@ export default {
     preventContext(/** @type {Event} */ event) {
       if (!isLongpressDL) return true
       event.preventDefault()
+      event.stopPropagation()
       return false
     },
     async downloadArtwork(/** @type {Event} */ ev, index) {
