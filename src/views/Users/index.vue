@@ -3,6 +3,9 @@
     <div class="user-wrap">
       <div class="users">
         <TopBar />
+        <div class="share_btn" @click="share">
+          <Icon class="icon" name="share" />
+        </div>
         <div v-if="userInfo.id" class="info-container">
           <div class="bg-cover" :class="{ hasbgcover: !!userInfo.bgcover }">
             <img v-lazy="userInfo.bgcover || userInfo.avatar" :class="{ nobg: !userInfo.bgcover }" :alt="userInfo.name">
@@ -58,7 +61,10 @@
                 <a :href="userInfo.twitter_url" target="_blank">@{{ userInfo.twitter_account }}</a>
               </li>
             </ul>
-            <span class="follow">
+            <span v-if="isCurrentUser" class="follow" style="cursor: pointer;" @click="toFollowedUsers">
+              <span class="num">{{ userInfo.follow }}</span>{{ $t('user.following') }}
+            </span>
+            <span v-else class="follow">
               <span class="num">{{ userInfo.follow }}</span>{{ $t('user.following') }}
             </span>
             <span v-if="userInfo.friend" class="friend">
@@ -176,9 +182,9 @@
               @onCilck="showSub('favorite')"
             />
           </van-tab>
-          <van-tab v-if="userInfo.bookmarks > 0 && userInfo.novels > 0" :title="`${$t('user.fav')}(${$t('common.novel')})`" name="fav_novel">
+          <van-tab v-if="userInfo.bookmarks > 0" :title="`${$t('user.fav')}(${$t('common.novel')})`" name="fav_novel">
             <FavoriteNovels
-              v-if="activeTab == 'fav_novel' && userInfo.novels > 0"
+              v-if="activeTab == 'fav_novel' && userInfo.bookmarks > 0"
               :id="userInfo.id"
               key="once-fav-novel"
               :num="0"
@@ -215,6 +221,7 @@ import FavoriteNovels from './components/FavoriteNovels.vue'
 import _ from 'lodash'
 import api, { localApi } from '@/api'
 import { getCache, setCache } from '@/utils/storage/siteCache'
+import { copyText } from '@/utils'
 
 export default {
   name: 'Users',
@@ -268,6 +275,10 @@ export default {
     },
     isFollowed() {
       return this.userInfo.is_followed
+    },
+    isCurrentUser() {
+      const id = this.$store.state?.user?.id
+      return id && id == this.userInfo.id
     },
   },
   watch: {
@@ -347,6 +358,16 @@ export default {
     },
     getCommentHeight() {
       this.commentHeight = this.$refs.comment.clientHeight
+    },
+    share() {
+      copyText(
+        `${this.userInfo.name} ${location.href}`,
+        () => this.$toast(this.$t('tips.copylink.succ')),
+        err => this.$toast(this.$t('tips.copy_err') + err)
+      )
+    },
+    toFollowedUsers() {
+      this.$router.push({ name: 'Following', params: { tab: '3' } })
     },
     showSub(page) {
       switch (page) {
@@ -613,6 +634,17 @@ export default {
   margin 20px 0
   ::v-deep .van-button
     width 100px
+
+.share_btn
+  position: fixed;
+  top: 0.9rem;
+  right 0.5rem;
+  z-index: 99;
+  font-size 0.675rem
+  cursor pointer
+  .svg-icon
+    color: #fafafa;
+    filter: drop-shadow(0.02667rem 0.05333rem 0.05333rem rgba(0,0,0,0.8));
 
 @media screen and (min-width 768px)
   .users .info-container .info .name

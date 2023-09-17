@@ -30,7 +30,7 @@ export default {
   components: { LatestConcerned, FollowedUsers, LatestAllSite, MyBookmarks },
   data() {
     return {
-      activeTab: '1',
+      activeTab: this.$route.params?.tab || '1',
     }
   },
   head() {
@@ -43,6 +43,9 @@ export default {
     isLogin() {
       return !!this.user
     },
+  },
+  activated() {
+    this.activeTab = this.$route.params?.tab || '1'
   },
 }
 </script>
