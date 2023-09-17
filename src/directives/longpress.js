@@ -5,7 +5,7 @@ export default {
     Vue.directive('longpress', {
       bind: function (el, { value }, vNode) {
         if (typeof value !== 'function') {
-          console.warn(`Expect a function, got ${value}`)
+          // console.warn(`Expect a function, got ${value}`)
           return
         }
 
