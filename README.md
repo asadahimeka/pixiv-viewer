@@ -116,6 +116,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务
 - [Vercel](https://vercel.com/)：提供页面托管服务
 
+## Donate/Sponsors
+
+<a href="https://sponsors.nanoka.top" target="_blank">
+<img width="160" src="https://upload-bbs.miyoushe.com/upload/2023/09/30/260511332/379cb3e57561c164124b641324ab24c7_1468657779553037247.jpg" alt>
+</a>
+
 ## LICENSE
 
 [![MIT License Copyright (c) 2020 Jad](https://img.shields.io/github/license/journey-ad/pixiv-viewer)](https://github.com/asadahimeka/pixiv-viewer/blob/master/LICENSE)
