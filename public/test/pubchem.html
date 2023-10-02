@@ -13,13 +13,20 @@
   <div id="app">
     <p>请写出下面这个结构式的正确的分子式，格式如：C2H4O2</p>
     <p>
-      输入答案：<input id="ans">&nbsp;&nbsp;<button id="sub_btn">提交</button>&nbsp;&nbsp;<button onclick="location.reload()">换一题</button>
+      输入答案：<input id="ans">&nbsp;&nbsp;<button id="sub_btn">提交</button>&nbsp;&nbsp;<button onclick="reload()">换一题</button>
     </p>
     <p>
       <img id="q_img" src="" alt="">
     </p>
   </div>
   <script>
+    function randomEl(arr) {
+      return arr[parseInt(Math.random() * arr.length, 10)]
+    }
+    function reload() {
+      const urls = ['./math.html', './pubchem.html', './b64.html', './zhuyin.html']
+      location.replace(randomEl(urls))
+    }
     window.onload = function () {
       var ans = ''
       fetch('./pubchem.json').then(function (resp) {

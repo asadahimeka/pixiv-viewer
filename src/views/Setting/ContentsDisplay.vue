@@ -114,7 +114,7 @@ export default {
           .then(() => {
             if (type === 1) {
               this.currentSETTING.r18 = checked
-              // LocalStorage.set('PXV_NSFW_ON', 1)
+              LocalStorage.set('PXV_NSFW_ON', 1)
             }
             if (type === 2) {
               this.currentSETTING.r18g = checked
