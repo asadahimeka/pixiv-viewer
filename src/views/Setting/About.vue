@@ -58,6 +58,13 @@
         label="Github:asadahimeka/pixiv-viewer"
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
       />
+      <van-cell
+        center
+        title="Pixiv Viewer Feedback"
+        is-link
+        label="Click to leave comments"
+        @click="openLink('https://www.nanoka.top/say/pxve_comments.html')"
+      />
     </van-cell-group>
   </div>
 </template>

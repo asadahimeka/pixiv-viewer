@@ -4,7 +4,7 @@
 
 中文 | [English](./docs/README.en.md)
 
-预览: 🔗 [pixiv-viewer.vercel.app](https://pixiv-viewer.vercel.app)
+预览: 🔗 [pixiv.pics](https://pixiv.pics)
 
 下载: ⏬ [App Center](https://install.appcenter.ms/users/yumine/apps/pixiv-viewer/distribution_groups/beta) | [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
 
