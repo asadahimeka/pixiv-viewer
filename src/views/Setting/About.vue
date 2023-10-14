@@ -60,9 +60,9 @@
       />
       <van-cell
         center
-        title="Pixiv Viewer Feedback"
+        :title="$t('VhMNSWrg03-_ryN7nRBJ3')"
         is-link
-        label="Click to leave comments"
+        :label="$t('9H-9VJU67Fuabl8OgbhOr')"
         @click="openLink('https://www.nanoka.top/say/pxve_comments.html')"
       />
     </van-cell-group>
