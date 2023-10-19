@@ -41,9 +41,9 @@ const HASH_SECRET = '28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0
 const DEFAULT_HEADERS = {
   'App-OS': 'Android',
   'App-OS-Version': 'Android 13.0',
-  'App-Version': '6.84.0',
+  'App-Version': '6.88.1',
   'Accept-Language': 'zh-CN',
-  'User-Agent': 'PixivAndroidApp/6.84.0 (Android 13.0; Pixel 7)',
+  'User-Agent': 'PixivAndroidApp/6.88.1 (Android 13.0; Pixel 7)',
 }
 
 function callApi(url, options) {
