@@ -108,7 +108,7 @@ const getRankCatLabels = () => [i18n.t('common.overall'), i18n.t('common.illust'
 const getRankCatActions = () => getRankCatLabels().map((e, i) => ({ text: e, _v: i.toString() }))
 
 const isHideManga = LocalStorage.get('PXV_HIDE_RANK_MANGA', false)
-const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682]
+const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682, 16106315]
 
 export default {
   name: 'Rank',

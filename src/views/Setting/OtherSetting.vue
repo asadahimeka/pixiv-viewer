@@ -224,7 +224,6 @@ export default {
           { name: 'es', subname: 'Español' },
           { name: 'pt', subname: 'Português' },
           { name: 'el', subname: 'Ελληνικά' },
-          { name: 'eo', subname: 'Esperanto' },
         ],
       },
       pximgChecked: true,

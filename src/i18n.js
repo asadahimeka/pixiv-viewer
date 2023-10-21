@@ -19,7 +19,6 @@ export function getSelectedLang() {
     'de': 'de',
     'el': 'el',
     'en': 'en',
-    'eo': 'eo',
     'es': 'es',
     'fr': 'fr',
     'it': 'it',
