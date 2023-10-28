@@ -228,7 +228,7 @@ export default {
       },
       pximgChecked: true,
       apiChecked: true,
-      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
+      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', false),
       isHideRankManga: LocalStorage.get('PXV_HIDE_RANK_MANGA', false),
       isDark: !!localStorage.getItem('PXV_DARK'),
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),

@@ -79,11 +79,19 @@ html,body
     background: rgba(255,255,255,0.8)
     backdrop-filter: saturate(200%) blur(6px)
     .home-title
+      position absolute
+      top 50%
+      left 6vw
+      transform translateY(-50%)
       display flex
       align-items center
     .app-logo,.home-search
       height 0.8rem
     .home-search
+      position absolute
+      top 50%
+      right 6vw
+      transform translateY(-50%)
       display flex
       align-items center
       .van-search
@@ -92,7 +100,8 @@ html,body
         background transparent
     .app-title
       margin-left 10px
-      font-size 32px
+      padding-top 5px
+      font-size 36px
       font-family "Lucida Handwriting", "Georgia Pro", Georgia, "Times New Roman", serif
       font-weight bold
 
@@ -106,7 +115,6 @@ html,body
     .Home
       padding-top 1.4rem
       .home-i-tabs
-        justify-content space-between
         align-items center
         padding-left 6vw
         padding-right 6vw

@@ -8,8 +8,8 @@
         :style="{ backgroundImage: `linear-gradient(45deg, ${randColor()} 0%, ${randColor()} 100%)` }"
         @click.stop="search(tag.name)"
       >
-        <img :src="tag.pic" alt>
-        <div class="meta">
+        <img :src="tag.pic" alt @contextmenu="preventContext">
+        <div v-longpress="ev => toArtwork(ev, tag.pic)" class="meta" @contextmenu="preventContext">
           <div class="content">
             <div v-if="tag.name" class="name" :class="[getLength(tag.name)]">#{{ tag.name }}</div>
             <div v-if="tag.tname" class="tname" :class="[getLength(tag.tname)]">{{ tag.tname }}</div>
@@ -23,6 +23,8 @@
 
 <script>
 import api from '@/api'
+import { Dialog } from 'vant'
+
 export default {
   components: {
   },
@@ -51,6 +53,26 @@ export default {
         this.error = true
       }
       this.loading = false
+    },
+    preventContext(event) {
+      event.preventDefault()
+      return false
+    },
+    async toArtwork(ev, pic) {
+      ev.preventDefault()
+      const id = pic.match(/.*\/(\d+)_p0_.*/)?.[1]
+      if (!id) return
+      const res = await Dialog.confirm({
+        title: this.$t('p56suIhQbLp-UUYtYjQoa'),
+        message: id,
+        lockScroll: false,
+        closeOnPopstate: true,
+        cancelButtonText: this.$t('common.cancel'),
+        confirmButtonText: this.$t('common.confirm'),
+      }).catch(() => 'cancel')
+      if (res != 'confirm') return
+      await this.$nextTick()
+      this.$router.push(`/artworks/${id}`)
     },
     getLength(val) {
       if (val.length >= 10) {
