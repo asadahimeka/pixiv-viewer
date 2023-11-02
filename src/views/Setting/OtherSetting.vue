@@ -562,4 +562,6 @@ export default {
   min-height 80vh
   #top-bar-wrap
     width 1.4rem
+  .van-cell__title
+    padding-right 20px
 </style>

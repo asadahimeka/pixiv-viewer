@@ -87,15 +87,20 @@ html,body
       align-items center
     .app-logo,.home-search
       height 0.8rem
+    .sel-tabs .com_sel_tab
+      height 0.7rem
+      margin-right 0.18rem
+      padding 0 0.2rem
+      font-size 0.35rem
     .home-search
       position absolute
       top 50%
-      right 6vw
-      transform translateY(-50%)
+      left 50%
+      transform translate(-50%, -50%)
       display flex
       align-items center
       .van-search
-        width 5rem
+        width 25vw
         padding 0
         background transparent
     .app-title
@@ -107,14 +112,22 @@ html,body
 
 @media screen and (max-width: 999px)
   .Home .home-i-tabs
-    .home-title,.home-search
+    justify-content flex-end
+    padding-right 0.5rem
+    .home-search
       display none
+
+@media screen and (max-width: 600px)
+  .Home .home-i-tabs
+    .app-title
+      font-size 0.39rem
 
 @media screen and (min-width: 1000px)
   #app
     .Home
       padding-top 1.4rem
       .home-i-tabs
+        justify-content flex-end
         align-items center
         padding-left 6vw
         padding-right 6vw

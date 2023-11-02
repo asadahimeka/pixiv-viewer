@@ -209,8 +209,8 @@
       "l": "Slow loading",
       "m": "Load slightly faster",
       "o": "Load slower",
-      "ph": "Please select picture details quality",
-      "title": "Image Details and Quality Select"
+      "ph": "Please select image details quality",
+      "title": "Image Details Quality Select"
     },
     "input": "Enter:",
     "lab": {

@@ -5,7 +5,7 @@
         <img class="app-logo" src="/app-icon.png" alt="Logo">
         <h1 class="app-title">Pixiv Viewer</h1>
       </div>
-      <div class="flex">
+      <div class="sel-tabs flex">
         <div v-t="'common.illust'" class="com_sel_tab cur"></div>
         <div v-t="'common.manga'" class="com_sel_tab" @click="$router.replace('/home_manga')"></div>
         <div v-t="'common.novel'" class="com_sel_tab" @click="$router.replace('/home_novel')"></div>
