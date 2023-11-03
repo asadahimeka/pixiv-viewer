@@ -13,11 +13,6 @@
         <van-tab :title="$t('setting.recomm.tm')" name="tm">
           <RecommendUserscript />
         </van-tab>
-        <van-tab v-if="showMhLink" title="🪜" name="mh">
-          <div class="setting-page">
-            <van-cell v-for="a in mhLinks" :key="a[0]" center :title="a[0]" is-link @click="openLink(a[1])" />
-          </div>
-        </van-tab>
       </van-tabs>
     </div>
   </div>
@@ -28,10 +23,6 @@ import TopBar from '@/components/TopBar'
 import RecommendApp from './RecommendApp.vue'
 import RecommendLink from './RecommendLink.vue'
 import RecommendUserscript from './RecommendUserscript.vue'
-
-const mhLinks = process.env.VUE_APP_MAHO_AFF_LINKS?.split(';').map(e => {
-  return e.split(',')
-})
 
 export default {
   name: 'SettingHistory',
@@ -44,8 +35,6 @@ export default {
   data() {
     return {
       activeTab: 'site',
-      mhLinks,
-      showMhLink: Boolean(mhLinks) && navigator.language.includes('zh'),
     }
   },
   head() {
