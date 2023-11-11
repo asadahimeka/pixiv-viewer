@@ -57,8 +57,8 @@
     </div>
     <div class="whid">
       <span v-if="!isNovel">{{ artwork.width }}×{{ artwork.height }}</span>
-      <span @click="copyId(artwork.id)">{{ isNovel?'': 'P' }}ID:{{ artwork.id }}</span>
-      <span @click="copyId(artwork.author.id)">UID:{{ artwork.author.id }}</span>
+      <span @click="copyId(artwork.id)">{{ isNovel?'': 'P' }}ID:{{ artwork.id }}<Icon name="copy" style="margin-left: 1px;" /></span>
+      <span @click="copyId(artwork.author.id)">UID:{{ artwork.author.id }}<Icon name="copy" style="margin-left: 1px;" /></span>
     </div>
     <ul class="tag-list" :class="{ censored: isCensored(artwork) }">
       <li v-if="artwork.illust_ai_type == 2">
@@ -394,6 +394,35 @@ export default {
   ::v-deep button {
     flex 1
     padding 0 5px
+
+    &:nth-child(1) {
+      transition 0.2s
+      filter: none;
+      &:hover {
+        color: #e74767 !important;
+        border-color: #e74767 !important;
+        background: #FEDFE1;
+        filter: brightness(1.05);
+      }
+    }
+
+    &:nth-child(2) {
+      transition 0.2s
+      filter: none;
+      &:hover {
+        background: #e2ffef;
+        filter: brightness(1.05);
+      }
+    }
+
+    &:nth-child(3) {
+      transition 0.2s
+      filter: none;
+      &:hover {
+        background: #d4ebff
+        filter: brightness(1.05);
+      }
+    }
   }
 }
 
@@ -414,9 +443,17 @@ export default {
   margin: 20px 0;
 
   .pid_link {
+    position relative
     font-size: 22px;
+    padding-left 30px
     a {
       color #0066FF
+    }
+    &:before {
+      content:'🔗'
+      position absolute
+      left 0
+      top 0
     }
   }
 
@@ -542,6 +579,7 @@ export default {
       color: #0099FF
 
       .icon {
+        width 1.1em
         font-size: 0.8em;
         margin-right: 0px;
         vertical-align: baseline;
@@ -586,6 +624,12 @@ export default {
       font-size: 26px;
       margin-right: 10px;
       cursor pointer
+      background transparent
+      border-radius 5px
+      transition 0.2s
+      &:not(.translated):hover {
+        background #e1d7ff
+      }
       &.translated {
         font-size: 22px;
         color: #adadad;
