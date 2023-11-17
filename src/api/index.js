@@ -967,11 +967,11 @@ const api = {
   async getDiscoveryList(mode = 'safe', max = 18, nocache = false) {
     let list
 
-    const params = { mode, max }
+    const params = { mode, max, _anon: 1 }
 
     if (nocache) params._vercel_no_cache = 1
 
-    const res = await get('/prks/s/ajax/illust/discovery', params, { baseURL: '/' })
+    const res = await get('/prks/now/ajax/illust/discovery', params, { baseURL: '/' })
 
     if (res && res.illusts) {
       list = res.illusts.filter(e => !e.isAdContainer).map(e => parseWebApiIllust(e))

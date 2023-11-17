@@ -591,6 +591,10 @@ export default {
       .user_link {
         margin-top: 20px;
         font-size: 22px;
+
+        a {
+          color: #06f;
+        }
       }
 
       .detail {

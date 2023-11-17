@@ -209,6 +209,8 @@ export default {
     },
   },
   mounted() {
+    const ua = navigator.userAgent
+    if (!/Chrome/i.test(ua) && /Safari/i.test(ua)) return
     this.$nextTick(() => {
       setTimeout(() => {
         this.drawMask()

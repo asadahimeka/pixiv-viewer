@@ -42,10 +42,6 @@
       "destination": "https://api.obfs.dev/:match*"
     },
     {
-      "source": "/prks/s/:match*",
-      "destination": "https://www.pixivs.cn/:match*"
-    },
-    {
       "source": "/prks/now/:match*",
       "destination": "https://now.pixiv.pics/:match*"
     },
