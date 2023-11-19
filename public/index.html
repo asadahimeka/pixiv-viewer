@@ -39,9 +39,9 @@
     <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
   </noscript>
   <div id="app"></div>
-  <div id="ldio-loading">
-    <div class="loadingio-spinner-ball-49w6m6a8g28"><div class="ldio-2gd0gx3uwxq"><div></div></div></div>
-    <p style="margin-top: 30px;text-align: center;font-size: 24px;font-family: sans-serif;">Loading...</p>
+  <div id="ldio-loading" style="padding-top: 36vh;">
+    <img src="<%= BASE_URL %>img/icons/192.png" width="120" height="120" alt="">
+    <div style="padding-top: 30px;text-align: center;font-size: 24px;font-family: sans-serif;line-height: 1;">Pixiv Viewer</div>
   </div>
   <script>if(!!localStorage.PXV_DARK)document.body.classList.add('dark');</script>
   <% if (process.env.NODE_ENV === 'production') { %>

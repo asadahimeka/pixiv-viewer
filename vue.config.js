@@ -30,11 +30,6 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     proxy: {
-      '/prks/s': {
-        target: 'https://www.pixivs.cn',
-        changeOrigin: true,
-        pathRewrite: { '^/prks/s': '' },
-      },
       '/prks/now': {
         target: 'https://now.pixiv.pics',
         changeOrigin: true,
