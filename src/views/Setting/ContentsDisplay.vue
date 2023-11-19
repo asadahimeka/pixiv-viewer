@@ -17,6 +17,11 @@
         <van-switch active-color="#536cb8" :value="currentSETTING.ai" size="24" @input="onAIChange($event)" />
       </template>
     </van-cell>
+    <van-cell center :title="$t('3HnNTIScyvd1cNc2qAh7X')" :label="$t('qmd5JADeSGtrvucK3TnGb')">
+      <template #right-icon>
+        <van-switch v-model="isHideRankManga" size="24" @change="changeHideRankManga" />
+      </template>
+    </van-cell>
     <van-field
       v-model="blockTags"
       rows="2"
@@ -61,6 +66,7 @@ export default {
         r18g: false,
         ai: false,
       },
+      isHideRankManga: LocalStorage.get('PXV_HIDE_RANK_MANGA', false),
     }
   },
   head() {
@@ -89,6 +95,15 @@ export default {
       setTimeout(() => {
         location.reload()
       }, 100)
+    },
+    changeHideRankManga(val) {
+      this.isHideRankManga = val
+      this.$nextTick(() => {
+        LocalStorage.set('PXV_HIDE_RANK_MANGA', val)
+        setTimeout(() => {
+          location.reload()
+        }, 500)
+      })
     },
     onAIChange(checked) {
       this.$set(this.currentSETTING, 'ai', checked)
@@ -152,5 +167,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-
+.setting-page
+  .van-cell__title
+    padding-right 20px
 </style>
