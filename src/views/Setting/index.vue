@@ -10,7 +10,7 @@
     <van-cell v-if="isLoggedIn" size="large" center is-link :to="`/u/${user.id}`">
       <template #title>
         <div class="user_data">
-          <img v-lazy="userAvatar" width="50" height="50" alt="">
+          <img v-lazy="user.profileImg" width="50" height="50" alt="">
           <div>
             <div>{{ user.name }}</div>
             <div style="color: #999">@{{ user.pixivId }}</div>
@@ -64,12 +64,6 @@ export default {
   computed: {
     ...mapState(['user']),
     ...mapGetters(['isLoggedIn']),
-    userAvatar() {
-      if (/^\/(-|~)\//.test(this.user.profileImg)) {
-        return `https://pixiv.js.org/${this.user.profileImg}`
-      }
-      return this.user.profileImg
-    },
   },
   methods: {
     async logoutApp() {
