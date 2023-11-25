@@ -84,6 +84,13 @@
       label="https://www.nanoka.top/illust/pixiv/"
       @click="openLink('https://www.nanoka.top/illust/pixiv/')"
     />
+    <van-cell
+      center
+      title="Wotaku - The Otaku Index"
+      is-link
+      label="https://wotaku.moe/"
+      @click="openLink('https://wotaku.moe/')"
+    />
   </div>
 </template>
 
