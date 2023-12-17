@@ -1,6 +1,10 @@
 <template>
-  <div class="setting">
-    <h1 class="app-title">
+  <div class="setting" :class="{isXmas}" :style="isXmas?`background-image:url(${xmasbg})`:''">
+    <div v-if="isXmas" class="app-title">
+      <img src="@/assets/images/3751541.png" alt="">
+      <div class="app-title-desc">Merry Christmas</div>
+    </div>
+    <h1 v-else class="app-title">
       <img v-if="!isLoggedIn" src="/app-icon.png" alt="">
       <div class="app-title-desc">
         <span class="title-font">Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup></span>
@@ -26,14 +30,10 @@
     <van-cell size="large" center :title="$t('setting.other.title')" icon="setting-o" is-link to="/setting/others" />
     <van-cell size="large" center :title="$t('setting.down_app')" icon="apps-o" is-link to="/setting/down_app" />
     <van-cell size="large" center :title="$t('setting.recomm.title')" icon="bookmark-o" is-link to="/setting/recommend" />
-    <!-- <van-cell v-if="showRp" size="large" center title="扫码领红包" icon="gift-o" is-link @click="showRpDialog=true" /> -->
     <van-cell size="large" center :title="$t('setting.about')" icon="info-o" is-link to="/setting/about" />
     <div v-if="isLoggedIn" style="width: 60%;margin: 1rem auto 0;">
       <van-button round plain block type="danger" size="small" @click="logoutApp">{{ $t('user.sess.out') }}</van-button>
     </div>
-    <!-- <van-dialog v-model="showRpDialog" show-cancel-button confirm-button-text="复制口令" @confirm="copyToken">
-      <img :src="rpImg" alt="" style="width: 100%">
-    </van-dialog> -->
   </div>
 </template>
 
@@ -42,18 +42,37 @@ import { mapGetters, mapState } from 'vuex'
 import { Dialog } from 'vant'
 import PixivAuth from '@/api/client/pixiv-auth'
 import { logout } from '@/api/user'
-// import { copyText } from '@/utils'
 
-// const rpText = process.env.VUE_APP_ALIPAY_REDPACK_TEXT
-// const rpImg = process.env.VUE_APP_ALIPAY_REDPACK_SRC
+const isXmas = (() => {
+  const d = new Date()
+  return d.getMonth() == 11 && (d.getDate() == 24 || d.getDate() == 25)
+})()
+
+const xmasbgs = [
+  '696D67_333033303235393030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303036373030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303234393030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303330363030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303330363030305F30325F66756C6C2E706E67.png',
+  '696D67_333034303331313030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303331313030305F30325F66756C6C2E706E67.png',
+  '696D67_333034303336393030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303337323030305F30325F66756C6C2E706E67.png',
+  '696D67_333034303433343030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303433373030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303433373030305F30325F66756C6C2E706E67.png',
+  '696D67_333034303439353030305F30315F66756C6C2E706E67.png',
+  '696D67_333034303439363030305F30315F66756C6C2E706E67.png',
+]
+
+const randomBg = () => `/img/gbf/${xmasbgs[parseInt(Math.random() * xmasbgs.length, 10)]}`
 
 export default {
   name: 'Setting',
   data() {
     return {
-      // rpImg,
-      // showRp: Boolean(rpImg) && navigator.language.includes('zh'),
-      // showRpDialog: false,
+      isXmas,
+      xmasbg: '',
     }
   },
   head() {
@@ -64,6 +83,9 @@ export default {
   computed: {
     ...mapState(['user']),
     ...mapGetters(['isLoggedIn']),
+  },
+  activated() {
+    this.xmasbg = randomBg()
   },
   methods: {
     async logoutApp() {
@@ -79,17 +101,55 @@ export default {
         logout()
       }
     },
-    // copyToken() {
-    //   copyText(rpText, () => this.$toast(this.$t('tips.copylink.succ')), () => {})
-    // },
   },
 }
 </script>
+
+<style lang="stylus">
+.dark #app .setting.isXmas
+  .app-title-desc
+    text-shadow: 1PX 1PX 2PX #fff;
+  .van-cell:hover
+    .van-cell__title,
+    .van-icon
+      color: #d53643
+</style>
 
 <style lang="stylus" scoped>
 .setting
   max-width 750px
   margin 0 auto 160px
+
+  &.isXmas
+    position relative
+    min-height 72vh
+    margin 0 auto
+    padding-bottom 160px
+    background transparent no-repeat right -1rem bottom / 9rem
+    &::after
+      content 'Background © Cygames, Inc.'
+      position absolute
+      right 1rem
+      bottom -0.5rem
+      font-size 0.1rem
+      color #999
+      font-family sans-serif
+    .app-title
+      color: #d53643;
+      margin: 0.7rem 0;
+      font-size 0.64rem
+      font-family: Lucida Handwriting,"LXGW WenKai Screen",Georgia Pro,Georgia,Times New Roman,serif;font-weight: bold;
+      img
+        display block !important
+    ::v-deep .van-cell
+      color: #ba2d38;
+      background-color transparent !important
+      border-radius: 0.2rem;
+      transition background-color 0.2s
+      &:hover
+        background-color: #FEDFE1 !important;
+      &::after
+        opacity 0
 
   ::v-deep .van-cell__left-icon
     margin-right 0.4rem

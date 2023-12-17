@@ -58,7 +58,11 @@
     <div class="whid">
       <span v-if="!isNovel">{{ artwork.width }}×{{ artwork.height }}</span>
       <span @click="copyId(artwork.id)">{{ isNovel?'': 'P' }}ID:{{ artwork.id }}<Icon name="copy" style="margin-left: 1px;" /></span>
-      <span @click="copyId(artwork.author.id)">UID:{{ artwork.author.id }}<Icon name="copy" style="margin-left: 1px;" /></span>
+      <span
+        v-longpress="() => onUidLongpress(artwork.author)"
+        @click="copyId(artwork.author.id)"
+        @contextmenu="preventContext"
+      >UID:{{ artwork.author.id }}<Icon name="copy" style="margin-left: 1px;" /></span>
     </div>
     <ul class="tag-list" :class="{ censored: isCensored(artwork) }">
       <li v-if="artwork.illust_ai_type == 2">
@@ -68,7 +72,15 @@
         <van-tag class="x_tag" size="large" type="danger">NSFW</van-tag>
       </li>
       <template v-for="(tag, ti) in artwork.tags">
-        <li :key="ti + '_1'" class="tag name" @click="toSearch(tag.name)">#{{ tag.name }}</li>
+        <li
+          :key="ti + '_1'"
+          v-longpress="() => onTagLongpress(tag.name)"
+          class="tag name"
+          @click="toSearch(tag.name)"
+          @contextmenu="preventContext"
+        >
+          #{{ tag.name }}
+        </li>
         <li v-if="showTranslatedTags && tag.translated_name" :key="ti + '_2'" class="tag translated" @click="toSearch(tag.translated_name)">
           {{ tag.translated_name }}
         </li>
@@ -139,6 +151,7 @@
 import { mapGetters } from 'vuex'
 import FileSaver from 'file-saver'
 import dayjs from 'dayjs'
+import { Dialog } from 'vant'
 import { copyText, sleep } from '@/utils'
 import { i18n } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
@@ -328,6 +341,40 @@ export default {
     toSearch(keyword) {
       keyword = encodeURIComponent(keyword)
       this.$router.push(this.isNovel ? `/search_novel/${keyword}` : `/search/${keyword}`)
+    },
+    preventContext(event) {
+      event.preventDefault()
+      return false
+    },
+    onTagLongpress(tag) {
+      Dialog.confirm({
+        title: this.$t('LEaBJrLF0DUhyTe6-fKYT'),
+        message: tag,
+        lockScroll: false,
+        closeOnPopstate: true,
+        cancelButtonText: this.$t('common.cancel'),
+        confirmButtonText: this.$t('common.confirm'),
+      }).then(res => {
+        if (res == 'confirm') {
+          this.$store.dispatch('appendBlockTags', [tag])
+        }
+      }).catch(() => {})
+
+      return false
+    },
+    onUidLongpress(author) {
+      Dialog.confirm({
+        title: this.$t('w73XEmHradtum3SQ9IjBq'),
+        message: `${author.name}(${author.id})`,
+        lockScroll: false,
+        closeOnPopstate: true,
+        cancelButtonText: this.$t('common.cancel'),
+        confirmButtonText: this.$t('common.confirm'),
+      }).then(res => {
+        if (res == 'confirm') {
+          this.$store.dispatch('appendBlockUids', [author.id])
+        }
+      }).catch(() => {})
     },
     async downloadArtwork() {
       if (this.artwork.type == 'ugoira') {

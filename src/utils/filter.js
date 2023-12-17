@@ -1,5 +1,5 @@
 import Mint from 'mint-filter'
-import store, { blockTags, blockUids } from '@/store'
+import store from '@/store'
 import { getCache, setCache } from './storage/siteCache'
 
 const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵/i
@@ -25,12 +25,12 @@ export function filterHomeNovel(e) {
 }
 
 export function filterCensoredIllust(artwork) {
-  if (blockUids.length && blockUids.includes(`${artwork?.author?.id}`)) {
+  if (store.state.blockUids.length && store.state.blockUids.includes(`${artwork?.author?.id}`)) {
     return false
   }
-  if (blockTags.length) {
+  if (store.state.blockTags.length) {
     const tags = JSON.stringify(artwork?.tags || [])
-    if (blockTags.some(e => tags.includes(e))) {
+    if (store.state.blockTags.some(e => tags.includes(e))) {
       return false
     }
   }

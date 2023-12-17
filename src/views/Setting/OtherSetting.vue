@@ -22,7 +22,12 @@
     </van-cell>
     <van-cell center :title="$t('5syY7l774noiN5LHKUnqF')" :label="$t('setting.lab.title')">
       <template #right-icon>
-        <van-switch :value="isLongpressDL" size="24" @change="changeLongpressDL" />
+        <van-switch :disabled="isLongpressBlock" :value="isLongpressDL" size="24" @change="changeLongpressDL" />
+      </template>
+    </van-cell>
+    <van-cell center :title="$t('kFOiZTwKWwXy-sxaspqSD')" :label="$t('setting.lab.title')">
+      <template #right-icon>
+        <van-switch :disabled="isLongpressDL" :value="isLongpressBlock" size="24" @change="changeLongpressBlock" />
       </template>
     </van-cell>
     <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
@@ -228,6 +233,7 @@ export default {
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
       isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', false),
       isLongpressDL: LocalStorage.get('PXV_LONGPRESS_DL', false),
+      isLongpressBlock: LocalStorage.get('PXV_LONGPRESS_BLOCK', false),
     }
   },
   head() {
@@ -419,6 +425,15 @@ export default {
       this.isLongpressDL = val
       this.$nextTick(() => {
         LocalStorage.set('PXV_LONGPRESS_DL', val)
+        setTimeout(() => {
+          location.reload()
+        }, 500)
+      })
+    },
+    changeLongpressBlock(val) {
+      this.isLongpressBlock = val
+      this.$nextTick(() => {
+        LocalStorage.set('PXV_LONGPRESS_BLOCK', val)
         setTimeout(() => {
           location.reload()
         }, 500)

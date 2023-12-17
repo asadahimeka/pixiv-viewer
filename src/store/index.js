@@ -12,9 +12,6 @@ const settings = LocalStorage.get('PXV_CNT_SHOW', {
 
 const enableSwipe = LocalStorage.get('PXV_IMG_DTL_SWIPE', false)
 
-export const blockTags = LocalStorage.get('PXV_B_TAGS', '').split(',').filter(Boolean)
-export const blockUids = LocalStorage.get('PXV_B_UIDS', '').split(',').filter(Boolean)
-
 export default new Vuex.Store({
   state: {
     themeColor: '#0196fa',
@@ -22,15 +19,17 @@ export default new Vuex.Store({
     searchHistory: LocalStorage.get('PIXIV_SearchHistory', []),
     SETTING: settings,
     user: null,
+    blockTags: LocalStorage.get('PXV_B_TAGS', '').split(',').filter(Boolean),
+    blockUids: LocalStorage.get('PXV_B_UIDS', '').split(',').filter(Boolean),
   },
   getters: {
     isCensored: state => artwork => {
-      if (blockUids.length && blockUids.includes(`${artwork?.author?.id}`)) {
+      if (state.blockUids.length && state.blockUids.includes(`${artwork?.author?.id}`)) {
         return true
       }
-      if (blockTags.length) {
+      if (state.blockTags.length) {
         const tags = JSON.stringify(artwork?.tags || [])
-        if (blockTags.some(e => tags.includes(e))) {
+        if (state.blockTags.some(e => tags.includes(e))) {
           return true
         }
       }
@@ -102,6 +101,18 @@ export default new Vuex.Store({
     setUser(state, user) {
       state.user = user
     },
+    setBlockTags(state, arr) {
+      if (Array.isArray(arr)) {
+        state.blockTags.push(...arr)
+        LocalStorage.set('PXV_B_TAGS', state.blockTags.join(','))
+      }
+    },
+    setBlockUids(state, arr) {
+      if (Array.isArray(arr)) {
+        state.blockUids.push(...arr)
+        LocalStorage.set('PXV_B_UIDS', state.blockUids.join(','))
+      }
+    },
   },
   actions: {
     setGalleryList({ commit }, list) {
@@ -112,6 +123,12 @@ export default new Vuex.Store({
     },
     saveSETTING({ commit }, value) {
       commit('saveSETTING', value)
+    },
+    appendBlockTags({ commit }, value) {
+      commit('setBlockTags', value)
+    },
+    appendBlockUids({ commit }, value) {
+      commit('setBlockUids', value)
     },
   },
   modules: {

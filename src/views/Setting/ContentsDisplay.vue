@@ -59,8 +59,8 @@ export default {
   name: 'SettingContentsDisplay',
   data() {
     return {
-      blockTags: LocalStorage.get('PXV_B_TAGS', ''),
-      blockUids: LocalStorage.get('PXV_B_UIDS', ''),
+      blockTags: '',
+      blockUids: '',
       currentSETTING: {
         r18: false,
         r18g: false,
@@ -77,6 +77,10 @@ export default {
   },
   mounted() {
     this.currentSETTING = JSON.parse(JSON.stringify(this.SETTING))
+  },
+  activated() {
+    this.blockTags = LocalStorage.get('PXV_B_TAGS', '')
+    this.blockUids = LocalStorage.get('PXV_B_UIDS', '')
   },
   methods: {
     saveSwitchValues() {
