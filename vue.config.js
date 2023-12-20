@@ -145,7 +145,6 @@ module.exports = {
           options: {
             cacheName: 'cdn-cache',
             cacheableResponse: { statuses: [200] },
-            expiration: { maxAgeSeconds: 86400 * 7 },
             fetchOptions: { credentials: 'omit', mode: 'cors' },
           },
         },
