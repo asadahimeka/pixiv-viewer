@@ -2,12 +2,15 @@
   <div class="artwork">
     <TopBar />
     <div class="more_btn" @click="showSettings=!showSettings">
-      <Icon class="icon" name="more3" />
+      <Icon class="icon" name="novel_setting" />
     </div>
-    <div class="ia-cont">
+    <div class="ia-cont" :class="{ isCollapseMeta }">
       <div class="ia-left">
         <van-loading v-if="loading" size="50px" style="margin-top: 3rem;" />
         <NovelView v-else :artwork="artwork" :text-obj="novelText" :text-config="textConfig" />
+        <div class="collapse-btn" @click="isCollapseMeta=!isCollapseMeta">
+          <Icon class="icon" name="double_arrow_down" />
+        </div>
       </div>
       <div class="ia-right">
         <van-skeleton class="skeleton" title avatar :row="5" avatar-size="42px" :loading="loading">
@@ -69,7 +72,7 @@
         </div>
         <div class="conf-title">{{ $t('novel.settings.text.height') }}</div>
         <div class="conf-inp">
-          <van-slider v-model="textConfig.height" :min="1" :max="5" :step="0.5" class="conf-slider" @change="onSizeChange" />
+          <van-slider v-model="textConfig.height" :min="1" :max="5" :step="0.1" class="conf-slider" @change="onSizeChange" />
         </div>
         <div class="conf-title">{{ $t('novel.settings.text.weight') }}</div>
         <div class="conf-inp">
@@ -157,6 +160,7 @@ export default {
       ],
       showSettings: false,
       textConfig,
+      isCollapseMeta: false,
     }
   },
   head() {
@@ -399,6 +403,7 @@ img[src*="/api/qrcode?text"]
   min-height 100vh
 
   .ia-left
+    position relative
     display flex
     justify-content center
     align-items center
@@ -406,6 +411,24 @@ img[src*="/api/qrcode?text"]
     min-width 72%
     margin-top 20px
     padding 0 20px
+
+    .collapse-btn
+      position absolute
+      z-index 99
+      right 0
+      top 200px
+      display flex
+      justify-content center
+      align-items center
+      width 60px
+      height 60px
+      background #f5f5f5
+      border-top-left-radius 10px
+      border-bottom-left-radius 10px
+      cursor pointer
+      .icon
+        font-size 50px
+        transform rotate(-90deg)
 
     ::v-deep .image-box
       width: 100% !important
@@ -428,6 +451,9 @@ img[src*="/api/qrcode?text"]
     padding-right 40px
     box-sizing border-box
     overflow hidden
+    transform translateX(0)
+    opacity 1
+    transition 0.2s
     ::v-deep
       .artwork-meta
         padding 20px 30px 40px
@@ -441,6 +467,24 @@ img[src*="/api/qrcode?text"]
     width 30vw
     background none
 
+  .isCollapseMeta
+    justify-content center
+    .ia-left
+      width 100%
+      .collapse-btn
+        position fixed
+        top: 2.7rem;
+        right: 0.4rem;
+        border-radius 10px
+        .icon
+          transform: rotate(90deg);
+    .ia-right
+      transform translateX(100%)
+      opacity 0
+      width 0
+      padding-right 0
+      margin-bottom 0
+
 @media screen and (max-width: 1200px)
   .ia-cont
     display block !important
@@ -449,6 +493,9 @@ img[src*="/api/qrcode?text"]
     width 100% !important
     margin 0 auto !important
     padding 0 !important
+
+    .collapse-btn
+      display none !important
 
     ::v-deep .image
       max-width: 100% !important

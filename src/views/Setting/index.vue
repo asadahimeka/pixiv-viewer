@@ -45,7 +45,7 @@ import { logout } from '@/api/user'
 
 const isXmas = (() => {
   const d = new Date()
-  return d.getMonth() == 11 && (d.getDate() == 24 || d.getDate() == 25)
+  return d.getMonth() == 11 && (d.getDate() >= 21 && d.getDate() <= 25)
 })()
 
 const xmasbgs = [

@@ -19,20 +19,14 @@
         <RankCard />
         <SpotlightCard />
       </div>
-      <template v-if="isWebLogin">
-        <Recomm4U />
-      </template>
+      <Recomm4U v-if="isWebLogin" />
       <template v-else>
         <div v-if="isSelfHibi" class="rec-cards">
           <RecommendIllustCard />
           <DiscoveryCard />
         </div>
-        <lazy-component>
-          <RandomIllust />
-        </lazy-component>
-        <lazy-component v-if="isSelfHibi">
-          <LatestIllustCard />
-        </lazy-component>
+        <RandomIllust />
+        <LatestIllustCard v-if="isSelfHibi" />
       </template>
     </div>
   </div>
