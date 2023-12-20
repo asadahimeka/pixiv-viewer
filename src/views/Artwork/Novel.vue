@@ -7,10 +7,12 @@
     <div class="ia-cont" :class="{ isCollapseMeta }">
       <div class="ia-left">
         <van-loading v-if="loading" size="50px" style="margin-top: 3rem;" />
-        <NovelView v-else :artwork="artwork" :text-obj="novelText" :text-config="textConfig" />
-        <div class="collapse-btn" @click="isCollapseMeta=!isCollapseMeta">
-          <Icon class="icon" name="double_arrow_down" />
-        </div>
+        <template v-else>
+          <NovelView :artwork="artwork" :text-obj="novelText" :text-config="textConfig" />
+          <div class="collapse-btn" @click="isCollapseMeta=!isCollapseMeta">
+            <Icon class="icon" name="double_arrow_down" />
+          </div>
+        </template>
       </div>
       <div class="ia-right">
         <van-skeleton class="skeleton" title avatar :row="5" avatar-size="42px" :loading="loading">
