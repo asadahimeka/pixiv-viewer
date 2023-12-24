@@ -599,6 +599,7 @@ export default {
     display flex
     align-items center
     flex-wrap wrap
+    gap 16px
     font-size: 24px;
     color: #7c8f99;
     margin: 16px 0;
@@ -606,7 +607,7 @@ export default {
 
     .view {
       min-width 100px
-      margin-right: 16px;
+      // margin-right: 16px;
       color: #3366FF
 
       .icon {
@@ -619,12 +620,12 @@ export default {
 
     .created.is_novel {
       display block
-      margin-top 16px
+      // margin-top 16px
     }
 
     .like {
       min-width 100px
-      margin-right: 16px;
+      // margin-right: 16px;
       color: #0099FF
 
       .icon {

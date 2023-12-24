@@ -3,7 +3,7 @@
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('about.title') }}</h3>
     <van-cell-group :title="$t('about.about_site')">
-      <van-cell center :title="$t('about.version')" clickable label="v1.13.1" />
+      <van-cell center :title="$t('about.version')" clickable label="v1.13.2" />
       <van-cell center :title="$t('about.disclaimer')" is-link :label="$t('tips.click_view')" to="/setting/about/disclaimer" />
       <van-cell
         center

@@ -413,7 +413,7 @@ export default {
           this.artList = artList
 
           this.curPage++
-          if (this.curPage > 9) this.finished = true
+          // if (this.curPage > 9) this.finished = true
         } else {
           this.finished = true
         }

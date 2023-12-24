@@ -44,6 +44,13 @@
     />
     <van-cell
       center
+      title="PixivCollection (Windows)"
+      is-link
+      label="Pixiv本地收藏夹图片管理"
+      @click="openLink('https://github.com/asadahimeka/PixivCollection/releases')"
+    />
+    <van-cell
+      center
       title="Flexbooru (Android)"
       is-link
       label="A booru client for Android, support Danbooru, Moebooru, Gelbooru, Shimmie, etc."

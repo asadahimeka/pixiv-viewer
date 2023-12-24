@@ -122,7 +122,7 @@ export default {
       font-size 13px
     }
     span {
-      margin-right 10px
+      margin-right 16px
     }
   }
 

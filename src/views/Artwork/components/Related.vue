@@ -88,7 +88,7 @@ export default {
             ...newList,
           ], 'id')
           this.curPage++
-          if (this.curPage > 2) this.finished = true
+          if (this.curPage > 4) this.finished = true
         } else {
           this.finished = true
         }

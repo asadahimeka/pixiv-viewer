@@ -86,6 +86,13 @@
     />
     <van-cell
       center
+      title="PixivCollection"
+      is-link
+      label="https://fav.pixiv.pics/"
+      @click="openLink('https://fav.pixiv.pics/')"
+    />
+    <van-cell
+      center
       title="Wotaku - The Otaku Index"
       is-link
       label="https://wotaku.moe/"
