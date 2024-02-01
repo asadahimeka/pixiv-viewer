@@ -29,8 +29,8 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= process.env.VUE_APP_GA_ID %>',{transport_type:'beacon'});</script>
   <% } %>
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
-  <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>" data-cache="true"></script>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_ID_SFW) { %>
+  <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID_SFW %>" data-cache="true"></script>
   <% } %>
 </head>
 
