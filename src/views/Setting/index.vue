@@ -3,7 +3,7 @@
     <h1 class="app-title">
       <img v-if="!isLoggedIn" src="/app-icon.png" alt="">
       <div class="app-title-desc">
-        <span class="title-font">Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup></span>
+        <span class="title-font">Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.7em;color: #33A6B8;">SFW</sup></span>
         <small>{{ $t('setting.app_desc') }}</small>
       </div>
     </h1>

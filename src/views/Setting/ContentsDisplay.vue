@@ -115,55 +115,59 @@ export default {
       window.umami?.track(`set_ai_switch_${checked}`)
     },
     onR18Change(checked, type) {
-      let name
-      if (type === 1) name = 'R-18'
-      if (type === 2) name = 'R-18G'
+      Dialog.alert({
+        title: '提示',
+        message: 'SFW 版本不支持打开此开关',
+      })
+      // let name
+      // if (type === 1) name = 'R-18'
+      // if (type === 2) name = 'R-18G'
 
-      window.umami?.track(`set_${name}_switch_${checked}`)
+      // window.umami?.track(`set_${name}_switch_${checked}`)
 
-      if (checked) {
-        Dialog.confirm({
-          message: this.$t('display.confirm', [name]),
-          confirmButtonColor: 'black',
-          cancelButtonColor: '#1989fa',
-          closeOnPopstate: true,
-          cancelButtonText: this.$t('common.cancel'),
-          confirmButtonText: this.$t('common.confirm'),
-        })
-          .then(() => {
-            if (type === 1) {
-              this.currentSETTING.r18 = checked
-              LocalStorage.set('PXV_NSFW_ON', 1)
-            }
-            if (type === 2) {
-              this.currentSETTING.r18g = checked
-              setTimeout(() => {
-                Dialog.alert({
-                  message: this.$t('display.confirm_g', [name]),
-                  confirmButtonText: this.$t('common.confirm'),
-                }).then(() => {
-                  location.reload()
-                })
-              }, 200)
-              LocalStorage.set('PXV_NSFW_ON', 1)
-            }
-            this.saveSwitchValues()
-            type === 1 && setTimeout(() => {
-              location.reload()
-            }, 200)
-          })
-          .catch(() => {
-            console.log('操作取消')
-          })
-      } else {
-        LocalStorage.remove('PXV_NSFW_ON')
-        if (type === 1) this.currentSETTING.r18 = checked
-        if (type === 2) this.currentSETTING.r18g = checked
-        this.saveSwitchValues()
-        setTimeout(() => {
-          location.reload()
-        }, 200)
-      }
+      // if (checked) {
+      //   Dialog.confirm({
+      //     message: this.$t('display.confirm', [name]),
+      //     confirmButtonColor: 'black',
+      //     cancelButtonColor: '#1989fa',
+      //     closeOnPopstate: true,
+      //     cancelButtonText: this.$t('common.cancel'),
+      //     confirmButtonText: this.$t('common.confirm'),
+      //   })
+      //     .then(() => {
+      //       if (type === 1) {
+      //         this.currentSETTING.r18 = checked
+      //         LocalStorage.set('PXV_NSFW_ON', 1)
+      //       }
+      //       if (type === 2) {
+      //         this.currentSETTING.r18g = checked
+      //         setTimeout(() => {
+      //           Dialog.alert({
+      //             message: this.$t('display.confirm_g', [name]),
+      //             confirmButtonText: this.$t('common.confirm'),
+      //           }).then(() => {
+      //             location.reload()
+      //           })
+      //         }, 200)
+      //         LocalStorage.set('PXV_NSFW_ON', 1)
+      //       }
+      //       this.saveSwitchValues()
+      //       type === 1 && setTimeout(() => {
+      //         location.reload()
+      //       }, 200)
+      //     })
+      //     .catch(() => {
+      //       console.log('操作取消')
+      //     })
+      // } else {
+      //   LocalStorage.remove('PXV_NSFW_ON')
+      //   if (type === 1) this.currentSETTING.r18 = checked
+      //   if (type === 2) this.currentSETTING.r18g = checked
+      //   this.saveSwitchValues()
+      //   setTimeout(() => {
+      //     location.reload()
+      //   }, 200)
+      // }
     },
     ...mapActions(['saveSETTING']),
   },
