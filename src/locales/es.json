@@ -237,7 +237,7 @@
     "succ_msg": "La autenticación de ID de sesión se realizó correctamente",
     "title": "Establecer galleta Pixiv",
     "warn": {
-      "text": "Esta función es una forma anormal de iniciar sesión y puede existir el riesgo de que se prohíba la cuenta. \nEl uso de esta función se considera como consentimiento del propio usuario y uso claro del riesgo. \nSi la cuenta está prohibida, etc., el autor de este proyecto no tiene nada que ver con eso.\n\nSe recomienda utilizar trompeta para realizar pruebas.",
+      "text": "Esta función es un método de inicio de sesión anormal y puede implicar riesgos. El uso de esta función se considera como el consentimiento del usuario y el uso claro de los riesgos. Si se producen anomalías en la cuenta, el autor de este proyecto no tiene nada que ver con ello.",
       "title": "Aviso de riesgo"
     }
   },

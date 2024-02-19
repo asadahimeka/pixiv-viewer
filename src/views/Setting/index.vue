@@ -1,12 +1,12 @@
 <template>
   <div class="setting">
-    <h1 class="app-title">
-      <img v-if="!isLoggedIn" src="/app-icon.png" alt="">
-      <div class="app-title-desc">
-        <span class="title-font">Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.7em;color: #33A6B8;">SFW</sup></span>
-        <small>{{ $t('setting.app_desc') }}</small>
+    <div class="app-title">
+      <div class="flex-c">
+        <img src="/app-icon.png" alt="">
+        <h1 class="title-font">Pxvek<sup style="margin-left: 5px;font-size: 0.7em;color: #33A6B8;">SFW</sup></h1>
       </div>
-    </h1>
+      <p class="app-title-desc">Browsing pixiv illustrations & novels without account</p>
+    </div>
     <van-cell v-if="isLoggedIn" size="large" center is-link :to="`/u/${user.id}`">
       <template #title>
         <div class="user_data">
@@ -84,9 +84,6 @@ export default {
     transform: translateY(1px);
 
 .app-title
-  display flex
-  justify-content center
-  align-items center
   margin 40px 0 50px
   padding-right 10px
   font-size 40px
@@ -97,12 +94,8 @@ export default {
     font-weight bold
 
   &-desc
-    display flex
-    flex-direction column
-    max-width 6rem
-    small
-      margin-top 0.2rem
-      font-size 0.24rem
+    margin-top 0.2rem
+    font-size 0.24rem
 
   img
     width 64px

@@ -360,7 +360,7 @@
     "succ_msg": "Sitzungs-ID-Authentifizierung erfolgreich",
     "title": "Pixiv-Cookie setzen",
     "warn": {
-      "text": "Diese Funktion ist eine anormale Art der Anmeldung, und es besteht die Gefahr, dass das Konto gesperrt wird. \nDie Nutzung dieser Funktion gilt als eigene Zustimmung des Nutzers und eindeutige Risikoübernahme. \nWenn der Account gesperrt wird usw., hat der Autor dieses Projekts nichts damit zu tun.\n\nEs wird empfohlen, Trompete zum Testen zu verwenden.",
+      "text": "Diese Funktion ist eine ungewöhnliche Anmeldemethode und kann Risiken bergen. Die Verwendung dieser Funktion gilt als Zustimmung des Benutzers und als klare Nutzung der Risiken. Sollten Kontoanomalien auftreten, hat der Autor dieses Projekts nichts damit zu tun.",
       "title": "Risikohinweis"
     }
   },

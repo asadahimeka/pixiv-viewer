@@ -360,7 +360,7 @@
     "succ_msg": "Authentification de l'ID de session réussie",
     "title": "Définir le cookie Pixiv",
     "warn": {
-      "text": "Cette fonction est une façon anormale de se connecter, et il peut y avoir un risque de bannissement du compte. \nL'utilisation de cette fonction est considérée comme le consentement de l'utilisateur et l'utilisation claire du risque. \nSi le compte est banni, etc., l'auteur de ce projet n'a rien à voir avec cela.\n\nIl est recommandé d'utiliser la trompette pour les tests.",
+      "text": "Cette fonction est une méthode de connexion anormale et peut comporter des risques. L'utilisation de cette fonction est considérée comme le consentement de l'utilisateur et une utilisation claire des risques. Si des anomalies de compte surviennent, l'auteur de ce projet n'y est pour rien.",
       "title": "Avis de risque"
     }
   },

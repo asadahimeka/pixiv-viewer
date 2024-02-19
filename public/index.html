@@ -5,14 +5,14 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-  <title>Pixiv Viewer - Yet Another Pixiv Illustration & Novel Viewer</title>
-  <meta name="keywords" content="pixiv,pixiv-viewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv每日排行,pixiv漫画,pixiv小说" />
-  <meta name="description" itemprop="description" content="又一个Pixiv插画小说阅览工具，适配多端展示，支持PWA安装。" />
-  <meta property="og:title" content="Pixiv Viewer" />
-  <meta property="og:description" content="又一个Pixiv插画小说阅览工具，适配多端展示，支持PWA安装。" />
+  <title>Pxvek - Browsing pixiv illustrations & novels without account</title>
+  <meta name="keywords" content="pixiv,pixiv-viewer,pixivviewer,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv漫画,pixiv小说,pixiv每日排行" />
+  <meta name="description" itemprop="description" content="免登录Pixiv插画小说阅览镜像站，支持PWA安装，适配多端样式。" />
+  <meta property="og:title" content="Pxvek" />
+  <meta property="og:description" content="免登录Pixiv插画小说阅览镜像站，支持PWA安装，适配多端样式。" />
   <meta property="og:url" content="https://pixiv.nanoka.top" />
-  <meta property="og:image" content="https://pixiv.nanoka.top/img/icons/256.png" />
-  <meta property="og:site_name" content="Pixiv Viewer" />
+  <meta property="og:image" content="https://pixiv.nanoka.top/app-icon.png" />
+  <meta property="og:site_name" content="Pxvek" />
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="x-dns-prefetch-control" content="on" />
   <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico" type="image/x-icon">
@@ -22,13 +22,7 @@
   <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/vant/2.12.54/index.min.css">
   <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/Swiper/5.4.5/css/swiper.min.css">
   <link rel="stylesheet" href="https://lib.baomitu.com/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixiv Viewer","alternateName":"Pxve","url":"https://pixiv.nanoka.top/"}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","url":"https://pixiv.nanoka.top/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixiv.nanoka.top/search/{search_term_string}"},"query-input":"required name=search_term_string"}}</script>
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
-  <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>
-  <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= process.env.VUE_APP_GA_ID %>',{transport_type:'beacon'});</script>
-  <% } %>
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_ID_SFW) { %>
   <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID_SFW %>" data-cache="true"></script>
   <% } %>
@@ -41,11 +35,11 @@
   <div id="app"></div>
   <div id="ldio-loading">
     <div class="ldio-content">
-      <img src="<%= BASE_URL %>img/icons/192.png" width="120" height="120" alt="">
-      <div class="ldio-title">Pixiv Viewer</div>
+      <img src="<%= BASE_URL %>app-icon.png" width="120" height="120" alt="">
+      <div class="ldio-title">Pxvek</div>
     </div>
   </div>
-  <script>if(!!localStorage.PXV_DARK)document.body.classList.add('dark');</script>
+  <script>if(localStorage.PXV_DARK!=='')document.body.classList.add('dark');</script>
   <% if (process.env.NODE_ENV === 'production') { %>
   <% for (let it of htmlWebpackPlugin.options.cdn.js) { %>
   <script src="<%= it %>"></script>

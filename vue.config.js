@@ -120,7 +120,7 @@ module.exports = {
     },
   },
   pwa: {
-    name: 'Pixiv Viewer',
+    name: 'Pxvek',
     themeColor: '#FFFFFF',
     iconPaths: {
       faviconSVG: null,

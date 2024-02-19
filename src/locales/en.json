@@ -360,7 +360,7 @@
     "succ_msg": "Session ID authentication succeeded",
     "title": "Set Pixiv Cookie",
     "warn": {
-      "text": "This function is an abnormal way to log in, and there may be a risk of banning the account. Using this function is deemed to be the user's own consent and clear use of the risk. If the account is banned, etc., the author of this project has nothing to do with it. \nIt is recommended to use alt account for testing.",
+      "text": "This function is an abnormal login method and may involve risks. Using this function is deemed to be the user's consent and clear use of the risks. If account abnormalities occur, the author of this project has nothing to do with it.",
       "title": "Risk Notice"
     }
   },

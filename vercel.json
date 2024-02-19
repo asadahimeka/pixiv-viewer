@@ -38,13 +38,21 @@
     {
       "source": "/-/:match*",
       "destination": "https://i.pixiv.re/:match"
+    },
+    {
+      "source": "/:path*",
+      "missing": [
+        {
+          "type": "header",
+          "key": "x-vercel-ip-country",
+          "value": "CN"
+        }
+      ],
+      "destination": "https://www.pixiv.pics/:match",
+      "permanent": false
     }
   ],
   "rewrites": [
-    {
-      "source": "/prks/obfs/:match*",
-      "destination": "https://api.obfs.dev/:match*"
-    },
     {
       "source": "/prks/now/:match*",
       "destination": "https://now.pixiv.pics/:match*"

@@ -3,7 +3,7 @@
     <div class="com_sel_tabs home-i-tabs">
       <div class="home-title">
         <img class="app-logo" src="/app-icon.png" alt="Logo">
-        <h1 class="app-title">Pixiv Viewer</h1>
+        <h1 class="app-title">Pxvek</h1>
       </div>
       <div class="sel-tabs flex">
         <div v-t="'common.illust'" class="com_sel_tab cur"></div>
@@ -68,7 +68,7 @@ export default {
     }
   },
   head: {
-    title: 'Pixiv Viewer - Yet Another Pixiv Illustration & Novel Viewer',
+    title: 'Pxvek - Browsing pixiv illustrations & novels without account',
     titleTemplate: null,
   },
   activated() {

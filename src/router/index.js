@@ -335,7 +335,7 @@ const router = new VueRouter({
   },
 })
 
-const isDark = !!localStorage.PXV_DARK
+const isDark = localStorage.PXV_DARK !== ''
 
 router.beforeEach((to, from, next) => {
   if (!isPageEffectOn && !isDark) document.body.classList.add('fadeIn')

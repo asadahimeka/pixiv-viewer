@@ -117,7 +117,7 @@ export default {
     onR18Change(checked, type) {
       Dialog.alert({
         title: '提示',
-        message: 'SFW 版本不支持打开此开关',
+        message: 'SFW 版本不支持打开此开关，请访问 <i style="user-select:text">https://www.pixiv.pics</i> 使用完整版',
       })
       // let name
       // if (type === 1) name = 'R-18'

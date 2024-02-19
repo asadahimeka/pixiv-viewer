@@ -29,7 +29,6 @@ setupApp()
 async function setupApp() {
   await checkWechat()
   await checkBrowser()
-  // await checkIncognito()
   await initSetting()
   await initLocalApi()
   await initLocale()
@@ -134,20 +133,3 @@ async function checkBrowser() {
   }
   return true
 }
-
-// async function checkIncognito() {
-//   let flag = false
-//   try {
-//     const { quota } = await navigator.storage.estimate()
-//     if (quota.toString().length > 10) return true
-//     document.body.innerHTML = ''
-//     Dialog.alert({
-//       message: 'Please use a normal tab to continue browsing.',
-//       confirmButtonText: 'OK',
-//     })
-//     flag = true
-//   } catch (error) {
-//     return true
-//   }
-//   if (flag) throw new Error('BLOCKED.')
-// }

@@ -110,7 +110,7 @@ export default {
         console.log('err: ', err)
         this.loading = false
         if (err instanceof Error) {
-          this.$toast(err.response?.data?.message || err)
+          this.$toast(err.response?.data?.message || err?.message || err)
         }
       }
     },

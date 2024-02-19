@@ -225,7 +225,7 @@ export default {
       const actions = [
         async () => {
           const shareData = {
-            title: 'Pixiv Viewer',
+            title: 'Pxvek',
             text: `${this.$t('artwork.share.share')} ${this.artwork.author.name} ${this.$t('artwork.share.of_art')} ${this.artwork.title} - ID: ${this.artwork.id}`,
             url: `${shareUrl}`,
           }

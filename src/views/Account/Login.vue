@@ -36,8 +36,6 @@
       <van-cell><a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank">{{ $t('login.o.desc7') }}</a></van-cell>
       <van-cell>{{ $t('login.t.d2') }}</van-cell>
       <van-cell><a href="https://www.nanoka.top/posts/e78ef86/" target="_blank">🔗https://www.nanoka.top/posts/e78ef86/</a></van-cell>
-      <van-cell><a href="https://github.com/Tsuk1ko/pxder#%E5%87%86%E5%A4%87" target="_blank">🔗https://github.com/Tsuk1ko/pxder</a></van-cell>
-      <van-cell><a href="https://github.com/mixmoe/HibiAPI/issues/53" target="_blank">🔗https://github.com/mixmoe/HibiAPI/issues/53</a></van-cell>
       <van-field v-model="appConfig.refreshToken" label="RefreshToken：" label-width="2rem" :placeholder="$t('login.t.d3')" />
       <van-cell>
         <div class="flex">

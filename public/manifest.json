@@ -1,26 +1,16 @@
 {
   "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-  "name": "Pixiv Viewer",
-  "short_name": "Pixiv Viewer",
-  "description": "又一个 Pixiv 阅览工具",
+  "name": "Pxvek",
+  "short_name": "Pxvek",
+  "description": "免登录 Pixiv 镜像站",
   "theme_color": "#FFFFFF",
   "background_color": "#F6F8FB",
   "display": "standalone",
   "start_url": ".",
   "icons": [
     {
-      "src": "./img/icons/192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    },
-    {
       "src": "./img/icons/256.png",
       "sizes": "256x256",
-      "type": "image/png"
-    },
-    {
-      "src": "./img/icons/512.png",
-      "sizes": "512x512",
       "type": "image/png"
     }
   ],

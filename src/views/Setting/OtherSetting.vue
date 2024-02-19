@@ -229,12 +229,12 @@ export default {
       pximgChecked: true,
       apiChecked: true,
       hideApSelect: LocalStorage.get('__HIDE_AP_SEL', false),
-      isDark: !!localStorage.getItem('PXV_DARK'),
+      isDark: localStorage.getItem('PXV_DARK') !== '',
       enableSwipe: LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
       isPageEffectOn: LocalStorage.get('PXV_PAGE_EFFECT', false),
       isLongpressDL: LocalStorage.get('PXV_LONGPRESS_DL', false),
       isLongpressBlock: LocalStorage.get('PXV_LONGPRESS_BLOCK', false),
-      isImageCardOuterMeta: LocalStorage.get('PXV_IMG_META_OUTER', false),
+      isImageCardOuterMeta: LocalStorage.get('PXV_IMG_META_OUTER', true),
     }
   },
   head() {

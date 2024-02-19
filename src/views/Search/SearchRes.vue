@@ -311,6 +311,9 @@ export default {
 
       this.$router.push(`/search/${encodeURIComponent(keywords)}`)
       this.showPopPreview = false
+      this.keywords = keywords + ' '
+      this.reset()
+      this.doSearch(this.keywords)
     },
     doSearch: _.throttle(async function (val) {
       val = val || this.keywords

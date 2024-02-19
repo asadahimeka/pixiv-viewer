@@ -44,11 +44,6 @@
         <van-icon v-if="isDark" :class="{ active: isActive('Setting') }" name="setting-o" />
         <span>{{ $t('nav.setting') }}</span>
       </li>
-      <li v-if="!isListenScroll" class="nav_to_top" @click="scrollToTop()">
-        <Icon class="icon" name="to_top" />
-        <van-icon v-if="isDark" name="back-top" />
-        <span>Top</span>
-      </li>
     </ul>
   </div>
 </template>
@@ -80,7 +75,7 @@ export default {
       showNav: true,
       scrollFn: () => {},
       isListenScroll: document.documentElement.clientWidth < 1280,
-      isDark: !!localStorage.PXV_DARK,
+      isDark: localStorage.PXV_DARK !== '',
     }
   },
   mounted() {

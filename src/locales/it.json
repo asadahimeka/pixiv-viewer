@@ -215,7 +215,7 @@
     "succ_msg": "Autenticazione dell'ID di sessione riuscita",
     "title": "Imposta il cookie Pixiv",
     "warn": {
-      "text": "Questa funzione è un modo anomalo per accedere e potrebbe esserci il rischio di vietare l'account. \nL'utilizzo di questa funzione è considerato il consenso dell'utente e il chiaro utilizzo del rischio. \nSe l'account è bannato, ecc., l'autore di questo progetto non c'entra niente.\n\nSi consiglia di utilizzare la tromba per i test.",
+      "text": "Questa funzione è un metodo di accesso anomalo e può comportare rischi. L'utilizzo di questa funzione presuppone il consenso dell'utente e un chiaro utilizzo dei rischi. Se si verificano anomalie nell'account, l'autore di questo progetto non ha nulla a che fare con ciò.",
       "title": "Avviso di rischio"
     }
   },
