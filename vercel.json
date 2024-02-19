@@ -40,7 +40,7 @@
       "destination": "https://i.pixiv.re/:match"
     },
     {
-      "source": "/:path*",
+      "source": "/:match*",
       "missing": [
         {
           "type": "header",
