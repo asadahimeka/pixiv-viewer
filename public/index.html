@@ -26,6 +26,9 @@
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_ID_SFW) { %>
   <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID_SFW %>" data-cache="true"></script>
   <% } %>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CLARITY_ID) { %>
+  <script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "<%= process.env.VUE_APP_CLARITY_ID %>");</script>
+  <% } %>
 </head>
 
 <body>
