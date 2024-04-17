@@ -6,7 +6,7 @@ import './polyfill'
 import './registerServiceWorker'
 
 import { init } from 'console-ban'
-import Vant, { Dialog, ImagePreview, Lazyload, Notify, Toast } from 'vant'
+import Vant, { ImagePreview, Lazyload, Notify, Toast } from 'vant'
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMasonry from 'vue-masonry-css'
@@ -102,10 +102,7 @@ async function initSetting() {
 async function checkWechat() {
   if (/MicroMessenger|QQ/i.test(navigator.userAgent)) {
     document.body.innerHTML = '<h1 style="margin:10px;font-size:32px">FUCK WECHAT</h1>'
-    Dialog.alert({
-      message: i18n.t('tip.browser_tip'),
-      theme: 'round-button',
-    })
+    window.alert(i18n.t('tip.browser_tip'))
     throw new Error('BLOCKED.')
   }
   return true
