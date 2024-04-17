@@ -114,16 +114,15 @@ async function checkWechat() {
 async function checkBrowser() {
   const message = i18n.t('tip.browser_latest')
   if (/Quark|QQBrowser|baidu|NewsArticle|UCBrowser|Huawei|HeyTap|Miui|Vivo|Oppo|360se|Sogou/i.test(navigator.userAgent)) {
-    Notify({
-      message,
-      color: '#fff',
-      background: '#f1c25f',
-      duration: 2500,
+    document.body.innerHTML = ''
+    Dialog.alert({
+      message: i18n.t('tip.browser_tip'),
+      theme: 'round-button',
     })
-    return true
+    throw new Error('BLOCKED.')
   }
   const chromeVer = parseInt(navigator.userAgent.match(/Chrome\/([\d.]+)/)?.[1])
-  if (chromeVer && chromeVer < 100) {
+  if (chromeVer && chromeVer < 106) {
     Notify({
       message,
       color: '#fff',
