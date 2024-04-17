@@ -115,10 +115,7 @@ async function checkBrowser() {
   const message = i18n.t('tip.browser_latest')
   if (/Quark|QQBrowser|baidu|NewsArticle|UCBrowser|Huawei|HeyTap|Miui|Vivo|Oppo|360se|Sogou/i.test(navigator.userAgent)) {
     document.body.innerHTML = ''
-    Dialog.alert({
-      message: i18n.t('tip.browser_tip'),
-      theme: 'round-button',
-    })
+    window.alert(i18n.t('tip.browser_tip'))
     throw new Error('BLOCKED.')
   }
   const chromeVer = parseInt(navigator.userAgent.match(/Chrome\/([\d.]+)/)?.[1])
