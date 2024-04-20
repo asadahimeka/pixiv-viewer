@@ -5,9 +5,8 @@
 // @description  HTTP helper for Pixiv-Viewer.
 // @author       asadahimeka
 // @license      MIT
-// @match        https://pixiv.nanoka.top/*
+// @match        https://pxvek.nanoka.top/*
 // @connect      pixiv.net
-// @connect      cocomi.cf
 // @connect      cocomi.eu.org
 // @connect      pixiv.pics
 // @connect      deno.dev

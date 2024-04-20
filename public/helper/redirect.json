@@ -7,7 +7,7 @@
       "exclude": "",
       "methods": [],
       "types": [],
-      "target": "https://pixiv.nanoka.top/account/oauth",
+      "target": "https://pxvek.nanoka.top/account/oauth",
       "example": "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback?state=123&code=456",
       "enable": true,
       "process": "",
