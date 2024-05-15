@@ -21,7 +21,7 @@ export default {
     // if no subcomponents specify a metaInfo.title, this title will be used
     title: 'Loading',
     // all titles will be injected into this template
-    titleTemplate: '%s | Pixiv Viewer',
+    titleTemplate: '%s | PxAnon',
   },
   async created() {
     let user = null

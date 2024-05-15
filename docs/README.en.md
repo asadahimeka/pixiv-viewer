@@ -1,6 +1,6 @@
 <p align="center"><img src="https://api.moedog.org/count/@asadahimeka-pixiv-viewer-github-en" alt="pixiv-viewer"></p>
 
-<h1 align="center">Pixiv Viewer <sup><small>Kai</small></sup></h1>
+<h1 align="center">Pixiv Viewer <sup><small>Anon</small></sup></h1>
 
 Demo: 🔗 [pixiv.pics](https://pixiv.pics)
 

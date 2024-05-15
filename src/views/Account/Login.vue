@@ -70,15 +70,6 @@ export default {
   },
   methods: {
     async openConfirmDialog(showKey) {
-      if (showKey == 'showConfirmDialog' && location.host != 'www.pixiv.pics') {
-        Dialog.alert({
-          title: this.$t('tips.tip'),
-          message: '<p>当前站点无法进行登录，请前往 <a href="https://www.pixiv.pics" target="_blank">https://www.pixiv.pics</a> 进行操作。<p>',
-          cancelButtonText: this.$t('common.cancel'),
-          confirmButtonText: this.$t('common.confirm'),
-        })
-        return
-      }
       const res = await Dialog.confirm({
         title: this.$t('sess.warn.title'),
         message: this.$t('sess.warn.text'),

@@ -3,7 +3,7 @@
   "version": "1.17.5",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --port 8899",
     "build": "vue-cli-service build",
     "release": "bumpp package.json src/consts/index.js --all --no-tag",
     "prerelease": "git add .",

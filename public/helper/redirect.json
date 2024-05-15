@@ -7,7 +7,7 @@
       "exclude": "",
       "methods": [],
       "types": [],
-      "target": "https://www.pixiv.pics/account/oauth",
+      "target": "https://pxve.cc/account/oauth",
       "example": "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback?state=123&code=456",
       "enable": true,
       "process": "",

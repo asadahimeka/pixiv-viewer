@@ -1,7 +1,7 @@
 {
   "about": {
     "disclaimer": "Disclaimer",
-    "disclaimer_text": "<b>Relativo a NSFW</b><br>Questo sito non visualizza risorse NSFW (come illustrazioni R-18) per impostazione predefinita, qualsiasi accesso a tali risorse è impostato dall'utente nelle impostazioni e l'utente ha assicurato \nQuello\n\nColoro che hanno più di 18 anni e non violano il contenuto previsto dalle leggi e dai regolamenti locali.\n\nAbbiamo contrassegnato chiaramente le risorse NSFW come potrebbero apparire e scoraggiamo l'accesso o la distribuzione di tali risorse.\n\n<br><b>Commenti degli utenti</b><br>I \"Commenti degli utenti\" si riferiscono ai commenti pubblicati dagli utenti del sito di origine Pixiv attraverso funzioni come l'auto-introduzione, l'introduzione dell'illustrazione e l'area dei commenti.\n\nQuesta parte appartiene al comportamento dell'editore e non possiamo controllarla efficacemente.\n\nNon pubblichiamo né incoraggiamo la diffusione di discorsi inappropriati.\n\nSe trovi contenuti inappropriati durante la navigazione, ti consigliamo vivamente di segnalarlo al sito di origine.\n\n<br><b>Dichiarazione sul copyright</b><br>Questo sito non ha alcuna relazione con pixiv.net (ピクシブ Co., Ltd.).Tutti i dati e le risorse multimediali richieste sono protetti da copyright di Pixiv o dei suoi autori originali.\n\n<br>Il programma Pixiv Viewer è concesso in licenza con licenza MIT.\n\n<br>Solo per la comunicazione e l'apprendimento.",
+    "disclaimer_text": "<b>Relativo a NSFW</b><br>Questo sito non visualizza risorse NSFW (come illustrazioni R-18) per impostazione predefinita, qualsiasi accesso a tali risorse è impostato dall'utente nelle impostazioni e l'utente ha assicurato \nQuello\n\nColoro che hanno più di 18 anni e non violano il contenuto previsto dalle leggi e dai regolamenti locali.\n\nAbbiamo contrassegnato chiaramente le risorse NSFW come potrebbero apparire e scoraggiamo l'accesso o la distribuzione di tali risorse.\n\n<br><b>Commenti degli utenti</b><br>I \"Commenti degli utenti\" si riferiscono ai commenti pubblicati dagli utenti del sito di origine Pixiv attraverso funzioni come l'auto-introduzione, l'introduzione dell'illustrazione e l'area dei commenti.\n\nQuesta parte appartiene al comportamento dell'editore e non possiamo controllarla efficacemente.\n\nNon pubblichiamo né incoraggiamo la diffusione di discorsi inappropriati.\n\nSe trovi contenuti inappropriati durante la navigazione, ti consigliamo vivamente di segnalarlo al sito di origine.\n\n<br><b>Dichiarazione sul copyright</b><br>Questo sito non ha alcuna relazione con pixiv.net (ピクシブ Co., Ltd.).Tutti i dati e le risorse multimediali richieste sono protetti da copyright di Pixiv o dei suoi autori originali.\n\n<br>Il programma PxAnon è concesso in licenza con licenza MIT.\n\n<br>Solo per la comunicazione e l'apprendimento.",
     "feedback": "Feedback",
     "from": "Modificato da",
     "origin_site": "Sito originale",
@@ -210,7 +210,7 @@
       "p2": "Tuttavia, ti consigliamo di tenere i tuoi cookie al sicuro.\n\nSe le informazioni che salvi qui vengono ottenute da altri, c'è il rischio di furto dell'account."
     },
     "ques1": "Come ottenere l'ID sessione Pixiv?",
-    "ques2": "Pixiv Viewer ruberà le mie informazioni personali?",
+    "ques2": "PxAnon ruberà le mie informazioni personali?",
     "save": "salva",
     "succ_msg": "Autenticazione dell'ID di sessione riuscita",
     "title": "Imposta il cookie Pixiv",

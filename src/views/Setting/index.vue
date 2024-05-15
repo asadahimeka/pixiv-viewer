@@ -3,8 +3,8 @@
     <h1 class="app-title" @click="$router.push('/setting/accent_color')">
       <img v-if="!isLoggedIn" src="/app-icon.png" alt="">
       <div class="app-title-desc">
-        <span class="title-font">Pixiv Viewer<sup style="margin-left: 5px;font-size: 0.3rem;">Kai</sup></span>
-        <small>{{ $t('setting.app_desc') }}</small>
+        <span class="title-font">PxAnon</span>
+        <small>Pixiv Illustration & Novel Viewer without Account</small>
       </div>
     </h1>
     <van-notice-bar

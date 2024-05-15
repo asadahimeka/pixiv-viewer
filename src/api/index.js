@@ -267,7 +267,8 @@ export const parseWebApiIllust = d => {
 }
 
 const dealErrMsg = res => {
-  let msg = res.error.user_message || res.error.message || res.error
+  const err = res.error?.response?.data?.error || res.error
+  let msg = err?.message || err?.user_message || err
   if (msg == 'Rate Limit') msg = i18n.t('tip.rate_limit')
   return msg
 }

@@ -65,7 +65,7 @@ import { fancyboxShow } from '@/utils'
 
 const isLongpressDL = LocalStorage.get('PXV_LONGPRESS_DL', false)
 const isLongpressBlock = LocalStorage.get('PXV_LONGPRESS_BLOCK', false)
-const isOuterMeta = LocalStorage.get('PXV_IMG_META_OUTER', false)
+const isOuterMeta = LocalStorage.get('PXV_IMG_META_OUTER', true)
 
 export default {
   props: {

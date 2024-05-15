@@ -9,7 +9,7 @@ const cdn = {
   css: [
     'https://lib.baomitu.com/vant/2.12.54/index.min.css',
     'https://lib.baomitu.com/Swiper/5.4.5/css/swiper.min.css',
-    'https://lib.baomitu.com/lxgw-wenkai-screen-webfont/1.7.0/style.min.css',
+    // 'https://lib.baomitu.com/lxgw-wenkai-screen-webfont/1.7.0/style.min.css',
   ],
   js: [
     'https://lib.baomitu.com/vue/2.6.14/vue.min.js',
@@ -124,7 +124,7 @@ module.exports = {
     },
   },
   pwa: {
-    name: 'Pixiv Viewer',
+    name: 'PxAnon',
     themeColor: '#FFFFFF',
     iconPaths: {
       faviconSVG: null,

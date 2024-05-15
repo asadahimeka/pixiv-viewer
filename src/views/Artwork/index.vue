@@ -222,12 +222,12 @@ export default {
       }
     },
     onShareSel(_, index) {
-      const shareUrl = `https://pixiv.pics/i/${this.artwork.id}`
+      const shareUrl = `https://pxve.cc/i/${this.artwork.id}`
       const imageUrl = this.artwork.images[0].l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/')
       const actions = [
         async () => {
           const shareData = {
-            title: 'Pixiv Viewer',
+            title: 'PxAnon',
             text: `${this.$t('artwork.share.share')} ${this.artwork.author.name} ${this.$t('artwork.share.of_art')} ${this.artwork.title} - ID: ${this.artwork.id}`,
             url: `${shareUrl}`,
           }
