@@ -182,7 +182,7 @@
   "setting": {
     "about": "О сайте",
     "api": {
-      "desc": "Введите адрес экземпляра HibiAPI ниже, вам нужно добавить https://, и путь должен быть заполнен в части `/api/pixiv`",
+      "desc": "Введите адрес экземпляра HibiAPI ниже, вам нужно добавить https://, и путь должен быть заполнен в части «/api/pixiv»",
       "desc2": "Например: https://hibiapi.getloli.com/api/pixiv, локальный кэш будет очищен после сохранения",
       "desc3": "Экземпляры API могут находиться в",
       "desc4": "поиск или создание собственного",
@@ -431,7 +431,7 @@
   "NgE24V8lvXN2c15W_2gnE": "Удерживание может заблокировать автора или метку, и его нельзя использовать вместе с параметром «Удерживание для скачивания».",
   "WdS4RTIeeWqdaqLtvk7ZO": "Поместить название изображения и автора под карточкой изображения. Щёлкните по заголовку, чтобы просмотреть изображение.",
   "Tx35SIS0MBLD-pgz1XgXh": "Показать всё",
-  "lJtMtr2rgYCSg-osHykE9": "Перейдите на <a href=\"https://saucenao.com/\" target=\"_blank\">https://saucenao.com</a> или поищите на <a href=\"https://iqdb.org/\" target= \n\"_blank\">https://iqdb.org</a>.",
+  "lJtMtr2rgYCSg-osHykE9": "Перейдите на <a href=\"https://saucenao.com/\" target=\"_blank\">https://saucenao.com</a> или поищите на <a href=\"https://iqdb.org/\" target=\"_blank\">https://iqdb.org</a>.",
   "zlMUy5svAesJpHhvWRc6C": "Предустановленные настройки цвета текста",
   "H_rYWoPA0uI7TU4YCbIz0": "Преобразование не выполнено. Возможно, ваше устройство не поддерживает эту функцию.",
   "zuVom-C8Ss8JTEDZIhzBj": "Использовать ffmpeg для преобразования на стороне сервера",
