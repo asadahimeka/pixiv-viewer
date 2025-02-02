@@ -190,16 +190,27 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 本项目使用 [Vue I18n](https://kazupon.github.io/vue-i18n/) 进行国际化，其他语言翻译主要来自机器翻译，如有不妥，欢迎[贡献翻译](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales)
 
 ## Credits
-- [pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)：原项目，修改于此
-- [Vue](https://vuejs.org/)：前端框架
-- [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)：UI 组件库
-- [Vue I18n](https://kazupon.github.io/vue-i18n/)：国际化支持
+
+### Special Thanks
+- [journey-ad/pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)：原项目，修改于此
+
+### Contributors
+- [@Blueberryy](https://github.com/Blueberryy): Russian translation
+
+### Projects
 - [HibiAPI](https://github.com/mixmoe/HibiAPI)：提供大部分接口支持
-- [Pixiv.cat](https://pixiv.re/)：图像反代服务
 - [PixivNow](https://github.com/FreeNowOrg/PixivNow)：提供部分网页版接口支持
+
+### Services
+- [Pixiv.cat](https://pixiv.re/)：图像反代服务
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务
 - [Netlify](https://netlify.com/)：提供页面托管服务
+
+### Developing
+- [Vue](https://vuejs.org/)：前端框架
+- [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)：UI 组件库
+- [Vue I18n](https://kazupon.github.io/vue-i18n/)：国际化支持
 
 ## Disclaimer
 

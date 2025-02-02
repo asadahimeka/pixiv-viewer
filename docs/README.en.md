@@ -1,7 +1,7 @@
 <p align="center"><img src="https://api.moedog.org/count/@himeka-pxve-github-en" alt="pixiv-viewer"></p>
 
 <h1 align="center">Pixiv Viewer <sup><small>Kai</small></sup></h1>
-<p align="center">Yet Another Pixiv Illust&Novel Viewer.</p>
+<p align="center">Yet Another Pixiv Illustration & Novel Viewer.</p>
 
 ![](https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer)
 ![](https://img.shields.io/badge/license-MIT-green)
@@ -10,67 +10,68 @@
 ![](https://img.shields.io/github/package-json/dependency-version/asadahimeka/pixiv-viewer/dev/@vue/cli-service)
 ![](https://img.shields.io/github/package-json/dependency-version/asadahimeka/pixiv-viewer/vant)
 
-Demo: 🔗 [pixiv.pictures](https://pixiv.pictures)
+**Demo:** 🔗 [pixiv.pictures](https://pixiv.pictures)
 
-Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
+**Download:** ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
 
 ## Features
 - [x] Home
-  - [x] Illustrations/Mangas/Novels/Lives
+  - [x] Illustrations/Mangas/Novels/Live Streams
   - [x] Rankings/Spotlights/Recommended/Discover/New Artworks
   - [x] Random Artworks
-- [x] Searching (Illustrations·Mangas/Novels/Users)
-  - [x] Search Hotwords (Long-press to view tags covers)
+- [x] Search (Illustrations·Mangas/Novels/Users)
+  - [x] Search Trends (Long-press to view tag covers)
   - [x] Search Auto-complete
   - [x] Preview of Popular Artworks
   - [x] Search Params Support
   - [x] Image Search
 - [x] Rankings
-  - [x] Overall/Illustrations/Manga/AnimeGifs/Novels Rankings
+  - [x] Overall/Illustration/Manga/Ugoira/Novel Rankings
   - [x] R18/AI Rankings
-  - [x] View Rankings by Date
+  - [x] View Rankings by Date Range
 - [x] Feeds
-  - [x] New Artworks Following
+  - [x] Latest Artworks from Followed Users
   - [x] My Bookmarks
   - [x] Followed Users
-  - [x] Latest from Entire Site
+  - [x] Latest from the Entire Site
 - [x] Settings
   - [x] Login (RefreshToken/OAuth/Cookie)
-  - [x] History
-  - [x] Toggle for R18 and AI Artworks
+  - [x] View History
+  - [x] R18/G and AI Artwork Display Toggle
   - [x] Local Blacklist
   - [x] Clear Cache
   - [x] Multi-language Support
-  - [x] Image Waterfull Layout Selection
-  - [x] Image Quality Selection for Image Details
+  - [x] Image Waterfall Layout Selection
+  - [x] Image Detail Quality Selection
   - [x] Dark Mode
   - [x] App Theme Color
   - [x] Swipe Left/Right to Browse Artworks
-  - [x] Multiple Image proxy Selection
-  - [x] Multiple API Instance Selection
+  - [x] Multiple Image Proxy Options
+  - [x] Multiple API Instance Options
   - [x] Export RefreshToken
   - [x] Proxy Service for AppAPI
   - [x] Long-press to Download Images from Lists
   - [x] Long-press to Block Images from Lists
   - [x] Download via File System Access API
-  - [x] Download via Tampermonkey User Script
-  - [x] Format for Downloaded File Names
+  - [x] Download via Tampermonkey Userscript
+  - [x] Customizable Download Filename Format
 - [x] Artwork Detail Page
   - [x] Bookmark/Download/View Comments/Share
-  - [x] Source Site Link/ID Copy
-  - [x] Ugoira Play
-  - [x] Ugoira Download (ZIP/GIF/WebM/APNG/MP4)
-  - [x] Novel Download
-  - [x] Novel Reading Settings (Font/Colors/Direction etc.)
+  - [x] Source Site Link
+  - [x] Copy PID/UID
+  - [x] Play Ugoira
+  - [x] Download Ugoira (ZIP/GIF/WebM/APNG/MP4)
+  - [x] Download Novels
+  - [x] Novel Reading Settings (Font, Colors, Direction, etc.)
 - [x] Author Detail Page
   - [x] Follow/Unfollow
-  - [x] View Author’s Illustrations/Mangas/Bookmarks/Novels
-  - [x] View Manga Series/Novel Series
-  - [x] Author Illustration Tags
+  - [x] View Author's Illustrations/Mangas/Bookmarks/Novels
+  - [x] View Manga/Novel Series
+  - [x] Author's Illustration Tags
   - [x] Related Users
 
 - [x] Local IndexedDB Cache Storage
-- [x] Multi-end Style Adaptation
+- [x] Multi-platform Style Adaptation
 - [x] PWA Support
 - [x] Android/Windows Version
 - [x] iOS/macOS Version
@@ -106,53 +107,49 @@ https://github.com/asadahimeka/pixiv-viewer/discussions
 - [booruwf](https://booru.cocomi.eu.org/)
 - [RankTop50](https://www.nanoka.top/illust/pixiv/)
 
-## Project setup
-```
+## Project Setup
+```sh
 pnpm install
 ```
 
-### Compiles and hot-reloads for development
-```
+### Compile and Hot-reload for Development
+```sh
 pnpm serve
 ```
 
-### Compiles and minifies for production
-```
+### Compile and Minify for Production
+```sh
 pnpm build
 ```
 
-### Lints and fixes files
-```
+### Lint and Fix Files
+```sh
 pnpm lint
 ```
 
-### Customize configuration
+### Customize Configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## FAQ
 
 ### How to preset the image proxy and API instance if you build it yourself?
 
-Refer to [#10](https://github.com/asadahimeka/pixiv-viewer/discussions/10) and [#13](https://github.com/asadahimeka/pixiv-viewer/discussions/13) to set up the environment variable. You can create a new `.env` file in the project root directory and fill in the environment variables in the following format:
+Refer to [#10](https://github.com/asadahimeka/pixiv-viewer/discussions/10) and [#13](https://github.com/asadahimeka/pixiv-viewer/discussions/13).
+You can create a new `.env` file in the root directory of the project and fill in the environment variables in the format of `.env.example`.
 
-```env
-TEST="lalala"
-ABC=DEF
-```
+### Why can't I view some artworks using a US/UK IP?
 
-### Some artworks cannot be viewed using US/UK IP
-
-See pixiv official announcement: https://www.pixiv.net/info.php?id=10837
+See the official pixiv announcement: https://www.pixiv.net/info.php?id=10837
 
 It is recommended to log in to this site with your own account before using it, and select a non-US/UK region in the official web page [settings](https://www.pixiv.net/setting_user.php). It is best to select the Japan region.
 
 ### List and details do not match or repeat, search results do not match the search label
 
-It is caused by the CDN cache of the self -built API, you can switch other API instances in the settings or use it after logging in.
+It is caused by the CDN cache of the self-built API, you can switch other API instances in the settings or use it after logging in.
 
 ### Keep prompting that the API exceeds the limit or Rate Limit
 
-You can switch the API instance in the settings, or directly use RefreshToken or OAuth to log in.
+You can switch the API instance in the settings or log in directly using RefreshToken or OAuth.
 
 ### How to get RefreshToken
 
@@ -160,7 +157,7 @@ See https://www.nanoka.top/posts/e78ef86/
 
 ### Image loading is very slow
 
-Due to the network environment, the image loading speed may be slow. You can switch to the image proxy in the settings, or download the Android version and turn on the image direct connection function.
+Image loading speed may be slow due to network conditions. You can switch to the image proxy in the settings, or download the Android version and turn on the image direct connection function.
 
 ### Cookie/SessionID login error
 
@@ -176,27 +173,38 @@ Go to the system settings to give this application storage permissions, or downl
 
 ## Contribute
 
-This project uses [Vue I18n](https://kazupon.github.io/vue-i18n/) for internationalization, other language translations are mainly from machine translation, if there is anything wrong, welcome [contribute translation](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales)
+This project uses [Vue I18n](https://kazupon.github.io/vue-i18n/) for translations. Non-Chinese language translations are mainly from machine translation, if you find errors, feel free to [contribute a translation](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales).
 
 ## Credits
-- [pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)
-- [Vue](https://vuejs.org/)
-- [Vant UI](https://vant-ui.github.io/vant/v2/)
-- [Vue I18n](https://kazupon.github.io/vue-i18n/)
+
+### Special Thanks
+- [journey-ad/pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)
+
+### Contributors
+- [@Blueberryy](https://github.com/Blueberryy): Russian translation
+
+### Projects
 - [HibiAPI](https://github.com/mixmoe/HibiAPI)
-- [Pixiv.cat](https://pixiv.re)
 - [PixivNow](https://github.com/FreeNowOrg/PixivNow)
+
+### Services
+- [Pixiv.cat](https://pixiv.re/)
 - [SauceNAO](https://saucenao.com/)
 - [Cloudflare Workers](https://workers.cloudflare.com/)
 - [Netlify](https://netlify.com/)
+
+### Developing
+- [Vue](https://vuejs.org/)
+- [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)
+- [Vue I18n](https://kazupon.github.io/vue-i18n/)
 
 ## Disclaimer
 
 This project has no affiliation with pixiv.net(ピクシブ株式会社).
 
-The copyright of all artworks presented in this project(Website/APP) belongs to Pixiv or its original authors.
+All artwork copyrights in this project(Website/App) belong to Pixiv or their original authors.
 
-This project is for communication and learning only and may not be used for any commercial purposes.
+This project is intended for communication and learning only and may not be used for any commercial purposes.
 
 ## LICENSE
 
