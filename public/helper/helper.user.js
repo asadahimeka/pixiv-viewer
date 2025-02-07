@@ -1,8 +1,10 @@
 // ==UserScript==
 // @name         Pxve HTTP Helper
+// @name:ru      HTTP-помощник Pxve
 // @namespace    https://www.nanoka.top
 // @version      0.7
 // @description  HTTP helper for Pixiv-Viewer.
+// @description:ru HTTP-помощник для Pixiv-Viewer.
 // @author       asadahimeka
 // @license      MIT
 // @match        https://www.pixiv.pictures/*
