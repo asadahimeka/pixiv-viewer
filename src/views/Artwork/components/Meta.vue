@@ -28,17 +28,17 @@
     </div>
     <div class="date">
       <span v-if="isNovel" class="view" style="margin-left: 0;">
-        {{ artwork.text_length | convertToK }}{{ $t('common.words') }}
+        {{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(artwork.text_length)]) }}
       </span>
       <span class="view">
         <Icon name="view" class="icon" />
-        {{ artwork.view | convertToK }}
+        {{ convertToK(artwork.view) }}
       </span>
       <span class="like">
         <Icon name="like" class="icon" />
-        {{ artwork.like | convertToK }}
+        {{ convertToK(artwork.like) }}
       </span>
-      <span class="created" :class="{ is_novel: isNovel }">{{ artwork.created | formatDate }}</span>
+      <span class="created" :class="{ is_novel: isNovel }">{{ formatDate(artwork.created) }}</span>
     </div>
     <div class="pid_link">
       <a
@@ -155,9 +155,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import dayjs from 'dayjs'
 import { Dialog } from 'vant'
-import { copyText, isSafari, downloadFile } from '@/utils'
+import { copyText, isSafari, downloadFile, formatIntlDate, formatIntlNumber } from '@/utils'
 import { i18n } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
 import { localApi } from '@/api'
@@ -172,20 +171,6 @@ const { isAutoLoadImt } = store.state.appSetting
 export default {
   name: 'ArtworkMeta',
   components: { CommentsArea },
-  filters: {
-    convertToK(val) {
-      if (!val) return '-'
-      val = +val
-      if (val > 10000) {
-        return (val / 1000).toFixed(1) + 'K'
-      } else {
-        return val
-      }
-    },
-    formatDate(val) {
-      return dayjs(val).format('YYYY-MM-DD HH:mm')
-    },
-  },
   props: {
     artwork: {
       type: Object,
@@ -251,6 +236,13 @@ export default {
     })
   },
   methods: {
+    convertToK(val) {
+      if (!val) return '-'
+      return formatIntlNumber(+val)
+    },
+    formatDate(val) {
+      return formatIntlDate(new Date(val))
+    },
     checkBookmarked() {
       if (!this.artwork.id) return
       if (window.APP_CONFIG.useLocalAppApi) {

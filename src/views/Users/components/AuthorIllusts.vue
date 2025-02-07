@@ -100,7 +100,7 @@ export default {
   computed: {
     authorName() {
       const n = this.artList[0]?.author.name
-      return n ? `${n} ${this.$t('user.of')}` : ''
+      return n ? `${n} - ` : ''
     },
     iTypeText() {
       const map = {
@@ -151,7 +151,7 @@ export default {
         this.getMemberArtwork()
         return
       }
-      window.umami?.track('sel_user_tag', { tag })
+      // window.umami?.track('sel_user_tag', { tag })
       this.selTag = tag
       this.getMemberTagArtworks()
     },
@@ -162,6 +162,7 @@ export default {
         this.memberTags = res.data
       } else {
         this.$toast({ message: res.msg })
+        this.memberTags = []
       }
     },
     getMemberTagArtworks: _.throttle(async function () {

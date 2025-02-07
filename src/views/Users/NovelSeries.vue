@@ -14,7 +14,7 @@
             <van-icon name="orders-o" style="margin-right: 2px;" />
             {{ detail.content_count }}
           </van-tag>
-          <van-tag color="#cdeefe" text-color="#0b6aaf">{{ detail.total_character_count }}{{ $t('common.words') }}</van-tag>
+          <van-tag color="#cdeefe" text-color="#0b6aaf">{{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(detail.total_character_count)]) }}</van-tag>
         </p>
       </template>
       <van-list
@@ -45,6 +45,7 @@ import _ from 'lodash'
 import TopBar from '@/components/TopBar'
 import NovelCard from '@/components/NovelCard.vue'
 import api from '@/api'
+import { formatIntlNumber } from '@/utils'
 
 export default {
   name: 'NovelSeries',
@@ -81,6 +82,10 @@ export default {
     },
   },
   methods: {
+    convertToK(val) {
+      if (!val) return '-'
+      return formatIntlNumber(+val)
+    },
     toArtwork(id) {
       this.$router.push({
         name: 'NovelDetail',

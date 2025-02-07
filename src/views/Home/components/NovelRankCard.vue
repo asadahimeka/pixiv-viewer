@@ -11,7 +11,7 @@
         <swiper-slide v-for="art in artList.slice(0, 10)" :key="art.id" class="swipe-item">
           <div class="novel_item">
             <van-tag class="novel_length" color="#cdeefe" text-color="#0b6aaf">
-              {{ art.text_length }}{{ $t('common.words') }}
+              {{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(art.text_length)]) }}
             </van-tag>
             <van-tag class="novel_favs" color="#ffe1e1" text-color="#ad0000">
               <van-icon name="like-o" style="margin-right: 2px;" />
@@ -45,6 +45,7 @@ import ImageCard from '@/components/ImageCard'
 import ImageSlide from '@/components/ImageSlide'
 import api from '@/api'
 import { filterHomeNovel } from '@/utils/filter'
+import { formatIntlNumber } from '@/utils'
 export default {
   name: 'RankCardNovel',
   components: {
@@ -85,6 +86,10 @@ export default {
     this.getRankList()
   },
   methods: {
+    convertToK(val) {
+      if (!val) return '-'
+      return formatIntlNumber(+val)
+    },
     novelTagsText(el) {
       return el.tags?.map(e => `#${e.name}`).join(' ')
     },

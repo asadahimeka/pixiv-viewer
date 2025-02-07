@@ -3,7 +3,7 @@
     <van-cell class="cell" :border="false" is-link @click="toAuthor(author.id)">
       <template #title>
         <Pximg nobg class="icon" :src="author.avatar" alt="" />
-        <span class="title">{{ author.name }} {{ $t('user.of_other_art') }}</span>
+        <span class="title">{{ $t('user.of_other_art', [author.name]) }}</span>
       </template>
     </van-cell>
     <div v-if="memberArtwork.length >= 10" class="artwork-list-wrap">

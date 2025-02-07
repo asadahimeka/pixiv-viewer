@@ -43,7 +43,7 @@
     "share": {
       "title": "立即分享给好友",
       "share": "分享",
-      "of_art": "的作品",
+      "of_art": "{0}的作品",
       "type": {
         "web": "Web 分享",
         "copylink": "复制链接",
@@ -96,7 +96,7 @@
     }
   },
   "user": {
-    "of_other_art": "的其他作品",
+    "of_other_art": "{0} 的其他作品",
     "art_num": "{0}件作品",
     "of": "的",
     "fav": "收藏",
@@ -180,7 +180,7 @@
     "about_site": "关于本站"
   },
   "cache": {
-    "records": "条记录",
+    "records": "{0} 条记录",
     "title": "清除缓存",
     "db": "持久化缓存",
     "clear": "清理",
@@ -469,5 +469,32 @@
   "P2gkznjKnjtHZDGXgzYfg": "下划线",
   "6oe7JPS26HGAlcjQdmHZ4": "杂项",
   "GnyWarxXoDw49xCft4IlS": "启用图片懒加载",
-  "2CmJxHkq8O-uA68cU90Lx": "图片懒加载使用 Observer 实现"
+  "2CmJxHkq8O-uA68cU90Lx": "图片懒加载使用 Observer 实现",
+  "498jRU7yCP-NoupL7HBFk": "模板:",
+  "7PnT90lP_mZTPfL3Uwlhl": "收藏数",
+  "8SuotxAmYS7l1QCfLz0Yv": "{0}收藏",
+  "P8RGkre-rnlFxZ18aH2VW": "{0}字",
+  "9t4q1l50WKJY_iuXpTo66": "Top",
+  "QV1uifvU3RRNg7roth-8s": "常问问题",
+  "KwSsYWyF0HXlP8lggxLqt": "一直提示 API 超限或者 Rate Limit",
+  "8msFTe9uT5LS1hBRYrhDQ": "如何获取 RefreshToken",
+  "kK53pSxdX9IOIwBqBIClc": "图片加载很慢",
+  "wJAMnVWft77VcJZbZGBnw": "使用美国/英国 IP 无法查看某些作品",
+  "6iJYYx2KV_KWyAz0yS1CS": "可以到设置里切换 API 实例，或者直接使用 RefreshToken 或者 OAuth 方式登录",
+  "BKT3O7AHWaF4y-_ZST_NG": "受限于网络环境，图片加载速度可能会比较慢。可以到设置里切换图床，或者下载 Android 版本后打开图片直连功能。",
+  "nLfTowV936VLOus1gCBwD": "见 pixiv 官方公告：",
+  "oIpHR8FnQhPgVI2BizbAn": "建议用自己的账号登录本站后再使用，并且要在官方网页端里面设置选择非美国/英国的地区，最好选择日区:",
+  "sJi3WO6IsK-5QD-YcWBMF": "列表与详情图片不匹配或重复、搜索结果与搜索标签不匹配",
+  "ChCGA7Uk5be-pt_ZPtyVU": "是因为自建 API 的 CDN 缓存导致的，可以到设置里切换其他 API 实例或者登录后再使用",
+  "hNq6xDwKzWRVTCurKT2VB": "Cookie/SessionID 登录出错",
+  "7Qp6wS6ighxbdX6P79aH8": "Android 版本点击下载就闪退",
+  "3bW7wpYWQJ7UircVA8I76": "是否有 iOS App",
+  "FKYu426sygq6j2G9o7cPa": "建议使用 RefreshToken 方式登录",
+  "94IU-NPgYBjKNVa_XspuT": "到系统设置里给予本应用存储权限，或者下载最新版本后再进行尝试",
+  "v-ZyNlfMeisfmOU7rNkbm": "可到 Github Releases 下载，注意 iOS 安装包未签名，需要自行签名侧载安装",
+  "DZ-5sfdw6SbWNC1_QX8QR": "自建的话如何预设图床与 API 实例",
+  "Wl1aNUtmWu3vdjH7e4VTy": "可以在项目根目录下新建 `.env` 文件，参照 `.env.example` 的格式填入环境变量。",
+  "5x4Ry0IB3Zq4yjhOoYraV": "趣闻",
+  "clEd8t6jcI3kzyZo8deiE": "用户",
+  "GFzSLeZ5Sg-1a2jgbtRiA": "加载中"
 }

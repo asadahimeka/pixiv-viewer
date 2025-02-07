@@ -20,7 +20,7 @@
       <van-tab :title="$t('sp.interview')" name="interview" />
       <van-tab :title="$t('common.manga')" name="manga" />
       <van-tab :title="$t('common.novel')" name="novels" />
-      <van-tab title="News" name="news" />
+      <van-tab :title="$t('5x4Ry0IB3Zq4yjhOoYraV')" name="news" />
       <van-tab :title="$t('sp.recomm')" name="recommend" />
     </van-tabs>
     <van-loading v-show="loading" class="loading" :size="'50px'" />

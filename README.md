@@ -148,7 +148,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 参照 [#10](https://github.com/asadahimeka/pixiv-viewer/discussions/10) 与 [#13](https://github.com/asadahimeka/pixiv-viewer/discussions/13) 设置环境变量。
 
-可以在项目根目录下新建 `.env` 文件，参照 `.env.example` 的格式填入环境变量：
+可以在项目根目录下新建 `.env` 文件，参照 `.env.example` 的格式填入环境变量
 
 ### 一直提示 API 超限或者 Rate Limit
 

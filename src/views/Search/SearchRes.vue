@@ -157,16 +157,11 @@ export default {
       autoCompleteTagList: [],
       usersIriTag: '',
       usersIriTags: [
-        { text: 'users入り', value: '' },
-        { text: '30000users入り', value: '30000users入り' },
-        { text: '20000users入り', value: '20000users入り' },
-        { text: '10000users入り', value: '10000users入り' },
-        { text: '7500users入り', value: '7500users入り' },
-        { text: '5000users入り', value: '5000users入り' },
-        { text: '1000users入り', value: '1000users入り' },
-        { text: '500users入り', value: '500users入り' },
-        { text: '250users入り', value: '250users入り' },
-        { text: '100users入り', value: '100users入り' },
+        { text: this.$t('7PnT90lP_mZTPfL3Uwlhl'), value: '' },
+        ...[30000, 20000, 10000, 7500, 5000, 1000, 500, 250, 100].map(e => {
+          const value = i18n.t('8SuotxAmYS7l1QCfLz0Yv', [e])
+          return { text: value, value }
+        }),
       ],
       minDate: new Date('2007/09/13'),
       maxDate: new Date(),

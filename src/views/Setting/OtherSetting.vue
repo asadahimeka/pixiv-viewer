@@ -255,7 +255,7 @@
           <span>{{ $t('P2gkznjKnjtHZDGXgzYfg') }}</span>
         </div>
       </div>
-      <van-field v-model="dlFileNameTpl" :label="'模板:'" label-width="3.5em" />
+      <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="3.5em" />
     </van-dialog>
   </div>
 </template>
@@ -616,7 +616,7 @@ export default {
       const loading = this.$toast.loading({
         duration: 0,
         forbidClick: true,
-        message: 'Loading',
+        message: this.$t('GFzSLeZ5Sg-1a2jgbtRiA'),
       })
       try {
         await checkFn(val)

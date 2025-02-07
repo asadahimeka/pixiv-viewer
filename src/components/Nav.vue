@@ -47,7 +47,7 @@
       <li v-if="!isShowBackTop" class="nav_to_top" @click="scrollToTop()">
         <Icon class="icon" name="to_top" index="BackTop" />
         <van-icon v-if="isDark" name="back-top" />
-        <span>Top</span>
+        <span>{{ $t('9t4q1l50WKJY_iuXpTo66') }}</span>
       </li>
     </ul>
   </div>

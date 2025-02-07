@@ -17,8 +17,17 @@
 <script>
 const colors = [
   { name: 'Miku', color: '#39C5BB' },
+  { name: 'Teto', color: '#D93A49' },
+  { name: 'Luka', color: '#FAAFBE' },
+  { name: 'Rin', color: '#FFA500' },
+  { name: 'Len', color: '#FFE211' },
   { name: 'IA', color: '#D6758F' },
+  { name: 'Miku(Sekai)', color: '#33CCBB', cname: 'Miku_Sekai' },
+  { name: 'MEIKO(Sekai)', color: '#DD4444', cname: 'MEIKO_Sekai' },
+  { name: 'KAITO(Sekai)', color: '#3366CC', cname: 'KAITO_Sekai' },
   { name: 'LuoTianyi', color: '#66CCFF' },
+  { name: 'YuezhengLing', color: '#EE0000' },
+  { name: 'Stardust', color: '#9999FF', cname: 'Stardust_Blue' },
   { name: 'MyGO!!!!!', color: '#3388BB', cname: 'MyGO' },
   { name: 'Tomori', color: '#77BBDD' },
   { name: 'Anon', color: '#FF8899' },

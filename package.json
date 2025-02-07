@@ -1,6 +1,6 @@
 {
   "name": "pixiv-viewer",
-  "version": "1.22.2",
+  "version": "1.22.3",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -21,7 +21,7 @@
     "localforage": "1.10.0",
     "lodash": "4.17.21",
     "mint-filter": "4.0.3",
-    "modern-mp4": "0.2.0",
+    "modern-mp4": "0.1.2",
     "nprogress": "0.2.0",
     "register-service-worker": "1.7.2",
     "swiper": "5.4.5",

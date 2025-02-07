@@ -79,7 +79,7 @@ export default {
   computed: {
     authorName() {
       const n = this.artList[0]?.author.name
-      return n ? `${n} ${this.$t('user.of')}` : ''
+      return n ? `${n} - ` : ''
     },
   },
   mounted() {
