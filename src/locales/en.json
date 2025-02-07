@@ -100,8 +100,8 @@
   "history": {
     "confirm": {
       "i": "Are you sure you want to clear the illustration and manga history?",
-      "n": "Are you sure you want to clear the novel history",
-      "u": "Are you sure you want to clear user history"
+      "n": "Are you sure you want to clear the novel history?",
+      "u": "Are you sure you want to clear user history?"
     }
   },
   "nav": {
@@ -162,21 +162,21 @@
     "search": "Search",
     "search_user": "Search user",
     "date": {
-      "asc": "ascending order by date",
-      "desc": "descending order by date",
+      "asc": "Ascending Order by Date",
+      "desc": "Descending Order by Date",
       "end": "End",
       "start": "Start"
     },
     "dura": {
-      "day": "in one day",
-      "month": "within a month",
-      "ph": "period of time",
-      "week": "within a week"
+      "day": "In one day",
+      "month": "Within a month",
+      "ph": "Period of time",
+      "week": "Within a week"
     },
     "mode": {
-      "exact": "exact match for tags",
-      "partial": "partial match for tags",
-      "title": "title and caption"
+      "exact": "Exact Match for Tags",
+      "partial": "Partial Match for Tags",
+      "title": "Title and Caption"
     }
   },
   "setting": {
@@ -184,8 +184,8 @@
     "api": {
       "desc": "Enter the HibiAPI instance address below, you need to add https://, and the path needs to be filled in the `/api/pixiv` part",
       "desc2": "For example: https://hibiapi.getloli.com/api/pixiv, the local cache will be cleared after saving",
-      "desc3": "API instances can go to",
-      "desc4": "finding or building your own",
+      "desc3": "API instances can be found at",
+      "desc4": "or built your own",
       "desc5": "The API instance address needs to support cross-origin (CORS) access",
       "ph": "Please select a HibiAPI instance (the local cache will be cleared after switching)",
       "title": "HibiAPI Instance Setting",
@@ -197,13 +197,13 @@
       "title": "Dark Mode"
     },
     "img_proxy": {
-      "desc": "Enter the pixiv image proxy address below, no need to add https://",
+      "desc": "Enter the Pixiv image proxy address below, no need to add https://",
       "desc2": "For example: i.pixiv.re, the local cache will be cleared after saving",
-      "ph": "Please select pixiv image proxy (the local cache will be cleared after switching)",
+      "ph": "Please select Pixiv image proxy (the local cache will be cleared after switching)",
       "title": "pximg Proxy Setting",
       "title2": "pximg image proxy select",
       "title3": "Image Proxy",
-      "title4": "pixiv image agency"
+      "title4": "Pixiv image agency"
     },
     "img_res": {
       "l": "Slow loading",
@@ -270,7 +270,7 @@
     "all": "Overview",
     "of_new": " Latest",
     "of_recomm": " Related",
-    "rank": "Monthy Ranking",
+    "rank": "Monthly Ranking",
     "recomm_4u": "Recommended to You",
     "title": "Pixivision",
     "column": "Column",
@@ -303,7 +303,7 @@
     "following": "Following",
     "friend": "MyPixiv",
     "novel_art": "Novels",
-    "novel_art_title": "{0} 's Novels",
+    "novel_art_title": "{0}'s Novels",
     "of": "'s ",
     "of_other_art": "'s other works",
     "sess": {
@@ -380,7 +380,7 @@
       "desc4": "Click to download Redirector rules",
       "desc5": "Please make sure you have the Tampermonkey browser extension installed and the HTTP Helper user script installed, otherwise you will not be able to request the API",
       "desc6": "Tampermonkey install link:",
-      "desc7": "Click Install HTTP Helper UserScript"
+      "desc7": "Click to install HTTP Helper UserScript"
     },
     "succ_tip": "Login success",
     "t": {
@@ -416,10 +416,10 @@
   "psoXLFqv51j1SeKjTbnms": "Primary color",
   "lGZGzwfWz9tW_KQey3AmQ": "Enable pximg image direct connection mode",
   "nTsgCnGYm8FSVMfe-TQSN": "Confirm to enable pximg direct mode?",
-  "YeEO8hAsoM45pm_vcijKP": "pximg direct connection mode requires that Tampermonkey and HTTP Helper userscript are installed, and the speed may be slower and stability is not guaranteed.",
-  "9omPI2Fz4KzKSVNlmF8-K": "Failed: Tampermonkey or HTTP Helper userscript is not installed.",
+  "YeEO8hAsoM45pm_vcijKP": "pximg direct connection mode requires that Tampermonkey and HTTP Helper user script are installed, and the speed may be slower and stability is not guaranteed.",
+  "9omPI2Fz4KzKSVNlmF8-K": "Failed: Tampermonkey or HTTP Helper user script is not installed.",
   "2jNIricwtCbrzEESdEbvH": "Click to install",
-  "lkfd4SXJiefx26Z7vj0Au": "HTTP Helper userscript link",
+  "lkfd4SXJiefx26Z7vj0Au": "HTTP Helper user script link",
   "hGqGftQ7v772prEac1hbJ": "Comments",
   "1V8tlBs--oNk_UbzsItA-": "Alternate site",
   "vqHSGcz4r3oSQIWQwZiVf": "No one has commented yet~",
@@ -451,7 +451,7 @@
   "pA7B6tF0GBv6m4bI9MJWY": "Download directory",
   "4v7z_VobhSO66p3-FrUt3": "Select the directory where the file is saved",
   "IQH88ofRzNxE0CTcT0-wO": "Create a folder with the author's name when downloading images",
-  "eZpkRjFnBvTEVV8yNj5b7": "Prefer using Tampermonkey userscript download",
+  "eZpkRjFnBvTEVV8yNj5b7": "Prefer using Tampermonkey user script download",
   "SAs_Y4hKK7myneH47ZQKG": "Please make sure the HTTP Helper script is installed. \nNon-CORS images can be downloaded.",
   "m9rhO-859d7Br05Hm5b54": "Download file name format",
   "QJJd8OqGWs3rIHxMwYma9": "Please set the format template of the download file name",
@@ -462,8 +462,8 @@
   "xVDEqSshq1e1ZEmv3q-3s": "Artwork title",
   "6_DlIX_02ur5HfDOc9wsb": "Artwork ID",
   "SjI_Ww3ngIBNJxTDLAszn": "Artwork index",
-  "0VXbrbumb60glupUb3cUk": "illustration width",
-  "G6LGYgi1RdW54WbmYURmF": "illustration height",
+  "0VXbrbumb60glupUb3cUk": "Illustration width",
+  "G6LGYgi1RdW54WbmYURmF": "Illustration height",
   "9tIV83JmVMkNKF2B8F4LI": "Artwork tag",
   "JHBWOqLzMQN-kgmyDVSzN": "Create time",
   "P2gkznjKnjtHZDGXgzYfg": "Underscore",
