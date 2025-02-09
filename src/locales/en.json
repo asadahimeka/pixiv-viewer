@@ -91,7 +91,7 @@
     "r18_label": "Contains nudity or sexual descriptions",
     "r18g": "R-18G works display",
     "r18g_label": "Contains gore or disgusting content",
-    "title": "Image Display Settings",
+    "title": "Artwork Display Settings",
     "block_tags": "Tag Blacklist",
     "block_tags_ph": "Please enter tags, separated by commas",
     "block_uids": "Artist Blacklist",
