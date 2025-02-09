@@ -5,7 +5,7 @@
     <van-form style="margin: 1rem auto;" @submit="onSubmit">
       <van-field
         v-model="sessionIdInput"
-        label="Session ID"
+        :label="$t('sYF0dqcLCYmsSg2R2bLk8')"
         :placeholder="$t('sess.input.ph')"
         :rules="rules.sessionIdInput"
       />

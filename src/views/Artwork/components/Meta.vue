@@ -157,7 +157,7 @@
 import { mapGetters } from 'vuex'
 import { Dialog } from 'vant'
 import { copyText, isSafari, downloadFile, formatIntlDate, formatIntlNumber } from '@/utils'
-import { i18n } from '@/i18n'
+import { i18n, isCNLocale } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
 import { localApi } from '@/api'
 import { toggleBookmarkCache } from '@/utils/storage/siteCache'
@@ -238,10 +238,11 @@ export default {
   methods: {
     convertToK(val) {
       if (!val) return '-'
+      if (isCNLocale()) return val
       return formatIntlNumber(+val)
     },
     formatDate(val) {
-      return formatIntlDate(new Date(val))
+      return formatIntlDate(val)
     },
     checkBookmarked() {
       if (!this.artwork.id) return

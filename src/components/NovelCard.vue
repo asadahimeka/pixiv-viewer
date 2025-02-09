@@ -27,8 +27,10 @@
 </template>
 
 <script>
-import { formatIntlNumber } from '@/utils'
 import { mapGetters } from 'vuex'
+import { formatIntlNumber } from '@/utils'
+import { isCNLocale } from '@/i18n'
+
 export default {
   name: 'NovelCard',
   props: {
@@ -74,6 +76,7 @@ export default {
   methods: {
     convertToK(val) {
       if (!val) return '-'
+      if (isCNLocale()) return val
       return formatIntlNumber(+val)
     },
     click(id) {

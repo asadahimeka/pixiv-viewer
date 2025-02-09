@@ -1,7 +1,12 @@
 <template>
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
-    <h3 class="af_title">{{ $t('psoXLFqv51j1SeKjTbnms') }}</h3>
+    <h3 class="af_title">
+      {{ $t('psoXLFqv51j1SeKjTbnms') }}
+      <div class="reset-color" @click="resetColor">
+        <Icon name="del" scale="2" />
+      </div>
+    </h3>
     <div class="color-list">
       <div v-for="(c,i) in colors" :key="i" class="color-item" @click="saveActColor(c)">
         <div class="color-bg" :style="{background:c.color}">{{ c.color }}</div>
@@ -112,11 +117,28 @@ export default {
       localStorage.PXV_THEME = theme
       localStorage.PXV_ACT_COLOR = c.color
     },
+    resetColor() {
+      this.actColor = null
+      const doc = document.documentElement
+      doc.classList.remove('custom_theme')
+      doc.classList.remove('t_' + localStorage.PXV_THEME)
+      doc.style.removeProperty('--accent-color')
+      localStorage.removeItem('PXV_THEME')
+      localStorage.removeItem('PXV_ACT_COLOR')
+    },
   },
 }
 </script>
 
 <style lang="stylus" scoped>
+.reset-color
+  position fixed
+  top 0.5rem
+  right 20px
+  cursor pointer
+  ::v-deep .svg-icon
+    font-size 0.6rem !important
+
 .color-list
   display flex
   gap 0.2rem

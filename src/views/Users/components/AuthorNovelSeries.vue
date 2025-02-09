@@ -35,6 +35,7 @@
 import _ from 'lodash'
 import api from '@/api'
 import { formatIntlNumber } from '@/utils'
+import { isCNLocale } from '@/i18n'
 
 export default {
   name: 'AuthorNovelSeries',
@@ -65,6 +66,7 @@ export default {
   methods: {
     convertToK(val) {
       if (!val) return '-'
+      if (isCNLocale()) return val
       return formatIntlNumber(+val)
     },
     getMemberArtwork: async function () {

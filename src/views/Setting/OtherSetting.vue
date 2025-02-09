@@ -616,7 +616,7 @@ export default {
       const loading = this.$toast.loading({
         duration: 0,
         forbidClick: true,
-        message: this.$t('GFzSLeZ5Sg-1a2jgbtRiA'),
+        message: this.$t('tips.loading'),
       })
       try {
         await checkFn(val)

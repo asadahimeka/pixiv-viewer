@@ -14,7 +14,7 @@
       <van-tab :title="$t('common.novel')" name="n">
         <HistoryNovel v-if="activeTab == 'n'" ref="hn" />
       </van-tab>
-      <van-tab :title="$t('clEd8t6jcI3kzyZo8deiE')" name="u">
+      <van-tab :title="$t('history_tab_label_user')" name="u">
         <HistoryUsers v-if="activeTab == 'u'" ref="hu" />
       </van-tab>
     </van-tabs>

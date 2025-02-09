@@ -133,9 +133,10 @@ module.exports = {
         /\.map$/,
         /^manifest.*\.js$/,
         /lang-.*-json\..*\.js$/,
+        /vant-locale-.*\.js$/,
         /robots\.txt$/,
         /sitemap\.txt$/,
-        /helper\.user\.js$/,
+        /\.user\.js$/,
       ],
       navigateFallbackDenylist: [/^\/prks\//],
       runtimeCaching: [

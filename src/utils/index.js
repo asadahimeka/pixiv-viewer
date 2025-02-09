@@ -1,8 +1,9 @@
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { Toast } from 'vant'
 import store from '@/store'
 import { isFsaSupported, saveFile } from './fsa'
-import { i18n } from '@/i18n'
+import { i18n, isCNLocale } from '@/i18n'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { BASE_URL } from '@/consts'
 
@@ -314,18 +315,26 @@ export async function fancyboxShow(artwork, index = 0, getSrc = e => e.o) {
   })
 }
 
-const intlNumberFormater = new Intl.NumberFormat(i18n.locale, {
-  notation: 'compact',
-  compactDisplay: 'short',
-})
-export function formatIntlNumber(/** @type {number} */ num) {
-  return intlNumberFormater.format(num)
+export function formatIntlNumber(num) {
+  try {
+    return new Intl.NumberFormat(i18n.locale, {
+      notation: 'compact',
+      compactDisplay: 'short',
+    }).format(num)
+  } catch (err) {
+    return num
+  }
 }
 
-const intlDateFormater = new Intl.DateTimeFormat(i18n.locale, {
-  dateStyle: 'short',
-  timeStyle: 'short',
-})
-export function formatIntlDate(/** @type {Date} */ date) {
-  return intlDateFormater.format(date)
+export function formatIntlDate(date) {
+  try {
+    if (isCNLocale()) return dayjs(date).format('YYYY-MM-DD HH:mm')
+    date = dayjs(date).toDate()
+    return new Intl.DateTimeFormat(i18n.locale, {
+      dateStyle: 'short',
+      timeStyle: 'short',
+    }).format(date)
+  } catch (err) {
+    return date
+  }
 }

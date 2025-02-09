@@ -678,3 +678,10 @@ html:has(.novel_text) #immersive-translate-popup
     background url('@/icons/loading.svg') no-repeat center center / contain
     border-radius: 5PX;
     box-shadow: 0 0 transparent, 0 0 transparent, 0 1PX 3PX 0 rgba(0, 0, 0, 0.1), 0 1PX 2PX -1PX rgba(0, 0, 0, 0.1);
+
+.non-cjk-lang
+  .Home .com_sel_tabs .home-search
+    display none !important
+  @media screen and (max-width: 999px)
+    .Home .com_sel_tabs .home-title
+      display none !important

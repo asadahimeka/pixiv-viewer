@@ -46,6 +46,8 @@ import ImageSlide from '@/components/ImageSlide'
 import api from '@/api'
 import { filterHomeNovel } from '@/utils/filter'
 import { formatIntlNumber } from '@/utils'
+import { isCNLocale } from '@/i18n'
+
 export default {
   name: 'RankCardNovel',
   components: {
@@ -88,6 +90,7 @@ export default {
   methods: {
     convertToK(val) {
       if (!val) return '-'
+      if (isCNLocale()) return val
       return formatIntlNumber(+val)
     },
     novelTagsText(el) {

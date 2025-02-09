@@ -17,68 +17,75 @@
     <van-cell-group :title="$t('about.credits')">
       <van-cell
         center
-        title="pixiv-viewer"
+        title="@journey-ad"
         is-link
-        label="Github:journey-ad/pixiv-viewer"
-        @click="openLink('https://github.com/journey-ad/pixiv-viewer')"
+        :label="$t('VISKhjE86qDcIl_XXpx1q')"
+        @click="openLink('https://github.com/journey-ad')"
       />
       <van-cell
         center
         title="HibiAPI"
         is-link
-        label="Github:mixmoe/HibiAPI"
+        :label="$t('44eCE1yMuhnfx93siUVJ8')"
         @click="openLink('https://github.com/mixmoe/HibiAPI')"
       />
       <van-cell
         center
         title="PixivNow"
         is-link
-        label="Github:FreeNowOrg/PixivNow"
+        :label="$t('OcYnjztb0HpfzH4xK-2f4')"
         @click="openLink('https://github.com/FreeNowOrg/PixivNow')"
       />
       <van-cell
         center
         title="Pixiv.cat"
         is-link
-        label="https://pixiv.re"
+        :label="$t('R7wR59U5tm8NR3Gn1FKAw')"
         @click="openLink('https://pixiv.re')"
+      />
+      <van-cell
+        center
+        title="@Blueberryy"
+        is-link
+        :label="$t('PtZhgMV8k86Gmg96kKTCA')"
+        @click="openLink('https://github.com/Blueberryy')"
       />
       <van-cell
         center
         title="pxder"
         is-link
-        label="Github:Tsuk1ko/pxder"
+        :label="$t('tQaYxaOwYjOgf1OAnQm4J')"
         @click="openLink('https://github.com/Tsuk1ko/pxder')"
       />
       <van-cell
         center
         title="PixEz"
         is-link
-        label="Github:Notsfsssf/pixez-flutter"
+        :label="$t('tQaYxaOwYjOgf1OAnQm4J')"
         @click="openLink('https://github.com/Notsfsssf/pixez-flutter')"
       />
       <van-cell
         center
         title="pixivpy-async"
         is-link
-        label="Github:Mikubill/pixivpy-async"
+        :label="$t('tQaYxaOwYjOgf1OAnQm4J')"
         @click="openLink('https://github.com/Mikubill/pixivpy-async')"
       />
     </van-cell-group>
     <van-cell-group :title="$t('about.feedback')">
       <van-cell
         center
-        title="Github Discussions"
+        :title="$t('cIyLKP7_S_Wo0Y0908dnm')"
         is-link
         label="Github:asadahimeka/pixiv-viewer"
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer/discussions')"
       />
       <van-cell
         center
-        title="Github Issues"
+        :title="$t('TnXv_wGi3BhyVLjxBYf1u')"
         is-link
-        label="Github:asadahimeka/pixiv-viewer-apk"
-        @click="openLink('https://github.com/asadahimeka/pixiv-viewer-apk/issues')"
+        label="Github:asadahimeka/pixiv-viewer"
+        @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
       />
       <van-cell
         center

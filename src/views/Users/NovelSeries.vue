@@ -46,6 +46,7 @@ import TopBar from '@/components/TopBar'
 import NovelCard from '@/components/NovelCard.vue'
 import api from '@/api'
 import { formatIntlNumber } from '@/utils'
+import { isCNLocale } from '@/i18n'
 
 export default {
   name: 'NovelSeries',
@@ -84,6 +85,7 @@ export default {
   methods: {
     convertToK(val) {
       if (!val) return '-'
+      if (isCNLocale()) return val
       return formatIntlNumber(+val)
     },
     toArtwork(id) {

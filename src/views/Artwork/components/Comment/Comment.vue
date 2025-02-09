@@ -55,7 +55,7 @@ export default {
       return str
     },
     formatDate(val) {
-      return formatIntlDate(new Date(val))
+      return formatIntlDate(val)
     },
   },
 }
