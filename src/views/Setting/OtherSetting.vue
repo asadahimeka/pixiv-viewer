@@ -3,7 +3,7 @@
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title" @dblclick="showAnaSwitch=true">{{ $t('setting.other.title') }}</h3>
     <van-cell-group :title="$t('GS0J0mAbmiqPGKw20ORPi')">
-      <van-cell center :title="$t('setting.other.lang')" is-link :label="lang.value" @click="lang.show = true" />
+      <van-cell center :title="$t('setting.other.lang')" is-link :label="selLangLabel" @click="lang.show = true" />
       <van-cell center :title="$t('psoXLFqv51j1SeKjTbnms')" is-link :label="`${accentColor} ${actTheme}`" to="/setting/accent_color" />
       <van-cell center :title="$t('setting.dark.title')" :label="$t('setting.lab.title')">
         <template #right-icon>
@@ -404,18 +404,18 @@ export default {
         show: false,
         value: i18n.locale,
         actions: [
-          { name: 'zh-Hans', subname: '简体中文' },
-          { name: 'zh-Hant', subname: '繁體中文' },
-          { name: 'en', subname: 'English' },
-          { name: 'ja', subname: '日本語' },
-          { name: 'ko', subname: '한국어' },
-          { name: 'de', subname: 'Deutsch' },
-          { name: 'fr', subname: 'Français' },
-          { name: 'ru', subname: 'Русский' },
-          { name: 'it', subname: 'Italiano' },
-          { name: 'es', subname: 'Español' },
-          { name: 'pt', subname: 'Português' },
-          { name: 'el', subname: 'Ελληνικά' },
+          { _value: 'zh-CN', name: '简体中文' },
+          { _value: 'zh-TW', name: '繁體中文' },
+          { _value: 'en', name: 'English' },
+          { _value: 'ja', name: '日本語' },
+          { _value: 'ko', name: '한국어' },
+          { _value: 'de', name: 'Deutsch' },
+          { _value: 'fr', name: 'Français' },
+          { _value: 'ru', name: 'Русский' },
+          { _value: 'it', name: 'Italiano' },
+          { _value: 'es', name: 'Español' },
+          { _value: 'pt', name: 'Português' },
+          { _value: 'el', name: 'Ελληνικά' },
         ],
       },
       ugoiraDL: {
@@ -487,6 +487,9 @@ export default {
     return { title: this.$t('setting.other.title') }
   },
   computed: {
+    selLangLabel() {
+      return this.lang.actions.find(e => e._value == this.lang.value)?.name || ''
+    },
     pximgBedLabel() {
       return this.pximgBed_.actions.find(e => e._value == this.pximgBed_.value)?.name || ''
     },
@@ -697,10 +700,10 @@ export default {
       }
       this.saveAppSetting('isAutoLoadImt', val, true)
     },
-    changeLang({ name }) {
-      this.lang.value = name
-      window.umami?.track('set_lang', { lang: name })
-      localStorage.setItem('PXV_LANG', name)
+    changeLang({ _value }) {
+      this.lang.value = _value
+      window.umami?.track('set_lang', { lang: _value })
+      localStorage.setItem('PXV_LANG', _value)
       setTimeout(() => {
         location.reload()
       }, 500)

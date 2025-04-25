@@ -92,7 +92,7 @@ async function initSetting() {
     LocalStorage.set('PXV_NSFW_ON', 1)
   }
   try {
-    if (!isOn() || getSelectedLang() != 'zh-Hans') return true
+    if (!isOn() || getSelectedLang() != 'zh-CN') return true
     document.documentElement.innerHTML = ''
     location.replace('/zq39i1hjru.html')
     flag = true

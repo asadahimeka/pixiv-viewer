@@ -1,543 +1,544 @@
 {
-	"about": {
-		"disclaimer": "免責聲明",
-		"disclaimer_text": "<b>NSFW 相關</b><br>本站預設不顯示 NSFW 資源（例如 R-18 插畫），任意觀看此類資源的行為均是由使用者在設定中設定的，並且使用者已確保自身年齡已滿18歲且未違反當地法律法規所規定的內容。\n對於可能出現的 NSFW 資源我們均有做出明顯的警告標記，我們不鼓勵觀看或傳播此類資源。 \n<br><b>使用者言論</b><br>「使用者言論」指的是 Pixiv 源站使用者透過自我介紹、插畫簡介、評論區等功能發布的言論。\n這部分屬於發表者自身的行為，我們無法有效控制。\n我們不會發布也不鼓勵傳播不當言論。\n如果您在瀏覽過程中發現了不當內容，我們非常鼓勵您前往 Pixiv 檢舉。 \n<br><b>版權聲明</b><br>本站與 pixiv.net（ピクシブ株式会社）無任何關係，請求得到的全部數據以及媒體資源，版權歸 Pixiv 或其原作者所有。 \n<br>Pixiv Viewer 程序透過 MIT 協議授權。 \n<br>僅供交流與學習。",
-		"feedback": "回饋",
-		"from": "修改自",
-		"origin_site": "原版網站",
-		"source": "原始碼",
-		"title": "關於",
-		"version": "版本",
-		"about_site": "關於本站",
-		"credits": "鳴謝"
-	},
-	"artwork": {
-		"download": {
-			"gif": "低畫質，兼容性最佳",
-			"placeholder": "請選擇下載格式",
-			"ugoira": {
-				"tip": "請先播放動圖"
-			},
-			"webm": "高畫質，兼容性差",
-			"zip": "原始序列幀歸檔文件",
-			"mp4": "使用 ffmpeg.wasm 在瀏覽器轉換"
-		},
-		"share": {
-			"of_art": "{0}的作品",
-			"share": "分享",
-			"title": "立即分享給好友",
-			"type": {
-				"copylink": "複製連結",
-				"qrcode": "二維碼",
-				"qzone": "QQ 空間",
-				"web": "Web 分享",
-				"wechat": "微信",
-				"weibo": "微博"
-			}
-		},
-		"fav_fail": "收藏失敗",
-		"unfav_fail": "取消收藏失敗"
-	},
-	"cache": {
-		"clear": "清理",
-		"confirm": {
-			"first": "確定要清理{0}嗎？",
-			"second": "清理後瀏覽記錄將會被刪除，且將重新從網路載入相關內容"
-		},
-		"db": "持久化緩存",
-		"local": "配置項緩存",
-		"records": "{0} 條記錄",
-		"session": "運行時緩存",
-		"success_tip": "清理完成",
-		"title": "清除緩存",
-		"mem": "內存佔用"
-	},
-	"common": {
-		"ai_gen": "AI 生成",
-		"artwork": "作品",
-		"cancel": "取消",
-		"confirm": "確認",
-		"content": {
-			"hide": "根據當前設定，此內容將不予顯示"
-		},
-		"discovery": "探索",
-		"download": "下載",
-		"history": "歷史記錄",
-		"illust": "插畫",
-		"illust_manga": "插畫·漫畫",
-		"manga": "漫畫",
-		"new_art": "新作",
-		"novel": "小說",
-		"overall": "綜合",
-		"random_view": "隨便看看",
-		"rank": "排行榜",
-		"recomm": "推薦",
-		"recomm_art": "推薦作品",
-		"related": "相關作品",
-		"ugoira": "動圖",
-		"user": "使用者",
-		"view_more": "查看更多",
-		"words": "字",
-		"date": "日期",
-		"reset": "重置",
-		"save": "儲存"
-	},
-	"display": {
-		"ai": "顯示 AI 生成標籤",
-		"ai_label": "在圖片列表中顯示「AI」標籤",
-		"confirm": "確定要開啟{0}作品顯示嗎？ 請確保您的年齡已滿18歲，且未違反當地法律法規所規定的內容。",
-		"confirm_g": "請注意，開啟{0}開關可能會對您的身心健康造成不可逆的影響，如若感到不適，請立即關閉應用並尋求醫學幫助",
-		"r18": "R-18 作品顯示",
-		"r18_label": "包含裸露內容或性描寫",
-		"r18g": "R-18G 作品顯示",
-		"r18g_label": "包含血腥或噁心內容",
-		"title": "作品顯示設定",
-		"block_tags": "標籤黑名單",
-		"block_tags_ph": "請輸入標籤，英文逗號分隔",
-		"block_uids": "畫師黑名單",
-		"block_uids_ph": "請輸入畫師 ID，英文逗號分隔"
-	},
-	"history": {
-		"confirm": {
-			"i": "確定要清除插畫·漫畫歷史記錄嗎",
-			"n": "確定要清除小說歷史記錄嗎",
-			"u": "確定要清除使用者歷史記錄嗎"
-		}
-	},
-	"nav": {
-		"home": "首頁",
-		"rank": "排行榜",
-		"search": "搜尋",
-		"setting": "設定",
-		"follow": "動態"
-	},
-	"novel": {
-		"series": {
-			"next": "下一話:",
-			"prev": "上一話："
-		},
-		"settings": {
-			"text": {
-				"bg": "文字背景",
-				"color": "文字顏色",
-				"direct_h": "橫向",
-				"direct_v": "縱向",
-				"direction": "文字方向",
-				"font": "文字字體",
-				"height": "文字行高",
-				"sans": "黑體",
-				"serif": "宋體",
-				"size": "文字大小",
-				"weight": "文字字重"
-			},
-			"title": "小說設定"
-		}
-	},
-	"rank": {
-		"day": "日榜",
-		"day_x": "R18 日",
-		"day_x_female": "R18 女向",
-		"day_x_male": "R18 男向",
-		"female": "女性向",
-		"male": "男性向",
-		"month": "月榜",
-		"original": "原創",
-		"r18g": "R18G 週",
-		"rookie": "新人",
-		"week": "周榜",
-		"week_x": "R18 週"
-	},
-	"search": {
-		"autocomplete": "搜尋建議",
-		"history": "歷史搜尋",
-		"img": {
-			"err": "返回結果解析失敗。",
-			"placeholder": "請選擇圖片文件"
-		},
-		"of_user_res": "{0}的搜尋結果",
-		"placeholder": "請輸入搜尋關鍵詞",
-		"pop_preview": "熱門預覽",
-		"pop_preview_novel": "熱門小說預覽",
-		"seach_tag": "搜尋標籤",
-		"search": "搜尋",
-		"search_user": "搜尋使用者",
-		"date": {
-			"asc": "按日期正序",
-			"desc": "按日期倒序",
-			"end": "止",
-			"start": "始"
-		},
-		"dura": {
-			"day": "一天內",
-			"month": "一個月內",
-			"ph": "時段",
-			"week": "一周內"
-		},
-		"mode": {
-			"exact": "標籤完全一致",
-			"partial": "標籤部分一致",
-			"title": "標題與簡介"
-		}
-	},
-	"setting": {
-		"about": "關於",
-		"api": {
-			"desc": "在下方輸入 HibiAPI 實例地址，需要加 https://，路徑需填寫到 `/api/pixiv` 部分",
-			"desc2": "例如：https://hibiapi.getloli.com/api/pixiv，儲存後會清空本地緩存",
-			"desc3": "API 實例可前往",
-			"desc4": "查找或自行搭建",
-			"desc5": "API 實例地址需要支援跨域（CORS）前往",
-			"ph": "請選擇 HibiAPI 實例（切換後會清空本地緩存)",
-			"title": "HibiAPI 實例設定",
-			"title2": "HibiAPI 實例選擇",
-			"title3": "HibiAPI 實例地址",
-			"title4": "HibiAPI 實例"
-		},
-		"dark": {
-			"title": "深色模式"
-		},
-		"img_proxy": {
-			"desc": "在下方輸入 pixiv 圖片代理地址，不需要加 https://",
-			"desc2": "例如：i.pixiv.re，儲存後會清空本地緩存",
-			"ph": "請選擇 pixiv 圖片代理（切換後會清空本地緩存)",
-			"title": "pximg 圖片代理設定",
-			"title2": "pximg 圖片代理選擇",
-			"title3": "圖片代理",
-			"title4": "pixiv 圖片代理"
-		},
-		"img_res": {
-			"l": "加載稍慢",
-			"m": "加載稍快",
-			"o": "加載更慢",
-			"ph": "請選擇圖片詳情畫質",
-			"title": "圖片詳情畫質選擇"
-		},
-		"input": "輸入：",
-		"lab": {
-			"title": "實驗性"
-		},
-		"layout": {
-			"g": "等寬等高",
-			"j": "等高不等寬",
-			"m": "等寬不等高",
-			"ph": "請選擇圖片列表佈局",
-			"title": "圖片列表佈局選擇"
-		},
-		"other": {
-			"lang": "語言",
-			"lang_ph": "請選擇語言",
-			"title": "偏好設定",
-			"manual_input": "不使用預設API或圖片代理",
-			"manual_input_label": "打開此開關可在下方手動輸入連結",
-			"api_proxy": {
-				"def_ph": "預設代理無法使用的話可以嘗試其他代理",
-				"sel_desc": "請選擇 AppApi 代理",
-				"title": "選擇 AppApi 代理"
-			},
-			"cp_token_label": "複製當前 RefreshToken 到剪貼板",
-			"cp_token_title": "導出 RefreshToken",
-			"direct_mode": {
-				"confirm": {
-					"msg": "直連模式僅支援 Firefox 瀏覽器，需確保油猴與 HTTP Helper 腳本已安裝，且速度較慢、不保證穩定性。\n不可與 AppApi 代理同時開啟。\n開啟直連後如果遇到網絡錯誤的話，請手動打開下面的連結後，點擊「高級」 - 「接受風險並繼續」，出現 421 後回到本站刷新頁面。",
-					"proxy_msg": "通過第三方雲服務轉發本地 AppApi 請求，無法保證穩定性與安全性。\n不可與直連模式同時開啟。",
-					"proxy_title": "確認啟用 AppApi 代理？",
-					"title": "確認啟用直連模式？"
-				},
-				"host": {
-					"label": "清除後將重新通過 DoH 查詢",
-					"title": "清除直連 hosts 緩存"
-				},
-				"host_msg": "確認清除直連模式 hosts 緩存記錄?",
-				"label": "是否通過域前置繞過 SNI 嗅探",
-				"proxy": {
-					"label": "是否通過雲服務代理本地 AppApi 請求",
-					"title": "啟用 AppApi 代理"
-				},
-				"title": "啟用直連模式"
-			},
-			"swipe_toggle": "詳情頁左右滑動瀏覽作品"
-		},
-		"recomm": {
-			"app": "應用",
-			"site": "網站",
-			"title": "相關推薦",
-			"tm": "使用者腳本"
-		},
-		"down_app": "下載應用程序",
-		"app_desc": "又一個 Pixiv 插畫/小說閱覽工具"
-	},
-	"sp": {
-		"all": "一覽",
-		"of_new": "的最新特輯",
-		"of_recomm": "的相關推薦",
-		"rank": "本月排行榜",
-		"recomm_4u": "為你推薦",
-		"title": "特輯",
-		"column": "專欄",
-		"recomm": "推薦",
-		"interview": "採訪"
-	},
-	"tips": {
-		"click_view": "點擊查看",
-		"copylink": {
-			"error": "複製連結失敗:",
-			"succ": "已複製",
-			"success": "已複製連結"
-		},
-		"current_value": "當前值：",
-		"download_wait": "下載時間可能較長，請耐心等待",
-		"loading": "加載中...",
-		"net_err": "網路異常，點擊重新加載",
-		"no_data": "暫無數據",
-		"no_more": "沒有更多了",
-		"copy_err": "複製失敗",
-		"tip": "提示",
-		"load_more": "加載更多"
-	},
-	"user": {
-		"art_num": "{0}件作品",
-		"art_title": "{0}作品",
-		"fav": "收藏",
-		"fav_novel_title": "小說收藏",
-		"fav_title": "插畫·漫畫收藏",
-		"following": "已關注",
-		"friend": "好P友",
-		"novel_art": "小說作品",
-		"novel_art_title": "{0}小說作品",
-		"of": "的",
-		"of_other_art": "{0} 的其他作品",
-		"sess": {
-			"logout": "您確定要刪除會話嗎？",
-			"login": "登入",
-			"my_fav": "我的收藏",
-			"out": "退出"
-		},
-		"related": "相關使用者",
-		"faved": "已收藏",
-		"view_comments": "查看評論",
-		"follow": "關注",
-		"follow_fail": "關注失敗",
-		"followed": "已關注",
-		"unfollow_fail": "取消關注失敗"
-	},
-	"tip": {
-		"rate_limit": "API 超出限制，請稍後重試",
-		"unknown_err": "未知錯誤",
-		"down_wait": "處理中，請耐心等待",
-		"downloaded": "下載完成",
-		"downloading": "下載中",
-		"connect_err": "連接失敗，此項不可用。",
-		"browser_latest": "請盡量使用最新的 Chrome/Edge 瀏覽器前往本站",
-		"browser_tip": "請使用 Chrome/Edge 瀏覽器前往本站"
-	},
-	"sess": {
-		"example": "Session ID 形如（無效，演示用）：",
-		"input": {
-			"msg": "Session ID 格式不正確",
-			"ph": "請輸入 Session ID"
-		},
-		"mobile_tip": "移動端自行尋找方法或者到電腦端獲取",
-		"q1": {
-			"p1": "1. 前往 {0} 源站並登入",
-			"p2": "2. 點擊地址欄的小鎖",
-			"p3": "3. 在彈出的界面選擇「Cookie(正在使用 0 個 Cookie)」",
-			"p4": "4. 展開 `pixiv.net` → `Cookie` 找到 {0} 項",
-			"p5": "5. 將它的「內容」複製後填寫到這裡"
-		},
-		"q2": {
-			"p2": "2. 按 F12 打開瀏覽器控制台",
-			"p3": "3. 點擊「存儲/storage」一欄",
-			"p4": "4. 在 cookie 列表裡找到「鍵/key」為 {0} 的一欄",
-			"p5": "5. 將它的「值/value」複製後填寫到這裡"
-		},
-		"que2": {
-			"p1": "我們 不會 存儲或轉讓您的個人信息以及 cookie。",
-			"p2": "不過我們建議妥善儲存您的 cookie。\n您在此處儲存的信息若被他人獲取有被盜號的風險。"
-		},
-		"ques1": "如何獲取 Pixiv Session ID ？",
-		"ques2": "Pixiv Viewer 會竊取我的個人信息嗎？",
-		"save": "儲存",
-		"succ_msg": "Session ID 認證成功",
-		"title": "設定 Pixiv Cookie",
-		"warn": {
-			"text": "本功能為非正常方式登入，可能有風險，使用本功能即視為使用者本人同意且已明確使用風險，如發生帳號異常等情形與本專案作者無關。",
-			"title": "風險告知"
-		}
-	},
-	"follow": {
-		"fav": "我的收藏",
-		"timeline": "動態",
-		"user": "已跟隨用户",
-		"latest": "全站最新"
-	},
-	"login": {
-		"fail_tip": "登入失敗",
-		"logout_tip": "確認退出？",
-		"o": {
-			"desc1": "即將打開 Pixiv 官網進行登入，請確保可以前往 Pixiv",
-			"desc2": "請確保已安裝 Redirector 瀏覽器擴充功能並匯入規則，否則將無法登入",
-			"desc3": "Redirector 安裝地址：",
-			"desc4": "點擊下載 Redirector 規則",
-			"desc5": "請確保已安裝油猴瀏覽器擴充功能並安裝 HTTP Helper 使用者腳本，否則將無法請求 API",
-			"desc6": "油猴安裝地址：",
-			"desc7": "點擊安裝 HTTP Helper 使用者腳本"
-		},
-		"succ_tip": "登入成功",
-		"t": {
-			"d1": "請確保已安裝油猴瀏覽器擴充功能並安裝 HTTP Helper 使用者腳本，否則請開啟 AppApi 代理",
-			"d2": "請填寫 RefreshToken，獲取方式參考以下連結",
-			"d3": "請填寫 RefreshToken",
-			"d4": "RefreshToken 格式不正確"
-		}
-	},
-	"iAH7adsXaqWMXEi3TOuwS": "系列",
-	"qmd5JADeSGtrvucK3TnGb": "根據作品類型在綜合排行榜列表頁面隱藏漫畫作品，可能會有遺漏",
-	"3HnNTIScyvd1cNc2qAh7X": "在排名中隱藏漫畫",
-	"wuh4SsMnuqgjHpaOVp2rB": "是否下載該作品",
-	"5syY7l774noiN5LHKUnqF": "列表/詳情圖片長按下載",
-	"9H-9VJU67Fuabl8OgbhOr": "點擊發表評論",
-	"VhMNSWrg03-_ryN7nRBJ3": "留言簿",
-	"p56suIhQbLp-UUYtYjQoa": "是否前往該作品",
-	"1a1meIFthYyv_s7C4M4L0": "封鎖此作品的作者或標籤",
-	"LEaBJrLF0DUhyTe6-fKYT": "你想屏蔽這個標籤嗎？",
-	"kFOiZTwKWwXy-sxaspqSD": "列表圖片長按屏蔽",
-	"w73XEmHradtum3SQ9IjBq": "你想屏蔽這個作者嗎？",
-	"ZO7u4XT4flW6_nmyvmXt7": "列表圖片資訊外置",
-	"ebHfHD4g4932R2m1gFtmn": "是否返回首頁？",
-	"a1HSQm-WYv6GDFwhKr9x_": "清理後設定項目將重置",
-	"mR4YFHYUnr00zmzYydrMv": "圖片清單鋪滿螢幕",
-	"V-KoSeNoEiNct7oZJgCcD": "關閉此開關會為圖片清單設定最大寬度",
-	"g4JWYmBbfeweCBkRSgGNw": "直播",
-	"qzuDyLgl-y1tIhY0Dc_6s": "人氣直播",
-	"bJ1fo_0HLdA1bWDIic_CT": "結果僅供參考",
-	"fSITk3ygQ7rxjm0lDUoSV": "此作品有 {0}% 的可能性是由 AI 產生的。",
-	"Wc3yMDMSkHUhoGx22bsP8": "導入設定",
-	"Bi5BpYwKhUhWcm_RueGZN": "匯出設定",
-	"psoXLFqv51j1SeKjTbnms": "應用主題色",
-	"lGZGzwfWz9tW_KQey3AmQ": "啟用 pximg 圖片直連模式",
-	"nTsgCnGYm8FSVMfe-TQSN": "確認啟用 pximg 直連模式？",
-	"YeEO8hAsoM45pm_vcijKP": "pximg 直連模式需確保油猴與 HTTP Helper 腳本已安裝，且速度可能較慢、不保證穩定性。",
-	"9omPI2Fz4KzKSVNlmF8-K": "油猴或 HTTP Helper 腳本未安裝，啟用失敗",
-	"2jNIricwtCbrzEESdEbvH": "點選安裝",
-	"lkfd4SXJiefx26Z7vj0Au": "HTTP Helper 腳本地址",
-	"hGqGftQ7v772prEac1hbJ": "評論",
-	"1V8tlBs--oNk_UbzsItA-": "備用域名",
-	"vqHSGcz4r3oSQIWQwZiVf": "還沒有人發表評論呢~",
-	"0CDMRP9wSGJQTyMbvrM8z": "查看回覆",
-	"qLUWER5bf4X2lE0RjKTBj": "詳情頁使用 Fancybox 查看原圖",
-	"k0V0c1MNZGYs9MCqjx8QL": "無效的session ID",
-	"3UCLxnEsirUQvP_xv4po4": "存取令牌格式錯誤",
-	"QRASoWf3qDfwihoIa84C9": "不可與長按屏蔽一起使用",
-	"NgE24V8lvXN2c15W_2gnE": "長按可屏蔽作者或標籤，不可與長按下載一起使用",
-	"WdS4RTIeeWqdaqLtvk7ZO": "將圖片標題與作者置於圖片卡下方，點選標題可預覽圖片",
-	"Tx35SIS0MBLD-pgz1XgXh": "展示全部",
-	"lJtMtr2rgYCSg-osHykE9": "請前往<a href=\"https://saucenao.com/\" target=\"_blank\">https://saucenao.com</a> 或<a href=\"https://iqdb.org/\" target= \n\"_blank\">https://iqdb.org</a> 搜尋。",
-	"zlMUy5svAesJpHhvWRc6C": "文字顏色預設",
-	"H_rYWoPA0uI7TU4YCbIz0": "轉換失敗，目前設備可能不支援此功能",
-	"zuVom-C8Ss8JTEDZIhzBj": "使用 ffmpeg 在服務端轉換",
-	"pIghtXdU8socMNNRUn5UR": "使用 WebCodec 在瀏覽器轉換",
-	"hHPMdWCYd_B2r9F0icW5Y": "顯示已收藏作品",
-	"KS3utA342Q7yr0mOFARV-": "暫時隱藏已喜歡作品",
-	"KBTp7zyXO4ckXvh14iu0K": "顯示漫畫作品",
-	"1VVoNDWxcoBn236bEV-_H": "暫時隱藏漫畫作品",
-	"GS0J0mAbmiqPGKw20ORPi": "基礎設定",
-	"9X179hdP1zzapzk5Rvqx2": "瀏覽設定",
-	"j2tFt08r6GGMmsfbF4HAN": "下載設定",
-	"7-drBPGRIz_BsYuc9ybCm": "網路設定",
-	"_AEPlcZHsKjnjPXQBX59p": "備份與還原",
-	"OA8ygupG-4FcNWHtwEUG-": "以 HTTP 載入圖片",
-	"zHc8vUk99v88lW41lrprb": "優先使用 File System Access API 下載",
-	"TvsHdAJPVAKY9rRiGoO6K": "請確保目前圖片Proxy支援CORS。\n可指定目錄來儲存檔案。",
-	"pA7B6tF0GBv6m4bI9MJWY": "下載目錄",
-	"4v7z_VobhSO66p3-FrUt3": "選擇檔案儲存的目錄",
-	"IQH88ofRzNxE0CTcT0-wO": "下載圖片時以作者名字建立資料夾",
-	"eZpkRjFnBvTEVV8yNj5b7": "優先使用油猴腳本下載",
-	"SAs_Y4hKK7myneH47ZQKG": "請確保 HTTP Helper 腳本已安裝。\n可下載非CORS圖片。",
-	"m9rhO-859d7Br05Hm5b54": "下載檔案名稱格式",
-	"QJJd8OqGWs3rIHxMwYma9": "請設定下載檔案名稱的格式模板",
-	"bmqXgC68c1dDsgtYwO1Sv": "建議下載格式中至少包含:",
-	"Zt3czgV8wrvas-it5b9Z0": "模板中可用變數如下，可點選標籤快速設定",
-	"VJLRKYZZDrAv5NKTHcisN": "作者名字",
-	"hVJXyeDWfpiwbIS7CpgEX": "作者 ID",
-	"xVDEqSshq1e1ZEmv3q-3s": "作品名字",
-	"6_DlIX_02ur5HfDOc9wsb": "作品 ID",
-	"SjI_Ww3ngIBNJxTDLAszn": "作品序號",
-	"0VXbrbumb60glupUb3cUk": "插畫寬度",
-	"G6LGYgi1RdW54WbmYURmF": "插畫高度",
-	"9tIV83JmVMkNKF2B8F4LI": "作品標籤",
-	"JHBWOqLzMQN-kgmyDVSzN": "創建時間",
-	"P2gkznjKnjtHZDGXgzYfg": "底線",
-	"6oe7JPS26HGAlcjQdmHZ4": "雜項",
-	"GnyWarxXoDw49xCft4IlS": "啟用圖片懶加載",
-	"2CmJxHkq8O-uA68cU90Lx": "圖片懶載入使用 Observer 實現",
-	"498jRU7yCP-NoupL7HBFk": "模板:",
-	"7PnT90lP_mZTPfL3Uwlhl": "收藏數",
-	"8SuotxAmYS7l1QCfLz0Yv": "{0}收藏",
-	"P8RGkre-rnlFxZ18aH2VW": "{0}字",
-	"9t4q1l50WKJY_iuXpTo66": "Top",
-	"QV1uifvU3RRNg7roth-8s": "常見問題",
-	"KwSsYWyF0HXlP8lggxLqt": "一直提示 API 超限或者 Rate Limit",
-	"8msFTe9uT5LS1hBRYrhDQ": "如何獲取 RefreshToken",
-	"kK53pSxdX9IOIwBqBIClc": "圖片加載很慢",
-	"wJAMnVWft77VcJZbZGBnw": "使用美國/英國 IP 無法查看某些作品",
-	"6iJYYx2KV_KWyAz0yS1CS": "可以到設定裡切換 API 實例，或者直接使用 RefreshToken 或者 OAuth 方式登入",
-	"BKT3O7AHWaF4y-_ZST_NG": "受限於網絡環境，圖片加載速度可能會比較慢。\n可以到設定裡切換圖床，或者下載 Android 版本後打開圖片直連功能。",
-	"nLfTowV936VLOus1gCBwD": "見 pixiv 官方公告：",
-	"oIpHR8FnQhPgVI2BizbAn": "建議用自己的賬號登入本站後再使用，並且要在官方網頁端裡面設定選擇非美國/英國的地區，最好選擇日區。",
-	"sJi3WO6IsK-5QD-YcWBMF": "列表與詳情圖片不匹配或重複、搜尋結果與搜尋標籤不匹配",
-	"ChCGA7Uk5be-pt_ZPtyVU": "是因為自建 API 的 CDN 緩存導致的，可以到設定裡切換其他 API 實例或者登入後再使用",
-	"hNq6xDwKzWRVTCurKT2VB": "Cookie/SessionID 登入出錯",
-	"FKYu426sygq6j2G9o7cPa": "建議使用 RefreshToken 方式登入",
-	"7Qp6wS6ighxbdX6P79aH8": "Android 版本點擊下載就閃退",
-	"94IU-NPgYBjKNVa_XspuT": "到系統設定裡給予本應用存儲權限，或者下載最新版本後再進行嘗試",
-	"3bW7wpYWQJ7UircVA8I76": "是否有 iOS App",
-	"v-ZyNlfMeisfmOU7rNkbm": "可到 Github Releases 下載，注意 iOS 安裝包（ipa 檔）未簽名，需要自行簽名側載安裝",
-	"DZ-5sfdw6SbWNC1_QX8QR": "自建的話如何預設圖床與 API 實例",
-	"Wl1aNUtmWu3vdjH7e4VTy": "可以在項目根目錄下新建 `.env` 文件，參照 `.env.example` 的格式填入環境變量。",
-	"5x4Ry0IB3Zq4yjhOoYraV": "趣聞",
-	"history_tab_label_user": "使用者",
-	"vant_cal_title": "日曆",
-	"vant_cal_month_title": "{year}/{month}",
-	"vant_cal_range_prompt": "選擇不超過{0}天",
-	"lives_chats_title": "聊天",
-	"VISKhjE86qDcIl_XXpx1q": "原項目作者",
-	"44eCE1yMuhnfx93siUVJ8": "提供大部分 API 接口支援",
-	"OcYnjztb0HpfzH4xK-2f4": "提供部分網頁版 API 接口支援",
-	"R7wR59U5tm8NR3Gn1FKAw": "圖像反代服務：https://pixiv.re",
-	"PtZhgMV8k86Gmg96kKTCA": "俄語翻譯",
-	"tQaYxaOwYjOgf1OAnQm4J": "客戶端與直連邏輯參考",
-	"cIyLKP7_S_Wo0Y0908dnm": "Github Discussions",
-	"TnXv_wGi3BhyVLjxBYf1u": "Github Issues",
-	"iqjnYM1N-k0dRi9zK1qhY": "Yande.re 瀑布流瀏覽",
-	"-0kO3F4F8o-BImHqqZqtf": "yande.re refine",
-	"nsbx-CsTvalHU191r4ncN": "ppixiv for Pixiv",
-	"86B5Xwwe8LCBBYG9d90_p": "Pixiv Previewer",
-	"E7xGZBPkIrdAB9Wea7xpP": "Pixiv 排行榜寬屏展示",
-	"k6pYRO1Zkj1lEn7icNblt": "RandomSexyPicParser",
-	"5g7BkTB_GvTwyZEV7iTRu": "大人的 Greasyfork",
-	"EbXDbF2ntTw8_yqu4C3NH": "右鍵新標籤圖片顯示最優化",
-	"uBK-rFPkvogiYvL4hLauA": "片假名終結者",
-	"ngWsK_SI194uLBKzA3XQY": "agefans Enhance",
-	"l0dzMCcjz576ZvVjodxOq": "Github 增強 - 高速下載",
-	"sYF0dqcLCYmsSg2R2bLk8": "Session ID",
-	"hqciRRXfoN19LYLh8xr4D": "App API（RefreshToken）",
-	"8zJrQTdrphmkCMMgL9SPW": "App API（OAuth）",
-	"3ZvAP-w7q7teBcLoqOgCc": "Web API（Cookie）",
-	"pL1gF_vTo1c_iF5GpBIDA": "搜尋標籤（僅R-18）",
-	"IxG-Y2odr_0OKUJbaqV0-": "搜尋標籤（全年齡）",
-	"mIfQo6LqzPPlvkV0XZM4X": "插畫搜尋結果列表最小收藏數過濾",
-	"_E9iTJP6wHVE-Qxau80YA": "圖片卡圓角",
-	"Rq0GHiUs_LyUxDu-IhfBb": "動圖預設下載格式",
-	"ks96nwuAms0B8wSWBWhil": "未選擇",
-	"Cy6qJLutMa5O3jJr8TawB": "頁面過渡效果",
-	"8ko0ip_aETyyaSIMQmLqR": "擴充 API 實例選擇",
-	"Na5UTdncjCSNrFJGlrPoq": "頁面背景色",
-	"BTQ4EAQMdeN-0ZdoU8ZsP": "歡迎 Star ☆彡",
-	"Nf5fGNxxxq0CSEYE4JATI": "提示「尚無此頁」或「尚無權限瀏覽該作品」或「您的瀏覽權限被限制了」",
-	"9fOw28j7M34o8pTBwf5C1": "此作品大概率已被作者刪除或隱藏",
-	"MIvoTULAIywXTtFIKsEuD": "小說儲存格式",
-	"ZfJcs8gi6ptsljzInCNpH": "預設",
-	"j1tomH0kHtIiXUQ-6NhcS": "小說文本設定",
-	"UiF3Ob-tYkIolJhNVMUFM": "設定小說文本閱讀樣式",
-	"SLO07VkQh2wjFJJ1MLvUl": "頁面字體"
+  "about": {
+    "disclaimer": "免責聲明",
+    "disclaimer_text": "<b>NSFW 相關</b><br>本站預設不顯示 NSFW 資源（例如 R-18 插畫），任意觀看此類資源的行為均是由使用者在設定中設定的，並且使用者已確保自身年齡已滿18歲且未違反當地法律法規所規定的內容。\n對於可能出現的 NSFW 資源我們均有做出明顯的警告標記，我們不鼓勵觀看或傳播此類資源。 \n<br><b>使用者言論</b><br>「使用者言論」指的是 Pixiv 源站使用者透過自我介紹、插畫簡介、評論區等功能發布的言論。\n這部分屬於發表者自身的行為，我們無法有效控制。\n我們不會發布也不鼓勵傳播不當言論。\n如果您在瀏覽過程中發現了不當內容，我們非常鼓勵您前往 Pixiv 檢舉。 \n<br><b>版權聲明</b><br>本站與 pixiv.net（ピクシブ株式会社）無任何關係，請求得到的全部數據以及媒體資源，版權歸 Pixiv 或其原作者所有。 \n<br>Pixiv Viewer 程序透過 MIT 協議授權。 \n<br>僅供交流與學習。",
+    "feedback": "回饋",
+    "from": "修改自",
+    "origin_site": "原版網站",
+    "source": "原始碼",
+    "title": "關於",
+    "version": "版本",
+    "about_site": "關於本站",
+    "credits": "鳴謝"
+  },
+  "artwork": {
+    "download": {
+      "gif": "低畫質，兼容性最佳",
+      "placeholder": "請選擇下載格式",
+      "ugoira": {
+        "tip": "請先播放動圖"
+      },
+      "webm": "高畫質，兼容性差",
+      "zip": "原始序列幀歸檔文件",
+      "mp4": "使用 ffmpeg.wasm 在瀏覽器轉換"
+    },
+    "share": {
+      "of_art": "{0}的作品",
+      "share": "分享",
+      "title": "立即分享給好友",
+      "type": {
+        "copylink": "複製連結",
+        "qrcode": "二維碼",
+        "qzone": "QQ 空間",
+        "web": "Web 分享",
+        "wechat": "微信",
+        "weibo": "微博"
+      }
+    },
+    "fav_fail": "收藏失敗",
+    "unfav_fail": "取消收藏失敗"
+  },
+  "cache": {
+    "clear": "清理",
+    "confirm": {
+      "first": "確定要清理{0}嗎？",
+      "second": "清理後瀏覽記錄將會被刪除，且將重新從網路載入相關內容"
+    },
+    "db": "持久化緩存",
+    "local": "配置項緩存",
+    "records": "{0} 條記錄",
+    "session": "運行時緩存",
+    "success_tip": "清理完成",
+    "title": "清除緩存",
+    "mem": "內存佔用"
+  },
+  "common": {
+    "ai_gen": "AI 生成",
+    "artwork": "作品",
+    "cancel": "取消",
+    "confirm": "確認",
+    "content": {
+      "hide": "根據當前設定，此內容將不予顯示"
+    },
+    "discovery": "探索",
+    "download": "下載",
+    "history": "歷史記錄",
+    "illust": "插畫",
+    "illust_manga": "插畫·漫畫",
+    "manga": "漫畫",
+    "new_art": "新作",
+    "novel": "小說",
+    "overall": "綜合",
+    "random_view": "隨便看看",
+    "rank": "排行榜",
+    "recomm": "推薦",
+    "recomm_art": "推薦作品",
+    "related": "相關作品",
+    "ugoira": "動圖",
+    "user": "使用者",
+    "view_more": "查看更多",
+    "words": "字",
+    "date": "日期",
+    "reset": "重置",
+    "save": "儲存"
+  },
+  "display": {
+    "ai": "顯示 AI 生成標籤",
+    "ai_label": "在圖片列表中顯示「AI」標籤",
+    "confirm": "確定要開啟{0}作品顯示嗎？ 請確保您的年齡已滿18歲，且未違反當地法律法規所規定的內容。",
+    "confirm_g": "請注意，開啟{0}開關可能會對您的身心健康造成不可逆的影響，如若感到不適，請立即關閉應用並尋求醫學幫助",
+    "r18": "R-18 作品顯示",
+    "r18_label": "包含裸露內容或性描寫",
+    "r18g": "R-18G 作品顯示",
+    "r18g_label": "包含血腥或噁心內容",
+    "title": "作品顯示設定",
+    "block_tags": "標籤黑名單",
+    "block_tags_ph": "請輸入標籤，英文逗號分隔",
+    "block_uids": "畫師黑名單",
+    "block_uids_ph": "請輸入畫師 ID，英文逗號分隔"
+  },
+  "history": {
+    "confirm": {
+      "i": "確定要清除插畫·漫畫歷史記錄嗎",
+      "n": "確定要清除小說歷史記錄嗎",
+      "u": "確定要清除使用者歷史記錄嗎"
+    }
+  },
+  "nav": {
+    "home": "首頁",
+    "rank": "排行榜",
+    "search": "搜尋",
+    "setting": "設定",
+    "follow": "動態"
+  },
+  "novel": {
+    "series": {
+      "next": "下一話:",
+      "prev": "上一話："
+    },
+    "settings": {
+      "text": {
+        "bg": "文字背景",
+        "color": "文字顏色",
+        "direct_h": "橫向",
+        "direct_v": "縱向",
+        "direction": "文字方向",
+        "font": "文字字體",
+        "height": "文字行高",
+        "sans": "黑體",
+        "serif": "宋體",
+        "size": "文字大小",
+        "weight": "文字字重"
+      },
+      "title": "小說設定"
+    }
+  },
+  "rank": {
+    "day": "日榜",
+    "day_x": "R18 日",
+    "day_x_female": "R18 女向",
+    "day_x_male": "R18 男向",
+    "female": "女性向",
+    "male": "男性向",
+    "month": "月榜",
+    "original": "原創",
+    "r18g": "R18G 週",
+    "rookie": "新人",
+    "week": "周榜",
+    "week_x": "R18 週"
+  },
+  "search": {
+    "autocomplete": "搜尋建議",
+    "history": "歷史搜尋",
+    "img": {
+      "err": "返回結果解析失敗。",
+      "placeholder": "請選擇圖片文件"
+    },
+    "of_user_res": "{0}的搜尋結果",
+    "placeholder": "請輸入搜尋關鍵詞",
+    "pop_preview": "熱門預覽",
+    "pop_preview_novel": "熱門小說預覽",
+    "seach_tag": "搜尋標籤",
+    "search": "搜尋",
+    "search_user": "搜尋使用者",
+    "date": {
+      "asc": "按日期正序",
+      "desc": "按日期倒序",
+      "end": "止",
+      "start": "始"
+    },
+    "dura": {
+      "day": "一天內",
+      "month": "一個月內",
+      "ph": "時段",
+      "week": "一周內"
+    },
+    "mode": {
+      "exact": "標籤完全一致",
+      "partial": "標籤部分一致",
+      "title": "標題與簡介"
+    }
+  },
+  "setting": {
+    "about": "關於",
+    "api": {
+      "desc": "在下方輸入 HibiAPI 實例地址，需要加 https://，路徑需填寫到 `/api/pixiv` 部分",
+      "desc2": "例如：https://hibiapi.getloli.com/api/pixiv，儲存後會清空本地緩存",
+      "desc3": "API 實例可前往",
+      "desc4": "查找或自行搭建",
+      "desc5": "API 實例地址需要支援跨域（CORS）前往",
+      "ph": "請選擇 HibiAPI 實例（切換後會清空本地緩存)",
+      "title": "HibiAPI 實例設定",
+      "title2": "HibiAPI 實例選擇",
+      "title3": "HibiAPI 實例地址",
+      "title4": "HibiAPI 實例"
+    },
+    "dark": {
+      "title": "深色模式"
+    },
+    "img_proxy": {
+      "desc": "在下方輸入 pixiv 圖片代理地址，不需要加 https://",
+      "desc2": "例如：i.pixiv.re，儲存後會清空本地緩存",
+      "ph": "請選擇 pixiv 圖片代理（切換後會清空本地緩存)",
+      "title": "pximg 圖片代理設定",
+      "title2": "pximg 圖片代理選擇",
+      "title3": "圖片代理",
+      "title4": "pixiv 圖片代理"
+    },
+    "img_res": {
+      "l": "加載稍慢",
+      "m": "加載稍快",
+      "o": "加載更慢",
+      "ph": "請選擇圖片詳情畫質",
+      "title": "圖片詳情畫質選擇"
+    },
+    "input": "輸入：",
+    "lab": {
+      "title": "實驗性"
+    },
+    "layout": {
+      "g": "等寬等高",
+      "j": "等高不等寬",
+      "m": "等寬不等高",
+      "ph": "請選擇圖片列表佈局",
+      "title": "圖片列表佈局選擇"
+    },
+    "other": {
+      "lang": "語言",
+      "lang_ph": "請選擇語言",
+      "title": "偏好設定",
+      "manual_input": "不使用預設API或圖片代理",
+      "manual_input_label": "打開此開關可在下方手動輸入連結",
+      "api_proxy": {
+        "def_ph": "預設代理無法使用的話可以嘗試其他代理",
+        "sel_desc": "請選擇 AppApi 代理",
+        "title": "選擇 AppApi 代理"
+      },
+      "cp_token_label": "複製當前 RefreshToken 到剪貼板",
+      "cp_token_title": "導出 RefreshToken",
+      "direct_mode": {
+        "confirm": {
+          "msg": "直連模式僅支援 Firefox 瀏覽器，需確保油猴與 HTTP Helper 腳本已安裝，且速度較慢、不保證穩定性。\n不可與 AppApi 代理同時開啟。\n開啟直連後如果遇到網絡錯誤的話，請手動打開下面的連結後，點擊「高級」 - 「接受風險並繼續」，出現 421 後回到本站刷新頁面。",
+          "proxy_msg": "通過第三方雲服務轉發本地 AppApi 請求，無法保證穩定性與安全性。\n不可與直連模式同時開啟。",
+          "proxy_title": "確認啟用 AppApi 代理？",
+          "title": "確認啟用直連模式？"
+        },
+        "host": {
+          "label": "清除後將重新通過 DoH 查詢",
+          "title": "清除直連 hosts 緩存"
+        },
+        "host_msg": "確認清除直連模式 hosts 緩存記錄?",
+        "label": "是否通過域前置繞過 SNI 嗅探",
+        "proxy": {
+          "label": "是否通過雲服務代理本地 AppApi 請求",
+          "title": "啟用 AppApi 代理"
+        },
+        "title": "啟用直連模式"
+      },
+      "swipe_toggle": "詳情頁左右滑動瀏覽作品"
+    },
+    "recomm": {
+      "app": "應用",
+      "site": "網站",
+      "title": "相關推薦",
+      "tm": "使用者腳本"
+    },
+    "down_app": "下載應用程序",
+    "app_desc": "又一個 Pixiv 插畫/小說閱覽工具"
+  },
+  "sp": {
+    "all": "一覽",
+    "of_new": "的最新特輯",
+    "of_recomm": "的相關推薦",
+    "rank": "本月排行榜",
+    "recomm_4u": "為你推薦",
+    "title": "特輯",
+    "column": "專欄",
+    "recomm": "推薦",
+    "interview": "採訪"
+  },
+  "tips": {
+    "click_view": "點擊查看",
+    "copylink": {
+      "error": "複製連結失敗:",
+      "succ": "已複製",
+      "success": "已複製連結"
+    },
+    "current_value": "當前值：",
+    "download_wait": "下載時間可能較長，請耐心等待",
+    "loading": "加載中...",
+    "net_err": "網路異常，點擊重新加載",
+    "no_data": "暫無數據",
+    "no_more": "沒有更多了",
+    "copy_err": "複製失敗",
+    "tip": "提示",
+    "load_more": "加載更多"
+  },
+  "user": {
+    "art_num": "{0}件作品",
+    "art_title": "{0}作品",
+    "fav": "收藏",
+    "fav_novel_title": "小說收藏",
+    "fav_title": "插畫·漫畫收藏",
+    "following": "已關注",
+    "friend": "好P友",
+    "novel_art": "小說作品",
+    "novel_art_title": "{0}小說作品",
+    "of": "的",
+    "of_other_art": "{0} 的其他作品",
+    "sess": {
+      "logout": "您確定要刪除會話嗎？",
+      "login": "登入",
+      "my_fav": "我的收藏",
+      "out": "退出"
+    },
+    "related": "相關使用者",
+    "faved": "已收藏",
+    "view_comments": "查看評論",
+    "follow": "關注",
+    "follow_fail": "關注失敗",
+    "followed": "已關注",
+    "unfollow_fail": "取消關注失敗"
+  },
+  "tip": {
+    "rate_limit": "API 超出限制，請稍後重試",
+    "unknown_err": "未知錯誤",
+    "down_wait": "處理中，請耐心等待",
+    "downloaded": "下載完成",
+    "downloading": "下載中",
+    "connect_err": "連接失敗，此項不可用。",
+    "browser_latest": "請盡量使用最新的 Chrome/Edge 瀏覽器前往本站",
+    "browser_tip": "請使用 Chrome/Edge 瀏覽器前往本站"
+  },
+  "sess": {
+    "example": "Session ID 形如（無效，演示用）：",
+    "input": {
+      "msg": "Session ID 格式不正確",
+      "ph": "請輸入 Session ID"
+    },
+    "mobile_tip": "移動端自行尋找方法或者到電腦端獲取",
+    "q1": {
+      "p1": "1. 前往 {0} 源站並登入",
+      "p2": "2. 點擊地址欄的小鎖",
+      "p3": "3. 在彈出的界面選擇「Cookie(正在使用 0 個 Cookie)」",
+      "p4": "4. 展開 `pixiv.net` → `Cookie` 找到 {0} 項",
+      "p5": "5. 將它的「內容」複製後填寫到這裡"
+    },
+    "q2": {
+      "p2": "2. 按 F12 打開瀏覽器控制台",
+      "p3": "3. 點擊「存儲/storage」一欄",
+      "p4": "4. 在 cookie 列表裡找到「鍵/key」為 {0} 的一欄",
+      "p5": "5. 將它的「值/value」複製後填寫到這裡"
+    },
+    "que2": {
+      "p1": "我們 不會 存儲或轉讓您的個人信息以及 cookie。",
+      "p2": "不過我們建議妥善儲存您的 cookie。\n您在此處儲存的信息若被他人獲取有被盜號的風險。"
+    },
+    "ques1": "如何獲取 Pixiv Session ID ？",
+    "ques2": "Pixiv Viewer 會竊取我的個人信息嗎？",
+    "save": "儲存",
+    "succ_msg": "Session ID 認證成功",
+    "title": "設定 Pixiv Cookie",
+    "warn": {
+      "text": "本功能為非正常方式登入，可能有風險，使用本功能即視為使用者本人同意且已明確使用風險，如發生帳號異常等情形與本專案作者無關。",
+      "title": "風險告知"
+    }
+  },
+  "follow": {
+    "fav": "我的收藏",
+    "timeline": "動態",
+    "user": "已跟隨用户",
+    "latest": "全站最新"
+  },
+  "login": {
+    "fail_tip": "登入失敗",
+    "logout_tip": "確認退出？",
+    "o": {
+      "desc1": "即將打開 Pixiv 官網進行登入，請確保可以前往 Pixiv",
+      "desc2": "請確保已安裝 Redirector 瀏覽器擴充功能並匯入規則，否則將無法登入",
+      "desc3": "Redirector 安裝地址：",
+      "desc4": "點擊下載 Redirector 規則",
+      "desc5": "請確保已安裝油猴瀏覽器擴充功能並安裝 HTTP Helper 使用者腳本，否則將無法請求 API",
+      "desc6": "油猴安裝地址：",
+      "desc7": "點擊安裝 HTTP Helper 使用者腳本"
+    },
+    "succ_tip": "登入成功",
+    "t": {
+      "d1": "請確保已安裝油猴瀏覽器擴充功能並安裝 HTTP Helper 使用者腳本，否則請開啟 AppApi 代理",
+      "d2": "請填寫 RefreshToken，獲取方式參考以下連結",
+      "d3": "請填寫 RefreshToken",
+      "d4": "RefreshToken 格式不正確"
+    }
+  },
+  "iAH7adsXaqWMXEi3TOuwS": "系列",
+  "qmd5JADeSGtrvucK3TnGb": "根據作品類型在綜合排行榜列表頁面隱藏漫畫作品，可能會有遺漏",
+  "3HnNTIScyvd1cNc2qAh7X": "在排名中隱藏漫畫",
+  "wuh4SsMnuqgjHpaOVp2rB": "是否下載該作品",
+  "5syY7l774noiN5LHKUnqF": "列表/詳情圖片長按下載",
+  "9H-9VJU67Fuabl8OgbhOr": "點擊發表評論",
+  "VhMNSWrg03-_ryN7nRBJ3": "留言簿",
+  "p56suIhQbLp-UUYtYjQoa": "是否前往該作品",
+  "1a1meIFthYyv_s7C4M4L0": "封鎖此作品的作者或標籤",
+  "LEaBJrLF0DUhyTe6-fKYT": "你想屏蔽這個標籤嗎？",
+  "kFOiZTwKWwXy-sxaspqSD": "列表圖片長按屏蔽",
+  "w73XEmHradtum3SQ9IjBq": "你想屏蔽這個作者嗎？",
+  "ZO7u4XT4flW6_nmyvmXt7": "列表圖片資訊外置",
+  "ebHfHD4g4932R2m1gFtmn": "是否返回首頁？",
+  "a1HSQm-WYv6GDFwhKr9x_": "清理後設定項目將重置",
+  "mR4YFHYUnr00zmzYydrMv": "圖片清單鋪滿螢幕",
+  "V-KoSeNoEiNct7oZJgCcD": "關閉此開關會為圖片清單設定最大寬度",
+  "g4JWYmBbfeweCBkRSgGNw": "直播",
+  "qzuDyLgl-y1tIhY0Dc_6s": "人氣直播",
+  "bJ1fo_0HLdA1bWDIic_CT": "結果僅供參考",
+  "fSITk3ygQ7rxjm0lDUoSV": "此作品有 {0}% 的可能性是由 AI 產生的。",
+  "Wc3yMDMSkHUhoGx22bsP8": "導入設定",
+  "Bi5BpYwKhUhWcm_RueGZN": "匯出設定",
+  "psoXLFqv51j1SeKjTbnms": "應用主題色",
+  "lGZGzwfWz9tW_KQey3AmQ": "啟用 pximg 圖片直連模式",
+  "nTsgCnGYm8FSVMfe-TQSN": "確認啟用 pximg 直連模式？",
+  "YeEO8hAsoM45pm_vcijKP": "pximg 直連模式需確保油猴與 HTTP Helper 腳本已安裝，且速度可能較慢、不保證穩定性。",
+  "9omPI2Fz4KzKSVNlmF8-K": "油猴或 HTTP Helper 腳本未安裝，啟用失敗",
+  "2jNIricwtCbrzEESdEbvH": "點選安裝",
+  "lkfd4SXJiefx26Z7vj0Au": "HTTP Helper 腳本地址",
+  "hGqGftQ7v772prEac1hbJ": "評論",
+  "1V8tlBs--oNk_UbzsItA-": "備用域名",
+  "vqHSGcz4r3oSQIWQwZiVf": "還沒有人發表評論呢~",
+  "0CDMRP9wSGJQTyMbvrM8z": "查看回覆",
+  "qLUWER5bf4X2lE0RjKTBj": "詳情頁使用 Fancybox 查看原圖",
+  "k0V0c1MNZGYs9MCqjx8QL": "無效的session ID",
+  "3UCLxnEsirUQvP_xv4po4": "存取令牌格式錯誤",
+  "QRASoWf3qDfwihoIa84C9": "不可與長按屏蔽一起使用",
+  "NgE24V8lvXN2c15W_2gnE": "長按可屏蔽作者或標籤，不可與長按下載一起使用",
+  "WdS4RTIeeWqdaqLtvk7ZO": "將圖片標題與作者置於圖片卡下方，點選標題可預覽圖片",
+  "Tx35SIS0MBLD-pgz1XgXh": "展示全部",
+  "lJtMtr2rgYCSg-osHykE9": "請前往<a href=\"https://saucenao.com/\" target=\"_blank\">https://saucenao.com</a> 或<a href=\"https://iqdb.org/\" target= \n\"_blank\">https://iqdb.org</a> 搜尋。",
+  "zlMUy5svAesJpHhvWRc6C": "文字顏色預設",
+  "H_rYWoPA0uI7TU4YCbIz0": "轉換失敗，目前設備可能不支援此功能",
+  "zuVom-C8Ss8JTEDZIhzBj": "使用 ffmpeg 在服務端轉換",
+  "pIghtXdU8socMNNRUn5UR": "使用 WebCodec 在瀏覽器轉換",
+  "hHPMdWCYd_B2r9F0icW5Y": "顯示已收藏作品",
+  "KS3utA342Q7yr0mOFARV-": "暫時隱藏已喜歡作品",
+  "KBTp7zyXO4ckXvh14iu0K": "顯示漫畫作品",
+  "1VVoNDWxcoBn236bEV-_H": "暫時隱藏漫畫作品",
+  "GS0J0mAbmiqPGKw20ORPi": "基礎設定",
+  "9X179hdP1zzapzk5Rvqx2": "瀏覽設定",
+  "j2tFt08r6GGMmsfbF4HAN": "下載設定",
+  "7-drBPGRIz_BsYuc9ybCm": "網路設定",
+  "_AEPlcZHsKjnjPXQBX59p": "備份與還原",
+  "OA8ygupG-4FcNWHtwEUG-": "以 HTTP 載入圖片",
+  "zHc8vUk99v88lW41lrprb": "優先使用 File System Access API 下載",
+  "TvsHdAJPVAKY9rRiGoO6K": "請確保目前圖片Proxy支援CORS。\n可指定目錄來儲存檔案。",
+  "pA7B6tF0GBv6m4bI9MJWY": "下載目錄",
+  "4v7z_VobhSO66p3-FrUt3": "選擇檔案儲存的目錄",
+  "IQH88ofRzNxE0CTcT0-wO": "下載圖片時以作者名字建立資料夾",
+  "eZpkRjFnBvTEVV8yNj5b7": "優先使用油猴腳本下載",
+  "SAs_Y4hKK7myneH47ZQKG": "請確保 HTTP Helper 腳本已安裝。\n可下載非CORS圖片。",
+  "m9rhO-859d7Br05Hm5b54": "下載檔案名稱格式",
+  "QJJd8OqGWs3rIHxMwYma9": "請設定下載檔案名稱的格式模板",
+  "bmqXgC68c1dDsgtYwO1Sv": "建議下載格式中至少包含:",
+  "Zt3czgV8wrvas-it5b9Z0": "模板中可用變數如下，可點選標籤快速設定",
+  "VJLRKYZZDrAv5NKTHcisN": "作者名字",
+  "hVJXyeDWfpiwbIS7CpgEX": "作者 ID",
+  "xVDEqSshq1e1ZEmv3q-3s": "作品名字",
+  "6_DlIX_02ur5HfDOc9wsb": "作品 ID",
+  "SjI_Ww3ngIBNJxTDLAszn": "作品序號",
+  "0VXbrbumb60glupUb3cUk": "插畫寬度",
+  "G6LGYgi1RdW54WbmYURmF": "插畫高度",
+  "9tIV83JmVMkNKF2B8F4LI": "作品標籤",
+  "JHBWOqLzMQN-kgmyDVSzN": "創建時間",
+  "P2gkznjKnjtHZDGXgzYfg": "底線",
+  "6oe7JPS26HGAlcjQdmHZ4": "雜項",
+  "GnyWarxXoDw49xCft4IlS": "啟用圖片懶加載",
+  "2CmJxHkq8O-uA68cU90Lx": "圖片懶載入使用 Observer 實現",
+  "498jRU7yCP-NoupL7HBFk": "模板:",
+  "7PnT90lP_mZTPfL3Uwlhl": "收藏數",
+  "8SuotxAmYS7l1QCfLz0Yv": "{0}收藏",
+  "P8RGkre-rnlFxZ18aH2VW": "{0}字",
+  "9t4q1l50WKJY_iuXpTo66": "Top",
+  "QV1uifvU3RRNg7roth-8s": "常見問題",
+  "KwSsYWyF0HXlP8lggxLqt": "一直提示 API 超限或者 Rate Limit",
+  "8msFTe9uT5LS1hBRYrhDQ": "如何獲取 RefreshToken",
+  "kK53pSxdX9IOIwBqBIClc": "圖片加載很慢",
+  "wJAMnVWft77VcJZbZGBnw": "使用美國/英國 IP 無法查看某些作品",
+  "6iJYYx2KV_KWyAz0yS1CS": "可以到設定裡切換 API 實例，或者直接使用 RefreshToken 或者 OAuth 方式登入",
+  "BKT3O7AHWaF4y-_ZST_NG": "受限於網絡環境，圖片加載速度可能會比較慢。\n可以到設定裡切換圖床，或者下載 Android 版本後打開圖片直連功能。",
+  "nLfTowV936VLOus1gCBwD": "見 pixiv 官方公告：",
+  "oIpHR8FnQhPgVI2BizbAn": "建議用自己的賬號登入本站後再使用，並且要在官方網頁端裡面設定選擇非美國/英國的地區，最好選擇日區。",
+  "sJi3WO6IsK-5QD-YcWBMF": "列表與詳情圖片不匹配或重複、搜尋結果與搜尋標籤不匹配",
+  "ChCGA7Uk5be-pt_ZPtyVU": "是因為自建 API 的 CDN 緩存導致的，可以到設定裡切換其他 API 實例或者登入後再使用",
+  "hNq6xDwKzWRVTCurKT2VB": "Cookie/SessionID 登入出錯",
+  "FKYu426sygq6j2G9o7cPa": "建議使用 RefreshToken 方式登入",
+  "7Qp6wS6ighxbdX6P79aH8": "Android 版本點擊下載就閃退",
+  "94IU-NPgYBjKNVa_XspuT": "到系統設定裡給予本應用存儲權限，或者下載最新版本後再進行嘗試",
+  "3bW7wpYWQJ7UircVA8I76": "是否有 iOS App",
+  "v-ZyNlfMeisfmOU7rNkbm": "可到 Github Releases 下載，注意 iOS 安裝包（ipa 檔）未簽名，需要自行簽名側載安裝",
+  "DZ-5sfdw6SbWNC1_QX8QR": "自建的話如何預設圖床與 API 實例",
+  "Wl1aNUtmWu3vdjH7e4VTy": "可以在項目根目錄下新建 `.env` 文件，參照 `.env.example` 的格式填入環境變量。",
+  "5x4Ry0IB3Zq4yjhOoYraV": "趣聞",
+  "history_tab_label_user": "使用者",
+  "vant_cal_title": "日曆",
+  "vant_cal_month_title": "{year}/{month}",
+  "vant_cal_range_prompt": "選擇不超過{0}天",
+  "lives_chats_title": "聊天",
+  "VISKhjE86qDcIl_XXpx1q": "原項目作者",
+  "44eCE1yMuhnfx93siUVJ8": "提供大部分 API 接口支援",
+  "OcYnjztb0HpfzH4xK-2f4": "提供部分網頁版 API 接口支援",
+  "R7wR59U5tm8NR3Gn1FKAw": "圖像反代服務：https://pixiv.re",
+  "PtZhgMV8k86Gmg96kKTCA": "俄語翻譯",
+  "tQaYxaOwYjOgf1OAnQm4J": "客戶端與直連邏輯參考",
+  "cIyLKP7_S_Wo0Y0908dnm": "Github Discussions",
+  "TnXv_wGi3BhyVLjxBYf1u": "Github Issues",
+  "iqjnYM1N-k0dRi9zK1qhY": "Yande.re 瀑布流瀏覽",
+  "-0kO3F4F8o-BImHqqZqtf": "yande.re refine",
+  "nsbx-CsTvalHU191r4ncN": "ppixiv for Pixiv",
+  "86B5Xwwe8LCBBYG9d90_p": "Pixiv Previewer",
+  "E7xGZBPkIrdAB9Wea7xpP": "Pixiv 排行榜寬屏展示",
+  "k6pYRO1Zkj1lEn7icNblt": "RandomSexyPicParser",
+  "5g7BkTB_GvTwyZEV7iTRu": "大人的 Greasyfork",
+  "EbXDbF2ntTw8_yqu4C3NH": "右鍵新標籤圖片顯示最優化",
+  "uBK-rFPkvogiYvL4hLauA": "片假名終結者",
+  "ngWsK_SI194uLBKzA3XQY": "agefans Enhance",
+  "l0dzMCcjz576ZvVjodxOq": "Github 增強 - 高速下載",
+  "sYF0dqcLCYmsSg2R2bLk8": "Session ID",
+  "hqciRRXfoN19LYLh8xr4D": "App API（RefreshToken）",
+  "8zJrQTdrphmkCMMgL9SPW": "App API（OAuth）",
+  "3ZvAP-w7q7teBcLoqOgCc": "Web API（Cookie）",
+  "pL1gF_vTo1c_iF5GpBIDA": "搜尋標籤（僅R-18）",
+  "IxG-Y2odr_0OKUJbaqV0-": "搜尋標籤（全年齡）",
+  "mIfQo6LqzPPlvkV0XZM4X": "插畫搜尋結果列表最小收藏數過濾",
+  "_E9iTJP6wHVE-Qxau80YA": "圖片卡圓角",
+  "Rq0GHiUs_LyUxDu-IhfBb": "動圖預設下載格式",
+  "ks96nwuAms0B8wSWBWhil": "未選擇",
+  "Cy6qJLutMa5O3jJr8TawB": "頁面過渡效果",
+  "8ko0ip_aETyyaSIMQmLqR": "擴充 API 實例選擇",
+  "Na5UTdncjCSNrFJGlrPoq": "頁面背景色",
+  "BTQ4EAQMdeN-0ZdoU8ZsP": "歡迎 Star ☆彡",
+  "Nf5fGNxxxq0CSEYE4JATI": "提示「尚無此頁」或「尚無權限瀏覽該作品」或「您的瀏覽權限被限制了」",
+  "9fOw28j7M34o8pTBwf5C1": "此作品大概率已被作者刪除或隱藏",
+  "MIvoTULAIywXTtFIKsEuD": "小說儲存格式",
+  "ZfJcs8gi6ptsljzInCNpH": "預設",
+  "j1tomH0kHtIiXUQ-6NhcS": "小說文本設定",
+  "UiF3Ob-tYkIolJhNVMUFM": "設定小說文本閱讀樣式",
+  "SLO07VkQh2wjFJJ1MLvUl": "頁面字體",
+  "FyTTJetQW2e3wVs2sOjif": "繁體中文翻譯"
 }

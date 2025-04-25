@@ -745,7 +745,7 @@ const api = {
     if (!spotlights) {
       const url = `${PIXIV_NEXT_URL}/api/pixivision`
       const params = { page }
-      if (lang != 'zh-Hans') {
+      if (lang != 'zh-CN') {
         params.lang = lang
       }
       const res = await get(url, params)
@@ -783,7 +783,7 @@ const api = {
 
     if (!spotlights) {
       const params = { page, type }
-      if (lang != 'zh-Hans') {
+      if (lang != 'zh-CN') {
         params.lang = lang
       }
       const res = await get(`${PIXIV_NEXT_URL}/api/pixivision/list`, params)
@@ -820,7 +820,7 @@ const api = {
 
     if (!spotlight) {
       const params = { id }
-      if (lang != 'zh-Hans') {
+      if (lang != 'zh-CN') {
         params.lang = lang
       }
       const res = await get(`${PIXIV_NEXT_URL}/api/pixivision/detail`, params)
@@ -855,7 +855,7 @@ const api = {
 
     if (!spotlight) {
       const params = {}
-      if (lang != 'zh-Hans') {
+      if (lang != 'zh-CN') {
         params.lang = lang
       }
       const res = await get(`${PIXIV_NEXT_URL}/api/pixivision/${id}`, params)

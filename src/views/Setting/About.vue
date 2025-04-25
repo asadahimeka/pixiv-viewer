@@ -52,6 +52,13 @@
       />
       <van-cell
         center
+        title="@olivertzeng"
+        is-link
+        :label="$t('FyTTJetQW2e3wVs2sOjif')"
+        @click="openLink('https://github.com/olivertzeng')"
+      />
+      <van-cell
+        center
         title="pxder"
         is-link
         :label="$t('tQaYxaOwYjOgf1OAnQm4J')"
