@@ -36,8 +36,8 @@ async function setupApp() {
   await checkWechat()
   await checkBrowser()
   await initSetting()
-  await initLocalApi()
   await initLocale()
+  await initLocalApi()
 
   Vue.use(Toast)
   if (store.state.appSetting.isImgLazy) {
