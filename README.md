@@ -120,6 +120,7 @@ https://github.com/asadahimeka/pixiv-viewer/discussions
 
 ## Alternatives
 
+- [PixiviFE](https://pixivfe.cocomi.eu.org/)
 - [Pixiviz](https://pixiviz.cocomi.eu.org/)
 - [Pixivel](https://pxelk.cocomi.eu.org/)
 - [PixivNow](https://pxnow.cocomi.eu.org/)
