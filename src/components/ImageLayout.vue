@@ -127,6 +127,11 @@ export default {
   position: relative !important;
 }
 
+.JustifiedLayout > .image-card {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 300px;
+}
+
 .true-masonry .image-card {
   height: fit-content;
   margin-bottom: 0 !important;
