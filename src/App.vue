@@ -47,12 +47,12 @@ export default {
 .with-body-bg.custom_theme body:not(.dark) .novel .artwork-meta .shrink::after {
   background: linear-gradient(to top, #fff, rgba(255, 255, 255, 0));
 }
-.with-body-bg.custom_theme body:not(.dark) .image-view.shrink {
+.with-body-bg body:not(.dark) .image-view.shrink {
   max-height: 95vh;
 }
 @media screen and (max-width: 600px) {
-  .with-body-bg.custom_theme body:not(.dark) .image-view.shrink{
-    max-width: 13rem;
+  .with-body-bg body:not(.dark) .image-view.shrink{
+    max-height: 13rem;
   }
 }
 </style>

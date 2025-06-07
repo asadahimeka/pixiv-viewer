@@ -1,11 +1,20 @@
 <template>
-  <div ref="related" class="related">
+  <div ref="related" class="related" :style="manualLoadRelated?'min-height:120px':''">
     <van-cell class="cell" :border="false">
       <template #title>
         <Icon class="icon heart" name="heart" />
         <span class="title">{{ $t('common.related') }}</span>
+        <van-button
+          v-if="manualLoadRelated && !showList"
+          size="small"
+          class="load_rel_btn"
+          @click="init()"
+        >
+          {{ $t('7KdpxnZMAURov4JetAfvV') }}
+        </van-button>
       </template>
     </van-cell>
+    <van-loading v-if="!manualLoadRelated && !showList" size="64px" style="width: 64px;margin: 20px auto;" />
     <van-list
       v-if="showList"
       v-model="loading"
@@ -21,7 +30,6 @@
         <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
       </wf-cont>
     </van-list>
-    <van-loading v-else size="64px" style="width: 64px;margin: 20px auto;" />
   </div>
 </template>
 
@@ -30,6 +38,9 @@ import _ from '@/lib/lodash'
 import api from '@/api'
 import { tryURL } from '@/utils'
 import ImageCard from '@/components/ImageCard'
+import store from '@/store'
+
+const { manualLoadRelated } = store.state.appSetting
 
 export default {
   name: 'Related',
@@ -51,10 +62,11 @@ export default {
       loading: false,
       finished: false,
       nextUrl: null,
+      manualLoadRelated,
     }
   },
   mounted() {
-    this.setObserver()
+    if (!manualLoadRelated) this.setObserver()
   },
   methods: {
     setObserver() {
@@ -124,8 +136,14 @@ export default {
 <style lang="stylus" scoped>
 .related {
   min-height: 72vh;
+
   .cell {
     padding: 0 8px 20px 8px;
+  }
+
+  .load_rel_btn {
+    margin-left: 0.2rem;
+    vertical-align: 0.5em;
   }
 
   .card-box {

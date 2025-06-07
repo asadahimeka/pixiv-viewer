@@ -122,6 +122,11 @@
           <van-switch :value="appSetting.isEnableSwipe" size="24" @change="v => saveAppSetting('isEnableSwipe', v, true)" />
         </template>
       </van-cell>
+      <van-cell center :title="$t('ZwLxHHLEfTwPAC6E2g6Pv')">
+        <template #right-icon>
+          <van-switch :value="appSetting.manualLoadRelated" size="24" @change="v => saveAppSetting('manualLoadRelated', v, true)" />
+        </template>
+      </van-cell>
       <van-cell v-if="isNavSHSetShow" center :title="$t('Gry1iNTJ2wm_9FMG_JpBT')">
         <template #right-icon>
           <van-switch :value="appSetting.hideNavBarOnScroll" size="24" @change="v => saveAppSetting('hideNavBarOnScroll', v, true)" />

@@ -556,6 +556,14 @@ img[src*="https://api.moedog.org/qr/?url="]
       padding-right 0
       margin-bottom 0
 
+@media screen and (min-width: 1201px)
+  .ia-cont
+    &:not(:has(shrink)) .ia-right
+      max-height 100vh
+      overflow-y auto
+      &::-webkit-scrollbar
+        display none
+
 @media screen and (max-width: 1200px)
   .ia-cont
     display block !important
