@@ -556,12 +556,12 @@ const api = {
     return { status: 0, data: filterCensoredIllusts(relatedList) }
   },
 
-  async getPopularPreviewNovel(word) {
-    const cacheKey = `search.popularPreview.novel.${word}`
+  async getPopularPreviewNovel(word, params = {}) {
+    const cacheKey = `search.popularPreview.novel.${word}.${JSON.stringify(params)}`
     let relatedList = await getCache(cacheKey)
 
     if (!relatedList) {
-      const res = await get('/popular_preview_novel', { word })
+      const res = await get('/popular_preview_novel', { word, ...params })
 
       if (res.novels) {
         relatedList = res.novels.map(art => parseNovel(art))
@@ -1100,14 +1100,15 @@ const api = {
     return { status: 0, data: filterCensoredIllusts(searchList) }
   },
 
-  async searchNovel(word, page = 1) {
-    const cacheKey = `searchList_novel_${word}_${page}`
+  async searchNovel(word, page = 1, params = {}) {
+    const cacheKey = `searchList_novel_${word}_${page}_${JSON.stringify(params)}`
     let searchList = SessionStorage.get(cacheKey)
 
     if (!searchList) {
       const res = await get('/search_novel', {
         word,
         page,
+        ...params,
       })
 
       if (res.novels) {

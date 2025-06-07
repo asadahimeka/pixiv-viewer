@@ -558,7 +558,7 @@ img[src*="https://api.moedog.org/qr/?url="]
 
 @media screen and (min-width: 1201px)
   .ia-cont
-    &:not(:has(shrink)) .ia-right
+    &:not(:has(.shrink)) .ia-right
       max-height 100vh
       overflow-y auto
       &::-webkit-scrollbar

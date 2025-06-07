@@ -660,7 +660,8 @@ html:has(.dark)
   .search .tags,
   .user-tabs .van-tabs__nav,
   .user-tabs .member-tags,
-  .History .h-tabs .van-tabs__nav
+  .History .h-tabs .van-tabs__nav,
+  .search .search_params + .rank-card > .cell
     max-width 1200PX
     margin-left auto !important
     margin-right auto !important
@@ -671,10 +672,12 @@ html:has(.dark)
     --jstf-w: 265;
     --jstf-w-px: 265PX;
   .users .van-tabs__nav
-    padding 0 !important
+    padding-left 0 !important
+    padding-right 0 !important
     overflow-y unset
     border-bottom-left-radius 8PX
     border-bottom-right-radius 8PX
+    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), var(--accent-color, #f7f8fa);
 
 .app-main:has(.live_detail)
   border-top 4PX solid #F2C358

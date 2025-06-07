@@ -45,7 +45,7 @@
         <template v-for="n in pidOrUidList">
           <div :key="'p_' + n" class="keyword" @click="toPidPage(n)">→ {{ $t('common.artwork') }} ID: {{ n }} </div>
           <div :key="'u_' + n" class="keyword" @click="toUidPage(n)">→ {{ $t('common.user') }} ID: {{ n }} </div>
-          <!-- <div :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div> -->
+          <div v-if="n.length<6" :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div>
         </template>
       </div>
       <div v-if="keywords.trim() && autoCompleteTagList.length" class="search-history">
@@ -75,7 +75,12 @@
             <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
             <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
           </template>
-          <van-dropdown-item ref="s_date" :title="$t('common.date')" :lazy-render="false" @open="onSelDateOpen">
+          <van-dropdown-item
+            ref="s_date"
+            :title="searchParams.start_date? searchParams.start_date + '~' + searchParams.end_date : $t('common.date')"
+            :lazy-render="false"
+            @open="onSelDateOpen"
+          >
             <van-calendar
               ref="selDate"
               color="#f2c358"

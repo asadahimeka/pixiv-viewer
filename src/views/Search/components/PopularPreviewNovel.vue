@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import _ from '@/lib/lodash'
 import api from '@/api'
 import NovelCard from '@/components/NovelCard.vue'
 export default {
@@ -37,6 +38,7 @@ export default {
   },
   props: {
     word: String,
+    params: Object,
   },
   data() {
     return {
@@ -54,7 +56,7 @@ export default {
       if (!this.word) return
       this.loading = true
       this.artList = []
-      const res = await api.getPopularPreviewNovel(this.word)
+      const res = await api.getPopularPreviewNovel(this.word, _.pickBy(this.params, Boolean))
       if (res.status === 0) {
         this.artList = res.data
         this.finished = true

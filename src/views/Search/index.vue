@@ -39,7 +39,7 @@
           <div :key="'p_' + n" class="keyword" @click="toPidPage(n)">→ {{ $t('common.illust_manga') }} ID: {{ n }} </div>
           <div :key="'u_' + n" class="keyword" @click="toUidPage(n)">→ {{ $t('common.user') }} ID: {{ n }} </div>
           <div :key="'n_' + n" class="keyword" @click="toNovelPage(n)">→ {{ $t('common.novel') }} ID: {{ n }} </div>
-          <!-- <div :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div> -->
+          <div v-if="n.length<6" :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div>
         </template>
       </div>
       <div v-if="keywords.trim() && autoCompleteTagList.length" class="search-history">
