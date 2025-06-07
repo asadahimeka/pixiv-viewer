@@ -179,6 +179,11 @@ export default {
         this.toPidPage(id)
         return
       }
+      const uid = this.lastWord.match(/https?:\/\/.+\/users\/(\d+)/i)?.[1]
+      if (uid) {
+        this.toUidPage(uid)
+        return
+      }
       if (BLOCK_LAST_WORD_RE.test(this.lastWord)) {
         return
       }
