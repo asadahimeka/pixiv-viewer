@@ -2,7 +2,6 @@ import Mint from 'mint-filter'
 import store from '@/store'
 import { getCache, setCache } from './storage/siteCache'
 import { COMMON_PROXY } from '@/consts'
-import { isBlockTagHit } from '.'
 
 const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵|雀魂|じゃんたま/i
 const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐|スカラマシュ|散兵|雀魂|じゃんたま/i
@@ -11,50 +10,53 @@ const blockedUserIds = [24517, 14002767, 16776564, 33333, 423251, 27526, 1315057
 export function filterHomeIllust(e) {
   if (e.type == 'manga') return false
   if (e.images.length != 1) return false
-  if (e.illust_ai_type == 2) return false
+  if (isAiIllust(e)) return false
   if (blockedUserIds.includes(+e.author.id)) return false
   return !re1.test(JSON.stringify(e.tags))
 }
 
 export function filterRecommIllust(e) {
-  if (e.illust_ai_type == 2) return false
+  if (isAiIllust(e)) return false
   return !re2.test(JSON.stringify(e.tags))
 }
 
 export function filterHomeNovel(e) {
-  if (e.novel_ai_type == 2) return false
+  if (e.illust_ai_type == 2 || e.novel_ai_type == 2) return false
   return !re2.test(JSON.stringify(e.tags))
 }
 
-export function filterCensoredIllust(artwork) {
-  if (store.state.blockUids.length && store.state.blockUids.includes(`${artwork?.author?.id}`)) {
+export function isArtworkNotCensored(artwork, state) {
+  if (state.blockUids.length && state.blockUids.includes(`${artwork?.author?.id}`)) {
     return false
   }
 
-  if (isBlockTagHit(store.state.blockTags, artwork?.tags)) {
+  if (isBlockTagHit(state.blockTags, artwork?.tags)) {
     return false
   }
 
   if (artwork.x_restrict == 1) {
-    if (artwork.illust_ai_type == 2) {
-      return store.state.contentSetting.r18 && store.state.contentSetting.ai
+    if (isAiIllust(artwork)) {
+      return state.contentSetting.r18 && state.contentSetting.ai
     }
-    return store.state.contentSetting.r18
+    return state.contentSetting.r18
   }
   if (artwork.x_restrict == 2) {
-    if (artwork.illust_ai_type == 2) {
-      return store.state.contentSetting.r18g && store.state.contentSetting.ai
+    if (isAiIllust(artwork)) {
+      return state.contentSetting.r18g && state.contentSetting.ai
     }
-    return store.state.contentSetting.r18g
+    return state.contentSetting.r18g
   }
-  if (artwork.illust_ai_type == 2) {
-    return store.state.contentSetting.ai
+  if (isAiIllust(artwork)) {
+    return state.contentSetting.ai
   }
   return true
 }
 
+export function filterCensoredIllust(artwork) {
+  return isArtworkNotCensored(artwork, store.state)
+}
+
 export function filterCensoredIllusts(list = []) {
-  console.log('list: ', list)
   return list.filter(filterCensoredIllust)
 }
 
@@ -109,6 +111,18 @@ export async function mintVerify(word = '', forceCheck = false) {
   } catch (error) {
     return true
   }
+}
+
+/**
+ * @param {string[]} blockTags
+ * @param {string[]|undefined} value
+ */
+export function isBlockTagHit(blockTags, value) {
+  let tags = Array.isArray(value) ? value : []
+  if (!tags.length || !blockTags.length) return false
+  if (typeof tags[0] != 'string') tags = tags.map(e => e.name)
+  const tagSet = new Set(tags)
+  return blockTags.some(tag => tagSet.has(tag))
 }
 
 export const BLOCK_INPUT_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]

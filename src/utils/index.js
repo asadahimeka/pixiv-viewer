@@ -355,15 +355,3 @@ export function formatIntlDate(date) {
     return date
   }
 }
-
-/**
- * @param {string[]} blockTags
- * @param {string[]|undefined} value
- */
-export function isBlockTagHit(blockTags, value) {
-  let tags = Array.isArray(value) ? value : []
-  if (!tags.length || !blockTags.length) return false
-  if (typeof tags[0] != 'string') tags = tags.map(e => e.name)
-  const tagSet = new Set(tags)
-  return blockTags.some(tag => tagSet.has(tag))
-}

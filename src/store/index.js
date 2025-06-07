@@ -2,8 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import _ from '@/lib/lodash'
 import { getSettingDef, LocalStorage, SessionStorage } from '@/utils/storage'
-import { isBlockTagHit, isSafari } from '@/utils'
+import { isSafari } from '@/utils'
 import { getSelectedLang } from '@/i18n'
+import { isArtworkNotCensored } from '@/utils/filter'
 
 Vue.use(Vuex)
 
@@ -73,32 +74,7 @@ export default new Vuex.Store({
     isR18On(state) {
       return state.contentSetting.r18 || state.contentSetting.r18g
     },
-    isCensored: state => artwork => {
-      if (state.blockUids.length && state.blockUids.includes(`${artwork?.author?.id}`)) {
-        return true
-      }
-
-      if (isBlockTagHit(state.blockTags, artwork?.tags)) {
-        return true
-      }
-
-      if (artwork.x_restrict == 1) {
-        if (artwork.illust_ai_type == 2) {
-          return !state.contentSetting.r18 || !state.contentSetting.ai
-        }
-        return !state.contentSetting.r18
-      }
-      if (artwork.x_restrict == 2) {
-        if (artwork.illust_ai_type == 2) {
-          return !state.contentSetting.r18g || !state.contentSetting.ai
-        }
-        return !state.contentSetting.r18g
-      }
-      if (artwork.illust_ai_type == 2) {
-        return !state.contentSetting.ai
-      }
-      return false
-    },
+    isCensored: state => artwork => !isArtworkNotCensored(artwork, state),
     wfProps: () => ({
       gutter: '8px',
       cols: {
