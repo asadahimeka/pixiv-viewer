@@ -10,8 +10,14 @@
       <van-tab :title="$t('follow.fav')" name="2">
         <MyBookmarks v-if="activeTab == 2" />
       </van-tab>
+      <van-tab :title="`${$t('follow.fav')}(${$t('common.novel')})`" name="7">
+        <MyBookmarksNovel v-if="activeTab == 7" />
+      </van-tab>
       <van-tab :title="$t('follow.user')" name="3">
         <FollowedUsers v-if="activeTab == 3" />
+      </van-tab>
+      <van-tab :title="$t('iHxoO4eLVL-CHSVMoVynN')" name="6">
+        <RecommUser v-if="activeTab == 6" />
       </van-tab>
       <van-tab :title="$t('follow.latest')" name="4">
         <LatestAllSite v-if="activeTab == 4" />
@@ -28,10 +34,20 @@ import LatestAllSite from './components/LatestAllSite.vue'
 import FeedsIllusts from './components/FeedsIllusts.vue'
 import FeedsNovels from './components/FeedsNovels.vue'
 import MyBookmarks from './MyBookmarks.vue'
+import RecommUser from '../Search/components/RecommUser.vue'
+import MyBookmarksNovel from './MyBookmarksNovel.vue'
 
 export default {
   name: 'Following',
-  components: { FeedsIllusts, FeedsNovels, FollowedUsers, LatestAllSite, MyBookmarks },
+  components: {
+    FeedsIllusts,
+    FeedsNovels,
+    FollowedUsers,
+    LatestAllSite,
+    MyBookmarks,
+    RecommUser,
+    MyBookmarksNovel,
+  },
   data() {
     return {
       activeTab: this.$route.params?.tab || '1',

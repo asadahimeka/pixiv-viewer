@@ -1619,9 +1619,9 @@ const api = {
    * @param {Number} id 画师ID
    * @param {Number} max_bookmark_id max_bookmark_id
    */
-  async getMemberFavorite(id, max_bookmark_id, nocache) {
+  async getMemberFavorite(id, max_bookmark_id, nocache = false) {
     const cacheKey = `memberFavorite_${id}_m${max_bookmark_id}`
-    let memberFavorite = await getCache(cacheKey)
+    let memberFavorite = nocache ? null : await getCache(cacheKey)
 
     if (!memberFavorite) {
       memberFavorite = {}
@@ -1639,7 +1639,7 @@ const api = {
         memberFavorite.next = url.get('max_bookmark_id')
         memberFavorite.illusts = res.illusts.map(art => parseIllust(art))
 
-        setCache(cacheKey, memberFavorite, 60 * 60 * 12)
+        !nocache && setCache(cacheKey, memberFavorite, 60 * 60 * 12)
       } else if (res.error) {
         return {
           status: -1,
@@ -1657,24 +1657,27 @@ const api = {
     return { status: 0, data: memberFavorite }
   },
 
-  async getMemberFavoriteNovel(id, max_bookmark_id) {
+  async getMemberFavoriteNovel(id, max_bookmark_id, nocache = false) {
     const cacheKey = `member_fav_novel_${id}_m${max_bookmark_id}`
-    let memberFavorite = await getCache(cacheKey)
+    let memberFavorite = nocache ? null : await getCache(cacheKey)
 
     if (!memberFavorite) {
       memberFavorite = {}
 
-      const res = await get('/favorite_novel', {
-        id,
-        max_bookmark_id,
-      })
+      const params = { id, max_bookmark_id }
+      const headers = {}
+      if (nocache) {
+        params.t = Date.now()
+        headers['cache-control'] = 'no-cache'
+      }
+      const res = await get('/favorite_novel', params, { headers })
 
       if (res.novels) {
         const url = new URLSearchParams(res.next_url)
         memberFavorite.next = url.get('max_bookmark_id')
         memberFavorite.novels = res.novels.map(art => parseNovel(art))
 
-        setCache(cacheKey, memberFavorite, 60 * 60 * 12)
+        !nocache && setCache(cacheKey, memberFavorite, 60 * 60 * 12)
       } else if (res.error) {
         return {
           status: -1,

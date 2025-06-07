@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search search-user">
     <div class="search-bar-wrap">
       <van-search
         v-model="keywords"
