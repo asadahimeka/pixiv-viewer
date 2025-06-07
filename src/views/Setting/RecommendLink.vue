@@ -65,6 +65,13 @@
     />
     <van-cell
       center
+      title="MixPiv"
+      is-link
+      label="https://mixpiv.cocomi.eu.org"
+      @click="openLink('https://mixpiv.cocomi.eu.org')"
+    />
+    <van-cell
+      center
       title="Moeview"
       is-link
       label="https://moeview.cocomi.eu.org"
