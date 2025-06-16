@@ -127,6 +127,11 @@
           <van-switch :value="appSetting.manualLoadRelated" size="24" @change="v => saveAppSetting('manualLoadRelated', v, true)" />
         </template>
       </van-cell>
+      <van-cell center :title="$t('60RSxzAvXAF1Lfp_oqv7h')">
+        <template #right-icon>
+          <van-switch :value="appSetting.autoPlayUgoira" size="24" @change="v => saveAppSetting('autoPlayUgoira', v, true)" />
+        </template>
+      </van-cell>
       <van-cell v-if="isNavSHSetShow" center :title="$t('Gry1iNTJ2wm_9FMG_JpBT')">
         <template #right-icon>
           <van-switch :value="appSetting.hideNavBarOnScroll" size="24" @change="v => saveAppSetting('hideNavBarOnScroll', v, true)" />
@@ -411,6 +416,7 @@ export default {
         show: false,
         actions: [
           { name: 'Medium', subname: this.$t('setting.img_res.m') },
+          { name: 'Large(WebP)', subname: this.$t('setting.img_res.m') },
           { name: 'Large', subname: this.$t('setting.img_res.l') },
           { name: 'Original', subname: this.$t('setting.img_res.o'), disabled: LocalStorage.get('PXIMG_PROXY') != 'i.pixiv.re' },
         ],

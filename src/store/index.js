@@ -65,6 +65,7 @@ export default new Vuex.Store({
       pageFont: /zh-|ja/.test(getSelectedLang()) ? 'LXGW WenKai Screen' : '',
       hideNavBarOnScroll: true,
       manualLoadRelated: false,
+      autoPlayUgoira: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

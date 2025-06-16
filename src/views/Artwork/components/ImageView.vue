@@ -9,6 +9,7 @@
       v-for="(url, index) in artwork.images"
       :key="index"
       class="image-box"
+      :style="index==0&&artworkRatio>0.6?`--ratio:${artworkRatio}`:''"
     >
       <!-- :style="index === 0 ? { width: `${displayWidth}px`, height: `${displayWidth / (artwork.width / artwork.height)}px` } : null" -->
       <!-- :style="{height: `${(375/artwork.width*artwork.height).toFixed(2)}px`}" -->
@@ -80,7 +81,7 @@ import { sleep, fancyboxShow, loadScript, downloadFile } from '@/utils'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 
-const { isLongpressDL, imgReso } = store.state.appSetting
+const { isLongpressDL, imgReso, autoPlayUgoira } = store.state.appSetting
 
 export default {
   props: {
@@ -107,6 +108,9 @@ export default {
     ...mapGetters(['isCensored']),
     censored() {
       return this.isCensored(this.artwork)
+    },
+    artworkRatio() {
+      return this.artwork.width / this.artwork.height
     },
     seasonEffectSrc() {
       const effects = this.$store.state.seasonEffects
@@ -136,9 +140,10 @@ export default {
   methods: {
     getImgUrl(urls) {
       const urlMap = {
-        Medium: urls.l,
-        Large: urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/'),
-        Original: urls.o,
+        'Medium': urls.l,
+        'Large(WebP)': urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/'),
+        'Large': urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/'),
+        'Original': urls.o,
       }
       return urlMap[imgReso] || urls.l
     },
@@ -423,6 +428,10 @@ export default {
       await downloadFile(blob, `${getArtworkFileName(this.artwork)}.mp4`, { subDir: 'ugoira' })
     },
     download(type) {
+      if (this.progressShow) {
+        this.$toast(this.$t('tips.loading'))
+        return
+      }
       const needPlay = !['MP4(Server)', 'Other'].includes(type)
       if (!this.ugoira && needPlay) {
         this.$toast(this.$t('artwork.download.ugoira.tip'))
@@ -473,6 +482,10 @@ export default {
             this.isShrink = true
           } else {
             this.isShrink = false
+          }
+
+          if (this.artwork.type == 'ugoira' && autoPlayUgoira) {
+            this.playUgoira()
           }
         }, 0)
       })
@@ -636,5 +649,10 @@ export default {
   height: 100%;
   pointer-events: none;
   background: var(--bg) no-repeat center center / contain;
+}
+@media screen and (max-width: 600px) {
+  .ia-cont .ia-left .image-box {
+    aspect-ratio: var(--ratio);
+  }
 }
 </style>
