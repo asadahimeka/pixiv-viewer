@@ -65,7 +65,9 @@ import { fancyboxShow, downloadFile } from '@/utils'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 
-const { isImageCardOuterMeta, isLongpressDL, isLongpressBlock } = store.state.appSetting
+const { isImageCardOuterMeta, isLongpressDL, isLongpressBlock, imgReso } = store.state.appSetting
+const isLargeWebp = imgReso == 'Large(WebP)'
+const getLargeWebpSrc = src => src.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/')
 
 export default {
   props: {
@@ -102,10 +104,9 @@ export default {
   },
   computed: {
     imgSrc() {
-      if (this.square) {
-        return this.artwork.images[0].s
-      }
-      return this.artwork.images[0].m
+      const i0 = this.artwork.images[0]
+      if (this.square) return i0.s
+      return isLargeWebp ? getLargeWebpSrc(i0.l) : i0.m
     },
     isAiIllust() {
       return isAiIllust(this.artwork)
@@ -198,7 +199,9 @@ export default {
         this.click(this.artwork.id)
         return
       }
-      const getSrc = e => e.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/')
+      const getSrc = isLargeWebp
+        ? e => getLargeWebpSrc(e.l)
+        : e => e.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/')
       if (store.state.appSetting.isUseFancybox) {
         fancyboxShow(this.artwork, 0, getSrc)
       } else {
