@@ -14,8 +14,10 @@
       <ImageCard
         v-for="art in artList"
         :key="art.id"
-        mode="all"
         :artwork="art"
+        :data-last-seen-text="art.id==lastId?$t('0r7KFznJTs3SQlvp4KQ84'):undefined"
+        :class="{'last-seen':art.id==lastId}"
+        mode="all"
         @click-card="toArtwork(art)"
       />
     </wf-cont>
@@ -27,6 +29,7 @@ import { localApi } from '@/api'
 import { getFollowingIllusts } from '@/api/user'
 import ImageCard from '@/components/ImageCard'
 import _ from '@/lib/lodash'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 
 export default {
   name: 'FeedsIllusts',
@@ -40,7 +43,15 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      lastId: null,
     }
+  },
+  async activated() {
+    this.lastId = await getCache('feeds.last.seen.id')
+  },
+  deactivated() {
+    const lastId = this.artList[this.artList.length - 1]?.id
+    setCache('feeds.last.seen.id', lastId)
   },
   methods: {
     getRankList: _.throttle(async function () {
@@ -77,4 +88,18 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.last-seen::after
+  content attr(data-last-seen-text)
+  position absolute
+  top 0
+  left 0
+  display flex
+  justify-content center
+  align-items center
+  width 100%
+  height 100%
+  font-size 0.36rem
+  background rgba(0,0,0,0.72)
+  color white
+  pointer-events none
 </style>
