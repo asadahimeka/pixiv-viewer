@@ -10,7 +10,7 @@
           <van-icon name="arrow-left" size="0.6rem" />
         </div>
       </template>
-      <div class="ia-cont">
+      <div class="ia-cont" :class="{ 'landscape-1-art': isLandscape1Art }">
         <div class="ia-left">
           <van-loading v-if="loading" size="50px" />
           <ImageView ref="imgView" :artwork="artwork" @open-download="ugoiraDownloadPanelShow = true" />
@@ -152,6 +152,9 @@ export default {
     ...mapGetters(['isCensored']),
     isSimulatedMeta() {
       return this.artwork.width == 0
+    },
+    isLandscape1Art() {
+      return this.artwork?.images?.length == 1 && this.artwork?.width > this.artwork?.height
     },
   },
   watch: {
@@ -438,6 +441,14 @@ img[src*="https://api.moedog.org/qr/?url="]
     box-sizing border-box
     overflow hidden
 
+@media screen and (min-width: 1600px)
+  .ia-cont
+    &.landscape-1-art
+      align-items center
+      .ia-left
+        margin-top -.2rem
+      .ia-right
+        min-height 100vh
 @media screen and (max-width: 1200px)
   .ia-cont
     display block !important
@@ -458,6 +469,17 @@ img[src*="https://api.moedog.org/qr/?url="]
     padding-right 0 !important
     .artwork-meta
       margin-top 10px !important
+
+  &.landscape-1-art
+    display: flex !important
+    flex-direction: column
+    .ia-left
+      flex 1
+      min-height 55vh
+    .ia-right
+      position: relative
+      width: 100% !important
+      max-width: 100% !important
 
 .artwork
   ::v-deep .top-bar-wrap
