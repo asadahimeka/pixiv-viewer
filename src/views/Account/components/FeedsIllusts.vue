@@ -15,8 +15,8 @@
         v-for="art in artList"
         :key="art.id"
         :artwork="art"
-        :data-last-seen-text="art.id==lastId?$t('0r7KFznJTs3SQlvp4KQ84'):undefined"
-        :class="{'last-seen':art.id==lastId}"
+        :data-last-seen-text="isLastSeen(art.id)?$t('0r7KFznJTs3SQlvp4KQ84'):undefined"
+        :class="{'last-seen': isLastSeen(art.id)}"
         mode="all"
         @click-card="toArtwork(art)"
       />
@@ -46,14 +46,17 @@ export default {
       lastId: null,
     }
   },
-  async activated() {
+  async created() {
     this.lastId = await getCache('feeds.last.seen.id')
   },
-  deactivated() {
-    const lastId = this.artList[this.artList.length - 1]?.id
+  destroyed() {
+    const lastId = this.artList[0]?.id
     setCache('feeds.last.seen.id', lastId)
   },
   methods: {
+    isLastSeen(id) {
+      return id != this.artList[0]?.id && id == this.lastId
+    },
     getRankList: _.throttle(async function () {
       this.loading = true
       const res = window.APP_CONFIG.useLocalAppApi
