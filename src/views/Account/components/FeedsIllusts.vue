@@ -50,8 +50,7 @@ export default {
     this.lastId = await getCache('feeds.last.seen.id')
   },
   destroyed() {
-    const lastId = this.artList[0]?.id
-    setCache('feeds.last.seen.id', lastId)
+    setCache('feeds.last.seen.id', this.artList[0]?.id)
   },
   methods: {
     isLastSeen(id) {
@@ -67,6 +66,10 @@ export default {
           ...this.artList,
           ...res.data,
         ], 'id')
+
+        if (this.curPage == 1) {
+          setCache('feeds.last.seen.id', this.artList[0]?.id)
+        }
 
         this.loading = false
         this.curPage++

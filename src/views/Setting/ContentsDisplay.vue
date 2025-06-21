@@ -64,7 +64,7 @@
 <script>
 import _ from '@/lib/lodash'
 import { Dialog } from 'vant'
-import { mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import store from '@/store'
 import { LocalStorage } from '@/utils/storage'
 
@@ -83,6 +83,7 @@ export default {
     return { title: this.$t('display.title') }
   },
   computed: {
+    ...mapGetters(['isLoggedIn']),
     appSetting() {
       return store.state.appSetting
     },
@@ -139,7 +140,7 @@ export default {
           .then(() => {
             if (type === 1) {
               this.currentContentSetting.r18 = checked
-              LocalStorage.set('PXV_NSFW_ON', 1)
+              LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
             }
             if (type === 2) {
               this.currentContentSetting.r18g = checked
@@ -151,7 +152,7 @@ export default {
                   location.reload()
                 })
               }, 200)
-              LocalStorage.set('PXV_NSFW_ON', 1)
+              LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
             }
             this.saveSwitchValues()
             type === 1 && setTimeout(() => {

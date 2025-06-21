@@ -67,7 +67,9 @@ import { getArtworkFileName } from '@/store/actions/filename'
 
 const { isImageCardOuterMeta, isLongpressDL, isLongpressBlock, imgReso } = store.state.appSetting
 const isLargeWebp = imgReso == 'Large(WebP)'
-const getLargeWebpSrc = src => src.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/')
+const getLargeWebpSrc = (src, fbk) => {
+  return src?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') || fbk
+}
 
 export default {
   props: {
@@ -106,7 +108,7 @@ export default {
     imgSrc() {
       const i0 = this.artwork.images[0]
       if (this.square) return i0.s
-      return isLargeWebp ? getLargeWebpSrc(i0.l) : i0.m
+      return isLargeWebp ? getLargeWebpSrc(i0.l, i0.m) : i0.m
     },
     isAiIllust() {
       return isAiIllust(this.artwork)

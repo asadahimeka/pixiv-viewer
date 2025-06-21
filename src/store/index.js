@@ -24,7 +24,7 @@ export default new Vuex.Store({
     contentSetting: getSettingDef('PXV_CNT_SHOW', {
       r18: false,
       r18g: false,
-      ai: true,
+      ai: false,
     }),
     /** @type {object|null} */
     user: null,

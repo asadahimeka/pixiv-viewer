@@ -15,7 +15,8 @@
 <p align="center">
 <img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer" >
 <img src="https://img.shields.io/badge/license-MIT-green" >
-<img src="https://api.netlify.com/api/v1/badges/84d224a8-1630-4f47-94c2-ffb0e6da920a/deploy-status" >
+<img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages">
+<!-- <img src="https://api.netlify.com/api/v1/badges/84d224a8-1630-4f47-94c2-ffb0e6da920a/deploy-status" > -->
 <img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer-app/total?logo=github" alt >
 <img src="https://img.shields.io/github/package-json/dependency-version/asadahimeka/pixiv-viewer/vue" >
 <img src="https://img.shields.io/github/package-json/dependency-version/asadahimeka/pixiv-viewer/dev/@vue/cli-service" >

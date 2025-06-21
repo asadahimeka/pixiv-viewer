@@ -89,11 +89,13 @@ export async function initUser() {
     } else {
       // removeCookie('CSRFTOKEN')
       sessionStorage.removeItem('PXV_NOW_CSRFTOKEN')
+      LocalStorage.remove('PXV_NOW_COOKIE')
       throw new Error(i18n.t('k0V0c1MNZGYs9MCqjx8QL'))
     }
   } catch (err) {
     // removeCookie('CSRFTOKEN')
     sessionStorage.removeItem('PXV_NOW_CSRFTOKEN')
+    LocalStorage.remove('PXV_NOW_COOKIE')
     throw err
   }
 }
