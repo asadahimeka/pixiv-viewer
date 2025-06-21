@@ -134,7 +134,8 @@
         "sans": "Sans",
         "serif": "Serif",
         "size": "Dimensione del font",
-        "weight": "Peso del testo"
+        "weight": "Peso del testo",
+        "direct_hc": "Colonne orizzontali"
       },
       "title": "Impostazioni del romanzo"
     }

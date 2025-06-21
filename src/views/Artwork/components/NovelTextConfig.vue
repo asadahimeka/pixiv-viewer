@@ -26,6 +26,7 @@
             <van-radio-group v-model="novelTextConfig.direction" direction="horizontal">
               <van-radio name="h">{{ $t('novel.settings.text.direct_h') }}</van-radio>
               <van-radio name="v">{{ $t('novel.settings.text.direct_v') }}</van-radio>
+              <van-radio name="hc">{{ $t('novel.settings.text.direct_hc') }}</van-radio>
             </van-radio-group>
           </div>
         </div>

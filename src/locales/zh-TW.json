@@ -128,7 +128,8 @@
         "sans": "黑體",
         "serif": "宋體",
         "size": "文字大小",
-        "weight": "文字字重"
+        "weight": "文字字重",
+        "direct_hc": "橫向分列"
       },
       "title": "小說設定"
     }

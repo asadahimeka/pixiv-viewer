@@ -155,7 +155,8 @@
         "sans": "Sem",
         "serif": "Serif",
         "size": "Tamanho da fonte",
-        "weight": "Peso do texto"
+        "weight": "Peso do texto",
+        "direct_hc": "Colunas horizontais"
       },
       "title": "Configurações de romance"
     }

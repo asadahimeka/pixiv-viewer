@@ -128,7 +128,8 @@
         "sans": "Sans",
         "serif": "Serife",
         "size": "Schriftgröße",
-        "weight": "Textgewicht"
+        "weight": "Textgewicht",
+        "direct_hc": "Horizontale Spalten"
       },
       "title": "Neuartige Einstellungen"
     }

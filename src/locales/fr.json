@@ -128,7 +128,8 @@
         "sans": "Sans",
         "serif": "Serif",
         "size": "Taille de police",
-        "weight": "Poids du texte"
+        "weight": "Poids du texte",
+        "direct_hc": "Colonnes horizontales"
       },
       "title": "Nouveaux paramètres"
     }

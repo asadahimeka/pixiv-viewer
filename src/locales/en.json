@@ -128,7 +128,8 @@
         "sans": "Sans",
         "serif": "Serif",
         "size": "Font size",
-        "weight": "Text weight"
+        "weight": "Text weight",
+        "direct_hc": "Horizontal Columns"
       },
       "title": "Novel Settings"
     }
@@ -516,7 +517,7 @@
   "E7xGZBPkIrdAB9Wea7xpP": "Pixiv ranking widescreen display",
   "k6pYRO1Zkj1lEn7icNblt": "RandomSexyPicParser",
   "5g7BkTB_GvTwyZEV7iTRu": "Greasyfork of adults",
-  "EbXDbF2ntTw8_yqu4C3NH": "Right-click the new label image to optimize display",
+  "EbXDbF2ntTw8_yqu4C3NH": "New tab image display optimized",
   "uBK-rFPkvogiYvL4hLauA": "Katakana Terminator",
   "ngWsK_SI194uLBKzA3XQY": "agefans Enhance",
   "l0dzMCcjz576ZvVjodxOq": "Github enhancement - high-speed download",

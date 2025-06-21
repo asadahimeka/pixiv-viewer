@@ -155,7 +155,8 @@
         "sans": "sin",
         "serif": "Serifa",
         "size": "Tamaño de fuente",
-        "weight": "Peso del texto"
+        "weight": "Peso del texto",
+        "direct_hc": "Columnas horizontales"
       },
       "title": "Configuraciones novedosas"
     }
