@@ -56,7 +56,7 @@ export default {
       }).then(async () => {
         this.artList = []
         await setCache('illusts.history', null)
-      })
+      }).catch(() => {})
     },
   },
 }

@@ -61,7 +61,7 @@ export default {
       }).then(async () => {
         this.artList = []
         await setCache('users.history', null)
-      })
+      }).catch(() => {})
     },
   },
 }

@@ -162,6 +162,8 @@
     <van-cell-group :title="$t('_AEPlcZHsKjnjPXQBX59p')">
       <van-cell center :title="$t('Wc3yMDMSkHUhoGx22bsP8')" is-link @click="importSettings" />
       <van-cell center :title="$t('Bi5BpYwKhUhWcm_RueGZN')" is-link @click="exportSettings" />
+      <van-cell center :title="$t('zhO6bfsyPM1-GpZgyer-L')" is-link @click="importHistory" />
+      <van-cell center :title="$t('VV1Yh4x2vpWMf-YwVIRSl')" is-link @click="exportHistory" />
     </van-cell-group>
 
     <van-dialog
@@ -355,6 +357,7 @@ import { mintVerify } from '@/utils/filter'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import { isFsaSupported, getMainDirHandle, setMainDirHandle } from '@/utils/fsa'
 import { getPageFontModel } from '@/utils/font'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 import NovelTextConfig from '../Artwork/components/NovelTextConfig.vue'
 
 export default {
@@ -755,13 +758,13 @@ export default {
             localStorage.setItem(k, settings[k])
           })
           window.umami?.track('importSettings')
-          this.$toast.success('Success')
+          this.$toast.success(this.$t('0NCaoKpvYXQvFiCsbcPpK'))
           setTimeout(() => {
             location.reload()
           }, 500)
         } catch (err) {
           console.log('err: ', err)
-          this.$toast(`Error: ${err.message}`)
+          this.$toast(`${this.$t('-LmNvXZulUIIHq_iCdxda')}: ${err.message}`)
         }
       }
       input.click()
@@ -776,6 +779,42 @@ export default {
       }
       const blob = new Blob([btoa(encodeURI(JSON.stringify(settings)))])
       downloadURL(blob, 'pixiv-viewer-settings.txt')
+    },
+    async importHistory() {
+      const input = document.createElement('input')
+      input.type = 'file'
+      input.accept = '.json'
+      input.style.display = 'none'
+      input.onchange = async e => {
+        try {
+          const text = await readTextFile(e.target.files[0])
+          const history = JSON.parse(text)
+          console.log('history: ', history)
+          const keys = ['illusts.history', 'novels.history', 'users.history']
+          await Promise.all(history.map(async (arr, i) => {
+            if (!Array.isArray(arr)) throw new Error('Data incorrect')
+            return setCache(keys[i], arr)
+          }))
+          window.umami?.track('importHistory')
+          this.$toast.success(this.$t('0NCaoKpvYXQvFiCsbcPpK'))
+          setTimeout(() => {
+            location.reload()
+          }, 500)
+        } catch (err) {
+          console.log('err: ', err)
+          this.$toast(`${this.$t('-LmNvXZulUIIHq_iCdxda')}: ${err.message}`)
+        }
+      }
+      input.click()
+    },
+    async exportHistory() {
+      window.umami?.track('exportHistory')
+      const history = await Promise.all([
+        getCache('illusts.history'),
+        getCache('novels.history'),
+        getCache('users.history'),
+      ])
+      downloadURL(new Blob([JSON.stringify(history)]), `pixiv-viewer-history-${Date.now()}.json`)
     },
     async checkURL(val, checkFn) {
       if (!isURL(val)) {
