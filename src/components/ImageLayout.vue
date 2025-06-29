@@ -102,11 +102,6 @@ export default {
   contain: layout paint;
 }
 
-.image-layout .image-card {
-  will-change: transform;
-  transform: translateZ(0);
-}
-
 .flex-waterfall .image-card {
   width: 4.5rem;
 }

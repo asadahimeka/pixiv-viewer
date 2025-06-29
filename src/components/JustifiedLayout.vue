@@ -59,7 +59,7 @@ export default {
         const b = boxes[i]
         items[i].elm.style.width = `${b.width}px`
         items[i].elm.style.height = `${b.height}px`
-        items[i].elm.style.transform = `translate3d(${b.left}px, ${b.top}px, 0)`
+        items[i].elm.style.transform = `translate(${b.left}px, ${b.top}px)`
       }
     },
     getChildren() {

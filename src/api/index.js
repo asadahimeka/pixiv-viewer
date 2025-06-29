@@ -195,8 +195,8 @@ const parseWebRankIllust = (d, mode, content) => {
     o: 'https://i.loli.best/' + d.illust_id,
   }]
 
-  let avatar = d.profile_img
-  if (!avatar.includes('s.pximg.net')) {
+  let avatar = d.profileImageUrl || ''
+  if (avatar && !avatar.includes('s.pximg.net')) {
     avatar = imgProxy(avatar)
   }
 
@@ -235,8 +235,8 @@ export const parseWebApiIllust = d => {
     o: 'https://i.loli.best/' + d.id,
   }]
 
-  let avatar = d.profileImageUrl
-  if (!avatar.includes('s.pximg.net')) {
+  let avatar = d.profileImageUrl || ''
+  if (avatar && !avatar.includes('s.pximg.net')) {
     avatar = imgProxy(avatar)
   }
 
