@@ -79,7 +79,7 @@
       </li>
       <template v-for="(tag, ti) in artwork.tags">
         <li
-          :key="ti + '_1'"
+          :key="ti + tag.name + '_1'"
           v-longpress="() => onTagLongpress(tag.name)"
           class="tag name"
           @click="toSearch(tag.name)"
@@ -87,7 +87,7 @@
         >
           #{{ tag.name }}
         </li>
-        <li v-if="showTranslatedTags && tag.translated_name" :key="ti + '_2'" class="tag translated" @click="toSearch(tag.translated_name)">
+        <li v-if="showTranslatedTags && tag.translated_name" :key="ti + tag.translated_name + '_2'" class="tag translated" @click="toSearch(tag.translated_name)">
           {{ tag.translated_name }}
         </li>
       </template>
@@ -359,6 +359,7 @@ export default {
       return false
     },
     onTagLongpress(tag) {
+      console.log('=================tag: ', tag)
       Dialog.confirm({
         title: this.$t('LEaBJrLF0DUhyTe6-fKYT'),
         message: tag,
