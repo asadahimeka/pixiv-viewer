@@ -57,11 +57,7 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.getRankList()
-      }, 200)
-    })
+    this.getRankList()
   },
   methods: {
     novelTagsText(el) {
@@ -140,7 +136,7 @@ export default {
 
     .swipe-wrap {
       height: 100%;
-      border-radius: 20px;
+      // border-radius: 20px;
       overflow: hidden;
 
       .swipe-item {
@@ -156,7 +152,7 @@ export default {
         .image-card {
           // width: 50vw;
           font-size: 0;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           box-sizing: border-box;
           width: 100%;
           height: 97%;
@@ -164,7 +160,7 @@ export default {
         }
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
           height: 97%;

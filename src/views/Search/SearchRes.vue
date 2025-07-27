@@ -33,6 +33,10 @@
     <div v-if="focus" class="search-dropdown">
       <div v-if="keywords.trim()" class="pid-n-uid">
         <div class="keyword" @click="onSearch">{{ $t('search.seach_tag') }} {{ keywords.trim() }} </div>
+        <template v-if="showR18OrSafeQuickTag">
+          <div class="keyword" @click="onSearch('R18')">{{ $t('pL1gF_vTo1c_iF5GpBIDA') }} {{ keywords.trim() }} </div>
+          <div class="keyword" @click="onSearch('safe')">{{ $t('IxG-Y2odr_0OKUJbaqV0-') }} {{ keywords.trim() }} </div>
+        </template>
         <div v-if="isSelfHibi" class="keyword" @click="searchUser">
           {{ $t('search.search_user') }} {{ keywords.trim() }}
         </div>
@@ -41,7 +45,7 @@
         <template v-for="n in pidOrUidList">
           <div :key="'p_' + n" class="keyword" @click="toPidPage(n)">→ {{ $t('common.artwork') }} ID: {{ n }} </div>
           <div :key="'u_' + n" class="keyword" @click="toUidPage(n)">→ {{ $t('common.user') }} ID: {{ n }} </div>
-          <!-- <div :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div> -->
+          <div v-if="n.length<6" :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div>
         </template>
       </div>
       <div v-if="keywords.trim() && autoCompleteTagList.length" class="search-history">
@@ -71,7 +75,12 @@
             <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
             <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
           </template>
-          <van-dropdown-item ref="s_date" :title="$t('common.date')" :lazy-render="false" @open="onSelDateOpen">
+          <van-dropdown-item
+            ref="s_date"
+            :title="searchParams.start_date? searchParams.start_date + '~' + searchParams.end_date : $t('common.date')"
+            :lazy-render="false"
+            @open="onSelDateOpen"
+          >
             <van-calendar
               ref="selDate"
               color="#f2c358"
@@ -113,8 +122,8 @@
         :error-text="$t('tips.net_err')"
         @load="doSearch"
       >
-        <wf-cont v-bind="$store.getters.wfProps">
-          <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork($event)" />
+        <wf-cont>
+          <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
         </wf-cont>
       </van-list>
       <van-loading v-show="keywords.trim() && artList.length == 0 && !finished" class="loading" :size="'50px'" />
@@ -125,16 +134,17 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
 import api from '@/api'
+import store from '@/store'
 import { notSelfHibiApi } from '@/consts'
-import { mintVerify } from '@/utils/filter'
+import { mintVerify, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE, BLOCK_SEARCH_WORD_RE, BLOCK_RESULT_RE } from '@/utils/filter'
 import { i18n } from '@/i18n'
 import ImageCard from '@/components/ImageCard'
 import PopularPreview from './components/PopularPreview.vue'
 
-const BLOCK_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]
+const ARTWORK_LINK_RE = /https?:\/\/.+\/artworks\/(\d+)/i
 
 export default {
   name: 'SearchRes',
@@ -157,16 +167,10 @@ export default {
       autoCompleteTagList: [],
       usersIriTag: '',
       usersIriTags: [
-        { text: 'users入り', value: '' },
-        { text: '30000users入り', value: '30000users入り' },
-        { text: '20000users入り', value: '20000users入り' },
-        { text: '10000users入り', value: '10000users入り' },
-        { text: '7500users入り', value: '7500users入り' },
-        { text: '5000users入り', value: '5000users入り' },
-        { text: '1000users入り', value: '1000users入り' },
-        { text: '500users入り', value: '500users入り' },
-        { text: '250users入り', value: '250users入り' },
-        { text: '100users入り', value: '100users入り' },
+        { text: this.$t('7PnT90lP_mZTPfL3Uwlhl'), value: '' },
+        ...[30000, 20000, 10000, 7500, 5000, 1000, 500, 250, 100].map(e => {
+          return { text: i18n.t('8SuotxAmYS7l1QCfLz0Yv', [e]), value: `${e}users入り` }
+        }),
       ],
       minDate: new Date('2007/09/13'),
       maxDate: new Date(),
@@ -197,13 +201,20 @@ export default {
       isSelfHibi: !notSelfHibiApi,
     }
   },
-  head: {
-    title: i18n.t('search.search'),
+  head() {
+    return {
+      title: this.$t('search.search'),
+    }
   },
   computed: {
     ...mapState(['searchHistory']),
     pidOrUidList() {
       return this.keywords.match(/(\d+)/g) || []
+    },
+    showR18OrSafeQuickTag() {
+      return store.getters.isR18On &&
+        !this.pidOrUidList.length &&
+        !this.keywords.includes('R-18')
     },
   },
   watch: {
@@ -256,19 +267,40 @@ export default {
         listWrap && listWrap.scrollTo({ top: 0 })
       })
     },
+    $route() {
+      if (this.$route.name != 'SearchKeyword') return
+      const keyword = (this.$route.params.keyword || '').trim()
+      console.log('watch route SearchKeyword: ', keyword)
+      console.log('watch route this.keywords: ', this.keywords)
+      if (!keyword || keyword == this.keywords.trim()) return
+      console.log('watch route Searching')
+      this.showPopPreview = false
+      this.keywords = keyword + ' '
+      this.reset()
+      this.doSearch(this.keywords)
+    },
   },
-  activated() {
-    console.log('-------------activated: SearchKeyword')
-    if (this.$route.name != 'SearchKeyword') return
+  mounted() {
     const keyword = (this.$route.params.keyword || '').trim()
-    console.log('keyword: ', keyword)
-    console.log('this.keywords: ', this.keywords)
-    if (!keyword || keyword == this.keywords.trim()) return
+    console.log('mounted: SearchKeyword: ', keyword)
+    if (!keyword) return
     this.showPopPreview = false
     this.keywords = keyword + ' '
     this.reset()
     this.doSearch(this.keywords)
   },
+  // activated() {
+  //   console.log('-------------activated: SearchKeyword')
+  //   if (this.$route.name != 'SearchKeyword') return
+  //   const keyword = (this.$route.params.keyword || '').trim()
+  //   console.log('keyword: ', keyword)
+  //   console.log('this.keywords: ', this.keywords)
+  //   if (!keyword || keyword == this.keywords.trim()) return
+  //   this.showPopPreview = false
+  //   this.keywords = keyword + ' '
+  //   this.reset()
+  //   this.doSearch(this.keywords)
+  // },
   methods: {
     reset() {
       this.curPage = 1
@@ -309,9 +341,9 @@ export default {
         return
       }
 
-      this.$router.push(`/search/${encodeURIComponent(keywords)}`)
       this.showPopPreview = false
       this.keywords = keywords + ' '
+      this.$router.push(`/search/${encodeURIComponent(keywords)}`)
       this.reset()
       this.doSearch(this.keywords)
     },
@@ -326,7 +358,7 @@ export default {
       }
       console.log(`doSearch: ${val}`)
 
-      if (/スカラマシュ|散兵|放浪者(原神)|流浪者(原神)/i.test(val) || !(await mintVerify(val))) {
+      if (BLOCK_SEARCH_WORD_RE.test(val) || !(await mintVerify(val))) {
         this.artList = []
         this.finished = true
         this.curPage = 1
@@ -335,19 +367,21 @@ export default {
 
       this.setSearchHistory(val)
 
-      if (!(this.$store.state.SETTING.r18 || this.$store.state.SETTING.r18g)) {
-        if (BLOCK_WORDS.some(e => e.test(val))) {
+      if (!(this.$store.state.contentSetting.r18 || this.$store.state.contentSetting.r18g)) {
+        if (BLOCK_INPUT_WORDS.some(e => e.test(val))) {
           this.artList = []
           this.finished = true
           this.curPage = 1
           return
         }
         val += ' -R-18 -R18 -18+'
+      } else if (this.searchParams.mode == 'title_and_caption') {
+        val = val.replace(/ -?R-18/g, '')
       }
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       const params = _.pickBy(this.searchParams, Boolean)
-      if (!this.$store.state.SETTING.ai) {
-        params.search_ai_type = 0
+      if (!this.$store.state.contentSetting.ai) {
+        params.search_ai_type = 1
       }
       this.loading = true
       const res = await api.search(val, this.curPage, params)
@@ -368,12 +402,20 @@ export default {
             artList = artList.filter(e => e.like > Number(match && match[0]))
           }
 
+          if (this.keywords__.includes(' R-18')) {
+            artList = artList.filter(e => e.x_restrict > 0)
+          }
+
+          if (this.keywords__.includes(' -R-18')) {
+            artList = artList.filter(e => e.x_restrict == 0)
+          }
+
           artList = artList.filter(e => {
             return !(
-              e.like < 5 ||
-              /恋童|ペド|幼女|スカラマシュ|散兵/.test(JSON.stringify(e.tags)) ||
-              /恋童|幼女|进群|加好友|度盘|スカラマシュ|散兵/.test(e.title) ||
-              /恋童|幼女|进群|加好友|度盘|スカラマシュ|散兵/.test(e.caption)
+              e.like < Number(store.state.appSetting.searchListMinFavNum) ||
+              BLOCK_RESULT_RE.test(JSON.stringify(e.tags)) ||
+              BLOCK_RESULT_RE.test(e.title) ||
+              BLOCK_RESULT_RE.test(e.caption)
             )
           })
 
@@ -393,11 +435,11 @@ export default {
         this.error = true
       }
     }, 1000),
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
     onSearchInput: _.debounce(async function () {
@@ -406,12 +448,12 @@ export default {
         this.autoCompleteTagList = []
         return
       }
-      const id = this.lastWord.match(/https?:\/\/.+\/artworks\/(\d+)/i)?.[1]
+      const id = this.lastWord.match(ARTWORK_LINK_RE)?.[1]
       if (id) {
         this.toPidPage(id)
         return
       }
-      if (/スカラマシュ|散|(^\d+$)/i.test(this.lastWord)) {
+      if (BLOCK_LAST_WORD_RE.test(this.lastWord)) {
         return
       }
       const res = await api.getTagsAutocomplete(this.lastWord)
@@ -422,11 +464,13 @@ export default {
     onFocus() {
       this.focus = true // 获取焦点
     },
-    async onSearch() {
+    async onSearch(searchType) {
       console.log('onSearch: ', this.keywords)
       this.focus = false
-      // document.querySelector('.app-main')?.scrollTo(0, 0)
-      this.keywords += ' '
+      let words = this.keywords
+      if (searchType == 'R18') words = words.trim() + ' R-18'
+      if (searchType == 'safe') words = words.trim() + ' -R-18'
+      this.keywords = words + ' '
       this.$router.push(`/search/${encodeURIComponent(this.keywords.trim())}`)
       this.reset()
       this.doSearch(this.keywords)
@@ -434,7 +478,6 @@ export default {
     searchTag(keywords) {
       console.log('------- searchTag: ', keywords)
       this.focus = false
-      // document.querySelector('.app-main')?.scrollTo(0, 0)
       if (this.$route.params.keyword?.trim() != keywords.trim()) {
         this.reset()
         this.search(keywords + ' ')
@@ -516,7 +559,7 @@ export default {
       height: 120px;
       padding-top 0.133rem
       padding-bottom 0
-      backdrop-filter: saturate(200%) blur(6px);
+      backdrop-filter: saturate(200%) blur(10PX);
       background: rgba(255, 255, 255, 0.8);
 
       ::v-deep .van-cell {
@@ -643,7 +686,7 @@ export default {
     top 120px
     margin-bottom 0
     padding 0px 0px 20px
-    backdrop-filter: saturate(200%) blur(6px);
+    backdrop-filter: saturate(200%) blur(10PX);
     background: rgba(255, 255, 255, 0.8);
   }
 

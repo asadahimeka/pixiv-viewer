@@ -2,33 +2,49 @@
   <div
     ref="view"
     class="novel-view"
-    :class="{ shrink: isShrink, loaded: artwork.images, censored }"
+    :class="{
+      censored,
+      shrink: isShrink,
+      loaded: artwork.images,
+      vertical: textConfig.direction == 'v',
+      'horizon-cols': textConfig.direction == 'hc'
+    }"
     :style="{ backgroundColor: textConfig.bg }"
-    @click="showFull"
+    @click="handleContClick"
+    @wheel="handleWheel"
+    @touchstart.passive="handleTouchstart"
+    @touchend.passive="handleTouchend"
   >
     <div class="image-box">
       <Pximg :src="getImgUrl" nobg :alt="artwork.title" class="image" />
     </div>
     <div
       class="novel_text"
-      :class="{ vertical: textConfig.direction=='v' }"
+      :class="{ vertical: textConfig.direction == 'v' }"
       :style="novelStyle"
       v-html="novelText"
     >
     </div>
-    <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
+    <Icon v-show="isShrink" class="dropdown" name="dropdown" scale="4" />
   </div>
 </template>
 
 <script>
-import { imgProxy } from '@/api'
 import { mapGetters } from 'vuex'
+import { imgProxy } from '@/api'
+import store, { novelTextConfig } from '@/store'
+import _ from '@/lib/lodash'
 
 const fontMap = {
-  'inherit': '"LXGW WenKai Screen", -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol',
+  'inherit': 'inherit',
   'sans-serif': 'YuGothic, "Hiragino Kaku Gothic Pro", "Source Han Sans", "Source Han Sans JP", "Noto Sans CJK JP", "Avenir Next", Avenir, "Source Sans", "Noto Sans", Roboto, Verdana, "Pingfang SC", "Hiragino Sans GB", "Lantinghei SC", "Source Han Sans CN", "Noto Sans CJK SC", "Microsoft Yahei", DengXian, "Pingfang TC", "Pingfang HK", "Hiragino Sans CNS", "Lantinghei TC", "Source Han Sans TW", "Source Han Sans HK", "Noto Sans CJK TC", "Microsoft JhengHei", "Apple SD Gothic Neo", "Source Han Sans K", "Source Han Sans KR", "Noto Sans CJK KR", "Malgun Gothic", sans-serif',
   'serif': '"Source Serif Pro", "Source Serif", "Noto Serif", "Times New Roman", "Georgia Pro", Georgia, "Songti SC", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif SC", Simsun, "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Source Han Serif", "Source Han Serif JP", "BIZ UDMincho Medium", "Noto Serif JP", "Songti TC", "Source Han Serif TC", "Source Han Serif TW", "Source Han Serif HK", "Noto Serif TC", PMingLiu, AppleMyungjo, "Source Han Serif K", "Source Han Serif KR", "Noto Serif KR", Batang, serif',
 }
+
+let startX = 0
+let startY = 0
+let endX = 0
+let endY = 0
 
 export default {
   name: 'NovelView',
@@ -41,18 +57,16 @@ export default {
       type: Object,
       required: true,
     },
-    textConfig: {
-      type: Object,
-      required: true,
-    },
-  },
-  data() {
-    return {
-      isShrink: this.textConfig.direction == 'h',
-    }
   },
   computed: {
     ...mapGetters(['isCensored']),
+    textConfig() {
+      return novelTextConfig
+    },
+    isShrink() {
+      if (this.textConfig.direction != 'h') return false
+      return this.$store.state.isNovelViewShrink
+    },
     censored() {
       return this.isCensored(this.artwork)
     },
@@ -81,13 +95,49 @@ export default {
     },
   },
   methods: {
-    showFull() {
-      if (this.isShrink) this.isShrink = false
-    },
     getEmbedImg(id) {
       const urls = this.textObj.embedImgs?.[id]?.urls
       return imgProxy(urls?.['1200x1200'] || urls?.original || '')
     },
+    handleContClick: _.throttle(function (e) {
+      if (this.isShrink) {
+        this.$store.commit('setIsNovelViewShrink', false)
+      }
+      if (this.textConfig.direction == 'hc') {
+        const w = this.$refs.view.offsetWidth
+        const i = e.clientX > (w / 2) ? 1 : -1
+        this.$refs.view.scrollLeft += w * i
+      }
+    }, 200),
+    handleWheel: _.throttle(function (e) {
+      if (store.state.isMobile) return
+      if (this.textConfig.direction == 'h') return
+      e.preventDefault()
+      if (this.textConfig.direction == 'hc') {
+        this.$refs.view.scrollLeft += this.$refs.view.clientWidth * (e.deltaY > 0 ? 1 : -1)
+        return
+      }
+      this.$refs.view.scrollLeft += e.deltaY
+    }, 200),
+    handleTouchstart: _.throttle(function (e) {
+      if (!store.state.isMobile) return
+      const touch = e.touches[0]
+      startX = touch.clientX
+      startY = touch.clientY
+    }, 200),
+    handleTouchend: _.throttle(function (e) {
+      if (!store.state.isMobile) return
+      const touch = e.changedTouches[0]
+      endX = touch.clientX
+      endY = touch.clientY
+
+      const deltaX = endX - startX
+      const deltaY = endY - startY
+
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+        this.$refs.view.scrollLeft += this.$refs.view.clientWidth * (deltaX > 0 ? -1 : 1)
+      }
+    }, 200),
   },
 }
 </script>
@@ -103,32 +153,57 @@ export default {
   text-align: justify;
   user-select text !important
 
-  &.vertical
-    width 90%
-    height 75vh
-    padding 10px 20px 40px
-    overflow-x: auto;
-    writing-mode: vertical-rl;
+  &:not(.vertical)
+    padding-bottom 100px
 
-.novel-view {
+  &.vertical
+    width auto
+    height 82.5vh
+    padding 10px 20px 40px 150px
+    @media screen and (max-width: 1200px)
+      height auto
+
+.novel-view
   position: relative;
   width 100%
   min-height: 600px;
-  margin-top 40px
+  padding-top 40px
 
-  &.censored {
+  &.horizon-cols
+    height: 98vh
+    overflow: auto
+    columns: auto 1
+    column-gap: 0
+    padding-bottom 40px
+    box-sizing border-box
+    scroll-behavior: smooth
+    .novel_text
+      padding 0
+      box-sizing border-box
+
+  @media screen and (max-width: 1200px)
+    border-radius: 0;
+    &.horizon-cols
+      width 100vw
+      height 100vh
+      padding 2.1rem 0 1rem
+      overflow hidden
+      .novel_text
+        width 100% !important
+        margin 40px 0 0
+        padding 0 30PX 0 28PX
+
+  &.censored
     pointer-events: none;
-  }
 
-  &.loaded {
+  &.loaded
     min-height: unset;
-  }
 
-  &.shrink {
+  &.shrink
     max-height: 1000px;
     overflow: hidden;
 
-    &::after {
+    &::after
       content: '';
       position: absolute;
       top: 0;
@@ -136,9 +211,8 @@ export default {
       bottom: 0;
       left: 0;
       background: linear-gradient(to top, rgb(255, 255, 255), rgba(#fff, 0));
-    }
 
-    .dropdown {
+    .dropdown
       position: absolute;
       bottom: 26px;
       left: 50%;
@@ -147,47 +221,71 @@ export default {
       color: #fafafa;
       filter: drop-shadow(1px 4px 8px rgba(0, 0, 0, 0.2));
       animation: ani-dropdown 2s ease-in-out infinite;
-    }
 
-    @keyframes ani-dropdown {
-      0%, 100% {
+    @keyframes ani-dropdown
+      0%, 100%
         transform: translate(-50%, 0);
-      }
+      50%
+        transform: translate(-50%, 10PX);
 
-      50% {
-        transform: translate(-50%, 6px);
-      }
-    }
-  }
-
-  .image-box {
+  .image-box
     position: relative;
-    // background: #fafafa;
 
-    &:nth-of-type(n+2) {
+    &:nth-of-type(n+2)
       min-height: 600px;
-      // max-height: 1000px;
-    }
 
-    .image {
+    .image
       display: block;
       width: 100%;
       height: 100%;
-      // min-height: 600px;
-      // max-height: 1000px;
       object-fit: cover;
 
-      &[lazy="loading"] {
+      &[lazy="loading"]
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
         width: 120px !important;
         height: 120px !important;
-        min-height: auto;
-      }
-    }
-  }
+        min-height: auto
 
-}
+</style>
+<style lang="stylus">
+html:has(.isCollapseMeta .horizon-cols)
+  overflow hidden
+.artwork.novel .ia-cont
+  height max-content
+  .ia-right
+    position: sticky;
+    top: 0;
+.artwork.novel .ia-cont.isCollapseMeta
+  &:has(.shrink),
+  &:has(.vertical)
+    height 100vh
+  .ia-left
+    margin-top 0
+    padding-left 0
+    padding-right 0
+  .novel-view
+    border-radius 0
+    &.horizon-cols
+      width 100vw
+      height 100vh
+      padding-bottom: 40px
+  .novel_text
+    height auto
+.artwork.novel .ia-cont .ia-left .novel-view.vertical
+  position relative
+  padding-right 4.5rem
+  overflow-x: auto
+  writing-mode: vertical-rl
+  .image-box
+    position absolute
+    top 50%
+    right 0
+    transform translateY(-50%)
+    width 4rem !important
+    height auto !important
+    margin-bottom 0 !important
+    padding-right 0.5rem
 </style>

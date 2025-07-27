@@ -49,7 +49,7 @@
         </div>
         <div class="chats">
           <div class="c-title-cont">
-            <div class="c-title">Chats</div>
+            <div class="c-title">{{ $t('lives_chats_title') }}</div>
             <div class="counts">
               <van-icon name="clock-o" />
               <span>{{ liveDuration }}</span>
@@ -406,7 +406,7 @@ export default {
     .chats
       margin-top 40px
       padding 20px 0
-      border 1px solid #ccc
+      border 1PX solid #ccc
       border-radius 0.1rem
       .ct-hr
         width 100%

@@ -57,7 +57,7 @@
 
 <script>
 import api, { imgProxy } from '@/api'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import { COMMON_PROXY } from '@/consts'
 
 export default {
@@ -83,7 +83,7 @@ export default {
       const res = await api.getLiveList(this.curPage)
       if (res.status === 0) {
         if (res.data.length) {
-          if (!(this.$store.state.SETTING.r18 || this.$store.state.SETTING.r18g)) {
+          if (!(this.$store.state.contentSetting.r18 || this.$store.state.contentSetting.r18g)) {
             res.data = res.data.filter(e => !e.is_adult)
           }
           this.artList = _.uniqBy([

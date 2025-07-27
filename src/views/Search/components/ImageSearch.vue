@@ -36,7 +36,8 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import _ from '@/lib/lodash'
+import { Dialog } from 'vant'
 import { PIXIV_NEXT_URL } from '@/consts'
 
 export default {
@@ -103,9 +104,10 @@ export default {
       // 此时可以自行将文件上传至服务器
 
       const showErr = () => {
-        this.$toast({
-          type: 'fail',
-          message: this.$t('search.img.err'),
+        Dialog.alert({
+          title: this.$t('tips.tip'),
+          message: `<p>${this.$t('search.img.err')}<br>${this.$t('lJtMtr2rgYCSg-osHykE9')}<p>`,
+          confirmButtonText: this.$t('common.confirm'),
         })
       }
 

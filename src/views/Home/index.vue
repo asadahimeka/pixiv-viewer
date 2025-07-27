@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import RankCard from './components/RankCard.vue'
 import SpotlightCard from '../Spotlights/SpotlightCard.vue'
 import DiscoveryCard from '../Discovery/DiscoveryCard.vue'
@@ -68,9 +68,11 @@ export default {
       placeholder: '',
     }
   },
-  head: {
-    title: 'PxAnon - Pixiv Illustration & Novel Viewer without Account',
-    titleTemplate: null,
+  head() {
+    return {
+      title: 'PxAnon - Yet Another Pixiv Illustration & Novel Viewer',
+      titleTemplate: null,
+    }
   },
   activated() {
     this.placeholder = _.sample(this.tags)

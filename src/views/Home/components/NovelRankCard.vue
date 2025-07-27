@@ -11,7 +11,7 @@
         <swiper-slide v-for="art in artList.slice(0, 10)" :key="art.id" class="swipe-item">
           <div class="novel_item">
             <van-tag class="novel_length" color="#cdeefe" text-color="#0b6aaf">
-              {{ art.text_length }}{{ $t('common.words') }}
+              {{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(art.text_length)]) }}
             </van-tag>
             <van-tag class="novel_favs" color="#ffe1e1" text-color="#ad0000">
               <van-icon name="like-o" style="margin-right: 2px;" />
@@ -45,6 +45,9 @@ import ImageCard from '@/components/ImageCard'
 import ImageSlide from '@/components/ImageSlide'
 import api from '@/api'
 import { filterHomeNovel } from '@/utils/filter'
+import { formatIntlNumber } from '@/utils'
+import { isCNLocale } from '@/i18n'
+
 export default {
   name: 'RankCardNovel',
   components: {
@@ -85,6 +88,11 @@ export default {
     this.getRankList()
   },
   methods: {
+    convertToK(val) {
+      if (!val) return '-'
+      if (isCNLocale()) return val
+      return formatIntlNumber(+val)
+    },
     novelTagsText(el) {
       return el.tags?.map(e => `#${e.name}`).join(' ')
     },
@@ -185,7 +193,7 @@ export default {
 
     .swipe-wrap {
       height: 100%;
-      border-radius: 20px;
+      // border-radius: 20px;
       overflow: hidden;
 
       .swipe-item {
@@ -201,7 +209,7 @@ export default {
         .image-card {
           // width: 50vw;
           font-size: 0;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           box-sizing: border-box;
           width: 100%;
           height: 97%;
@@ -209,7 +217,7 @@ export default {
         }
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
           height: 97%;

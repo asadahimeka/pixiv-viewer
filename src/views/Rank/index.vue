@@ -15,7 +15,22 @@
       </van-popover>
       <div class="nav_divi"></div>
       <RankNav :menu="menu" />
-      <span style="display: inline-block;">
+      <van-popover
+        v-if="showFilterFavsBtn"
+        v-model="showFilterFavsPop"
+        placement="bottom-end"
+        theme="dark"
+        trigger="click"
+      >
+        <div class="filter-favs-actions">
+          <span @click="isFilterFavs=!isFilterFavs">{{ isFilterFavs ? $t('hHPMdWCYd_B2r9F0icW5Y') : $t('KS3utA342Q7yr0mOFARV-') }}</span>
+          <span @click="isHideManga=!isHideManga">{{ isHideManga ? $t('KBTp7zyXO4ckXvh14iu0K') : $t('1VVoNDWxcoBn236bEV-_H') }}</span>
+        </div>
+        <template #reference>
+          <van-icon name="filter-o" class="filter-favs-icon" />
+        </template>
+      </van-popover>
+      <span style="display: inline-block;cursor: pointer;">
         <div class="calendar" @click="isDatePickerShow = true">
           <div class="date">{{ dateNum }}</div>
         </div>
@@ -32,14 +47,14 @@
       :error-text="$t('tips.net_err')"
       @load="getRankList"
     >
-      <wf-cont v-bind="$store.getters.wfProps">
+      <wf-cont>
         <ImageCard
           v-for="(art, i) in artList"
           :key="art.id"
           mode="all"
           :artwork="art"
           :index="i + 1"
-          @click-card="toArtwork($event)"
+          @click-card="toArtwork(art)"
         />
       </wf-cont>
     </van-list>
@@ -66,11 +81,12 @@
 import dayjs from 'dayjs'
 import ImageCard from '@/components/ImageCard'
 import Nav from './components/Nav'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import api from '@/api'
 import { i18n } from '@/i18n'
-import { LocalStorage } from '@/utils/storage'
 import { isAiIllust } from '@/utils/filter'
+import { getCache } from '@/utils/storage/siteCache'
+import store from '@/store'
 
 const getRankMenus = () => ({
   daily: { name: i18n.t('rank.day'), io: 'day', cat: '0' },
@@ -108,9 +124,9 @@ const getRankMenus = () => ({
 const getRankCatLabels = () => [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
 const getRankCatActions = () => getRankCatLabels().map((e, i) => ({ text: e, _v: i.toString() }))
 
-const isHideManga = LocalStorage.get('PXV_HIDE_RANK_MANGA', false)
-const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682, 16106315]
-const AUTHORS_NO_TYPE_AI = [10758107, 88598928, 31909437, 21470736]
+const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682, 16106315, 10760589, 18758563]
+const AUTHORS_NO_TYPE_AI = [10758107, 88598928, 31909437, 21470736, 14225123, 60651589, 127064402, 87931615, 95485582, 101555203, 20557152, 91255148]
+const isHideManga = store.state.appSetting.isHideRankManga
 
 export default {
   name: 'Rank',
@@ -121,7 +137,6 @@ export default {
   data() {
     const maxDate = dayjs().subtract(new Date().getHours() > 14 ? 1 : 2, 'days').toDate()
     return {
-      scrollTop: 0,
       minDate: dayjs('2007-09-13').toDate(),
       maxDate,
       date: maxDate,
@@ -137,6 +152,10 @@ export default {
       actRankCat: '1',
       rankCatLabels: getRankCatLabels(),
       rankCatActions: getRankCatActions(),
+      showFilterFavsBtn: window.APP_CONFIG.useLocalAppApi,
+      showFilterFavsPop: false,
+      isFilterFavs: false,
+      isHideManga,
     }
   },
   head() {
@@ -167,12 +186,21 @@ export default {
         // window.umami?.track('change_rank_date', { rank_date: val?.toLocaleDateString() })
       }
     },
+    isFilterFavs(val) {
+      window.umami?.track('rank_filter_fav_change', { val })
+      this.onFilterFavsChange()
+    },
+    isHideManga(val) {
+      window.umami?.track('rank_hide_manga_change', { val })
+      this.onFilterFavsChange()
+    },
   },
   mounted() {
     this.init()
   },
   activated() {
     this.showRankCat = false
+    this.showFilterFavsPop = false
   },
   methods: {
     onRankCatSel({ _v }) {
@@ -183,6 +211,11 @@ export default {
       this.actRankCat = _v
       const first = Object.keys(this.menu)[0]
       this.$router.replace(`/rank/${first}`)
+    },
+    onFilterFavsChange() {
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+      this.showFilterFavsPop = false
+      this.init()
     },
     reset() {
       const { type = 'daily' } = this.$route.params
@@ -215,14 +248,11 @@ export default {
         if (res.data.length == 0) {
           this.finished = true
         } else {
-          let artList = _.uniqBy([
-            ...this.artList,
-            ...res.data,
-          ], 'id')
-          if (!isWebRank && isHideManga) {
+          let artList = res.data
+          if (!isWebRank && this.isHideManga) {
             artList = artList.filter(e => {
               if (e.type == 'manga') return false
-              if (/漫画|描き方|お絵かきTIPS|manga/.test(JSON.stringify(e))) return false
+              if (/漫画|描き方|お絵かきTIPS|manga/.test(JSON.stringify(e.tags))) return false
               if (AUTHORS_NO_TYPE_MANGA.includes(+e.author.id)) return false
               return true
             })
@@ -237,7 +267,14 @@ export default {
               return true
             })
           }
-          this.artList = artList
+          if (this.isFilterFavs) {
+            const favMap = await getCache('local.fav.map', {})
+            artList = artList.filter(e => !(favMap[e.id] || e.is_bookmarked))
+          }
+          this.artList = _.uniqBy([
+            ...this.artList,
+            ...artList,
+          ], 'id')
           this.curPage++
         }
         this.loading = false
@@ -249,11 +286,11 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
     showPopup() {
@@ -278,6 +315,21 @@ export default {
   height 24px
   margin 0 15px
   background #000
+}
+
+.filter-favs-icon {
+  margin-left 0.2rem
+  padding 0.1rem 0
+  font-size 0.55rem
+  transform: translateY(-2px)
+  cursor pointer
+}
+
+.filter-favs-actions span {
+  display block
+  padding 10PX 16PX
+  cursor pointer
+  font-size 14PX
 }
 
 .rank {
@@ -307,7 +359,7 @@ export default {
     // background: #fff;
     z-index: 10;
     // backdrop-filter: blur(6px);
-    backdrop-filter: saturate(200%) blur(6px);
+    backdrop-filter: saturate(200%) blur(10PX);
     background: rgba(255, 255, 255, 0.8);
 
     .nav {

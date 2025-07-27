@@ -1,4 +1,4 @@
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import store from '@/store'
 import localDb from './localDb'
 

@@ -1,0 +1,143 @@
+.with-body-bg
+  body::before
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 100vw;
+    height: 100vh;
+    background: #f7f8fa;
+
+  &.custom_theme body::before
+    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)), var(--accent-color, #f7f8fa);
+
+  body.dark::before
+    background: #16161a !important;
+
+  &.custom_theme body:not(.dark)
+    .novel .ia-cont .ia-left .collapse-btn,
+    .novel .ia-cont .ia-right .artwork-meta
+      background: #fefefe;
+    .novel .ia-cont .ia-right .artwork-meta
+      box-shadow: 0 1PX 1PX -1PX rgba(0,0,0,.2), 0 1PX 1PX 0 rgba(0,0,0,.14), 0 1PX 1PX 0 rgba(0,0,0,.12)
+    #ldio-loading,
+    .van-popup:not(.van-popover--dark),
+    .van-share-sheet > button,
+    .van-calendar,
+    .search-dropdown
+      background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)), var(--accent-color)
+    .van-popup .van-cell,
+    .dropdown.search-bar-wrap .search-bar,
+    .artwork-meta .meta_btns .van-button,
+    .comments-popup .van-button,
+    .search .search_params .van-dropdown-menu__bar
+      background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), var(--accent-color)
+    .comments-popup .van-button:hover
+      filter brightness(1.05)
+    .rank .top .nav a
+      border 1PX solid #bbb
+      &.cur
+        border-color var(--accent-color)
+
+  body:not(.dark)
+    .setting-page > .af_title + .van-cell,
+    .setting-page .van-cell:first-child,
+    .setting>.setting-group .van-cell:first-child
+      border-top-left-radius: 8PX;
+      border-top-right-radius: 8PX;
+    .setting-page .van-cell:last-child,
+    .setting>.setting-group .van-cell:last-child
+      border-bottom-left-radius: 8PX;
+      border-bottom-right-radius: 8PX;
+    .setting-page .van-cell-group,
+    .setting-page .van-cell-group::after,
+    .container .af_title + .van-form .van-field,
+    .container .tips.van-collapse,
+    .container .tips.van-collapse::after,
+    .van-tabs--line .van-sticky:not(.van-sticky--fixed) .van-tabs__wrap
+      border-radius: 8PX;
+    .novel-card,
+    .novel .ia-cont .ia-left .collapse-btn,
+    .novel .ia-cont .ia-right .artwork-meta
+      background: rgba(0,0,0,0.04);
+    .Home .com_sel_tabs .home-search .van-search__content,
+    .search .search-bar-wrap .van-search__content
+      background white
+      box-shadow: 0 1PX .5PX .5PX rgba(0, 0, 0, 0.1)
+    .com_sel_tabs .com_sel_tab,
+    .rank .top .com_sel_tab,
+    .search .keyword
+      box-shadow: 0 1PX .5PX .5PX rgba(0, 0, 0, 0.1)
+    .home-i,
+    .home-m,
+    .home-n,
+    .Spotlight .spd_recomm,
+    .search .rank-card .van-cell
+      margin-top: 0.2rem;
+    .Spotlight .van-cell,
+    .Spotlights .van-cell,
+    .home-i,
+    .home-m,
+    .home-n,
+    .home-i .van-cell,
+    .home-m .van-cell,
+    .home-n .van-cell,
+    .search .rank-card .van-cell,
+    .user-container .van-sticky:not(.van-sticky--fixed) .van-tabs__nav,
+    .Following .van-sticky:not(.van-sticky--fixed) .van-tabs__nav,
+    .author-card .van-cell,
+    .related .van-cell
+      background: 0;
+    .novel .novel-view.shrink
+      max-height: 95vh;
+    .users .info-container .detail
+      max-height: 5.33333rem
+      overflow-y auto
+      &::-webkit-scrollbar
+        width: 0.17333rem
+      .content
+        &+.more, &::after
+          display none
+    .search-dropdown .pid-n-uid
+      margin-top 0.13333rem
+    .search .com_sel_tabs
+      left 50%
+      transform translateX(-50%)
+      width max-content
+      padding-top 0.1rem
+      backdrop-filter: none
+      background none
+    .rank .top,
+    .Home .com_sel_tabs,
+    .Following .van-tabs__nav,
+    .search .search-bar
+      backdrop-filter: saturate(200%) blur(16PX);
+      background: rgba(255, 255, 255, 0.2);
+    .search .search_params
+      position fixed
+      z-index 3
+      top 1.6rem
+      left 0
+      width 100%
+      .van-dropdown-menu__bar
+        background white
+      .search_param_sel
+        width max-content
+        min-width 100%
+      &+.result-list
+        padding-top 1rem
+      &+.rank-card
+        padding-top 1.1rem
+
+  &:not(.custom_theme) body:not(.dark)
+    .search .search-dropdown,
+    .dropdown.search-bar-wrap .search-bar
+      background #f7f8fa
+
+  @media screen and (max-width: 600px)
+    body:not(.dark)
+      .setting,.setting-page
+        max-width: 9.4rem;
+      .novel .novel-view.shrink
+        max-height: 72vh;

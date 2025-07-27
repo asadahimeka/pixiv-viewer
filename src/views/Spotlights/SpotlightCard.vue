@@ -38,6 +38,8 @@
 <script>
 import ImageSlide from '@/components/ImageSlide'
 import api from '@/api'
+import store from '@/store'
+
 export default {
   name: 'SpotlightCard',
   components: {
@@ -73,11 +75,7 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.getList()
-      }, 100)
-    })
+    this.getList()
   },
   methods: {
     async getList() {
@@ -96,12 +94,11 @@ export default {
     toList() {
       this.$router.push({
         name: 'Spotlights',
-        params: { list: this.spotlights },
       })
     },
     toDetail(id) {
       this.$router.push({
-        name: 'Spotlight',
+        name: store.state.isMobile ? 'SpotlightDetail' : 'Spotlight',
         params: { id },
       })
     },
@@ -124,7 +121,7 @@ export default {
       width 100%
       height 100%
       object-fit cover
-      border-radius: 20px;
+      // border-radius: 20px;
 
       &[lazy="loading"] {
         width: 100px;
@@ -141,7 +138,7 @@ export default {
       left: 0;
       width: 100%;
       height: 97%;
-      border-radius: 20px;
+      // border-radius: 20px;
 
       &::before {
         position: absolute;
@@ -149,7 +146,7 @@ export default {
         bottom: 0;
         width: 100%;
         height: 50%;
-        border-radius: 20px;
+        // border-radius: 20px;
         background-image: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, rgba(255,255,255,0) 100%);
       }
     }
@@ -180,9 +177,16 @@ export default {
     // padding: 0 12px;
     height: 365px;
 
+    @media screen and (max-width: 500px) {
+      height 5.1rem
+      .swipe-item {
+        width 9.4rem !important
+      }
+    }
+
     .swipe-wrap {
       height: 100%;
-      border-radius: 20px;
+      // border-radius: 20px;
       overflow: hidden;
 
       .swipe-item {
@@ -198,7 +202,7 @@ export default {
         .image-card {
           // width: 50vw;
           font-size: 0;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           box-sizing: border-box;
           width: 100%;
           height: 97%;
@@ -206,7 +210,7 @@ export default {
         }
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
           height: 97%;

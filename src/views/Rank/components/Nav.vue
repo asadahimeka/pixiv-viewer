@@ -28,7 +28,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(['SETTING']),
+    ...mapState(['contentSetting']),
   },
   mounted() {
     this.init()
@@ -38,14 +38,13 @@ export default {
   },
   methods: {
     showModeNav(item) {
-      if (item.x && !this.SETTING.r18) return false
-      if (item.ai && !this.SETTING.ai) return false
-      if (item.xg && !this.SETTING.r18g) return false
+      if (item.x && !this.contentSetting.r18) return false
+      if (item.ai && !this.contentSetting.ai) return false
+      if (item.xg && !this.contentSetting.r18g) return false
       return true
     },
     init() {
-      const cur = document.querySelector('.cur')
-      cur && cur.scrollIntoView()
+      document.querySelector('.nav .cur')?.scrollIntoView?.()
     },
   },
 }

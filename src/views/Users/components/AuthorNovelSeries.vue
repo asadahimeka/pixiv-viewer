@@ -22,7 +22,7 @@
                 <van-icon name="orders-o" style="margin-right: 2px;" />
                 {{ s.content_count }}
               </van-tag>
-              <van-tag color="#cdeefe" text-color="#0b6aaf">{{ s.total_character_count }}{{ $t('common.words') }}</van-tag>
+              <van-tag color="#cdeefe" text-color="#0b6aaf">{{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(s.total_character_count)]) }}</van-tag>
             </p>
           </div>
         </div>
@@ -32,8 +32,10 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import api from '@/api'
+import { formatIntlNumber } from '@/utils'
+import { isCNLocale } from '@/i18n'
 
 export default {
   name: 'AuthorNovelSeries',
@@ -62,6 +64,11 @@ export default {
     }
   },
   methods: {
+    convertToK(val) {
+      if (!val) return '-'
+      if (isCNLocale()) return val
+      return formatIntlNumber(+val)
+    },
     getMemberArtwork: async function () {
       if (!this.id) return
       this.loading = true

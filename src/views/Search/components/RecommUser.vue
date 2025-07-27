@@ -17,7 +17,7 @@
 
 <script>
 import api from '@/api'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import ImageSlide from '@/components/ImageSlide.vue'
 
 export default {
@@ -48,11 +48,7 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.init()
-      })
-    })
+    this.init()
   },
   methods: {
     toUserPage(id) {
@@ -109,7 +105,7 @@ export default {
 .illusts ::v-deep .image-slide
   height: 390px
   margin-bottom 12px
-  border: 1px solid #ebebeb
+  border: 1PX solid #ebebeb
   border-radius: 18px
   box-sizing: border-box
   background none

@@ -1,16 +1,16 @@
 <template>
-  <div class="artwork" :class="{ isSafari }">
+  <div class="artwork" :class="{ isSafari, isAutoLoadImt, isSimulatedMeta }">
     <TopBar />
     <div class="share_btn" @click="share">
       <Icon class="icon" name="share" />
     </div>
     <van-swipe-cell ref="swipeCell" :disabled="disableSwipe" stop-propagation @open="onSwipeOpen">
-      <template #left>
+      <template v-if="!disableSwipe" #left>
         <div class="ia-sc-btn">
           <van-icon name="arrow-left" size="0.6rem" />
         </div>
       </template>
-      <div class="ia-cont">
+      <div class="ia-cont" :class="{ 'landscape-1-art': isLandscape1Art }">
         <div class="ia-left">
           <van-loading v-if="loading" size="50px" />
           <ImageView ref="imgView" :artwork="artwork" @open-download="ugoiraDownloadPanelShow = true" />
@@ -24,7 +24,7 @@
           </keep-alive>
         </div>
       </div>
-      <template #right>
+      <template v-if="!disableSwipe" #right>
         <div class="ia-sc-btn">
           <van-icon name="arrow" size="0.6rem" />
         </div>
@@ -32,7 +32,7 @@
     </van-swipe-cell>
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
-      <Related :key="artwork.id" :artwork="artwork" />
+      <Related v-show="artwork.id" :key="artwork.id" :artwork="artwork" />
     </keep-alive>
     <van-action-sheet
       v-model="ugoiraDownloadPanelShow"
@@ -54,29 +54,33 @@
 </template>
 
 <script>
+import nprogress from 'nprogress'
+import { mapGetters } from 'vuex'
+import { ImagePreview } from 'vant'
+import api from '@/api'
+import store from '@/store'
+import _ from '@/lib/lodash'
+import { getCache, setCache } from '@/utils/storage/siteCache'
+import { i18n } from '@/i18n'
+import { copyText, isSafari } from '@/utils'
+import { PIXIV_NEXT_URL, COMMON_PROXY } from '@/consts'
 import TopBar from '@/components/TopBar'
 import ImageView from './components/ImageView'
 import Meta from './components/Meta'
 import AuthorCard from './components/AuthorCard'
 import Related from './components/Related'
-import { ImagePreview } from 'vant'
-import { mapGetters } from 'vuex'
-import nprogress from 'nprogress'
-import api from '@/api'
-import { getCache, setCache } from '@/utils/storage/siteCache'
-import _ from 'lodash'
-import { i18n } from '@/i18n'
-import { copyText, isSafari } from '@/utils'
 import IconLink from '@/assets/images/share-sheet-link.png'
 import IconQQ from '@/assets/images/share-sheet-qq.png'
 import IconQrcode from '@/assets/images/share-sheet-qrcode.png'
 import IconQzone from '@/assets/images/share-sheet-qzone.png'
 import IconWeb from '@/assets/images/share-sheet-web.png'
-import IconWechat from '@/assets/images/share-sheet-wechat.png'
+// import IconWechat from '@/assets/images/share-sheet-wechat.png'
 import IconWeibo from '@/assets/images/share-sheet-weibo.png'
 import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
-import { LocalStorage } from '@/utils/storage'
+import { SessionStorage } from '@/utils/storage'
+
+const { isAutoLoadImt, isEnableSwipe } = store.state.appSetting
 
 export default {
   name: 'Artwork',
@@ -115,7 +119,8 @@ export default {
         { name: 'GIF', subname: i18n.t('artwork.download.gif') },
         { name: 'WebM', subname: i18n.t('artwork.download.webm') }, // chrome only
         { name: 'APNG', subname: i18n.t('artwork.download.webm') },
-        { name: 'MP4', subname: i18n.t('LC7_PMpEgK-L5fx7s4TBv') },
+        { name: 'MP4(Browser)', subname: i18n.t('pIghtXdU8socMNNRUn5UR') },
+        { name: 'MP4(Server)', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
         { name: 'Other', subname: i18n.t('artwork.download.mp4') },
       ],
       showShare: false,
@@ -126,13 +131,14 @@ export default {
         { name: i18n.t('artwork.share.type.weibo'), icon: IconWeibo },
         { name: i18n.t('artwork.share.type.qzone'), icon: IconQzone },
         { name: 'QQ', icon: IconQQ },
-        { name: i18n.t('artwork.share.type.wechat'), icon: IconWechat },
+        // { name: i18n.t('artwork.share.type.wechat'), icon: IconWechat },
         { name: 'Twitter', icon: IconTwitter },
         { name: 'Facebook', icon: IconFacebook },
       ],
-      disableSwipe: !LocalStorage.get('PXV_IMG_DTL_SWIPE', false),
       maybeAiAuthor: false,
       isSafari: isSafari(),
+      isAutoLoadImt,
+      disableSwipe: !isEnableSwipe,
     }
   },
   head() {
@@ -144,6 +150,12 @@ export default {
   },
   computed: {
     ...mapGetters(['isCensored']),
+    isSimulatedMeta() {
+      return this.artwork.width == 0
+    },
+    isLandscape1Art() {
+      return this.artwork?.images?.length == 1 && this.artwork?.width > this.artwork?.height
+    },
   },
   watch: {
     $route() {
@@ -161,12 +173,26 @@ export default {
   methods: {
     init() {
       this.loading = true
-      const id = +this.$route.params.id
       this.artwork = {}
-      this.getArtwork(id)
+      const id = Number(this.$route.params.id)
+      let art = SessionStorage.get(`param_art_detail_${id}`)
+      if (!art) art = this.$route.params.art
+      console.log('artwork detail: ', id, art)
+      if (art && art.type != 'ugoira' && !art.images[0].o.includes('i.loli.best')) {
+        this.artwork = art
+        this.loading = false
+        SessionStorage.set(`param_art_detail_${id}`, art)
+        if (window.APP_CONFIG.useLocalAppApi) {
+          this.getArtwork(+id)
+        } else {
+          this.pushHistory(art)
+        }
+      } else {
+        this.getArtwork(+id)
+      }
     },
     async getArtwork(id) {
-      // console.log(id);
+      await this.$nextTick()
       const res = await api.getArtwork(id)
       if (res.status === 0) {
         this.artwork = res.data
@@ -179,25 +205,36 @@ export default {
           })
         }
 
-        let historyList = await getCache('illusts.history', [])
-        if (!Array.isArray(historyList)) historyList = []
-        if (historyList.length > 100) historyList = historyList.slice(0, 100)
-        historyList = _.uniqBy([res.data, ...historyList], 'id')
-        setCache('illusts.history', historyList)
+        if (this.artwork.images[0].o.includes('common/images/limit')) {
+          this.pidRecover(id)
+        }
+
+        this.pushHistory(res.data)
       } else {
         this.$toast({
           message: res.msg,
           icon: require('@/icons/error.svg'),
           duration: 3000,
         })
-        // setTimeout(() => {
-        //   this.$router.back()
-        // }, 500)
+        if (res.msg == '尚无此页') {
+          this.pidRecover(id, true)
+        }
       }
     },
+    async pushHistory(art) {
+      await this.$nextTick()
+      this.$refs.artworkMeta?.drawMask()
+
+      let historyList = await getCache('illusts.history', [])
+      if (!Array.isArray(historyList)) historyList = []
+      // if (historyList.length > 100) historyList = historyList.slice(0, 100)
+      historyList = _.uniqBy([art, ...historyList], 'id')
+      setCache('illusts.history', historyList)
+    },
     showUgPanelFromDlBtn() {
-      if (!this.$refs.imgView.ugoira) {
-        this.$toast(this.$t('artwork.download.ugoira.tip'))
+      const { ugoiraDefDLFormat } = store.state.appSetting
+      if (ugoiraDefDLFormat) {
+        this.$refs.imgView.download(ugoiraDefDLFormat)
         return
       }
       this.ugoiraDownloadPanelShow = true
@@ -228,7 +265,7 @@ export default {
         async () => {
           const shareData = {
             title: 'PxAnon',
-            text: `${this.$t('artwork.share.share')} ${this.artwork.author.name} ${this.$t('artwork.share.of_art')} ${this.artwork.title} - ID: ${this.artwork.id}`,
+            text: `${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- ID: ${this.artwork.id}`,
             url: `${shareUrl}`,
           }
           try {
@@ -247,21 +284,21 @@ export default {
         () => {
           ImagePreview({
             closeable: true,
-            images: [`https://api.obfs.dev/api/qrcode?text=${encodeURIComponent(shareUrl)}`],
+            images: [`https://api.moedog.org/qr/?url=${encodeURIComponent(shareUrl)}`],
           })
         },
         () => {
-          this.openUrl(`https://service.weibo.com/share/share.php?language=zh_cn&searchPic=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.artwork.author.name} ${this.$t('artwork.share.of_art')} ${this.artwork.title} - PID: ${this.artwork.id}`)}&summary=PID%3A${this.artwork.id}&pic=${imageUrl}`)
+          this.openUrl(`https://service.weibo.com/share/share.php?language=zh_cn&searchPic=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}&summary=PID%3A${this.artwork.id}&pic=${imageUrl}`)
         },
         () => {
           this.openUrl(`https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title=${this.artwork.title}&url=${encodeURIComponent(shareUrl)}&pics=${imageUrl}&summary=${encodeURIComponent(this.artwork.author.name + ' - PID: ' + this.artwork.id)}`)
         },
         () => {
-          this.openUrl(`https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}&source=${encodeURIComponent(shareUrl)}&desc=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.artwork.author.name} ${this.$t('artwork.share.of_art')} ${this.artwork.title} - PID: ${this.artwork.id}`)}&summary=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.artwork.author.name} ${this.$t('artwork.share.of_art')} ${this.artwork.title} - PID: ${this.artwork.id}`)}`)
+          this.openUrl(`https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}&source=${encodeURIComponent(shareUrl)}&desc=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}&summary=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}`)
         },
-        () => {
-          this.openUrl(`https://wechat-share.pwp.space/?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}`)
-        },
+        // () => {
+        //   this.openUrl(`https://wechat-share.pwp.space/?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}`)
+        // },
         () => {
           this.openUrl(`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.pixiv.net/artworks/${this.artwork.id}`)}&text=${this.artwork.title}&hashtags=pixiv`)
         },
@@ -277,12 +314,45 @@ export default {
     async share() {
       this.showShare = true
     },
+    async pidRecover(id, setFakeAuthor = false) {
+      if (!store.getters.isR18On) return
+      const res = await fetch(`${PIXIV_NEXT_URL}/api/pid-recover/${id}`)
+      window.umami?.track('pid_recover', { ok: res.ok })
+      if (!res.ok) return
+      const arr = await res.json()
+      console.log('--------------pidRecover arr: ', arr)
+      this.loading = false
+      this.artwork = {
+        id,
+        title: `${id}`,
+        created: arr[0].createDate,
+        author: setFakeAuthor
+          ? {
+              id: 11,
+              name: 'Unknown',
+              avatar: 'https://s.pximg.net/common/images/no_profile.png',
+            }
+          : {
+              ...this.artwork.author,
+              name: 'Unknown',
+            },
+        images: arr.map(e => ({
+          l: COMMON_PROXY + e.sampleUrl,
+          o: COMMON_PROXY + e.fileUrl,
+        })),
+        tags: arr[0].tags.map(e => ({ name: e })),
+        width: 0,
+        height: 0,
+        count: arr.length,
+        type: 'illust',
+      }
+    },
   },
 }
 </script>
 
 <style lang="stylus">
-img[src*="/api/qrcode?text"]
+img[src*="https://api.moedog.org/qr/?url="]
   position absolute
   top 50%
   left 50%
@@ -323,6 +393,7 @@ img[src*="/api/qrcode?text"]
     height 0.12rem
   ::v-deep .van-swipe-cell
     cursor auto
+    overflow clip
 
 .ia-sc-btn
   display flex
@@ -363,11 +434,21 @@ img[src*="/api/qrcode?text"]
         box-shadow: 0 0 transparent, 0 0 transparent, 0 1PX 3PX 0 rgba(0,0,0,.1), 0 1PX 2PX -1PX rgba(0,0,0,.1)
 
   .ia-right
+    position: sticky;
+    top: 0;
     max-width 28%
     padding-right 40px
     box-sizing border-box
     overflow hidden
 
+@media screen and (min-width: 1600px)
+  .ia-cont
+    &.landscape-1-art
+      align-items center
+      .ia-left
+        margin-top -.2rem
+      .ia-right
+        min-height 100vh
 @media screen and (max-width: 1200px)
   .ia-cont
     display block !important
@@ -389,20 +470,47 @@ img[src*="/api/qrcode?text"]
     .artwork-meta
       margin-top 10px !important
 
+  &.landscape-1-art
+    display: flex !important
+    flex-direction: column
+    .ia-left
+      flex 1
+      min-height 55vh
+    .ia-right
+      position: relative
+      width: 100% !important
+      max-width: 100% !important
+
 .artwork
   ::v-deep .top-bar-wrap
     width 2rem
     background none
-  &.isSafari
+  &.isSafari, &.isAutoLoadImt
     .image-view.loaded
       min-height auto
     .ia-right ::v-deep .artwork-meta
       padding 20px 30px 40px
       background #f5f5f5
       border-radius 20px
+      .tag.translated
+        color #808080
       @media screen and (max-width: 1200px)
         margin 0.26667rem 0.13333rem !important
       .shrink::after
         background: linear-gradient(to top, #f5f5f5, rgba(255,255,255,0));
 
+.isSimulatedMeta
+  ::v-deep .artwork-meta
+    .tag-list
+      pointer-events none
+    .view,
+    .like,
+    .pid_link,
+    .whid span:first-child,
+    .whid span:last-child,
+    .van-button:has(.van-icon-comment-o)
+      display none
+    .date,.whid
+      display inline-flex
+      margin 0
 </style>

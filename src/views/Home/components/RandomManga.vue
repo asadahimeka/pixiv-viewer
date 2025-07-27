@@ -17,13 +17,13 @@
       :error-text="$t('tips.net_err')"
       @load="getRankList"
     >
-      <wf-cont v-bind="$store.getters.wfProps">
+      <wf-cont>
         <ImageCard
           v-for="art in artList"
           :key="art.id"
           mode="all"
           :artwork="art"
-          @click-card="toArtwork($event)"
+          @click-card="toArtwork(art)"
         />
       </wf-cont>
     </van-list>
@@ -33,7 +33,7 @@
 <script>
 import ImageCard from '@/components/ImageCard'
 import api from '@/api'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
 export default {
   name: 'RandomManga',
@@ -76,11 +76,11 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
   },
@@ -95,7 +95,7 @@ export default {
 
     .swipe-wrap {
       height: 100%;
-      border-radius: 20px;
+      // border-radius: 20px;
       overflow: hidden;
 
       .swipe-item {
@@ -110,13 +110,13 @@ export default {
           font-size: 0;
           float: left;
           margin-right: 12px;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
         }
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
 

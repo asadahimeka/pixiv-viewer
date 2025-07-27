@@ -32,12 +32,17 @@ export default {
     }
   },
   activated() {
-    this.getHistory()
+    this.init()
   },
   mounted() {
-    this.getHistory()
+    this.init()
   },
   methods: {
+    init() {
+      this.$nextTick(() => {
+        this.getHistory()
+      })
+    },
     toArtwork(id) {
       this.$router.push({
         name: 'Users',
@@ -56,7 +61,7 @@ export default {
       }).then(async () => {
         this.artList = []
         await setCache('users.history', null)
-      })
+      }).catch(() => {})
     },
   },
 }
@@ -107,7 +112,7 @@ export default {
     min-height 240px
     padding: 0.26667rem;
     margin-bottom: 0.2rem;
-    border-radius: 0.26667rem;
+    // border-radius: 0.26667rem;
     border-bottom: 0.01333rem solid #ccc;
     cursor: pointer;
     .cover

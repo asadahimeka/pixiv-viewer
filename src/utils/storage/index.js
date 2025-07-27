@@ -1,3 +1,18 @@
+function serialize(val) {
+  return JSON.stringify(val)
+}
+
+function deserialize(val) {
+  if (typeof val !== 'string') {
+    return undefined
+  }
+  try {
+    return JSON.parse(val)
+  } catch (e) {
+    return val || undefined
+  }
+}
+
 class Storage {
   get(key, def) {
     console.log('%c - storage get: ' + key, 'color:blueviolet')
@@ -83,17 +98,12 @@ class Session extends Storage {
 export const LocalStorage = new Local()
 export const SessionStorage = new Session()
 
-function serialize(val) {
-  return JSON.stringify(val)
-}
-
-function deserialize(val) {
-  if (typeof val !== 'string') {
-    return undefined
-  }
-  try {
-    return JSON.parse(val)
-  } catch (e) {
-    return val || undefined
-  }
+/**
+ * @template T
+ * @param {string} key
+ * @param {T} def
+ * @returns {T}
+ */
+export function getSettingDef(key, def) {
+  return LocalStorage.get(key, def)
 }

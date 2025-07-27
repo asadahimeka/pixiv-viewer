@@ -4,16 +4,13 @@
       <div class="com_sel_tab" @click="$router.replace('/')">{{ $t('common.illust') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/home_manga')">{{ $t('common.manga') }}</div>
       <div class="com_sel_tab cur">{{ $t('common.novel') }}</div>
+      <div v-t="'g4JWYmBbfeweCBkRSgGNw'" class="com_sel_tab" @click="$router.push('/lives')"></div>
     </div>
     <div class="home-n">
       <NovelRankCard />
       <NovelRecommendCard v-if="isSelfHibi" />
-      <lazy-component>
-        <RandomNovel />
-      </lazy-component>
-      <lazy-component v-if="isSelfHibi">
-        <LatestNovelCard />
-      </lazy-component>
+      <RandomNovel />
+      <LatestNovelCard v-if="isSelfHibi" />
     </div>
   </div>
 </template>
@@ -24,7 +21,6 @@ import LatestNovelCard from './components/LatestNovelCard.vue'
 import NovelRankCard from './components/NovelRankCard.vue'
 import NovelRecommendCard from './components/NovelRecommendCard.vue'
 import RandomNovel from './components/RandomNovel.vue'
-import { i18n } from '@/i18n'
 
 export default {
   name: 'HomeNovel',
@@ -39,8 +35,10 @@ export default {
       isSelfHibi: !notSelfHibiApi,
     }
   },
-  head: {
-    title: i18n.t('common.novel'),
+  head() {
+    return {
+      title: this.$t('common.novel'),
+    }
   },
 }
 </script>

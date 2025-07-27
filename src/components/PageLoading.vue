@@ -4,13 +4,12 @@
   </div>
 </template>
 <script>
-import { mapState } from 'vuex'
 export default {
   name: 'PageLoading',
-  computed: {
-    ...mapState({
-      color: 'themeColor',
-    }),
+  data() {
+    return {
+      color: localStorage.PXV_ACT_COLOR,
+    }
   },
 }
 </script>

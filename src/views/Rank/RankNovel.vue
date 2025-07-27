@@ -64,7 +64,7 @@
 <script>
 import dayjs from 'dayjs'
 import Nav from './components/Nav'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import api from '@/api'
 import NovelCard from '@/components/NovelCard.vue'
 import { i18n } from '@/i18n'
@@ -96,7 +96,6 @@ export default {
   data() {
     const maxDate = dayjs().subtract(new Date().getHours() > 14 ? 1 : 2, 'days').toDate()
     return {
-      scrollTop: 0,
       minDate: dayjs('2007-09-13').toDate(),
       maxDate,
       date: maxDate,
@@ -244,7 +243,7 @@ export default {
     // background: #fff;
     z-index: 1;
     // backdrop-filter: blur(6px);
-    backdrop-filter: saturate(200%) blur(6px);
+    backdrop-filter: saturate(200%) blur(10PX);
     background: rgba(255, 255, 255, 0.8);
 
     .nav {

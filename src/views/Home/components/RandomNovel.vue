@@ -26,7 +26,7 @@
 
 <script>
 import api from '@/api'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
 import NovelCard from '@/components/NovelCard.vue'
 import { filterHomeNovel } from '@/utils/filter'
@@ -104,7 +104,7 @@ export default {
       .swipe-item {
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
 

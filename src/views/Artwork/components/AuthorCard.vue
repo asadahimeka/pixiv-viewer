@@ -8,7 +8,7 @@
     <van-cell class="cell" :border="false" is-link @click="toAuthor(author.id)">
       <template #title>
         <Pximg nobg class="icon" :src="author.avatar" alt="" />
-        <span class="title">{{ author.name }} {{ $t('user.of_other_art') }}</span>
+        <span class="title">{{ $t('user.of_other_art', [author.name]) }}</span>
       </template>
     </van-cell>
     <div v-if="memberArtwork.length>=10" class="artwork-list-wrap">
@@ -19,7 +19,7 @@
           :key="art.id"
           class="image-card-slide"
         >
-          <ImageCard class="slide" mode="cover" :artwork="art" @click-card="toArtwork($event)" />
+          <ImageCard class="slide" mode="cover" :artwork="art" @click-card="toArtwork(art)" />
         </swiper-slide>
         <swiper-slide class="image-slide-slide">
           <ImageSlide class="slide" :images="slides">
@@ -122,11 +122,11 @@ export default {
       console.log('----------------ai arts: ', length)
       this.$emit('author-change', length >= 5)
     },
-    toArtwork(id) {
+    toArtwork(art) {
       this.setGalleryList(this.memberArtwork)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
     toAuthor(id) {
@@ -180,7 +180,7 @@ export default {
 
   .artwork-list-wrap {
     // overflow-x: scroll;
-    border-radius: 20px;
+    // border-radius: 20px;
 
     .artwork-list {
       display: flex;
@@ -196,7 +196,7 @@ export default {
 
         .image-card {
           height: 240px !important;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
           margin-right: 6px;
@@ -205,7 +205,7 @@ export default {
 
         .image-slide {
           height: 240px !important;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search search-user">
     <div class="search-bar-wrap">
       <van-search
         v-model="keywords"
@@ -28,9 +28,8 @@
 </template>
 
 <script>
-import { mintVerify } from '@/utils/filter'
+import { mintVerify, BLOCK_SEARCH_WORD_RE } from '@/utils/filter'
 import RecommUser from './components/RecommUser.vue'
-import { i18n } from '@/i18n'
 
 export default {
   name: 'SearchUser',
@@ -42,13 +41,15 @@ export default {
       keywords: '',
     }
   },
-  head: {
-    title: i18n.t('search.search_user'),
+  head() {
+    return {
+      title: this.$t('search.search_user'),
+    }
   },
   methods: {
     async onSearch() {
       const word = this.keywords.trim()
-      if (!word || /スカラマシュ|散兵|放浪者|流浪者/i.test(word) || !(await mintVerify(word))) {
+      if (!word || BLOCK_SEARCH_WORD_RE.test(word) || !(await mintVerify(word))) {
         return
       }
       this.$router.push(`/search_user/${word}`)
@@ -89,7 +90,7 @@ export default {
       height: 120px;
       padding-top 0.133rem
       padding-bottom 0
-      backdrop-filter: saturate(200%) blur(6px);
+      backdrop-filter: saturate(200%) blur(10PX);
       background: rgba(255, 255, 255, 0.8);
 
       ::v-deep .van-cell {
@@ -114,7 +115,7 @@ export default {
     top 120px
     margin-bottom 0
     padding 0px 0px 20px
-    backdrop-filter: saturate(200%) blur(6px);
+    backdrop-filter: saturate(200%) blur(10PX);
     background: rgba(255, 255, 255, 0.8);
   }
 

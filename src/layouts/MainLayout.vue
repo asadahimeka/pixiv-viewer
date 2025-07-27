@@ -1,17 +1,12 @@
 <template>
   <div class="main-layout" :class="{ noImgFillScreen, 'safe-area': safeArea }">
-    <div class="app-main">
-      <transition v-if="isPageEffectOn" :name="transitionName" mode="out-in">
-        <keep-alive :max="10">
-          <router-view />
-        </keep-alive>
-      </transition>
-      <keep-alive v-else :max="10">
+    <div class="app-main" :class="{ 'image-card-no-radius': imageCardNoRadius }">
+      <keep-alive :max="10">
         <router-view />
       </keep-alive>
     </div>
-    <my-nav v-if="showNav" :is-nav-appear="isNavAppear" />
-    <div v-else class="back_to_top" :class="{ 'back_to_top--show': !isNavAppear }" @click="scrollToTop()">
+    <my-nav v-show="showNav" :is-nav-appear="hideNavBarOnScroll ? isNavAppear : true" />
+    <div v-show="!showNav" class="back_to_top" :class="{ 'back_to_top--show': !isNavAppear }" @click="scrollToTop()">
       <van-icon name="back-top" />
     </div>
   </div>
@@ -19,11 +14,10 @@
 
 <script>
 import Nav from '@/components/Nav'
+import store from '@/store'
 import { throttleScroll } from '@/utils'
-import { LocalStorage } from '@/utils/storage'
 
-const isPageEffectOn = LocalStorage.get('PXV_PAGE_EFFECT', false)
-const noImgFillScreen = !LocalStorage.get('PXV_IMG_FIT_SCREEN', true)
+const { isImageFitScreen, isImageCardBorderRadius, hideNavBarOnScroll } = store.state.appSetting
 
 export default {
   components: {
@@ -41,26 +35,14 @@ export default {
   },
   data() {
     return {
-      noImgFillScreen,
-      isPageEffectOn,
-      transitionName: isPageEffectOn ? 'fade' : '',
       isNavAppear: true,
+      noImgFillScreen: !isImageFitScreen,
+      imageCardNoRadius: !isImageCardBorderRadius,
+      hideNavBarOnScroll,
     }
   },
-  watch: {
-    '$route'(to, from) {
-      if (!isPageEffectOn) return
-      const toDepth = to.meta.__depth
-      const fromDepth = from.meta.__depth
-      if (toDepth == fromDepth) {
-        this.transitionName = 'fade'
-      } else {
-        this.transitionName = toDepth < fromDepth ? 'slide-right' : 'slide-left'
-      }
-      console.log('this.transitionName: ', this.transitionName)
-    },
-  },
   mounted() {
+    console.log('main-layout mounted')
     addEventListener('scroll', throttleScroll(document.documentElement, scroll => {
       if (scroll > 160) this.isNavAppear = false
     }, () => {
@@ -70,6 +52,11 @@ export default {
   methods: {
     scrollToTop() {
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+      if (this.$route.name == 'NovelDetail') {
+        setTimeout(() => {
+          this.$store.commit('setIsNovelViewShrink', true)
+        }, 500)
+      }
     },
   },
 }

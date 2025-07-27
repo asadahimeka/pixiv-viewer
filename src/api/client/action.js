@@ -5,8 +5,8 @@ import PixivAuth from './pixiv-auth'
 const API_DOMAIN = 'app-api.pixiv.net'
 const OAUTH_DOMAIN = 'oauth.secure.pixiv.net'
 const DEF_API_HOSTS = {
-  [OAUTH_DOMAIN]: '210.140.92.180',
-  [API_DOMAIN]: '210.140.92.180',
+  [OAUTH_DOMAIN]: '210.140.139.161',
+  [API_DOMAIN]: '210.140.139.161',
 }
 
 async function setApiHosts(config) {
@@ -212,10 +212,8 @@ function initApp(pixiv) {
     return pixiv.trendingTagsNovel(req.query)
   })
   app.get('/related', async req => {
-    const { page = 1, size = 30, id } = req.query
-    return pixiv.illustRelated(id, {
-      offset: (page - 1) * size,
-    })
+    const { id, nextUrl } = req.query
+    return pixiv.illustRelated(id, { nextUrl })
   })
   app.get('/related_novel', async req => {
     const { page = 1, size = 30, id } = req.query

@@ -36,14 +36,14 @@
       box-shadow: 0 3PX 1PX -2PX rgba(0, 0, 0, .2), 0 2PX 2PX 0 rgba(0, 0, 0, .14), 0 1PX 5PX 0 rgba(0, 0, 0, .12);
     }
   </style>
-  <script async defer="defer" src="https://um.nanoka.top/script.js" data-website-id="69717e89-51a1-409a-80e6-89210a688efd" data-cache="true"></script>
+  <script src="https://um.nanoka.top/script.js" data-website-id="69717e89-51a1-409a-80e6-89210a688efd" data-cache="true"></script>
 </head>
 
 <body>
   <div style="padding: 0 10px;text-align: center;">
     <h1 style="margin-top: 40px;font-size: 36px;">
-      <img width="40" height="40" src="https://pxve.cc/app-icon.png" alt="" style="vertical-align: -0.2em;">
-      <span>PxAnon<sup style="margin-left: 5px; font-size: 20px;">Kai</sup></span>
+      <img width="40" height="40" src="/app-icon.png" alt="" style="vertical-align: -0.2em;">
+      <span>PxAnon</span>
     </h1>
     <hr style="width: 100px;">
     <h2 style="font-size: 24px;">H なのはダメ！</h2>
@@ -82,7 +82,9 @@
     </p>
   </div>
   <script>
-    window.umami = window.umami || { track: () => {} }
+    function track (key, val) {
+      window.umami && window.umami.track(key, val)
+    }
     window.onload = function () {
       const images = [
         'https://upload-bbs.miyoushe.com/upload/2023/04/17/190122060/b8b72d059259260cabe9b6194373ee84_3762224610399620263.jpg',
@@ -99,15 +101,15 @@
       return arr[parseInt(Math.random() * arr.length, 10)]
     }
     function goTest() {
-      const urls = ['./test/math.html', './test/pubchem.html', './test/b64.html', './test/zhuyin.html']
+      const urls = ['./test/math.html', './test/pubchem.html', './test/b64.html']
       location.href = randomEl(urls)
     }
     function goCaptcha() {
       location.href = './test/captcha.html'
     }
     function goDownloadApp() {
-      window.umami.track('zq39i1hjru_goDownloadApp')
-      location.href = 'https://install.appcenter.ms/users/yumine/apps/pixiv-viewer/distribution_groups/beta'
+      track('zq39i1hjru_goDownloadApp')
+      location.href = 'https://github.com/asadahimeka/pixiv-viewer/releases'
     }
     function changeLang() {
       localStorage.setItem('PXV_LANG', 'en')
@@ -115,7 +117,7 @@
       location.replace('/')
     }
     function closeSwitch() {
-      window.umami.track('zq39i1hjru_closeSwitch')
+      track('zq39i1hjru_closeSwitch')
       localStorage.removeItem('PXV_NSFW_ON')
       localStorage.removeItem('PXV_CNT_SHOW')
       location.replace('/')

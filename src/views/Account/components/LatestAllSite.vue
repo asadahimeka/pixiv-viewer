@@ -10,13 +10,13 @@
     :error-text="$t('tips.net_err')"
     @load="getRankList"
   >
-    <wf-cont v-bind="$store.getters.wfProps">
+    <wf-cont>
       <ImageCard
         v-for="art in artList"
         :key="art.id"
         mode="all"
         :artwork="art"
-        @click-card="toArtwork($event)"
+        @click-card="toArtwork(art)"
       />
     </wf-cont>
   </van-list>
@@ -25,7 +25,7 @@
 <script>
 import { getNewIllusts } from '@/api/user'
 import ImageCard from '@/components/ImageCard'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 
 export default {
   name: 'LatestAllSite',
@@ -63,11 +63,11 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
   },

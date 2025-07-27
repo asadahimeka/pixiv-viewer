@@ -9,6 +9,7 @@
       v-for="(url, index) in artwork.images"
       :key="index"
       class="image-box"
+      :style="index==0&&artworkRatio>0.6?`--ratio:${artworkRatio}`:''"
     >
       <!-- :style="index === 0 ? { width: `${displayWidth}px`, height: `${displayWidth / (artwork.width / artwork.height)}px` } : null" -->
       <!-- :style="{height: `${(375/artwork.width*artwork.height).toFixed(2)}px`}" -->
@@ -31,6 +32,7 @@
         @click.native.stop="view(index)"
         @contextmenu.native="preventContext"
       />
+      <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
       <!-- <img
         v-else
         :src="getImgUrl(url)"
@@ -54,6 +56,7 @@
       <div v-if="ugoiraPlaying" class="btn-pause" @click="drawCanvas('pause')">
         <Icon class="pause" name="pause" scale="6" />
       </div>
+      <div v-else-if="progressShow" class="loading"></div>
       <div v-else class="btn-play" @click="playUgoira()">
         <Icon class="play" name="play" scale="6" />
       </div>
@@ -68,17 +71,17 @@
 import { mapGetters } from 'vuex'
 import { Dialog, ImagePreview } from 'vant'
 import axios from 'axios'
-import JSZip from 'jszip'
-import GIF from 'gif.js'
-import tsWhammy from 'ts-whammy'
-import FileSaver from 'file-saver'
+// import JSZip from 'jszip'
+// import GIF from 'gif.js'
+// import tsWhammy from 'ts-whammy'
+// import { encode as encodeMP4 } from 'modern-mp4'
 import api from '@/api'
-import { LocalStorage } from '@/utils/storage'
-import { sleep, fancyboxShow, loadScript } from '@/utils'
+import { BASE_URL } from '@/consts'
+import { sleep, fancyboxShow, loadScript, downloadFile } from '@/utils'
+import store from '@/store'
+import { getArtworkFileName } from '@/store/actions/filename'
 
-const imgResSel = LocalStorage.get('PXV_DTL_IMG_RES', navigator.userAgent.includes('Mobile') ? 'Medium' : 'Large')
-const isLongpressDL = LocalStorage.get('PXV_LONGPRESS_DL', false)
-const useFancybox = LocalStorage.get('PXV_USE_FANCYBOX', false)
+const { isLongpressDL, imgReso, autoPlayUgoira } = store.state.appSetting
 
 export default {
   props: {
@@ -86,19 +89,9 @@ export default {
       type: Object,
       required: true,
     },
-    // lazy: {
-    //   type: Boolean,
-    //   default: true,
-    // },
-    // maybeAiAuthor: {
-    //   type: Boolean,
-    //   default: false,
-    // },
   },
   data() {
     return {
-      // displayWidth: 0,
-      // displayHeight: 0,
       isShrink: false,
       ugoira: null,
       ugoiraPlaying: false,
@@ -115,6 +108,20 @@ export default {
     ...mapGetters(['isCensored']),
     censored() {
       return this.isCensored(this.artwork)
+    },
+    artworkRatio() {
+      return this.artwork.width / this.artwork.height
+    },
+    seasonEffectSrc() {
+      const effects = this.$store.state.seasonEffects
+      let src = ''
+      this.artwork.tags?.some(t => {
+        const act = effects?.find(e => e.tag == t.name)
+        if (!act) return false
+        src = act.src
+        return true
+      })
+      return src
     },
   },
   watch: {
@@ -133,11 +140,12 @@ export default {
   methods: {
     getImgUrl(urls) {
       const urlMap = {
-        Medium: urls.l,
-        Large: urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/'),
-        Original: urls.o,
+        'Medium': urls.l,
+        'Large(WebP)': urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/'),
+        'Large': urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/'),
+        'Original': urls.o,
       }
-      return urlMap[imgResSel] || urls.l
+      return urlMap[imgReso] || urls.l
     },
     async view(index) {
       if (this.censored) {
@@ -147,7 +155,7 @@ export default {
         })
         return
       }
-      if (useFancybox) {
+      if (store.state.appSetting.isUseFancybox) {
         fancyboxShow(this.artwork, index)
       } else {
         ImagePreview({
@@ -160,19 +168,19 @@ export default {
       }
     },
     preventContext(/** @type {Event} */ event) {
-      if (!isLongpressDL) return true
+      if (!this.isLongpressDL) return true
       event.preventDefault()
       event.stopPropagation()
       return false
     },
     async downloadArtwork(/** @type {Event} */ ev, index) {
       console.log('ev: ', ev)
-      if (!isLongpressDL || this.artwork.type == 'ugoira') {
+      if (!this.isLongpressDL || this.artwork.type == 'ugoira') {
         return
       }
       ev.preventDefault()
       const src = this.artwork.images[index].o
-      const fileName = `${this.artwork.author.name}_${this.artwork.title}_${this.artwork.id}_p${index}.${src.split('.').pop()}`
+      const fileName = `${getArtworkFileName(this.artwork, index)}.${src.split('.').pop()}`
       const res = await Dialog.confirm({
         title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
         message: fileName,
@@ -183,7 +191,7 @@ export default {
       }).catch(() => 'cancel')
       if (res != 'confirm') return
       await this.$nextTick()
-      FileSaver.saveAs(src, fileName)
+      await downloadFile(src, fileName, { subDir: store.state.appSetting.dlSubDirByAuthor ? this.artwork.author.name : undefined })
     },
     showFull() {
       if (this.isShrink) this.isShrink = false
@@ -194,7 +202,7 @@ export default {
     //     forbidClick: true,
     //   })
     //   try {
-    //     const resp = await fetch(`https://hibi-nx.pixiv.pics/api/ai-image-detect?url=${url}`)
+    //     const resp = await fetch(`https://hibiapi.cocomi.eu.org/api/ai-image-detect?url=${url}`)
     //     const json = await resp.json()
     //     loading.clear()
     //     Dialog.alert({
@@ -226,63 +234,42 @@ export default {
       }
 
       const ugoira = await this.ugoiraMetadata()
-      const frames = {}
-      ugoira.frames.forEach(frame => {
-        frames[frame.file] = frame
-      })
-
       this.ugoira = {
-        frames,
         zip: ugoira.zip,
+        frames: ugoira.frames.reduce((res, frame) => {
+          res[frame.file] = frame
+          return res
+        }, {}),
       }
-      // console.log(this.ugoira);
-      this.progressShow = true
-      axios
-        .get(ugoira.zip, {
+
+      try {
+        this.progressShow = true
+        const resp = await axios.get(ugoira.zip, {
           responseType: 'blob',
           timeout: 1000 * 60,
           onDownloadProgress: progress => {
             this.progress = progress.loaded / progress.total
           },
         })
-        .then(resp => {
-          const jszip = new JSZip()
-          jszip.loadAsync(resp.data).then(zip => {
-            let index = 0
-            const files = Object.keys(zip.files)
-            files.forEach(name => {
-              zip
-                .file(name)
-                .async('blob')
-                .then(async blob => {
-                  return {
-                    blob,
-                    bmp: await createImageBitmap(blob),
-                  }
-                })
-                .then(({ blob, bmp }) => {
-                  this.ugoira.frames[name].blob = blob
-                  this.ugoira.frames[name].bmp = bmp
-
-                  if (++index === files.length) {
-                    console.info(
-                      'Frames loaded:',
-                      `frames ${files.length}`,
-                      `size ${resp.data.size}`
-                    )
-                    this.progressShow = false
-                    this.drawCanvas('play')
-                  }
-                })
-            })
-          })
+        const { default: JSZip } = await import('jszip')
+        const jszip = new JSZip()
+        const zip = await jszip.loadAsync(resp.data)
+        const files = Object.keys(zip.files)
+        await Promise.all(files.map(async name => {
+          const blob = await zip.file(name).async('blob')
+          const bmp = await createImageBitmap(blob)
+          this.ugoira.frames[name].blob = blob
+          this.ugoira.frames[name].bmp = bmp
+        }))
+        console.info('Frames loaded:', `frames ${files.length}`, `size ${resp.data.size}`)
+        this.progressShow = false
+        this.drawCanvas('play')
+      } catch (err) {
+        this.resetUgoira()
+        this.$toast({
+          message: err.message,
         })
-        .catch(error => {
-          this.resetUgoira()
-          this.$toast({
-            message: error.message,
-          })
-        })
+      }
     },
     drawCanvas(action) {
       const ctx = this.$refs.ugoira[0].getContext('2d')
@@ -319,21 +306,19 @@ export default {
         this.ugoiraPlaying = false
       }
     },
-    downloadZIP() {
-      FileSaver.saveAs(
-        this.ugoira.zip,
-        `[${this.artwork.author.name}] ${this.artwork.title} - ${this.artwork.id}.zip`
-      )
+    async downloadZIP() {
+      await downloadFile(this.ugoira.zip, `${getArtworkFileName(this.artwork)}.zip`, { subDir: 'ugoira' })
     },
     // ref: https://github.com/xuejianxianzun/PixivBatchDownloader/blob/master/src/ts/ConvertUgoira/ToAPNG.ts
     async downloadAPNG() {
+      this.$toast(this.$t('tip.down_wait'))
+
       if (!window.UPNG) {
-        await loadScript('https://lib.baomitu.com/pako/2.1.0/pako_deflate.min.js')
-        await loadScript('https://lib.baomitu.com/upng-js/2.1.0/UPNG.min.js')
+        await loadScript(`${BASE_URL}static/js/pako_deflate.min.js`)
+        await loadScript(`${BASE_URL}static/js/UPNG.min.js`)
       }
 
-      this.$toast(this.$t('tip.down_wait'))
-      await sleep(1000)
+      await sleep(200)
 
       const { width, height } = this.artwork
       const canvas = document.createElement('canvas')
@@ -354,22 +339,11 @@ export default {
 
       images = null
 
-      FileSaver.saveAs(
-        blob,
-        `[${this.artwork.author.name}] ${this.artwork.title} - ${this.artwork.id}.apng`
-      )
+      await downloadFile(blob, `${getArtworkFileName(this.artwork)}.apng`, { subDir: 'ugoira' })
     },
     async downloadWebM() {
-      if (/iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream) {
-        this.$toast({
-          message: this.$t('tips.ios_webm'),
-          icon: require('@/icons/error.svg'),
-        })
-        return
-      }
-
       this.$toast(this.$t('tip.down_wait'))
-      await sleep(1000)
+      await sleep(200)
 
       const { width, height } = this.artwork
 
@@ -395,23 +369,20 @@ export default {
         duration += frame.delay
       })
 
+      const { default: tsWhammy } = await import('ts-whammy')
       const webm = tsWhammy.fromImageArrayWithOptions(images, { duration: duration / 1000 })
 
-      FileSaver.saveAs(
-        webm,
-        `[${this.artwork.author.name}] ${this.artwork.title} - ${this.artwork.id}.webm`
-      )
+      await downloadFile(webm, `${getArtworkFileName(this.artwork)}.webm`, { subDir: 'ugoira' })
     },
     async downloadGIF() {
       this.$toast(this.$t('tip.down_wait'))
-      await sleep(1000)
 
       let images = Object.values(this.ugoira.frames)
       let offset = 1
       if (images.length >= 100) {
         // 抽帧间隔
         offset = 2
-        images = images.filter((frame, idx) => idx % offset === 0) // 抽帧
+        images = images.filter((_, idx) => idx % offset === 0) // 抽帧
         // .map(frame => URL.createObjectURL(frame.blob));
       }
 
@@ -422,55 +393,67 @@ export default {
       cacheCanvas.height = height
       const ctx = cacheCanvas.getContext('2d')
 
+      const { default: GIF } = await import('gif.js')
       const gif = new GIF({
         workers: 10,
         quality: 10,
         width,
         height,
-        workerScript: `${process.env.BASE_URL}static/js/gif.worker.js`,
+        workerScript: `${BASE_URL}static/js/gif.worker.js`,
       })
       Object.values(images).forEach(frame => {
         ctx.clearRect(0, 0, width, height)
         ctx.drawImage(frame.bmp, 0, 0, width, height)
         gif.addFrame(ctx, { copy: true, delay: frame.delay * offset })
       })
-      gif.on('finished', blob => {
-        FileSaver.saveAs(
-          blob,
-          `[${this.artwork.author.name}] ${this.artwork.title} - ${this.artwork.id}.gif`
-        )
+      gif.on('finished', async blob => {
+        await downloadFile(blob, `${getArtworkFileName(this.artwork)}.gif`, { subDir: 'ugoira' })
       })
       gif.render()
     },
+    // ref: https://github.com/FreeNowOrg/PixivNow/blob/master/src/utils/UgoiraPlayer.ts#L195
+    async downloadMP4() {
+      this.$toast(this.$t('tip.down_wait'))
+
+      const { width, height } = this.artwork
+      let frames = Object.values(this.ugoira.frames).map(frame => ({
+        data: frame.bmp,
+        duration: frame.delay,
+      }))
+      this.resetUgoira()
+      const { encode } = await import('modern-mp4')
+      const mp4File = await encode({ frames, width, height, audio: false })
+      const blob = new Blob([mp4File], { type: 'video/mp4' })
+      frames = null
+      await downloadFile(blob, `${getArtworkFileName(this.artwork)}.mp4`, { subDir: 'ugoira' })
+    },
     download(type) {
+      if (this.progressShow) {
+        this.$toast(this.$t('tips.loading'))
+        return
+      }
+      const needPlay = !['MP4(Server)', 'Other'].includes(type)
+      if (!this.ugoira && needPlay) {
+        this.$toast(this.$t('artwork.download.ugoira.tip'))
+        return
+      }
       window.umami?.track('download_ugoira', { dl_type: type })
-      switch (type) {
-        case 'ZIP':
-          this.downloadZIP()
-          break
-
-        case 'GIF':
-          this.downloadGIF()
-          break
-
-        case 'WebM':
-          this.downloadWebM()
-          break
-
-        case 'APNG':
-          this.downloadAPNG()
-          break
-
-        case 'MP4':
-          window.open(`https://ugoira-mp4-dl.cocomi.eu.org/${this.artwork.id}`, '_blank', 'noopener')
-          break
-
-        case 'Other':
-          window.open(`https://ugoira.cocomi.eu.org/?id=${this.artwork.id}`, '_blank', 'noopener')
-          break
-
-        default:
-          break
+      const actions = {
+        'ZIP': () => this.downloadZIP(),
+        'GIF': () => this.downloadGIF(),
+        'WebM': () => this.downloadWebM(),
+        'APNG': () => this.downloadAPNG(),
+        'MP4(Browser)': () => this.downloadMP4(),
+        'MP4(Server)': () => window.open(`https://ugoira-mp4-dl.cocomi.eu.org/${this.artwork.id}`, '_blank', 'noopener'),
+        'Other': () => window.open(`https://ugoira.cocomi.eu.org/?id=${this.artwork.id}`, '_blank', 'noopener'),
+      }
+      try {
+        actions[type]?.()
+      } catch (err) {
+        window.umami?.track('download_ugoira_err', { error: err.message })
+        this.$toast({
+          message: this.$t('H_rYWoPA0uI7TU4YCbIz0'),
+        })
       }
     },
     openDownloadPanel() {
@@ -499,6 +482,10 @@ export default {
             this.isShrink = true
           } else {
             this.isShrink = false
+          }
+
+          if (this.artwork.type == 'ugoira' && autoPlayUgoira) {
+            this.playUgoira()
           }
         }, 0)
       })
@@ -621,6 +608,17 @@ export default {
       color: rgba(122, 172, 208, 0.9);
     }
 
+    .loading {
+      position: absolute;
+      right: 16px;
+      bottom: 16px;
+      width: 6em;
+      height: 6em;
+      background: rgba(122, 172, 208, 0.45) url('~@/icons/loading.svg');
+      background-size: 100%;
+      border-radius 50%
+    }
+
     .progress-bar {
       position: absolute;
       bottom: 0;
@@ -637,6 +635,24 @@ export default {
         background: linear-gradient(to right, #3fffa2 0%, #1a9be0 100%);
       }
     }
+  }
+}
+</style>
+<style scoped>
+.image-view.loaded .image[lazy="loaded"] + .season-effect {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 99;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: var(--bg) no-repeat center center / contain;
+}
+@media screen and (max-width: 600px) {
+  .ia-cont .ia-left .image-box {
+    aspect-ratio: var(--ratio);
   }
 }
 </style>

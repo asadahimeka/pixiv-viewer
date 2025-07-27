@@ -2,9 +2,11 @@
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('user.sess.login') }}</h3>
-    <van-cell size="large" center title="App API (RefreshToken)" is-link @click="openConfirmDialog('showTokenDialog')" />
-    <van-cell size="large" center title="App API (OAuth)" is-link @click="openConfirmDialog('showConfirmDialog')" />
-    <van-cell size="large" center title="Web API (Cookie)" is-link to="/account/session" />
+    <div>
+      <van-cell size="large" center :title="$t('hqciRRXfoN19LYLh8xr4D')" is-link @click="openConfirmDialog('showTokenDialog')" />
+      <van-cell size="large" center :title="$t('8zJrQTdrphmkCMMgL9SPW')" is-link @click="openConfirmDialog('showConfirmDialog')" />
+      <van-cell size="large" center :title="$t('3ZvAP-w7q7teBcLoqOgCc')" is-link to="/account/session" />
+    </div>
     <van-dialog
       v-model="showConfirmDialog"
       width="9rem"
@@ -16,8 +18,8 @@
     >
       <van-cell>{{ $t('login.o.desc1') }}</van-cell>
       <van-cell>{{ $t('login.o.desc2') }}</van-cell>
-      <van-cell>{{ $t('login.o.desc3') }} <a href="https://github.com/fengyc/URLRedirector" target="_blank">🔗github.com/fengyc/URLRedirector</a></van-cell>
-      <van-cell><i style="cursor: pointer;" @click="copyRule">{{ $t('login.o.desc4') }}</i></van-cell>
+      <van-cell>{{ $t('login.o.desc3') }} <a href="https://einaregilsson.com/redirector/" target="_blank">🔗einaregilsson.com/redirector/</a></van-cell>
+      <van-cell><a href="/helper/Redirector.json" target="_blank" download>{{ $t('login.o.desc4') }}</a></van-cell>
       <van-cell>{{ $t('login.o.desc5') }}</van-cell>
       <van-cell>{{ $t('login.o.desc6') }} <a href="https://www.tampermonkey.net/index.php" target="_blank">🔗www.tampermonkey.net</a></van-cell>
       <van-cell><a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank">{{ $t('login.o.desc7') }}</a></van-cell>
@@ -38,7 +40,7 @@
       <van-cell><a href="https://www.nanoka.top/posts/e78ef86/" target="_blank">🔗https://www.nanoka.top/posts/e78ef86/</a></van-cell>
       <!-- <van-cell><a href="https://github.com/Tsuk1ko/pxder#%E5%87%86%E5%A4%87" target="_blank">🔗https://github.com/Tsuk1ko/pxder</a></van-cell> -->
       <!-- <van-cell><a href="https://github.com/mixmoe/HibiAPI/issues/53" target="_blank">🔗https://github.com/mixmoe/HibiAPI/issues/53</a></van-cell> -->
-      <van-field v-model="appConfig.refreshToken" label="RefreshToken：" label-width="2rem" :placeholder="$t('login.t.d3')" />
+      <van-field v-model.trim="appConfig.refreshToken" label="RefreshToken：" label-width="2.75rem" :placeholder="$t('login.t.d3')" />
       <van-cell>
         <div class="flex">
           <span style="margin-right: 0.3rem">{{ $t('setting.other.direct_mode.proxy.title') }}</span>
@@ -52,7 +54,6 @@
 <script>
 import { getLoginURL } from '@/api/client/login'
 import PixivAuth from '@/api/client/pixiv-auth'
-import { copyText } from '@/utils'
 import { LocalStorage } from '@/utils/storage'
 import { Dialog } from 'vant'
 
@@ -113,13 +114,6 @@ export default {
       }
       await this.$nextTick()
       PixivAuth.writeConfig(this.appConfig)
-    },
-    copyRule() {
-      copyText(
-        `${location.origin}/helper/redirect.json`,
-        () => this.$toast(this.$t('tips.copylink.succ')),
-        () => {}
-      )
     },
   },
 }

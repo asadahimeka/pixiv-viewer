@@ -40,10 +40,10 @@ const HASH_SECRET = '28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0
 
 const DEFAULT_HEADERS = {
   'App-OS': 'Android',
-  'App-OS-Version': 'Android 13.0',
-  'App-Version': '6.103.0',
+  'App-OS-Version': 'Android 14.0',
+  'App-Version': '6.124.0',
   'Accept-Language': 'zh-CN',
-  'User-Agent': 'PixivAndroidApp/6.103.0 (Android 13.0; Pixel 7)',
+  'User-Agent': 'PixivAndroidApp/6.124.0 (Android 14.0; Pixel 8)',
 }
 
 function callApi(url, options) {
@@ -524,19 +524,14 @@ class PixivApi {
     return this.requestUrl(`/v2/illust/comment/replies?${queryString}`)
   }
 
-  illustRelated(id, options) {
+  illustRelated(id, options = {}) {
     if (!id) {
       return Promise.reject(new Error('illust_id required'))
     }
 
-    const queryString = qs.stringify(
-      Object.assign(
-        {
-          illust_id: id,
-        },
-        options
-      )
-    )
+    const { nextUrl } = options
+    delete options.nextUrl
+    const queryString = nextUrl || qs.stringify(Object.assign({ illust_id: id }, options))
     return this.requestUrl(`/v2/illust/related?${queryString}`)
   }
 

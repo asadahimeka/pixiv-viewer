@@ -10,8 +10,14 @@
       <van-tab :title="$t('follow.fav')" name="2">
         <MyBookmarks v-if="activeTab == 2" />
       </van-tab>
+      <van-tab :title="`${$t('follow.fav')}(${$t('common.novel')})`" name="7">
+        <MyBookmarksNovel v-if="activeTab == 7" />
+      </van-tab>
       <van-tab :title="$t('follow.user')" name="3">
         <FollowedUsers v-if="activeTab == 3" />
+      </van-tab>
+      <van-tab :title="$t('iHxoO4eLVL-CHSVMoVynN')" name="6">
+        <RecommUser v-if="activeTab == 6" />
       </van-tab>
       <van-tab :title="$t('follow.latest')" name="4">
         <LatestAllSite v-if="activeTab == 4" />
@@ -28,10 +34,20 @@ import LatestAllSite from './components/LatestAllSite.vue'
 import FeedsIllusts from './components/FeedsIllusts.vue'
 import FeedsNovels from './components/FeedsNovels.vue'
 import MyBookmarks from './MyBookmarks.vue'
+import RecommUser from '../Search/components/RecommUser.vue'
+import MyBookmarksNovel from './MyBookmarksNovel.vue'
 
 export default {
   name: 'Following',
-  components: { FeedsIllusts, FeedsNovels, FollowedUsers, LatestAllSite, MyBookmarks },
+  components: {
+    FeedsIllusts,
+    FeedsNovels,
+    FollowedUsers,
+    LatestAllSite,
+    MyBookmarks,
+    RecommUser,
+    MyBookmarksNovel,
+  },
   data() {
     return {
       activeTab: this.$route.params?.tab || '1',
@@ -50,7 +66,8 @@ export default {
     },
   },
   activated() {
-    this.activeTab = this.$route.params?.tab || '1'
+    const act = this.$route.params?.tab
+    if (act) this.activeTab = act
   },
 }
 </script>
@@ -65,7 +82,7 @@ export default {
   .van-tabs__nav
     padding-bottom 0
     background: rgba(255,255,255,0.8)
-    backdrop-filter: saturate(200%) blur(0.08rem)
+    backdrop-filter: saturate(200%) blur(10PX)
   .van-tab
     margin 0 0.1rem
     padding 0

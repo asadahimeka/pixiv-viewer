@@ -19,6 +19,7 @@
       position: relative;
       width: 30%;
       max-width: 30%;
+      cursor: pointer;
     }
 
     #q_imgs>div::before {
@@ -31,46 +32,79 @@
       color: #fff;
     }
 
+    #q_imgs>div.act::after {
+      content: '✅';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      font-size: 26px;
+      text-align: right;
+    }
+
     #q_imgs>div img {
       width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
   </style>
-  <script async defer="defer" src="https://um.nanoka.top/script.js"
-    data-website-id="69717e89-51a1-409a-80e6-89210a688efd" data-cache="true"></script>
+  <script src="https://um.nanoka.top/script.js" data-website-id="69717e89-51a1-409a-80e6-89210a688efd" data-cache="true"></script>
+  <script src="https://lib.baomitu.com/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="dd.js" disable-devtool-auto></script>
 </head>
 
 <body>
   <div id="app">
     <p id="q_title"></p>
-    <p>答案请输入图片的序号，多个序号以英文逗号分隔</p>
-    <p>
-      输入答案：<input id="ans">&nbsp;&nbsp;<button id="sub_btn">提交</button>&nbsp;&nbsp;<button
-        onclick="reload()">换一题</button>
-    </p>
+    <p>点击图片选择，再次点击取消选择&nbsp;&nbsp;<button id="sub_btn">提交</button>&nbsp;&nbsp;<button onclick="reload()">换一题</button></p>
     <p id="q_imgs"></p>
   </div>
   <script>
-    window.umami = window.umami || { track: () => {} }
-    function randomEl(arr) {
-      return arr[parseInt(Math.random() * arr.length, 10)]
+    function track (key, val) {
+      window.umami && window.umami.track(key, val)
+    }
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
     }
     function reload() {
       location.reload()
     }
     window.onload = function () {
-      var ans = ''
+      let ans = ''
+      let isAnsEnc = false
       fetch('./captcha.json').then(function (resp) {
         return resp.json()
       }).then(function (arr) {
-        const el = Math.random() < 0.5 ? arr[0] : randomEl(arr)
-        q('#q_title').innerText = el.q
-        q('#q_imgs').innerHTML = el.i.map((e, i) => `<div data-index=${i + 1}><img src="${e}" alt></div>`).join('')
-        ans = el.a
+        let lastIndex = localStorage.getItem('_PXV_CAPTCHA_INDEX') || 0
+        const el = arr[lastIndex]
+        lastIndex = Number(lastIndex) + 1
+        if (lastIndex >= arr.length) lastIndex = 0
+        localStorage.setItem('_PXV_CAPTCHA_INDEX', lastIndex)
+        if (el.a) {
+          q('#q_title').innerText = el.q
+          q('#q_imgs').innerHTML = el.i.map((e, i) => `<div data-index=${i + 1} onclick="this.classList.toggle('act')"><img src="${e}" alt></div>`).join('')
+          ans = el.a
+          isAnsEnc = true
+        } else {
+          const imgs = shuffleArray(el.i)
+          q('#q_title').innerText = el.q
+          q('#q_imgs').innerHTML = imgs.map((e, i) => `<div data-index=${i + 1} onclick="this.classList.toggle('act')"><img src="${e.replace('y:', '')}" alt></div>`).join('')
+          ans = imgs.map((e, i) => e.startsWith('y:') ? i + 1 : null).filter(Boolean).join(',')
+        }
       })
       q('#sub_btn').onclick = function () {
-        const val = q('#ans').value
-        window.umami.track('captcha_answer', { val: q('#q_title').innerText + ': ' + val + '(' + ans + ')'})
-        if (val == ans) {
+        track('captcha_answer_')
+        const val = [...document.querySelectorAll('#q_imgs .act')].map(e => e.getAttribute('data-index')).join(',')
+        const res = isAnsEnc ? dec(ans, val) : ans
+        if (val == res) {
+          track('captcha_answer_correct', { val: q('#q_title').innerText + ': ' + val })
           alert('回答正确')
           localStorage.setItem('PXV_NSFW_ON', '{"data":0,"expires":-1}')
           location.replace('/')
@@ -78,6 +112,13 @@
           alert('回答错误')
           reload()
         }
+      }
+    }
+    function dec(ans, val) {
+      try {
+        return CryptoJS.AES.decrypt(ans, val).toString(CryptoJS.enc.Utf8) || 'DECRYPT_ERROR'
+      } catch (err) {
+        return 'DECRYPT_ERROR'
       }
     }
     function q(sel) {

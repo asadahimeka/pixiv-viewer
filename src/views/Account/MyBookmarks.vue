@@ -10,15 +10,21 @@
       :error-text="$t('tips.net_err')"
       @load="getMemberFavorite()"
     >
-      <wf-cont v-bind="$store.getters.wfProps">
-        <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork($event)" />
+      <wf-cont>
+        <ImageCard
+          v-for="art in artList"
+          :key="art.id"
+          mode="all"
+          :artwork="art"
+          @click-card="toArtwork(art)"
+        />
       </wf-cont>
     </van-list>
   </div>
 </template>
 
 <script>
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import { mapState } from 'vuex'
 import ImageCard from '@/components/ImageCard'
 import { getBookmarkIllusts } from '@/api/user'
@@ -104,11 +110,11 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
   },

@@ -24,7 +24,7 @@
 <script>
 import { localApi } from '@/api'
 import NovelCard from '@/components/NovelCard'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 
 export default {
   name: 'FeedsNovels',

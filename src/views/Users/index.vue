@@ -40,45 +40,75 @@
                 {{ isFollowed ? $t('user.followed') : $t('user.follow') }}
               </van-button>
             </div>
-            <ul class="site-list">
-              <li class="site user_account">
-                <a target="_blank" rel="noreferrer" :href="'https://pixiv.me/' + userInfo.account">
-                  @{{ userInfo.account }}
-                </a>
-              </li>
-              <li class="site">·</li>
-              <li v-longpress="onUidLongpress" class="site" @click="copyId">
-                <span class="user_id">ID:{{ userInfo.id }}</span>
-                <Icon name="copy" />
-              </li>
-              <!-- <li v-if="userInfo.region" class="site">
-                <Icon class="icon loc" name="loc" />
+            <div class="share_btn" @click="share">
+              <Icon class="icon" name="share" />
+            </div>
+            <div>
+              <ul class="site-list">
+                <li class="site user_account">
+                  <a target="_blank" rel="noreferrer" :href="'https://pixiv.me/' + userInfo.account">
+                    @{{ userInfo.account }}
+                  </a>
+                </li>
+                <li class="site">·</li>
+                <li v-longpress="onUidLongpress" class="site" @click="copyId">
+                  <span class="user_id">ID:{{ userInfo.id }}</span>
+                  <Icon name="copy" />
+                </li>
+                <!-- <li v-if="userInfo.region" class="site">
+                  <Icon class="icon loc" name="loc" />
+                  <span>{{ userInfo.region }}</span>
+                </li> -->
+              </ul>
+              <ul class="site-list" :class="{ multi: userInfo.webpage && userInfo.twitter_url }">
+                <li v-if="userInfo.webpage" class="site">
+                  <Icon class="icon home" name="home-s" />
+                  <a :href="userInfo.webpage" target="_blank">{{ userInfo.webpage | hostname }}</a>
+                </li>
+                <li v-if="userInfo.twitter_url" class="site">
+                  <Icon class="icon twitter" name="twitter" />
+                  <a :href="userInfo.twitter_url" target="_blank">@{{ userInfo.twitter_account }}</a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <span v-if="isCurrentUser" class="follow" style="cursor: pointer;" @click="toFollowedUsers">
+                {{ $t('user.following') }}
+                <span class="num">
+                  <a>{{ userInfo.follow }}</a>
+                </span>
+              </span>
+              <span v-else class="follow">
+                {{ $t('user.following') }}
+                <span class="num">
+                  <a
+                    :href="`https://www.pixiv.net/users/${userInfo.id}/following`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="margin-left: -.3em;;color: inherit;"
+                  >
+                    {{ userInfo.follow }}
+                  </a>
+                </span>
+              </span>
+              <span v-if="userInfo.friend" class="friend">
+                {{ $t('user.friend') }}
+                <span class="num">
+                  <a
+                    :href="`https://www.pixiv.net/users/${userInfo.id}/mypixiv`"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style="margin-left: -.3em;;color: inherit;"
+                  >
+                    {{ userInfo.friend }}
+                  </a>
+                </span>
+              </span>
+              <span v-if="userInfo.region" class="follow">
+                <Icon name="loc" />
                 <span>{{ userInfo.region }}</span>
-              </li> -->
-            </ul>
-            <ul class="site-list" :class="{ multi: userInfo.webpage && userInfo.twitter_url }">
-              <li v-if="userInfo.webpage" class="site">
-                <Icon class="icon home" name="home-s" />
-                <a :href="userInfo.webpage" target="_blank">{{ userInfo.webpage | hostname }}</a>
-              </li>
-              <li v-if="userInfo.twitter_url" class="site">
-                <Icon class="icon twitter" name="twitter" />
-                <a :href="userInfo.twitter_url" target="_blank">@{{ userInfo.twitter_account }}</a>
-              </li>
-            </ul>
-            <span v-if="isCurrentUser" class="follow" style="cursor: pointer;" @click="toFollowedUsers">
-              {{ $t('user.following') }}<span class="num">{{ userInfo.follow }}</span>
-            </span>
-            <span v-else class="follow">
-              {{ $t('user.following') }}<span class="num">{{ userInfo.follow }}</span>
-            </span>
-            <span v-if="userInfo.friend" class="friend">
-              {{ $t('user.friend') }}<span class="num">{{ userInfo.friend }}</span>
-            </span>
-            <span v-if="userInfo.region" class="follow">
-              <Icon name="loc" />
-              <span>{{ userInfo.region }}</span>
-            </span>
+              </span>
+            </div>
             <div class="user_link">
               <span>🔗</span>
               <a
@@ -101,7 +131,7 @@
           class="user-tabs"
           sticky
           animated
-          swipeable
+          :swipeable="activeTab!='illusts'"
           swipe-threshold="3"
           color="#F2C358"
         >
@@ -228,7 +258,7 @@ import FavoriteIllusts from './components/FavoriteIllusts'
 import RecommUser from '../Search/components/RecommUser.vue'
 import AuthorNovels from './components/AuthorNovels.vue'
 import FavoriteNovels from './components/FavoriteNovels.vue'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import { Dialog } from 'vant'
 import api, { localApi } from '@/api'
 import { getCache, setCache } from '@/utils/storage/siteCache'
@@ -355,7 +385,7 @@ export default {
 
         let historyList = await getCache('users.history', [])
         if (!Array.isArray(historyList)) historyList = []
-        if (historyList.length > 100) historyList = historyList.slice(0, 100)
+        // if (historyList.length > 100) historyList = historyList.slice(0, 100)
         historyList = _.uniqBy([res.data, ...historyList], 'id')
         setCache('users.history', historyList)
       } else {
@@ -392,12 +422,20 @@ export default {
         }
       }).catch(() => {})
     },
-    share() {
-      copyText(
-        `${this.userInfo.name} ${location.href}`,
-        () => this.$toast(this.$t('tips.copylink.succ')),
-        err => this.$toast(this.$t('tips.copy_err') + err)
-      )
+    async share() {
+      try {
+        await navigator.share({
+          title: 'PxAnon',
+          text: `${this.$t('8dWKEVyxLa8UjO0iuOA78')}：${this.userInfo.name}`,
+          url: `https://pixiv.pictures/u/${this.userInfo.id}`,
+        }).catch(() => {})
+      } catch (err) {
+        copyText(
+          `${this.userInfo.name} ${location.href}`,
+          () => this.$toast(this.$t('tips.copylink.succ')),
+          err => this.$toast(this.$t('tips.copy_err') + err)
+        )
+      }
     },
     toFollowedUsers() {
       this.$router.push({ name: 'Following', params: { tab: '3' } })
@@ -458,14 +496,14 @@ export default {
     padding-right 16px
 </style>
 <style lang="stylus" scoped>
-.user-container {
-  height: 100%;
+// .user-container {
+//   height: 100%;
 
-  .user-illusts, .user-wrap {
-    height: 100vh;
-    // overflow-y: scroll;
-  }
-}
+//   .user-illusts, .user-wrap {
+//     height: 100vh;
+//     // overflow-y: scroll;
+//   }
+// }
 
 .loading {
   position: absolute;

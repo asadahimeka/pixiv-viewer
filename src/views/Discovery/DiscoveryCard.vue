@@ -9,7 +9,7 @@
     <div class="card-box">
       <swiper class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="art in artList.slice(0, 10)" :key="art.id" class="swipe-item">
-          <ImageCard mode="meta" square :artwork="art" @click-card="toArtwork($event)" />
+          <ImageCard mode="meta" square :artwork="art" @click-card="toArtwork(art)" />
         </swiper-slide>
         <swiper-slide class="swipe-item more">
           <ImageSlide :images="slides">
@@ -31,10 +31,11 @@
 </template>
 
 <script>
+import _ from '@/lib/lodash'
+import api from '@/api'
+import { SessionStorage } from '@/utils/storage'
 import ImageCard from '@/components/ImageCard'
 import ImageSlide from '@/components/ImageSlide'
-import api from '@/api'
-import _ from 'lodash'
 
 export default {
   name: 'DiscoveryCard',
@@ -73,11 +74,7 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      setTimeout(() => {
-        this.getRankList()
-      }, 500)
-    })
+    this.getRankList()
   },
   methods: {
     async getRankList() {
@@ -94,16 +91,16 @@ export default {
       this.loading = false
     },
     toDiscovery() {
+      SessionStorage.set('discovery.illusts', this.artList)
       this.$router.push({
         name: 'Discovery',
-        params: { list: this.artList },
       })
     },
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
   },
@@ -132,12 +129,16 @@ export default {
 
     .swipe-wrap {
       height: 100%;
-      border-radius: 20px;
+      // border-radius: 20px;
       overflow: hidden;
 
       .swipe-item {
-        width 370px
+        width 4.4rem
         margin-right: 12px;
+
+        @media screen and (max-width: 500px) {
+          width 4.65rem
+        }
 
         &:last-child {
           .image-card {
@@ -148,7 +149,7 @@ export default {
         .image-card {
           // width: 50vw;
           font-size: 0;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           box-sizing: border-box;
           width: 100%;
           height: 97%;
@@ -156,7 +157,7 @@ export default {
         }
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
           height: 97%;

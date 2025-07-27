@@ -1,0 +1,23 @@
+{
+    "createdBy": "Redirector v3.5.4",
+    "createdAt": "2025-01-18T16:22:56.785Z",
+    "redirects": [
+        {
+            "description": "PxveLoginRedirect",
+            "exampleUrl": "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback?state=123&code=456",
+            "exampleResult": "https://pxve.cc/account/oauth?state=123&code=456",
+            "error": null,
+            "includePattern": "https://app-api.pixiv.net/web/v1/users/auth/pixiv/callback*",
+            "excludePattern": "",
+            "patternDesc": "",
+            "redirectUrl": "https://pxve.cc/account/oauth$1",
+            "patternType": "W",
+            "processMatches": "noProcessing",
+            "disabled": false,
+            "grouped": false,
+            "appliesTo": [
+                "main_frame"
+            ]
+        }
+    ]
+}

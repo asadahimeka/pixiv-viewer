@@ -35,7 +35,8 @@
   .van-dropdown-item__option--active,
   .van-dropdown-item__option--active .van-dropdown-item__icon,
   .van-calendar__day--middle,
-  .van-dialog__cancel[style*="color:"]
+  .van-dialog__cancel[style*="color:"],
+  .van-tag--primary.van-tag--plain
     color var(--accent-color) !important
 
   .back_to_top,
@@ -87,13 +88,15 @@
     text-decoration underline
 
   .image-card .bookmark
-    padding 0.12rem !important
-    filter none !important
-    background: rgba(0,0,0,.3)
-    backdrop-filter: blur(10px)
+    padding 7PX 7PX 5PX !important
+    filter drop-shadow(1PX 1PX 1PX var(--accent-color)) !important
+    background: rgba(255,255,255,.5)
     border-top-left-radius 0.2rem
-    .van-icon
+    .van-icon,
+    .van-loading__spinner
       color var(--accent-color) !important
+    .van-icon
+      font-size 28PX
 
   #app .rank .top .calendar
     background-image: url('~@/assets/images/calendar_op0.png')
@@ -117,7 +120,7 @@ tab-text-color($color)
   .search .search-bar-wrap .search-bar-word .word .text
     border-color #fefefe !important
 
-mygo-chara-icon($url)
+bandori-chara-icon($url)
   .setting .app-title
     img
       display none
@@ -154,6 +157,20 @@ mygo-chara-icon($url)
   .setting .app-title-desc::before,
   .Home .home-title::before
     background url($url) no-repeat center / contain
+  .ldio-content
+    &::before
+      content ''
+      display block
+      width 80PX
+      height 80PX
+      margin 0 auto
+      background url($url) no-repeat center / contain
+    img
+      display none
+    .ldio-title
+      top 100PX
+      & + .ldio-title
+        top 140PX !important
 
 artwork-tag-shadow($alpha = 0.05, $isBold = false)
   #app .artwork-meta .tag-list .tag
@@ -166,23 +183,23 @@ darken-text-preset()
   artwork-tag-shadow()
 
 // .t_Anon
-  // mygo-chara-icon("https://upload-bbs.miyoushe.com/upload/2024/04/16/190122060/32106f9522e4b98c27249f35d3958868_8413347470642025982.png")
+//   bandori-chara-icon("~@/assets/images/bandori/42Anon-Chihaya-joXxhD.png")
 
 .t_Soyo
   --accent-color darken(#FFDD88, 20%) !important
-  mygo-chara-icon("https://upload-bbs.miyoushe.com/upload/2024/04/17/190122060/212be2d3f873cfea44529289d4c85cc2_4715623065945558825.png")
+  bandori-chara-icon("~@/assets/images/bandori/44Soyo-Nagasaki-FaWW3M.png")
   darken-text-preset()
 
 .t_Taki
-  mygo-chara-icon("https://upload-bbs.miyoushe.com/upload/2024/04/17/190122060/c05edb58641b2622bdd6d9c0b6553394_5979670341200237354.png")
+  bandori-chara-icon("~@/assets/images/bandori/45Taki-Shiina-mAtLbm.png")
 
 .t_Tomori
-  mygo-chara-icon("https://upload-bbs.miyoushe.com/upload/2024/04/17/190122060/32ef5e5e1cf7f5fc9b9c223fbf9f2712_3178960435287605206.png")
+  bandori-chara-icon("~@/assets/images/bandori/41Tomori-Takamatsu-OHMnhE.png")
   tab-text-color(#333)
   artwork-tag-shadow(0.01, true)
 
 .t_Rana
-  mygo-chara-icon("https://upload-bbs.miyoushe.com/upload/2024/04/17/190122060/7535cd28469e887d37e3a5139d2894fa_8353360825500089988.png")
+  bandori-chara-icon("~@/assets/images/bandori/43Raana-Kaname-hDUANf.png")
   tab-text-color(#333)
   artwork-tag-shadow(0.05, true)
 
@@ -206,3 +223,80 @@ darken-text-preset()
 .t_LOCK
   --accent-color darken(#AAEE22, 10%) !important
   darken-text-preset()
+
+.t_Kasumi
+  bandori-chara-icon("~@/assets/images/bandori/6Kasumi-Toyama-5RT6V3.png")
+.t_Tae
+  bandori-chara-icon("~@/assets/images/bandori/7Tae-Hanazono-NvX97I.png")
+.t_Rimi
+  bandori-chara-icon("~@/assets/images/bandori/8Rimi-Ushigome-XySNxU.png")
+.t_Saaya
+  bandori-chara-icon("~@/assets/images/bandori/9Saaya-Yamabuki-s5ZgsR.png")
+.t_Arisa
+  bandori-chara-icon("~@/assets/images/bandori/10Arisa-Ichigaya-Ub9Avr.png")
+
+.t_Yukina
+  bandori-chara-icon("~@/assets/images/bandori/26Yukina-Minato-iKvRys.png")
+.t_Sayo
+  bandori-chara-icon("~@/assets/images/bandori/27Sayo-Hikawa-yTVpZh.png")
+.t_Lisa
+  bandori-chara-icon("~@/assets/images/bandori/28Lisa-Imai-G7Kaf5.png")
+.t_Ako
+  bandori-chara-icon("~@/assets/images/bandori/29Ako-Udagawa-CdqVpc.png")
+.t_Rinko
+  bandori-chara-icon("~@/assets/images/bandori/30Rinko-Shirokane-cSpZHX.png")
+
+.t_Ran
+  bandori-chara-icon("~@/assets/images/bandori/11Ran-Mitake-0Phk2K.png")
+.t_Moka
+  bandori-chara-icon("~@/assets/images/bandori/12Moca-Aoba-Ov3pCL.png")
+.t_Himari
+  bandori-chara-icon("~@/assets/images/bandori/13Himari-Uehara-Af23h0.png")
+.t_Tomoe
+  bandori-chara-icon("~@/assets/images/bandori/14Tomoe-Udagawa-V4MeiL.png")
+.t_Tsugumi
+  bandori-chara-icon("~@/assets/images/bandori/15Tsugumi-Hazawa-y38Nv3.png")
+
+.t_Aya
+  bandori-chara-icon("~@/assets/images/bandori/21Aya-Maruyama-xR7U1k.png")
+.t_Hina
+  bandori-chara-icon("~@/assets/images/bandori/22Hina-Hikawa-R7GnAW.png")
+.t_Chisato
+  bandori-chara-icon("~@/assets/images/bandori/23Chisato-Shirasagi-BNimKb.png")
+.t_Maya
+  bandori-chara-icon("~@/assets/images/bandori/24Maya-Yamato-kh5IMf.png")
+.t_Eve
+  bandori-chara-icon("~@/assets/images/bandori/25Eve-Wakamiya-xB1ABy.png")
+
+.t_Kokoro
+  bandori-chara-icon("~@/assets/images/bandori/16Kokoro-Tsurumaki-O4FbtH.png")
+.t_Kaoru
+  bandori-chara-icon("~@/assets/images/bandori/17Kaoru-Seta-xi1nZF.png")
+.t_Hagumi
+  bandori-chara-icon("~@/assets/images/bandori/18Hagumi-Kitazawa-0gfwgv.png")
+.t_Kanon
+  bandori-chara-icon("~@/assets/images/bandori/19Kanon-Matsubara-huGKWh.png")
+.t_Misaki
+  bandori-chara-icon("~@/assets/images/bandori/20Misaki-Okusawa-9pX5DG.png")
+
+.t_LAYER
+  bandori-chara-icon("~@/assets/images/bandori/36LAYER-37Q8rQ.png")
+.t_LOCK
+  bandori-chara-icon("~@/assets/images/bandori/37LOCK-5xvctz.png")
+.t_MASKING
+  bandori-chara-icon("~@/assets/images/bandori/38MASKING-PCZ7gC.png")
+.t_PAREO
+  bandori-chara-icon("~@/assets/images/bandori/39PAREO-6DPmmM.png")
+.t_CHU2
+  bandori-chara-icon("~@/assets/images/bandori/40CHU²-LF0zoh.png")
+
+.t_Mashiro
+  bandori-chara-icon("~@/assets/images/bandori/31Mashiro-Kurata-roOUKU.png")
+.t_Touko
+  bandori-chara-icon("~@/assets/images/bandori/32Touko-Kirigaya-IyTZ9d.png")
+.t_Nanami
+  bandori-chara-icon("~@/assets/images/bandori/33Nanami-Hiromachi-Y5aB90.png")
+.t_Tsukushi
+  bandori-chara-icon("~@/assets/images/bandori/34Tsukushi-Futaba-9uhm4n.png")
+.t_Rui
+  bandori-chara-icon("~@/assets/images/bandori/35Rui-Yashio-EfpbT4.png")

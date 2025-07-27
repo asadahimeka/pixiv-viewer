@@ -33,8 +33,8 @@
       />
       <div v-if="mode == 'all' || mode === 'meta'" v-longpress="isTriggerLongpress?onLongpress:null" class="meta">
         <div v-if="!isOuterMeta" class="content">
-          <h2 class="title" :title="artwork.title">{{ artwork.title }}</h2>
-          <div class="author-cont">
+          <h2 class="title" :title="artwork.title + ' ' + artwork.created" @click.stop="onImageTitleClick">{{ artwork.title }}</h2>
+          <div class="author-cont" @click.stop="toAuthor">
             <Pximg :src="artwork.author.avatar" :alt="artwork.author.name" nobg class="avatar" />
             <div class="author">{{ artwork.author.name }}</div>
           </div>
@@ -43,7 +43,9 @@
     </div>
     <div v-if="isOuterMeta && (mode == 'all' || mode === 'meta')" class="outer-meta">
       <div class="content">
-        <h2 v-longpress="onImageTitleLongpress" class="title" :title="artwork.title">{{ artwork.title }}</h2>
+        <h2 class="title" :title="artwork.title + ' ' + artwork.created" @click="onImageTitleClick">
+          {{ artwork.title }}
+        </h2>
         <div class="author-cont" @click="toAuthor">
           <Pximg :src="artwork.author.avatar" :alt="artwork.author.name" nobg class="avatar" />
           <div class="author">{{ artwork.author.name }}</div>
@@ -54,18 +56,20 @@
 </template>
 
 <script>
-import FileSaver from 'file-saver'
-import { Dialog } from 'vant'
+import { Dialog, ImagePreview } from 'vant'
 import { mapGetters } from 'vuex'
 import { localApi } from '@/api'
-import { LocalStorage } from '@/utils/storage'
 import { getCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { isAiIllust } from '@/utils/filter'
-import { fancyboxShow } from '@/utils'
+import { fancyboxShow, downloadFile } from '@/utils'
+import store from '@/store'
+import { getArtworkFileName } from '@/store/actions/filename'
 
-const isLongpressDL = LocalStorage.get('PXV_LONGPRESS_DL', false)
-const isLongpressBlock = LocalStorage.get('PXV_LONGPRESS_BLOCK', false)
-const isOuterMeta = LocalStorage.get('PXV_IMG_META_OUTER', true)
+const { isImageCardOuterMeta, isLongpressDL, isLongpressBlock, imgReso } = store.state.appSetting
+const isLargeWebp = imgReso == 'Large(WebP)'
+const getLargeWebpSrc = (src, fbk) => {
+  return src?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') || fbk
+}
 
 export default {
   props: {
@@ -96,16 +100,15 @@ export default {
       showBookmarkBtn: window.APP_CONFIG.useLocalAppApi,
       bLoading: false,
       isBookmarked: false,
+      isOuterMeta: isImageCardOuterMeta,
       isTriggerLongpress: isLongpressDL || isLongpressBlock,
-      isOuterMeta,
     }
   },
   computed: {
     imgSrc() {
-      if (this.square) {
-        return this.artwork.images[0].s
-      }
-      return this.artwork.images[0].m
+      const i0 = this.artwork.images[0]
+      if (this.square) return i0.s
+      return isLargeWebp ? getLargeWebpSrc(i0.l, i0.m) : i0.m
     },
     isAiIllust() {
       return isAiIllust(this.artwork)
@@ -193,8 +196,26 @@ export default {
       ev.preventDefault()
       isLongpressDL ? this.downloadArtwork() : this.showBlockDialog()
     },
-    onImageTitleLongpress() {
-      fancyboxShow(this.artwork, 0, e => e.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/'))
+    onImageTitleClick() {
+      if (this.artwork.novel_ai_type) {
+        this.click(this.artwork.id)
+        return
+      }
+      const getSrc = isLargeWebp
+        ? e => getLargeWebpSrc(e.l)
+        : e => e.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/')
+      if (store.state.appSetting.isUseFancybox) {
+        fancyboxShow(this.artwork, 0, getSrc)
+      } else {
+        ImagePreview({
+          images: this.artwork.images.map(getSrc),
+          startPosition: 0,
+          closeOnPopstate: true,
+          closeable: true,
+          loop: false,
+          transition: 'fade',
+        })
+      }
     },
     toAuthor() {
       if (this.$route.name == 'Users') return
@@ -232,11 +253,9 @@ export default {
     },
     async downloadArtwork() {
       if (this.artwork.type == 'ugoira') return
-      const src = this.artwork.images[0].o
-      const fileName = `${this.artwork.author.name}_${this.artwork.title}_${this.artwork.id}_p0.${src.split('.').pop()}`
       const res = await Dialog.confirm({
         title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
-        message: fileName,
+        message: this.artwork.title,
         lockScroll: false,
         closeOnPopstate: true,
         cancelButtonText: this.$t('common.cancel'),
@@ -244,7 +263,15 @@ export default {
       }).catch(() => 'cancel')
       if (res != 'confirm') return
       await this.$nextTick()
-      FileSaver.saveAs(src, fileName)
+      const len = this.artwork.images.length
+      for (let index = 0; index < len; index++) {
+        const item = this.artwork.images[index]
+        const fileName = `${getArtworkFileName(this.artwork, index)}.${item.o.split('.').pop()}`
+        await downloadFile(item.o, fileName, {
+          message: `${this.$t('tip.downloading')} (${index + 1}/${len})`,
+          subDir: store.state.appSetting.dlSubDirByAuthor ? this.artwork.author.name : undefined,
+        })
+      }
     },
   },
 }
@@ -256,7 +283,7 @@ export default {
   overflow: hidden;
   background: #fafafa;
   margin-bottom: 10px;
-  border-radius: 20px;
+  // border-radius: 20px;
 
   // @media screen and (min-width: 1280px)
   //   &:hover
@@ -341,7 +368,7 @@ export default {
   box-shadow none
   background none
   .image-card-wrapper
-    border-radius: 0.26667rem;
+    // border-radius: 0.26667rem;
 
   .meta
     background: rgba(0,0,0,.04);
@@ -395,6 +422,7 @@ export default {
     .title
       margin 6px 0
       font-weight 600
+      cursor pointer
 
     .avatar
       width: 36px;

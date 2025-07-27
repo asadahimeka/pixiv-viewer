@@ -26,15 +26,20 @@
     <div v-if="focus" class="search-dropdown">
       <div v-if="keywords.trim()" class="pid-n-uid">
         <div class="keyword" @click="onSearch">{{ $t('search.seach_tag') }} {{ keywords.trim() }} </div>
+        <template v-if="isR18On && !pidOrUidList.length">
+          <div class="keyword" @click="onSearch('R18')">{{ $t('pL1gF_vTo1c_iF5GpBIDA') }} {{ keywords.trim() }} </div>
+          <div class="keyword" @click="onSearch('safe')">{{ $t('IxG-Y2odr_0OKUJbaqV0-') }} {{ keywords.trim() }} </div>
+        </template>
         <div v-if="isSelfHibi" class="keyword" @click="searchUser">
           {{ $t('search.search_user') }} {{ keywords.trim() }}
         </div>
       </div>
       <div v-if="pidOrUidList.length" class="pid-n-uid">
         <template v-for="n in pidOrUidList">
-          <div :key="'p_' + n" class="keyword" @click="toPidPage(n)">→ {{ $t('common.artwork') }} ID: {{ n }} </div>
+          <div :key="'p_' + n" class="keyword" @click="toPidPage(n)">→ {{ $t('common.illust_manga') }} ID: {{ n }} </div>
           <div :key="'u_' + n" class="keyword" @click="toUidPage(n)">→ {{ $t('common.user') }} ID: {{ n }} </div>
-          <!-- <div :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div> -->
+          <div :key="'n_' + n" class="keyword" @click="toNovelPage(n)">→ {{ $t('common.novel') }} ID: {{ n }} </div>
+          <div v-if="n.length<6" :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div>
         </template>
       </div>
       <div v-if="keywords.trim() && autoCompleteTagList.length" class="search-history">
@@ -56,7 +61,7 @@
       </div>
     </div>
     <ImageSearch v-show="!focus && !keywords.trim()" ref="imageSearch" key="container" />
-    <div class="com_sel_tabs">
+    <div class="com_sel_tabs" :style="focus?'opacity:0;pointer-events:none':''">
       <div class="com_sel_tab cur">{{ $t('common.illust_manga') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_novel')">{{ $t('common.novel') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_user')">{{ $t('common.user') }}</div>
@@ -69,11 +74,12 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import { mapState, mapActions } from 'vuex'
 import { notSelfHibiApi } from '@/consts'
-import { i18n } from '@/i18n'
+import { BLOCK_LAST_WORD_RE } from '@/utils/filter'
 import api from '@/api'
+import store from '@/store'
 import Tags from './components/Tags'
 import ImageSearch from './components/ImageSearch'
 
@@ -94,13 +100,18 @@ export default {
       isSelfHibi: !notSelfHibiApi,
     }
   },
-  head: {
-    title: i18n.t('search.search'),
+  head() {
+    return {
+      title: this.$t('search.search'),
+    }
   },
   computed: {
     ...mapState(['searchHistory']),
     pidOrUidList() {
       return this.keywords.match(/(\d+)/g) || []
+    },
+    isR18On() {
+      return store.getters.isR18On
     },
   },
   watch: {
@@ -168,7 +179,12 @@ export default {
         this.toPidPage(id)
         return
       }
-      if (/スカラマシュ|散|(^\d+$)/i.test(this.lastWord)) {
+      const uid = this.lastWord.match(/https?:\/\/.+\/users\/(\d+)/i)?.[1]
+      if (uid) {
+        this.toUidPage(uid)
+        return
+      }
+      if (BLOCK_LAST_WORD_RE.test(this.lastWord)) {
         return
       }
       const res = await api.getTagsAutocomplete(this.lastWord)
@@ -179,12 +195,14 @@ export default {
     onFocus() {
       this.focus = true // 获取焦点
     },
-    async onSearch() {
+    async onSearch(searchType) {
       console.log('onSearch: ', this.keywords)
       this.focus = false
-      const { keywords } = this
+      let words = this.keywords
       this.reset()
-      this.$router.push(`/search/${encodeURIComponent(keywords.trim())}`)
+      if (searchType == 'R18') words = words.trim() + ' R-18'
+      if (searchType == 'safe') words = words.trim() + ' -R-18'
+      this.$router.push(`/search/${encodeURIComponent(words.trim())}`)
     },
     searchTag(keywords) {
       console.log('------- searchTag: ', keywords)
@@ -204,6 +222,10 @@ export default {
     toSpotlightPage(id) {
       this.reset()
       this.$router.push(`/spotlight/${id}`)
+    },
+    toNovelPage(id) {
+      this.reset()
+      this.$router.push(`/novel/${id}`)
     },
     clearHistory() {
       this.setSearchHistory(null)
@@ -260,7 +282,7 @@ export default {
       height: 120px;
       padding-top 0.133rem
       padding-bottom 0
-      backdrop-filter: saturate(200%) blur(6px);
+      backdrop-filter: saturate(200%) blur(10PX);
       background: rgba(255, 255, 255, 0.8);
 
       ::v-deep .van-cell {
@@ -387,7 +409,7 @@ export default {
     top 120px
     margin-bottom 0
     padding 0px 0px 20px
-    backdrop-filter: saturate(200%) blur(6px);
+    backdrop-filter: saturate(200%) blur(10PX);
     background: rgba(255, 255, 255, 0.8);
   }
 

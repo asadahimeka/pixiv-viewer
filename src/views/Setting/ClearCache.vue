@@ -4,7 +4,7 @@
     <h3 class="af_title">{{ $t('cache.title') }}</h3>
     <van-cell center :title="$t('cache.db')">
       <template #label>
-        <span>{{ size.db[1] }} {{ $t('cache.records') }} ~ {{ size.db[0] | bytes }}</span>
+        <span>{{ $t('cache.records', [size.db[1]]) }} ~ {{ size.db[0] | bytes }}</span>
       </template>
       <template #right-icon>
         <van-button type="info" size="small" @click="clearCache('db')">
@@ -14,7 +14,7 @@
     </van-cell>
     <van-cell center :title="$t('cache.local')">
       <template #label>
-        <span>{{ size.local[1] }} {{ $t('cache.records') }} ~ {{ size.local[0] | bytes }}</span>
+        <span>{{ $t('cache.records', [size.local[1]]) }} ~ {{ size.local[0] | bytes }}</span>
       </template>
       <template #right-icon>
         <van-button size="small" color="linear-gradient(to right, #ff6034, #ee0a24)" @click="clearCache('local')">
@@ -24,7 +24,7 @@
     </van-cell>
     <van-cell center :title="$t('cache.session')">
       <template #label>
-        <span>{{ size.session[1] }} {{ $t('cache.records') }} ~ {{ size.session[0] | bytes }}</span>
+        <span>{{ $t('cache.records', [size.session[1]]) }} ~ {{ size.session[0] | bytes }}</span>
       </template>
       <template #right-icon>
         <van-button type="primary" size="small" @click="clearCache('session')">
@@ -39,6 +39,7 @@
 import { Dialog } from 'vant'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import localDb from '@/utils/storage/localDb'
+import { i18n } from '@/i18n'
 
 export default {
   name: 'SettingClearCache',
@@ -52,8 +53,9 @@ export default {
       const sizes = ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB']
 
       const i = Math.floor(Math.log(bytes) / Math.log(k))
+      const n = parseFloat((bytes / Math.pow(k, i)).toFixed(dm))
 
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+      return `${i18n.locale.includes('zh') ? n : n.toLocaleString(i18n.locale)} ${sizes[i]}`
     },
   },
   components: {

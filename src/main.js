@@ -1,53 +1,58 @@
-// import 'swiper/css/swiper.css'
+import '@/lib/vant-style'
+import 'swiper/css/swiper.css'
 import '@/assets/style/base.styl'
 import '@/assets/style/theme.styl'
+import '@/assets/style/theme-bg.styl'
+import '@/assets/style/vta.css'
 
 import '@vant/touch-emulator'
-import './polyfill'
-import './registerServiceWorker'
+import '@/lib/polyfill'
+import '@/lib/registerServiceWorker'
 
-import { init } from 'console-ban'
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
-import VueMasonry from 'vue-masonry-css'
 import VueMeta from 'vue-meta'
-import Vant, { Dialog, ImagePreview, Lazyload, Notify, Toast } from 'vant'
+import { Dialog, Lazyload, Notify, Toast } from 'vant'
 
-import SvgIcon, { loadingSvg } from './icons'
-import ImageLayout from './components/ImageLayout.vue'
-import TopBar from './components/TopBar.vue'
-import Pximg from './components/DirectPximg.vue'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import longpress from './directives/longpress'
-import { LocalStorage } from './utils/storage'
-import { getSelectedLang, i18n, initLocale } from './i18n'
-import { getActionMap } from './api/client/action'
-import { initBookmarkCache } from './utils/storage/siteCache'
+import setupVant from '@/lib/vant'
+import SvgIcon, { loadingSvg } from '@/icons'
+import VueMasonry from '@/components/VueMasonryCss'
+import ImageLayout from '@/components/ImageLayout.vue'
+import TopBar from '@/components/TopBar.vue'
+import Pximg from '@/components/DirectPximg.vue'
+import App from '@/App.vue'
+import router from '@/router'
+import store from '@/store'
+import longpress from '@/directives/longpress'
+import { LocalStorage } from '@/utils/storage'
+import { loadCustomFont } from '@/utils/font'
+import { getSelectedLang, i18n, initLocale } from '@/i18n'
+import { getActionMap } from '@/api/client/action'
+import { initBookmarkCache } from '@/utils/storage/siteCache'
 
 setupApp()
 
 async function setupApp() {
   await checkWechat()
   await checkBrowser()
-  // await checkIncognito()
   await initSetting()
-  await initLocalApi()
   await initLocale()
+  await initLocalApi()
 
   Vue.use(Toast)
-  Vue.use(ImagePreview)
-  Vue.use(Lazyload, {
-    // observer: true,
-    lazyComponent: true,
-    loading: localStorage.PXV_ACT_COLOR ? loadingSvg(localStorage.PXV_ACT_COLOR) : require('@/icons/loading.svg'),
-    preload: 1.5,
-  })
-  Vue.use(Vant)
+  if (store.state.appSetting.isImgLazy) {
+    Vue.use(Lazyload, {
+      observer: store.state.appSetting.isImgLazyOb,
+      observerOptions: { rootMargin: '0px 50px 50px 0px', threshold: [0] },
+      lazyComponent: false,
+      loading: loadingSvg(localStorage.PXV_ACT_COLOR || '#38a9f5'),
+      preload: 1.3,
+    })
+  }
+  setupVant()
   Vue.use(VueAwesomeSwiper)
-  Vue.use(VueMasonry)
   Vue.use(VueMeta, { keyName: 'head' })
+  Vue.use(VueMasonry)
   Vue.use(SvgIcon)
   Vue.use(longpress)
 
@@ -63,21 +68,24 @@ async function setupApp() {
     i18n,
     render: h => h(App),
   }).$mount('#app')
-
-  if (process.env.NODE_ENV === 'production') {
-    init()
-  }
 }
 
 async function initLocalApi() {
   const config = LocalStorage.get('PXV_CLIENT_CONFIG', {})
   window.APP_CONFIG = config
   if (!config.useLocalAppApi) return
+  document.querySelector('#ldio-loading .ldio-content')
+    ?.insertAdjacentHTML('beforeend', `<p class="ldio-title" style="top:180px;font-size:14px">${i18n.t('sBmkLtGcrWIL7xsU-EdM9')}</p>`)
   window.__localApiMap__ = await getActionMap()
   await initBookmarkCache()
 }
 
 async function initSetting() {
+  const { pageTransition, withBodyBg, pageFont } = store.state.appSetting
+  if (pageFont) loadCustomFont(pageFont)
+  if (pageTransition) document.documentElement.classList.add(pageTransition)
+  if (withBodyBg) document.documentElement.classList.add('with-body-bg')
+
   let flag = false
   const setting = LocalStorage.get('PXV_CNT_SHOW', {})
   const isOn = () => LocalStorage.get('PXV_NSFW_ON', null)
@@ -85,7 +93,7 @@ async function initSetting() {
     LocalStorage.set('PXV_NSFW_ON', 1)
   }
   try {
-    if (!isOn() || getSelectedLang() != 'zh-Hans') return true
+    if (!isOn() || getSelectedLang() != 'zh-CN') return true
     document.documentElement.innerHTML = ''
     location.replace('/zq39i1hjru.html')
     flag = true
@@ -127,20 +135,3 @@ async function checkBrowser() {
   }
   return true
 }
-
-// async function checkIncognito() {
-//   let flag = false
-//   try {
-//     const { quota } = await navigator.storage.estimate()
-//     if (quota.toString().length > 10) return true
-//     document.body.innerHTML = ''
-//     Dialog.alert({
-//       message: 'Please use a normal tab to continue browsing.',
-//       confirmButtonText: 'OK',
-//     })
-//     flag = true
-//   } catch (error) {
-//     return true
-//   }
-//   if (flag) throw new Error('BLOCKED.')
-// }

@@ -1,3 +1,2 @@
 User-agent: *
-Disallow:
-Sitemap: https://pxve.cc/sitemap.txt
+Disallow: /

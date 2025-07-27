@@ -42,14 +42,6 @@
   ],
   "rewrites": [
     {
-      "source": "/prks/obfs/:match*",
-      "destination": "https://api.obfs.dev/:match*"
-    },
-    {
-      "source": "/prks/now/:match*",
-      "destination": "https://now.pixiv.pics/:match*"
-    },
-    {
       "source": "/:path*",
       "destination": "/index.html"
     }

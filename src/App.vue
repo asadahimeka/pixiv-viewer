@@ -7,47 +7,55 @@
 
 <script>
 import Preload from '@/components/Preload'
-import { mapMutations } from 'vuex'
-import { existsSessionId, initUser } from '@/api/user'
-import { localApi } from './api'
+import store from './store'
 import { CURRENT_APP_VERSION } from './consts'
+import { checkIsLogin } from './store/actions/check-login'
+import { fetchNotices } from './store/actions/fetch-notice'
+import { loadImtSdk } from './utils/translate'
 
 export default {
   name: 'App',
   components: {
     Preload,
   },
-  head: {
-    // if no subcomponents specify a metaInfo.title, this title will be used
-    title: 'Loading',
-    // all titles will be injected into this template
-    titleTemplate: '%s | PxAnon',
+  head() {
+    return {
+      // if no subcomponents specify a metaInfo.title, this title will be used
+      title: this.$t('tips.loading'),
+      // all titles will be injected into this template
+      titleTemplate: '%s | PxAnon',
+    }
   },
   async created() {
-    let user = null
-    try {
-      if (window.APP_CONFIG.useLocalAppApi) {
-        user = await localApi.me()
-      } else if (existsSessionId()) {
-        user = await initUser()
-      }
-    } catch (err) {
-      console.log('err: ', err)
-    }
-    console.log('user: ', user)
-    this.setUser(user)
+    checkIsLogin()
+    fetchNotices()
   },
   mounted() {
-    const loading = document.querySelector('#ldio-loading')
-    loading && (loading.style.display = 'none')
+    document.querySelector('#ldio-loading')?.remove()
     window.umami?.track('App Mounted', { host: location.host, ver: CURRENT_APP_VERSION })
-  },
-  methods: {
-    ...mapMutations(['setUser']),
+    if (!localStorage.PXV_ASSETS_LOADED) localStorage.PXV_ASSETS_LOADED = '1'
+    if (store.state.appSetting.isAutoLoadImt) loadImtSdk(true)
   },
 }
 </script>
 
+<style>
+.with-body-bg.custom_theme body:not(.dark) .shrink::after {
+  --color: color-mix(in srgb, var(--accent-color), white 90%);
+  background: linear-gradient(to top, var(--color), rgba(255, 255, 255, 0));
+}
+.with-body-bg.custom_theme body:not(.dark) .novel .artwork-meta .shrink::after {
+  background: linear-gradient(to top, #fff, rgba(255, 255, 255, 0));
+}
+.with-body-bg body:not(.dark) .image-view.shrink {
+  max-height: 95vh;
+}
+@media screen and (max-width: 600px) {
+  .with-body-bg body:not(.dark) .image-view.shrink{
+    max-height: 13rem;
+  }
+}
+</style>
 <style lang="stylus">
 html,body
   width 100%;
@@ -79,7 +87,7 @@ html,body
     margin-bottom 0
     padding 0.3rem 0
     background: rgba(255,255,255,0.8)
-    backdrop-filter: saturate(200%) blur(6px)
+    backdrop-filter: saturate(200%) blur(10PX)
     .home-title
       position absolute
       top 50%

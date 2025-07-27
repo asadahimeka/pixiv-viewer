@@ -5,27 +5,21 @@
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-  <title>PxAnon - Pixiv Illustration & Novel Viewer without Account</title>
-  <meta name="keywords" content="pixiv,p站,p站镜像,pixiv第三方,pixiv镜像,pixiv每日排行,pixiv漫画,pixiv小说" />
-  <meta name="description" itemprop="description" content="PxAnon是一个第三方P站镜像网站，提供Pixiv的插画、漫画、小说等作品的在线浏览。" />
-  <meta property="og:title" content="PxAnon" />
-  <meta property="og:description" content="PxAnon是一个第三方P站镜像网站，提供Pixiv的插画、漫画、小说等作品的在线浏览。" />
-  <meta property="og:url" content="https://pxve.cc" />
-  <meta property="og:image" content="https://pxve.cc/img/icons/256.png" />
-  <meta property="og:site_name" content="PxAnon" />
+  <title>PxAnon - Yet Another Pixiv Illustration & Novel Viewer</title>
   <meta name="referrer" content="no-referrer">
   <meta http-equiv="x-dns-prefetch-control" content="on" />
   <link rel="shortcut icon" href="<%= BASE_URL %>favicon.ico" type="image/x-icon">
+  <link rel="dns-prefetch" href="https://api.cocomi.eu.org">
   <link rel="dns-prefetch" href="https://lib.baomitu.com">
+  <link rel="preconnect" href="https://api.cocomi.eu.org" crossorigin="anonymous" />
   <link rel="preconnect" href="https://lib.baomitu.com" crossorigin="anonymous" />
   <link rel="stylesheet" href="<%= BASE_URL %>static/css/flexible.css">
   <% for (let css of htmlWebpackPlugin.options.cdn.css) { %>
   <link rel="stylesheet" href="<%= css %>">
   <% } %>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"PxAnon","alternateName":"Pxve","url":"https://pxve.cc/"}</script>
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","url":"https://pxve.cc/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pxve.cc/search/{search_term_string}"},"query-input":"required name=search_term_string"}}</script>
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
-  <script>document.documentElement.classList.add('custom_theme','t_'+(localStorage.PXV_THEME||'Anon'));document.documentElement.style.setProperty('--accent-color',localStorage.PXV_ACT_COLOR||'#ff8899');</script>
+  <script>localStorage.PXV_THEME='Anon';localStorage.PXV_ACT_COLOR='#ff8899';</script>
+  <script>if(localStorage.PXV_THEME){document.documentElement.classList.add('custom_theme','t_'+localStorage.PXV_THEME);document.documentElement.style.setProperty('--accent-color',localStorage.PXV_ACT_COLOR);}</script>
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= process.env.VUE_APP_GA_ID %>',{transport_type:'beacon'});</script>
@@ -33,8 +27,8 @@
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_UMAMI_SRC) { %>
   <script async defer src="<%= process.env.VUE_APP_UMAMI_SRC %>" data-website-id="<%= process.env.VUE_APP_UMAMI_ID %>" data-cache="true"></script>
   <% } %>
-  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CLARITY_ID) { %>
-  <script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "<%= process.env.VUE_APP_CLARITY_ID %>");</script>
+  <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_CLARITY_ID_MAIN) { %>
+  <script>(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i+"?ref=bwt";y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "<%= process.env.VUE_APP_CLARITY_ID_MAIN %>");</script>
   <% } %>
 </head>
 
@@ -49,7 +43,7 @@
       <div class="ldio-title">PxAnon</div>
     </div>
   </div>
-  <script>if(!!localStorage.PXV_DARK)document.body.classList.add('dark');</script>
+  <script>if(!!localStorage.PXV_DARK)document.body.classList.add('dark');if(!localStorage.PXV_ASSETS_LOADED){document.querySelector('#ldio-loading .ldio-content').insertAdjacentHTML('beforeend',`<p class="ldio-title" style="top:180px;font-size:14px">${navigator.language.includes('zh')?'首次加载较慢，请耐心等待':'The first loading is slow, please be patient'}</p>`);}</script>
   <% if (process.env.NODE_ENV === 'production') { %>
   <% for (let js of htmlWebpackPlugin.options.cdn.js) { %>
   <script src="<%= js %>"></script>

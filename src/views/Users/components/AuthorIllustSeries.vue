@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import api from '@/api'
 
 export default {

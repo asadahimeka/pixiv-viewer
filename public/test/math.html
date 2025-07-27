@@ -7,12 +7,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="referrer" content="no-referrer">
   <title>Question</title>
-  <script async defer="defer" src="https://um.nanoka.top/script.js" data-website-id="69717e89-51a1-409a-80e6-89210a688efd" data-cache="true"></script>
+  <script src="https://um.nanoka.top/script.js" data-website-id="69717e89-51a1-409a-80e6-89210a688efd" data-cache="true"></script>
+  <script src="https://lib.baomitu.com/crypto-js/4.2.0/crypto-js.min.js"></script>
+  <script src="dd.js" disable-devtool-auto></script>
 </head>
 
 <body>
   <div id="app">
-    <p>回答下面的问题，答案按无空格格式判定，多个答案用英文逗号分隔，x<sup>2</sup> 记为 x^2，分数以 / 表示如：1/2</p>
+    <p>回答下面的问题，答案里不要有空格，多个答案用英文逗号分隔，x<sup>2</sup> 记为 x^2，分数以 / 表示如：1/2</p>
     <p>
       <img id="q_img" src="" alt="">
     </p>
@@ -21,12 +23,14 @@
     </p>
   </div>
   <script>
-    window.umami = window.umami || { track: () => {} }
+    function track (key, val) {
+      window.umami && window.umami.track(key, val)
+    }
     function randomEl(arr) {
       return arr[parseInt(Math.random() * arr.length, 10)]
     }
     function reload() {
-      const urls = ['./math.html', './pubchem.html', './b64.html', './zhuyin.html']
+      const urls = ['./math.html', './pubchem.html', './b64.html']
       location.replace(randomEl(urls))
     }
     window.onload = function () {
@@ -39,14 +43,23 @@
         ans = el.a
       })
       q('#sub_btn').onclick = function () {
-        if (q('#ans').value == ans) {
-          window.umami.track('math_answer_correct', { val: ans })
+        track('math_answer')
+        const val = q('#ans').value
+        if (val == dec(ans, val)) {
+          track('math_answer_correct', { val: val })
           alert('回答正确')
           localStorage.setItem('PXV_NSFW_ON', '{"data":0,"expires":-1}')
           location.replace('/')
         } else {
           alert('回答错误')
         }
+      }
+    }
+    function dec(ans, val) {
+      try {
+        return CryptoJS.AES.decrypt(ans, val).toString(CryptoJS.enc.Utf8) || 'DECRYPT_ERROR'
+      } catch (err) {
+        return 'DECRYPT_ERROR'
       }
     }
     function q(sel) {

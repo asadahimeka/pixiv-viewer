@@ -1,7 +1,4 @@
-import SvgIcon from '@/components/SvgIcon'
-
-const requireContext = require.context('./svg', false, /\.svg$/)
-requireContext.keys().forEach(requireContext)
+import SvgIcon from './Icon.vue'
 
 export default {
   install(Vue) {

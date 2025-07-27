@@ -1,6 +1,6 @@
 <template>
   <div class="novel-card" @click.stop="click(artwork.id)">
-    <div class="img-cont">
+    <div v-if="showImg" class="img-cont">
       <Pximg :src="imgSrc" :alt="artwork.title" class="image" :class="{ censored }" />
     </div>
     <div class="meta" :class="{ censored }">
@@ -16,7 +16,7 @@
         <van-tag v-if="index">#{{ index }}</van-tag>
         <van-tag v-if="tagText" :color="tagText === 'R-18' ? '#fb7299' : '#ff3f3f'">{{ tagText }}</van-tag>
         <van-tag v-if="isAiIllust" color="#536cb8">&nbsp;AI&nbsp;</van-tag>
-        <van-tag color="#cdeefe" text-color="#0b6aaf">{{ artwork.text_length }}{{ $t('common.words') }}</van-tag>
+        <van-tag color="#cdeefe" text-color="#0b6aaf">{{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(artwork.text_length)]) }}</van-tag>
         <van-tag color="#ffe1e1" text-color="#ad0000">
           <van-icon name="like-o" style="margin-right: 2px;" />
           {{ artwork.like }}
@@ -28,6 +28,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { formatIntlNumber } from '@/utils'
+import { isCNLocale } from '@/i18n'
+
 export default {
   name: 'NovelCard',
   props: {
@@ -41,6 +44,10 @@ export default {
     square: {
       type: Boolean,
       default: false,
+    },
+    showImg: {
+      type: Boolean,
+      default: true,
     },
   },
   data() {
@@ -71,6 +78,11 @@ export default {
     },
   },
   methods: {
+    convertToK(val) {
+      if (!val) return '-'
+      if (isCNLocale()) return val
+      return formatIntlNumber(+val)
+    },
     click(id) {
       if (
         !id ||

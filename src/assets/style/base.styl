@@ -1,5 +1,8 @@
+html
+  --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+
 html, body
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-family: var(--font-family);
   color: #333;
   overscroll-behavior: none;
   user-select: none;
@@ -8,6 +11,9 @@ html, body
 // html[lang="ja"]
 //   &, & body
 //     font-family: "LXGW WenKai Screen", -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+
+code
+  font-family Consolas, "Roboto Mono", "Courier New", Courier, monospace
 
 .flex
   display flex
@@ -104,6 +110,9 @@ html, body
 .author-card .cell .icon
   object-fit: cover
 
+.History.illusts
+  padding: 0 0.15rem 0.5rem;
+
 .setting-page
   max-width 750px
   margin 0 auto 160px
@@ -165,9 +174,8 @@ html, body
   width: 2rem
   height: 97%
   margin-top: 0
-  border-radius: 20px
   color: #ffd745
-  background-image: linear-gradient(270deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0) 100%)
+  background-image: linear-gradient(270deg, rgba(0,0,0,0.4) 0%, rgba(255,255,255,0) 100%)
   transition: opacity 0.2s
   opacity: 0
   &.swiper-button-disabled
@@ -178,7 +186,7 @@ html, body
 .swiper-button-prev
   left: 0
   right: auto
-  background-image: linear-gradient(90deg, rgba(0,0,0,0.6) 0%, rgba(255,255,255,0) 100%)
+  background-image: linear-gradient(90deg, rgba(0,0,0,0.4) 0%, rgba(255,255,255,0) 100%)
 
 @media screen and (max-width: 600px)
   .swiper-button-prev, .swiper-button-next, .swiper-scrollbar
@@ -189,8 +197,8 @@ html, body
   src: local('Dosis Regular'), local('Dosis-Regular'), url('../fonts/dosis-v7-latin-ext_latin-regular.woff') format('woff');
 
 ::-webkit-scrollbar
-  width: 13px;
-  height: 13px;
+  width: 12px;
+  height: 12px;
 
 ::-webkit-scrollbar-track
   background: #e6e6e6;
@@ -207,6 +215,43 @@ html, body
 @media screen and (max-width: 500px)
   ::-webkit-scrollbar
     width: 0;
+
+  .justified-container
+    padding: 0 0.2rem;
+  .justified-container .image-card
+    width 100% !important
+  .justified-container .image-card.isOuterMeta
+    display: flex
+    flex-direction: column
+    margin-bottom: 0.35rem
+    border-radius 20PX
+    background: #fafafa;
+    box-shadow: 0 3PX 1PX -2PX rgba(0, 0, 0, 0.2), 0 2PX 2PX 0 rgba(0, 0, 0, 0.14), 0 1PX 5PX 0 rgba(0, 0, 0, 0.12);
+    .image-card-wrapper
+      order: 2
+      &, & .image
+        border-radius 0
+    .outer-meta
+      order: 1
+      .content
+        padding-top 0.22rem
+        padding-left: 1.5rem;
+      .avatar
+        position: absolute;
+        top: 50%;
+        left: 0.4rem;
+        transform: translateY(-50%);
+        width: 0.9rem;
+        height: 0.9rem;
+      .title
+        font-size: 0.42rem
+      .author
+        font-size: 0.35rem
+
+
+
+  .rank-card
+    margin-bottom 0.2rem !important
 
   .image-card
     .title, .author
@@ -231,7 +276,8 @@ html:has(.dark)
   background #16161a
   color #fff
   .van-dialog,
-  .van-button
+  .van-button,
+  .comments-popup
     background #333
     color #fff !important
   .van-dialog__message--has-title
@@ -274,13 +320,16 @@ html:has(.dark)
 
   .rank-card .spec_wp,
   .image-card
-    // border 1px solid #aaa
+    // border 1PX solid #aaa
     border 0
-    border-radius: 0.26667rem;
+    // border-radius: 0.26667rem;
 
+  .nav-container
+    @media screen and (max-width: 450px)
+      height 110px
   .nav-container .nav-bar
     box-shadow 0 0 0.26667rem #222
-    background rgba(0,0,0,0.8)
+    background rgba(0,0,0,0.7)
     li
       display flex
       justify-content center
@@ -295,6 +344,10 @@ html:has(.dark)
       &.active,
       &.active + span
         color: #f2c358
+      @media screen and (max-width: 450px)
+        font-size 22PX
+        & + span
+          font-size 12PX
     span
       display inline-block
 
@@ -391,7 +444,7 @@ html:has(.dark)
     box-shadow none
 
   .van-search__content
-    border 1px solid #aaa
+    border 1PX solid #aaa
     &,
     .van-cell
       background-color: transparent !important
@@ -453,7 +506,7 @@ html:has(.dark)
       color #bbb
 
   .image-slide
-      border 1px solid #16161a
+      border 1PX solid #16161a
 
   .ss-title,
   .ss-author,
@@ -488,7 +541,7 @@ html:has(.dark)
 .setting-actions .conf-fcont
   align-items flex-start !important
 
-#sel_block_dialog
+#sel_block_dialog, #get_pnt_nots_dialog
   display flex
   flex-direction column
   margin-top: -0.9rem
@@ -499,7 +552,6 @@ html:has(.dark)
 
 .rank-card .spec_wp
   overflow hidden
-  border-radius: 0.26667rem;
 
 // .Spotlights .image-card, .rank-card .spec_wp
 //   img[lazy="loaded"]
@@ -512,7 +564,40 @@ html:has(.dark)
 .card-box .swipe-item .image-card-wrapper
   height 100%
   padding-bottom 0 !important
-  border-radius: 0.26667rem;
+
+.image-card,
+.image-card .image,
+.image-card-wrapper,
+.rank-card .spec_wp,
+.rank-card .spec_wp .sp_info::before,
+.card-box .swipe-item .image-card,
+.card-box .swipe-item .image-card .outer-meta::before,
+.Spotlights .image-card,
+.Spotlight .image-card .outer-meta::before,
+.illusts .user_info
+  border-radius: 12PX;
+
+.image-card-no-radius
+  .image-card,
+  .image-card .image,
+  .image-card-wrapper,
+  .rank-card .spec_wp,
+  .rank-card .spec_wp .sp_info::before,
+  .card-box .swipe-item .image-card,
+  .card-box .swipe-item .image-card .outer-meta::before,
+  .Spotlights .image-card,
+  .Spotlight .image-card .outer-meta::before,
+  .illusts .user_info,
+  .ia-cont .ia-left .image-box .image,
+  .image-slide,
+  .tags .tag,
+  .tags .tag img,
+  .tags .tag .meta,
+  .search .tags .meta::after
+    border-radius: 0 !important;
+
+.image-card .btn-play
+  font-size 1.2rem !important
 
 .swiper-slide .image
   transform none !important
@@ -552,6 +637,7 @@ html:has(.dark)
       width: 100%;
       height: 120%;
       background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5) 0%, rgba(255, 255, 255, 0) 100%);
+      // border-radius: 0.26667rem;
     .content
       color #fff !important
 
@@ -573,7 +659,11 @@ html:has(.dark)
   .rank .top,
   .search .tags,
   .user-tabs .van-tabs__nav,
-  .History .h-tabs .van-tabs__nav
+  .user-tabs .member-tags,
+  .History .h-tabs .van-tabs__nav,
+  .artwork .related > .cell,
+  .search .search_params + .rank-card > .cell,
+  .search-user .list-wrap
     max-width 1200PX
     margin-left auto !important
     margin-right auto !important
@@ -583,6 +673,134 @@ html:has(.dark)
   .justified-container .image-card
     --jstf-w: 265;
     --jstf-w-px: 265PX;
+  .users .van-tabs__nav
+    padding-left 0 !important
+    padding-right 0 !important
+    overflow-y unset
+    border-bottom-left-radius 8PX
+    border-bottom-right-radius 8PX
+    background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), var(--accent-color, #f7f8fa);
 
 .app-main:has(.live_detail)
   border-top 4PX solid #F2C358
+
+.color-gray
+  color: gray
+.imt-res-text
+  color: gray
+  &,& .immersive-translate-target-translation-theme-background-inner
+    padding 0 !important
+    background transparent !important
+
+#immersive-translate-popup
+  display none !important
+html:has(.novel_text) #immersive-translate-popup
+  display block !important
+
+.van-popover__action
+  &.imt,&.sc,&.ms,&.gg,&.yd
+    width 220px
+
+#app .ia-left .image-box .img3
+  transition opacity,transform 0.5s
+  opacity 1
+  &[lazy="loading"]
+    opacity 0
+.ia-left .image-box:has(.img3[lazy="loading"])
+  &::after
+    content ''
+    position absolute
+    top: 50%;
+    left: 50%;
+    width: 1.6rem !important;
+    height: 1.6rem !important;
+    margin-left: -0.8rem !important;
+    margin-top: -0.8rem !important;
+    transform: scale(0.9);
+    background url('@/icons/loading.svg') no-repeat center center / contain
+    border-radius: 5PX;
+    box-shadow: 0 0 transparent, 0 0 transparent, 0 1PX 3PX 0 rgba(0, 0, 0, 0.1), 0 1PX 2PX -1PX rgba(0, 0, 0, 0.1);
+
+.non-cjk-lang
+  .Home .com_sel_tabs .home-search
+    display none !important
+  @media screen and (max-width: 999px)
+    .Home .com_sel_tabs .home-title
+      display none !important
+
+#app .users .info-container .info .detail.ex
+  max-height: 5.33333rem
+  overflow-y auto
+  &::-webkit-scrollbar
+    width: 0.17333rem
+#app .users .info-container .info .share_btn
+  display none
+@media screen and (min-width: 1280px)
+  #app .users
+    .van-tabs__nav
+      padding-left 5vw
+      padding-right 5vw
+      .van-tab
+        flex none
+        min-width 2rem
+        &:first-child
+          margin-left 0.21333rem
+      .van-tabs__line
+        width 1.2rem
+        height 4PX
+        border-radius 0
+    .share_btn
+      display none
+    .info-container .info
+      display flex
+      flex-direction column
+      justify-content start
+      padding-left: 5rem;
+      padding-right: 5rem;
+      padding-top: 0.4rem;
+      .avatar
+        top: -0.7rem
+        left: 5.5rem;
+        transform: none;
+      >*:not(.avatar)
+        margin-left 0
+        margin-right 0
+        padding-left 3.7rem !important
+        padding-right 0
+        text-align left
+      >span
+        display inline-block
+        width fit-content
+      .name
+        max-width calc(100% - 7rem)
+        margin-bottom 0.5rem
+      .follow_btn
+        position: absolute;
+        top: 0.1rem;
+        right: 6rem;
+        padding-left 0 !important
+      .share_btn
+        position absolute
+        top: 0.25rem;
+        right: 5rem;
+        display block
+        padding-left 0 !important
+      .site-list
+        display inline-flex
+        justify-content start
+      .detail
+        margin-top: 0.26667rem;
+        padding-right 0 !important
+        .content
+          margin-left 0 !important
+          margin-right 0 !important
+
+body.dark::before
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  background: #16161a;

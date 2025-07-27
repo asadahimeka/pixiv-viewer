@@ -1,11 +1,20 @@
 <template>
-  <div ref="related" class="related">
+  <div ref="related" class="related" :style="manualLoadRelated?'min-height:120px':''">
     <van-cell class="cell" :border="false">
       <template #title>
         <Icon class="icon heart" name="heart" />
         <span class="title">{{ $t('common.related') }}</span>
+        <van-button
+          v-if="manualLoadRelated && !showList"
+          size="small"
+          class="load_rel_btn"
+          @click="init()"
+        >
+          {{ $t('7KdpxnZMAURov4JetAfvV') }}
+        </van-button>
       </template>
     </van-cell>
+    <van-loading v-if="!manualLoadRelated && !showList" size="64px" style="width: 64px;margin: 20px auto;" />
     <van-list
       v-if="showList"
       v-model="loading"
@@ -17,18 +26,22 @@
       :error-text="$t('tips.net_err')"
       @load="getRelated()"
     >
-      <wf-cont v-bind="$store.getters.wfProps">
-        <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork($event)" />
+      <wf-cont>
+        <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
       </wf-cont>
     </van-list>
-    <van-loading v-else size="64px" style="width: 64px;margin: 20px auto;" />
   </div>
 </template>
 
 <script>
-import ImageCard from '@/components/ImageCard'
+import _ from '@/lib/lodash'
 import api from '@/api'
-import _ from 'lodash'
+import { tryURL } from '@/utils'
+import ImageCard from '@/components/ImageCard'
+import store from '@/store'
+
+const { manualLoadRelated } = store.state.appSetting
+
 export default {
   name: 'Related',
   components: {
@@ -48,10 +61,12 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      nextUrl: null,
+      manualLoadRelated,
     }
   },
   mounted() {
-    this.setObserver()
+    if (!manualLoadRelated) this.setObserver()
   },
   methods: {
     setObserver() {
@@ -77,18 +92,19 @@ export default {
     },
     getRelated: _.throttle(async function () {
       if (!this.artwork.id) return
+      console.log('this.nextUrl: ', this.nextUrl)
       this.loading = true
-      let newList
-      const res = await api.getRelated(this.artwork.id, this.curPage)
+      const nextUrl = tryURL(this.nextUrl)
+      const res = await api.getRelated(this.artwork.id, this.curPage, nextUrl?.search.slice(1))
       if (res.status === 0) {
-        newList = res.data
-        if (newList.length) {
+        if (res.data.length) {
           this.artList = _.uniqBy([
             ...this.artList,
-            ...newList,
+            ...res.data,
           ], 'id')
           this.curPage++
-          if (this.curPage > 4) this.finished = true
+          if (res.data.nextUrl) this.nextUrl = res.data.nextUrl
+          else this.finished = true
         } else {
           this.finished = true
         }
@@ -101,11 +117,11 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
     init() {
@@ -120,8 +136,14 @@ export default {
 <style lang="stylus" scoped>
 .related {
   min-height: 72vh;
+
   .cell {
     padding: 0 8px 20px 8px;
+  }
+
+  .load_rel_btn {
+    margin-left: 0.2rem;
+    vertical-align: 0.5em;
   }
 
   .card-box {
@@ -130,7 +152,7 @@ export default {
     // height: 365px;
     .swipe-wrap {
       height: 100%;
-      border-radius: 20px;
+      // border-radius: 20px;
       overflow: hidden;
 
       .swipe-item {
@@ -145,13 +167,13 @@ export default {
           font-size: 0;
           float: left;
           margin-right: 12px;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
         }
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
 

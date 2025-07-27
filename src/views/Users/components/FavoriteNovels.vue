@@ -30,7 +30,7 @@
 
 <script>
 import api from '@/api'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import NovelCard from '@/components/NovelCard.vue'
 export default {
   name: 'FavoriteNovels',

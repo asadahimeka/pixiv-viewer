@@ -39,7 +39,7 @@ export default {
   margin-bottom: 10px;
   overflow: hidden;
   background: #fafafa;
-  border-radius: 20px;
+  // border-radius: 20px;
 
   .image {
     position: absolute;

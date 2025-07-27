@@ -1,41 +1,43 @@
 <template>
   <div class="setting">
-    <h1 class="app-title" @click="$router.push('/setting/accent_color')">
+    <h1 class="app-title">
       <img v-if="!isLoggedIn" src="/app-icon.png" alt="">
       <div class="app-title-desc">
         <span class="title-font">PxAnon</span>
-        <small>Pixiv Illustration & Novel Viewer without Account</small>
+        <small>Yet Another Pixiv Illustration & Novel Viewer</small>
       </div>
     </h1>
     <van-notice-bar
       v-if="notice"
       class="custom-notice"
-      color="#B5495B"
-      background="#FEDFE1"
+      :color="notice.color || '#B5495B'"
+      :background="notice.bg || '#FEDFE1'"
       :left-icon="notice.icon"
     >
       {{ notice.text }}
     </van-notice-bar>
-    <van-cell v-if="isLoggedIn" size="large" center is-link :to="`/u/${user.id}`">
-      <template #title>
-        <div class="user_data">
-          <Pximg :src="user.profileImg" nobg width="50" height="50" alt="" />
-          <div>
-            <div>{{ user.name }}</div>
-            <div style="color: #999">@{{ user.pixivId }}</div>
+    <div class="setting-group">
+      <van-cell v-if="isLoggedIn" size="large" center is-link :to="`/u/${user.id}`">
+        <template #title>
+          <div class="user_data">
+            <Pximg :src="user.profileImg" nobg width="50" height="50" alt="" />
+            <div>
+              <div>{{ user.name }}</div>
+              <div style="color: #999">@{{ user.pixivId }}</div>
+            </div>
           </div>
-        </div>
-      </template>
-    </van-cell>
-    <van-cell v-if="isLoggedIn" size="large" center :title="$t('user.sess.my_fav')" icon="star-o" is-link :to="`/users/${user.id}/favorites`" />
-    <van-cell v-else size="large" center :title="$t('user.sess.login')" icon="user-circle-o" is-link to="/account/login" />
-    <van-cell size="large" center :title="$t('common.history')" icon="underway-o" is-link to="/setting/history" />
-    <van-cell size="large" center :title="$t('display.title')" icon="eye-o" is-link to="/setting/contents_display" />
-    <van-cell size="large" center :title="$t('cache.title')" icon="delete-o" is-link to="/setting/clearcache" />
-    <van-cell size="large" center :title="$t('setting.other.title')" icon="setting-o" is-link to="/setting/others" />
-    <van-cell size="large" center :title="$t('setting.down_app')" icon="apps-o" is-link to="/setting/down_app" />
-    <van-cell size="large" center :title="$t('setting.recomm.title')" icon="bookmark-o" is-link to="/setting/recommend" />
-    <van-cell size="large" center :title="$t('setting.about')" icon="info-o" is-link to="/setting/about" />
+        </template>
+      </van-cell>
+      <van-cell v-if="isLoggedIn" size="large" center :title="$t('user.sess.my_fav')" icon="star-o" is-link :to="`/users/${user.id}/favorites`" />
+      <van-cell v-else size="large" center :title="$t('user.sess.login')" icon="user-circle-o" is-link to="/account/login" />
+      <van-cell size="large" center :title="$t('common.history')" icon="underway-o" is-link to="/setting/history" />
+      <van-cell size="large" center :title="$t('display.title')" icon="eye-o" is-link to="/setting/contents_display" />
+      <van-cell size="large" center :title="$t('cache.title')" icon="delete-o" is-link to="/setting/clearcache" />
+      <van-cell size="large" center :title="$t('setting.other.title')" icon="setting-o" is-link to="/setting/preference" />
+      <van-cell size="large" center :title="$t('setting.down_app')" icon="apps-o" is-link @click="openDlLink" />
+      <van-cell size="large" center :title="$t('setting.recomm.title')" icon="bookmark-o" is-link to="/setting/osusume" />
+      <van-cell size="large" center :title="$t('setting.about')" icon="info-o" is-link to="/setting/about" />
+    </div>
     <div v-if="isLoggedIn" style="width: 60%;margin: 1rem auto 0;">
       <van-button round plain block type="danger" size="small" @click="logoutApp">{{ $t('user.sess.out') }}</van-button>
     </div>
@@ -45,18 +47,13 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import { Dialog } from 'vant'
-import dayjs from 'dayjs'
 import PixivAuth from '@/api/client/pixiv-auth'
 import { logout } from '@/api/user'
-// import { NOTICES_JSON } from '@/consts'
+import { LocalStorage } from '@/utils/storage'
+import store from '@/store'
 
 export default {
   name: 'Setting',
-  data() {
-    return {
-      notice: null,
-    }
-  },
   head() {
     return {
       title: this.$t('nav.setting'),
@@ -65,28 +62,16 @@ export default {
   computed: {
     ...mapState(['user']),
     ...mapGetters(['isLoggedIn']),
-  },
-  async created() {
-    try {
-      const notices = await fetch('https://pxve-notice.nanoka.top').then(r => r.json())
-      const today = dayjs().startOf('day')
-      this.notice = notices.find(e =>
-        today.isAfter(dayjs(e.start).startOf('day') - 1) &&
-        today.isBefore(dayjs(e.end).endOf('day'))
-      )
-      console.log('this.notice: ', this.notice)
-      if (this.notice?.style) {
-        document.head.insertAdjacentHTML('beforeend', `<style>${this.notice.style}</style>`)
-      }
-    } catch (err) {
-      console.log('err: ', err)
-    }
+    notice() {
+      return store.state.appNotice
+    },
   },
   methods: {
     async logoutApp() {
       if (window.APP_CONFIG.useLocalAppApi) {
         const res = await Dialog.confirm({ message: this.$t('login.logout_tip') })
         if (res != 'confirm') return
+        LocalStorage.remove('PXV_CLIENT_AUTH')
         window.APP_CONFIG.useLocalAppApi = false
         PixivAuth.writeConfig(window.APP_CONFIG)
         setTimeout(() => {
@@ -95,6 +80,10 @@ export default {
       } else {
         logout()
       }
+    },
+    openDlLink() {
+      window.umami?.track('open_dl_app_link')
+      window.open('https://github.com/asadahimeka/pixiv-viewer/releases', '_blank', 'noopener')
     },
   },
 }

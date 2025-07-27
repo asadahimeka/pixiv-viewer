@@ -2,8 +2,8 @@
   <div class="HomeRecommIllust illusts">
     <top-bar />
     <h3 class="af_title">{{ $t('common.recomm_art') }}</h3>
-    <wf-cont layout="Grid">
-      <ImageCard v-for="art in artList" :key="art.id" mode="all" square :artwork="art" @click-card="toArtwork($event)" />
+    <wf-cont>
+      <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
     </wf-cont>
     <van-loading v-if="!showLoadMoreBtn && loading" class="loading" :size="'50px'" />
     <van-empty v-if="!loading && !artList.length" :description="$t('tips.no_data')" />
@@ -22,11 +22,13 @@
 </template>
 
 <script>
+import _ from '@/lib/lodash'
+import api from '@/api'
+import { filterRecommIllust, filterCensoredIllust } from '@/utils/filter'
+import { tryURL } from '@/utils'
 import TopBar from '@/components/TopBar'
 import ImageCard from '@/components/ImageCard'
-import api from '@/api'
-import { filterRecommIllust } from '@/utils/filter'
-import _ from 'lodash'
+import { SessionStorage } from '@/utils/storage'
 
 export default {
   name: 'RecommendIllust',
@@ -36,14 +38,14 @@ export default {
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.notFromDetail = from.name !== 'Artwork'
+      vm.isFromDetail = ['Artwork', 'Users'].includes(from.name)
     })
   },
   data() {
     return {
       loading: false,
       artList: [],
-      notFromDetail: true,
+      isFromDetail: false,
       finished: false,
       nextUrl: null,
       showLoadMoreBtn: window.APP_CONFIG.useLocalAppApi,
@@ -56,29 +58,21 @@ export default {
     this.init()
   },
   methods: {
-    toArtwork(id) {
+    toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id },
+        params: { id: art.id, art },
       })
     },
-    tryURL(url) {
-      try {
-        return new URL(url)
-      } catch (_err) {
-        return null
-      }
-    },
     async loadMore() {
+      console.log('this.nextUrl: ', this.nextUrl)
       const params = {}
-      if (!window.APP_CONFIG.useApiProxy) {
-        const u = this.tryURL(this.nextUrl)
-        if (u) {
-          u.searchParams.forEach((v, k) => {
-            params[k] = v
-          })
-        }
+      const u = tryURL(this.nextUrl)
+      if (u) {
+        u.searchParams.forEach((v, k) => {
+          params[k] = v
+        })
       }
       this.loading = true
       const res = await api.getRecommendedIllust(JSON.stringify(params))
@@ -86,7 +80,7 @@ export default {
         if (res.data.length) {
           this.artList = _.uniqBy([
             ...this.artList,
-            ...res.data.filter(filterRecommIllust),
+            ...res.data.filter(filterCensoredIllust),
           ], 'id')
           this.nextUrl = res.data.nextUrl
         } else {
@@ -104,7 +98,7 @@ export default {
       this.artList = []
       const res = await api.getRecommendedIllust()
       if (res.status === 0) {
-        this.artList = res.data.filter(filterRecommIllust)
+        this.artList = res.data.filter(this.showLoadMoreBtn ? filterCensoredIllust : filterRecommIllust)
         this.nextUrl = res.data.nextUrl
       } else {
         this.$toast({
@@ -115,11 +109,13 @@ export default {
       this.loading = false
     },
     init() {
-      const { list } = this.$route.params
+      if (this.isFromDetail && this.artList.length) return
+      const list = SessionStorage.get('recommended.illust')
+      console.log('list: ', list)
       if (list) {
         this.artList = list
         this.nextUrl = list.nextUrl
-      } else if (this.notFromDetail) {
+      } else {
         this.getArtList()
       }
     },

@@ -30,7 +30,7 @@
 
 <script>
 import api from '@/api'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import NovelCard from '@/components/NovelCard.vue'
 export default {
   name: 'AuthorNovels',
@@ -79,7 +79,7 @@ export default {
   computed: {
     authorName() {
       const n = this.artList[0]?.author.name
-      return n ? `${n} ${this.$t('user.of')}` : ''
+      return n ? `${n} - ` : ''
     },
   },
   mounted() {

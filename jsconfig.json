@@ -23,7 +23,11 @@
     },
   },
   "vueCompilerOptions": {
-    "target": 2,
+    "target": 2.7,
+    // "optionsWrapper": [
+    //   "(await import('vue')).defineComponent(",
+    //   ")"
+    // ]
   },
   "include": [
     "src/**/*.js",

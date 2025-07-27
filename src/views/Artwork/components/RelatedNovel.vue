@@ -1,11 +1,20 @@
 <template>
-  <div ref="related" class="related">
+  <div ref="related" class="related" :style="manualLoadRelated?'min-height:120px':''">
     <van-cell class="cell" :border="false">
       <template #title>
         <Icon class="icon heart" name="heart" />
         <span class="title">{{ $t('common.related') }}</span>
+        <van-button
+          v-if="manualLoadRelated && !showList"
+          size="small"
+          class="load_rel_btn"
+          @click="init()"
+        >
+          {{ $t('7KdpxnZMAURov4JetAfvV') }}
+        </van-button>
       </template>
     </van-cell>
+    <van-loading v-if="!manualLoadRelated && !showList" size="64px" style="width: 64px;margin: 20px auto;" />
     <van-list
       v-if="showList"
       v-model="loading"
@@ -21,14 +30,17 @@
         <NovelCard v-for="art in artList" :key="art.id" :artwork="art" @click-card="toArtwork($event)" />
       </masonry>
     </van-list>
-    <van-loading v-else size="64px" style="width: 64px;margin: 20px auto;" />
   </div>
 </template>
 
 <script>
 import api from '@/api'
-import _ from 'lodash'
+import _ from '@/lib/lodash'
 import NovelCard from '@/components/NovelCard.vue'
+import store from '@/store'
+
+const { manualLoadRelated } = store.state.appSetting
+
 export default {
   name: 'RelatedNovel',
   components: {
@@ -57,10 +69,11 @@ export default {
           default: 4,
         },
       },
+      manualLoadRelated,
     }
   },
   mounted() {
-    this.setObserver()
+    if (!manualLoadRelated) this.setObserver()
   },
   methods: {
     setObserver() {
@@ -132,6 +145,11 @@ export default {
     padding: 0 8px 20px 8px;
   }
 
+  .load_rel_btn {
+    margin-left: 0.2rem;
+    vertical-align: 0.5em;
+  }
+
   .card-box {
     padding: 0 12px;
 
@@ -153,13 +171,13 @@ export default {
           font-size: 0;
           float: left;
           margin-right: 12px;
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
         }
 
         .image-slide {
-          border: 1px solid #ebebeb;
+          border: 1PX solid #ebebeb;
           border-radius: 18px;
           box-sizing: border-box;
 

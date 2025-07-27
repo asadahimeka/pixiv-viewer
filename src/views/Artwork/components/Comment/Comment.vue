@@ -23,14 +23,15 @@
           alt=""
         >
       </div>
-      <div class="comment-date">{{ comment.commentDate }}</div>
+      <div class="comment-date">{{ formatDate(comment.commentDate) }}</div>
     </div>
   </li>
 </template>
 
 <script>
-import stampList from './stampList.json'
 import { imgProxy } from '@/api'
+import { formatIntlDate } from '@/utils'
+import stampList from './stampList.json'
 
 export default {
   name: 'Comment',
@@ -53,6 +54,9 @@ export default {
       }
       return str
     },
+    formatDate(val) {
+      return formatIntlDate(val)
+    },
   },
 }
 </script>
@@ -73,15 +77,16 @@ export default {
     flex 1
     .user
       margin-bottom: .1rem
-      font-size 0.33rem
+      font-size 18PX
       font-weight bold
     .content
+      word-break: break-all
       white-space: pre-wrap
       margin-bottom: .3em
-      font-size 0.3rem
+      font-size 16PX
     .comment-date
       margin-top 10px
-      font-size: .75em
+      font-size: 12PX
       color: #aaa
 </style>
 <style lang="stylus">

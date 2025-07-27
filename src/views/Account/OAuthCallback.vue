@@ -23,8 +23,8 @@ export default {
         location.replace('/')
       }, 200)
     } catch (err) {
-      console.log('err: ', err)
-      Dialog.alert({ message: this.$t('login.fail_tip') })
+      console.warn('err: ', err)
+      Dialog.alert({ title: this.$t('login.fail_tip'), message: err?.message || err })
     }
   },
 }

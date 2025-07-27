@@ -4,24 +4,36 @@
     <h3 class="af_title">{{ $t('display.title') }}</h3>
     <van-cell center :title="$t('display.r18')" :label="$t('display.r18_label')">
       <template #right-icon>
-        <van-switch active-color="#fb7299" :value="currentSETTING.r18" size="24" @input="onR18Change($event, 1)" />
+        <van-switch active-color="#fb7299" :value="currentContentSetting.r18" size="24" @input="onR18Change($event, 1)" />
       </template>
     </van-cell>
     <van-cell center :title="$t('display.r18g')" :label="$t('display.r18g_label')">
       <template #right-icon>
-        <van-switch active-color="#ff3f3f" :value="currentSETTING.r18g" size="24" @input="onR18Change($event, 2)" />
+        <van-switch active-color="#ff3f3f" :value="currentContentSetting.r18g" size="24" @input="onR18Change($event, 2)" />
       </template>
     </van-cell>
     <van-cell center :title="$t('display.ai')" :label="$t('display.ai_label')">
       <template #right-icon>
-        <van-switch active-color="#536cb8" :value="currentSETTING.ai" size="24" @input="onAIChange($event)" />
+        <van-switch active-color="#536cb8" :value="currentContentSetting.ai" size="24" @input="onAIChange($event)" />
       </template>
     </van-cell>
     <van-cell center :title="$t('3HnNTIScyvd1cNc2qAh7X')" :label="$t('qmd5JADeSGtrvucK3TnGb')">
       <template #right-icon>
-        <van-switch v-model="isHideRankManga" size="24" @change="changeHideRankManga" />
+        <van-switch :value="appSetting.isHideRankManga" size="24" @change="v => saveAppSetting('isHideRankManga', v)" />
       </template>
     </van-cell>
+    <van-field
+      v-if="clientConfig.useLocalAppApi"
+      v-model="searchMinFavNum"
+      type="digit"
+      class="searchMinFavNum_field"
+      :label="$t('mIfQo6LqzPPlvkV0XZM4X')"
+      placeholder=" "
+    >
+      <template #button>
+        <van-button size="small" type="info" @click="saveAppSetting('searchListMinFavNum', searchMinFavNum || '0')">{{ $t('common.save') }}</van-button>
+      </template>
+    </van-field>
     <van-field
       v-model="blockTags"
       rows="2"
@@ -50,42 +62,41 @@
 </template>
 
 <script>
-// import { resetCookieOnce, setCookieOnce } from '@/utils'
-import { LocalStorage } from '@/utils/storage'
+import _ from '@/lib/lodash'
 import { Dialog } from 'vant'
-import { mapState, mapActions } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
+import store from '@/store'
+import { LocalStorage } from '@/utils/storage'
 
 export default {
   name: 'SettingContentsDisplay',
   data() {
     return {
+      currentContentSetting: _.cloneDeep(store.state.contentSetting),
       blockTags: '',
       blockUids: '',
-      currentSETTING: {
-        r18: false,
-        r18g: false,
-        ai: false,
-      },
-      isHideRankManga: LocalStorage.get('PXV_HIDE_RANK_MANGA', false),
+      clientConfig: { ...window.APP_CONFIG },
+      searchMinFavNum: store.state.appSetting.searchListMinFavNum,
     }
   },
   head() {
     return { title: this.$t('display.title') }
   },
   computed: {
-    ...mapState(['SETTING']),
-  },
-  mounted() {
-    this.currentSETTING = JSON.parse(JSON.stringify(this.SETTING))
+    ...mapGetters(['isLoggedIn']),
+    appSetting() {
+      return store.state.appSetting
+    },
   },
   activated() {
     this.blockTags = LocalStorage.get('PXV_B_TAGS', '')
     this.blockUids = LocalStorage.get('PXV_B_UIDS', '')
   },
   methods: {
+    ...mapMutations(['saveContentSetting']),
     saveSwitchValues() {
       this.$nextTick(() => {
-        this.saveSETTING(JSON.parse(JSON.stringify(this.currentSETTING)))
+        this.saveContentSetting(_.cloneDeep(this.currentContentSetting))
       })
     },
     saveBlockTags() {
@@ -100,17 +111,13 @@ export default {
         location.reload()
       }, 100)
     },
-    changeHideRankManga(val) {
-      this.isHideRankManga = val
-      this.$nextTick(() => {
-        LocalStorage.set('PXV_HIDE_RANK_MANGA', val)
-        setTimeout(() => {
-          location.reload()
-        }, 500)
-      })
+    saveAppSetting(key, val) {
+      window.umami?.track(`set:${key}`, { val })
+      store.commit('setAppSetting', { [key]: val })
+      setTimeout(() => location.reload(), 200)
     },
     onAIChange(checked) {
-      this.$set(this.currentSETTING, 'ai', checked)
+      this.$set(this.currentContentSetting, 'ai', checked)
       this.saveSwitchValues()
       window.umami?.track(`set_ai_switch_${checked}`)
     },
@@ -132,11 +139,11 @@ export default {
         })
           .then(() => {
             if (type === 1) {
-              this.currentSETTING.r18 = checked
-              LocalStorage.set('PXV_NSFW_ON', 1)
+              this.currentContentSetting.r18 = checked
+              LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
             }
             if (type === 2) {
-              this.currentSETTING.r18g = checked
+              this.currentContentSetting.r18g = checked
               setTimeout(() => {
                 Dialog.alert({
                   message: this.$t('display.confirm_g', [name]),
@@ -145,7 +152,7 @@ export default {
                   location.reload()
                 })
               }, 200)
-              LocalStorage.set('PXV_NSFW_ON', 1)
+              LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
             }
             this.saveSwitchValues()
             type === 1 && setTimeout(() => {
@@ -157,19 +164,27 @@ export default {
           })
       } else {
         LocalStorage.remove('PXV_NSFW_ON')
-        if (type === 1) this.currentSETTING.r18 = checked
-        if (type === 2) this.currentSETTING.r18g = checked
+        if (type === 1) this.currentContentSetting.r18 = checked
+        if (type === 2) this.currentContentSetting.r18g = checked
         this.saveSwitchValues()
         setTimeout(() => {
           location.reload()
         }, 200)
       }
     },
-    ...mapActions(['saveSETTING']),
   },
 }
 </script>
 
+<style lang="stylus">
+.setting-page
+  .searchMinFavNum_field
+    .van-field__label
+      width 4rem
+    .van-field__value .van-field__control
+      padding-right .2rem
+      text-align right
+</style>
 <style lang="stylus" scoped>
 .setting-page
   .van-cell__title

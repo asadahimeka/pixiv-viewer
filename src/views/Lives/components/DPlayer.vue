@@ -1,4 +1,5 @@
 <script>
+import { BASE_URL } from '@/consts'
 import { loadScript } from '@/utils'
 
 export default {
@@ -14,8 +15,8 @@ export default {
   },
   async mounted() {
     if (!window.DPlayer) {
-      await loadScript('https://lib.baomitu.com/hls.js/1.5.7/hls.min.js')
-      await loadScript('https://lib.baomitu.com/dplayer/1.27.1/DPlayer.min.js')
+      await loadScript(`${BASE_URL}static/js/hls.min.js`)
+      await loadScript(`${BASE_URL}static/js/DPlayer.min.js`)
     }
     await this.$nextTick()
     this.initPlayer()
