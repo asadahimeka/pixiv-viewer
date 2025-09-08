@@ -126,6 +126,6 @@ export function isBlockTagHit(blockTags, value) {
 }
 
 export const BLOCK_INPUT_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]
-export const BLOCK_LAST_WORD_RE = /スカラマシュ|散|(^\d+$)|雀魂|じゃんたま/i
-export const BLOCK_SEARCH_WORD_RE = /スカラマシュ|散兵|放浪者(原神)|流浪者(原神)|雀魂|じゃんたま/i
+export const BLOCK_LAST_WORD_RE = /(^\d+$)|スカラ|散|雀魂|じゃんたま/i
+export const BLOCK_SEARCH_WORD_RE = /スカラマシュ|散兵|放浪者|流浪者|雀魂|じゃんたま/i
 export const BLOCK_RESULT_RE = /恋童|ペド|幼女|进群|加好友|度盘|低价|スカラマシュ|散兵|雀魂|じゃんたま/

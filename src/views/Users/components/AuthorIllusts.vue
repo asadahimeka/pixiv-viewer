@@ -32,6 +32,7 @@
       </div>
     </div>
     <van-list
+      v-if="selTag"
       v-model="loading"
       :loading-text="$t('tips.loading')"
       :finished="finished"
@@ -41,23 +42,34 @@
       :error-text="$t('tips.net_err')"
       @load="getMemberArtwork()"
     >
-      <wf-cont :layout="selTag ? 'Grid' : undefined">
+      <wf-cont layout="selTag">
         <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
       </wf-cont>
     </van-list>
+    <ImageList
+      v-else
+      :list="artList"
+      :loading="loading"
+      :finished="finished"
+      :error="error"
+      :on-load-more="getMemberArtwork"
+      :van-list-props="{ 'finished-text': !once ? $t('tips.no_more') : '' }"
+    />
   </div>
 </template>
 
 <script>
-import ImageCard from '@/components/ImageCard'
-import api from '@/api'
 import _ from '@/lib/lodash'
+import api from '@/api'
 import { generateRandomColor, getContrastingTextColor } from '@/utils'
+import ImageCard from '@/components/ImageCard.vue'
+import ImageList from '@/components/ImageList.vue'
 
 export default {
   name: 'AuthorIllusts',
   components: {
     ImageCard,
+    ImageList,
   },
   props: {
     id: {

@@ -27,6 +27,7 @@
         v-longpress="isLongpressDL?e => downloadArtwork(e, index):null"
         :src="getImgUrl(url)"
         :alt="`${artwork.title} - Page ${index + 1}`"
+        :style="index==0?'view-transition-name:artwork-cover':''"
         class="image"
         nobg
         @click.native.stop="view(index)"
@@ -113,15 +114,18 @@ export default {
       return this.artwork.width / this.artwork.height
     },
     seasonEffectSrc() {
-      const effects = this.$store.state.seasonEffects
-      let src = ''
-      this.artwork.tags?.some(t => {
-        const act = effects?.find(e => e.tag == t.name)
-        if (!act) return false
-        src = act.src
-        return true
-      })
-      return src
+      const tagNames = this.artwork.tags?.map(t => t.name) || []
+      const match = this.$store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
+      return match?.src || ''
+
+      // let src = ''
+      // this.artwork.tags?.some(t => {
+      //   const act = effects?.find(e => e.tag == t.name)
+      //   if (!act) return false
+      //   src = act.src
+      //   return true
+      // })
+      // return src
     },
   },
   watch: {

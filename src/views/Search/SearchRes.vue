@@ -109,23 +109,15 @@
         </van-dropdown-menu>
       </div>
       <PopularPreview v-if="showPopPreview && keywords.trim()" ref="popPreview" :word="keywords" :params="searchParams" />
-      <van-list
+      <ImageList
         v-else-if="keywords.trim()"
-        v-model="loading"
-        class="result-list"
-        :loading-text="$t('tips.loading')"
+        list-class="result-list"
+        :list="artList"
+        :loading="loading"
         :finished="finished"
-        :error.sync="error"
-        :immediate-check="false"
-        :offset="800"
-        :finished-text="$t('tips.no_more')"
-        :error-text="$t('tips.net_err')"
-        @load="doSearch"
-      >
-        <wf-cont>
-          <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
-        </wf-cont>
-      </van-list>
+        :error="error"
+        :on-load-more="doSearch"
+      />
       <van-loading v-show="keywords.trim() && artList.length == 0 && !finished" class="loading" :size="'50px'" />
       <div class="mask" @click="focus = false"></div>
     </div>
@@ -141,7 +133,7 @@ import store from '@/store'
 import { notSelfHibiApi } from '@/consts'
 import { mintVerify, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE, BLOCK_SEARCH_WORD_RE, BLOCK_RESULT_RE } from '@/utils/filter'
 import { i18n } from '@/i18n'
-import ImageCard from '@/components/ImageCard'
+import ImageList from '@/components/ImageList.vue'
 import PopularPreview from './components/PopularPreview.vue'
 
 const ARTWORK_LINK_RE = /https?:\/\/.+\/artworks\/(\d+)/i
@@ -149,7 +141,7 @@ const ARTWORK_LINK_RE = /https?:\/\/.+\/artworks\/(\d+)/i
 export default {
   name: 'SearchRes',
   components: {
-    ImageCard,
+    ImageList,
     PopularPreview,
   },
   data() {
@@ -383,6 +375,7 @@ export default {
       if (!this.$store.state.contentSetting.ai) {
         params.search_ai_type = 1
       }
+      if (this.loading || this.finished) return
       this.loading = true
       const res = await api.search(val, this.curPage, params)
       if (res.status === 0) {

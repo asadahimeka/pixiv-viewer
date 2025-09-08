@@ -106,9 +106,14 @@ export default {
         this.memberArtwork = res.data
         this.checkAiAuthor()
         // this.$emit('loaded')
+        if (this.$route.name != 'Artwork') return
         const i = res.data.findIndex(e => e.id == this.$route.params.id)
         i && this.$nextTick(() => {
-          this.$refs.mySwiper?.$swiper?.slideTo(i)
+          try {
+            this.$refs.mySwiper?.$swiper?.slideTo(i)
+          } catch (err) {
+            console.log('err: ', err)
+          }
         })
       } else {
         this.$toast({

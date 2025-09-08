@@ -1,40 +1,32 @@
 <template>
-  <van-list
-    v-model="loading"
-    class="artwork-list"
-    :loading-text="$t('tips.loading')"
-    :finished="finished"
-    :finished-text="$t('tips.no_more')"
-    :error.sync="error"
-    :offset="800"
-    :error-text="$t('tips.net_err')"
-    @load="getRankList"
-  >
-    <wf-cont>
-      <ImageCard
-        v-for="art in artList"
-        :key="art.id"
-        :artwork="art"
-        :data-last-seen-text="isLastSeen(art.id)?$t('0r7KFznJTs3SQlvp4KQ84'):undefined"
-        :class="{'last-seen': isLastSeen(art.id)}"
-        mode="all"
-        @click-card="toArtwork(art)"
-      />
-    </wf-cont>
-  </van-list>
+  <div>
+    <ImageList
+      list-class="artwork-list"
+      :list="artList"
+      :loading="loading"
+      :finished="finished"
+      :error="error"
+      :on-load-more="getRankList"
+      :image-card-props="(_, art) => ({
+        'data-last-seen-text': isLastSeen(art.id) ? $t('0r7KFznJTs3SQlvp4KQ84') : undefined,
+        'class': { 'last-seen': isLastSeen(art.id) }
+      })"
+    />
+    <van-loading v-show="loading" class="loading-fixed" size="50px" />
+  </div>
 </template>
 
 <script>
 import { localApi } from '@/api'
 import { getFollowingIllusts } from '@/api/user'
-import ImageCard from '@/components/ImageCard'
+import ImageList from '@/components/ImageList.vue'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 
 export default {
   name: 'FeedsIllusts',
   components: {
-    ImageCard,
+    ImageList,
   },
   data() {
     return {
@@ -48,8 +40,9 @@ export default {
   },
   async created() {
     this.lastId = await getCache('feeds.last.seen.id')
+    this.getRankList()
   },
-  destroyed() {
+  beforeDestroy() {
     setCache('feeds.last.seen.id', this.artList[0]?.id)
   },
   methods: {
@@ -57,6 +50,7 @@ export default {
       return id != this.artList[0]?.id && id == this.lastId
     },
     getRankList: _.throttle(async function () {
+      if (this.loading || this.finished) return
       this.loading = true
       const res = window.APP_CONFIG.useLocalAppApi
         ? await localApi.illustFollow(this.curPage)
@@ -82,19 +76,12 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
   },
 }
 </script>
 
-<style lang="stylus" scoped>
-.last-seen::after
+<style lang="stylus">
+.image-card.last-seen::after
   content attr(data-last-seen-text)
   position absolute
   top 0

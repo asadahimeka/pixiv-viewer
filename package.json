@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@vant/touch-emulator": "1.4.0",
+    "@vueuse/core": "11.3.0",
     "axios": "0.29.0",
     "better-justified-layout": "1.0.0",
     "core-js": "3.40.0",

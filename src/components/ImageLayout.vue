@@ -106,18 +106,15 @@ export default {
   width: 4.5rem;
 }
 
-.justified-grid .image-card,
 .JustifiedLayout .image-card {
   position: absolute !important;
 }
 
-.justified-grid .image-card-wrapper,
 .JustifiedLayout .image-card-wrapper {
   height: 100%;
   padding-bottom: 0 !important;
 }
 
-.justified-grid .image,
 .JustifiedLayout .image {
   position: relative !important;
 }

@@ -363,7 +363,8 @@ export default {
           if (nots) url += `&nots=${nots}`
           if (srv == 'sc' && aiModel) url += `&aimd=${aiModel}`
           res = await fetch(url).then(r => r.text())
-          if (!res.includes('Translate failed')) setCache(cacheKey, res)
+          // if (!res.includes('Translate failed')) setCache(cacheKey, res)
+          if (!res.startsWith('{')) setCache(cacheKey, res)
         }
         this.novelText.text = res
         loading.clear()

@@ -9,6 +9,10 @@
   --f7-page-transition-duration: 400ms;
 }
 
+.act-art-cover {
+  view-transition-name: artwork-cover;
+}
+
 .f7-ios::view-transition-old(root) {
   animation: ios-page-current-to-previous var(--f7-page-transition-duration) forwards;
 }

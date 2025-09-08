@@ -32,6 +32,11 @@ module.exports = {
   lintOnSave: false,
   runtimeCompiler: false,
   productionSourceMap: false,
+  devServer: {
+    client: {
+      overlay: false, // 关闭错误/警告浮层
+    },
+  },
   // devServer: {
   //   proxy: {
   //     '/prks/now': {

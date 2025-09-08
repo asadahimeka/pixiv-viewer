@@ -15,21 +15,14 @@
       </template>
     </van-cell>
     <van-loading v-if="!manualLoadRelated && !showList" size="64px" style="width: 64px;margin: 20px auto;" />
-    <van-list
+    <ImageList
       v-if="showList"
-      v-model="loading"
-      :loading-text="$t('tips.loading')"
+      :list="artList"
+      :loading="loading"
       :finished="finished"
-      :finished-text="$t('tips.no_more')"
-      :error.sync="error"
-      :offset="800"
-      :error-text="$t('tips.net_err')"
-      @load="getRelated()"
-    >
-      <wf-cont>
-        <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
-      </wf-cont>
-    </van-list>
+      :error="error"
+      :on-load-more="getRelated"
+    />
   </div>
 </template>
 
@@ -37,7 +30,7 @@
 import _ from '@/lib/lodash'
 import api from '@/api'
 import { tryURL } from '@/utils'
-import ImageCard from '@/components/ImageCard'
+import ImageList from '@/components/ImageList.vue'
 import store from '@/store'
 
 const { manualLoadRelated } = store.state.appSetting
@@ -45,7 +38,7 @@ const { manualLoadRelated } = store.state.appSetting
 export default {
   name: 'Related',
   components: {
-    ImageCard,
+    ImageList,
   },
   props: {
     artwork: {
@@ -83,15 +76,17 @@ export default {
       }, options)
       ob.observe(this.$refs.related)
     },
-    url(id, index) {
-      return api.url(id, index)
+    init() {
+      this.reset()
+      this.showList = true
+      this.getRelated()
     },
     reset() {
       this.curPage = 1
       this.artList = []
     },
     getRelated: _.throttle(async function () {
-      if (!this.artwork.id) return
+      if (!this.artwork.id || this.loading || this.finished) return
       console.log('this.nextUrl: ', this.nextUrl)
       this.loading = true
       const nextUrl = tryURL(this.nextUrl)
@@ -117,18 +112,6 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
-    init() {
-      this.reset()
-      this.showList = true
-      this.getRelated()
-    },
   },
 }
 </script>

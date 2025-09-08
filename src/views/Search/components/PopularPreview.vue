@@ -8,33 +8,26 @@
         <span class="title">{{ $t('search.pop_preview') }}</span>
       </template>
     </van-cell>
-    <van-list
-      v-model="loading"
-      class="result-list"
-      :loading-text="$t('tips.loading')"
+    <ImageList
+      list-class="result-list"
+      :list="artList"
+      :loading="loading"
       :finished="finished"
-      :error.sync="error"
-      :immediate-check="false"
-      :offset="800"
-      :finished-text="$t('tips.no_more')"
-      :error-text="$t('tips.net_err')"
-      @load="getList"
-    >
-      <wf-cont>
-        <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
-      </wf-cont>
-    </van-list>
+      :error="error"
+      :on-load-more="getList"
+    />
   </div>
 </template>
 
 <script>
 import _ from '@/lib/lodash'
-import ImageCard from '@/components/ImageCard'
 import api from '@/api'
+import ImageList from '@/components/ImageList.vue'
+
 export default {
   name: 'PopularPreview',
   components: {
-    ImageCard,
+    ImageList,
   },
   props: {
     word: String,
@@ -53,7 +46,7 @@ export default {
   },
   methods: {
     async getList() {
-      if (!this.word) return
+      if (!this.word || this.loading || this.finished) return
       this.loading = true
       this.artList = []
       const res = await api.getPopularPreview(this.word, _.pickBy(this.params, Boolean))
@@ -68,13 +61,6 @@ export default {
         })
       }
       this.loading = false
-    },
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
     },
   },
 }

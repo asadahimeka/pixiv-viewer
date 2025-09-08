@@ -356,14 +356,20 @@ const router = new VueRouter({
   routes,
   mode: 'history',
   base: BASE_URL,
-  scrollBehavior(_, __, pos) {
+  scrollBehavior(_to, _from, pos) {
     console.log('pos: ', pos)
     return pos || { x: 0, y: 0 }
   },
 })
 
+const { pageTransition, imgReso } = store.state.appSetting
+const isLargeWebP = imgReso == 'Large(WebP)'
+
 const noSlideRoutes = ['Home', 'HomeManga', 'HomeNovel', 'Search', 'SearchNovel', 'SearchUser', 'Rank', 'RankNovel', 'Following', 'Setting']
 function handlePageTransition(to, from) {
+  if (isLargeWebP && to.name == 'Artwork' && from.name != 'Artwork') {
+    document.querySelector(`.art-cover-${to.params.id}`)?.classList.add('act-art-cover')
+  }
   const { routeHistory } = store.state
   if (routeHistory.length > 1 && routeHistory[routeHistory.length - 2] == to.fullPath) {
     document.documentElement.classList.add('router-vta-back')
@@ -384,7 +390,6 @@ function handlePageTransition(to, from) {
   }
 }
 
-const { pageTransition } = store.state.appSetting
 router.beforeEach((to, from, next) => {
   if (pageTransition) {
     handlePageTransition(to, from)
@@ -396,7 +401,13 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-  if (!pageTransition) nprogress.done()
+  if (!pageTransition) {
+    nprogress.done()
+  } else if (isLargeWebP) {
+    setTimeout(() => {
+      document.querySelector('.act-art-cover')?.classList.remove('act-art-cover')
+    }, 500)
+  }
   console.log('afterEach to', to.fullPath)
   console.log('afterEach from', from.fullPath)
 })

@@ -11,31 +11,26 @@
       </van-cell>
       <h3 v-else class="af_title">{{ $t('user.fav_title') }}</h3>
     </template>
-    <van-list
-      v-model="loading"
-      :loading-text="$t('tips.loading')"
+    <ImageList
+      :list="artList"
+      :loading="loading"
       :finished="finished"
-      :finished-text="!once ? $t('tips.no_more') : ''"
-      :error.sync="error"
-      :offset="800"
-      :error-text="$t('tips.net_err')"
-      @load="getMemberFavorite()"
-    >
-      <wf-cont>
-        <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
-      </wf-cont>
-    </van-list>
+      :error="error"
+      :on-load-more="getMemberFavorite"
+      :van-list-props="{ 'finished-text': !once ? $t('tips.no_more') : '' }"
+    />
   </div>
 </template>
 
 <script>
-import ImageCard from '@/components/ImageCard'
-import api from '@/api'
 import _ from '@/lib/lodash'
+import api from '@/api'
+import ImageList from '@/components/ImageList.vue'
+
 export default {
   name: 'FavoriteIllusts',
   components: {
-    ImageCard,
+    ImageList,
   },
   props: {
     id: {
@@ -85,7 +80,7 @@ export default {
       this.finished = false
     },
     getMemberFavorite: _.throttle(async function () {
-      if (!this.id) return
+      if (!this.id || this.loading || this.finished) return
       if (this.next == null) return
       this.loading = true
       let newList
@@ -108,13 +103,6 @@ export default {
         this.error = true
       }
     }, 2500),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
     onClick() {
       this.$emit('onCilck')
     },

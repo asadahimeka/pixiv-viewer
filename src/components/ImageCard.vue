@@ -1,5 +1,9 @@
 <template>
-  <div class="image-card" :class="{isOuterMeta}" :style="{ '--w': artwork.width, '--h': artwork.height }">
+  <div
+    class="image-card"
+    :class="{ isOuterMeta, [`art-cover-${artwork.id}`]: true }"
+    :style="{ '--w': artwork.width, '--h': artwork.height }"
+  >
     <div
       class="image-card-wrapper"
       :style="{ paddingBottom: paddingBottom(artwork) }"
@@ -82,11 +86,6 @@ export default {
       required: false,
       default: 'cover',
     },
-    column: {
-      type: Number,
-      required: false,
-      default: 2,
-    },
     index: {
       type: Number,
     },
@@ -114,13 +113,7 @@ export default {
       return isAiIllust(this.artwork)
     },
     tagText() {
-      if (this.artwork.x_restrict == 1) {
-        return 'R-18'
-      } else if (this.artwork.x_restrict == 2) {
-        return 'R-18G'
-      } else {
-        return false
-      }
+      return ['', 'R-18', 'R-18G'][this.artwork.x_restrict] || ''
     },
     ...mapGetters(['isCensored']),
     censored() {
@@ -134,19 +127,6 @@ export default {
     }
   },
   methods: {
-    // onAvatarErr() {
-    //   const src = this.artwork.author.avatar
-    //   if (!src) return
-    //   if (src.includes('i.pixiv.re')) return
-    //   try {
-    //     const u = new URL(src)
-    //     u.host = 'i.pixiv.re'
-    //     // eslint-disable-next-line vue/no-mutating-props
-    //     this.artwork.author.avatar = u.href
-    //   } catch (error) {
-    //     console.log('error: ', error)
-    //   }
-    // },
     async toggleBookmark() {
       if (this.bLoading) return
       this.bLoading = true
@@ -173,11 +153,9 @@ export default {
       }
     },
     click(id) {
-      if (
-        !id ||
-        (this.$route.name === 'Artwork' && this.$route.params.id == id)
-      ) { return false }
-
+      if (!id || (this.$route.name == 'Artwork' && this.$route.params.id == id)) {
+        return false
+      }
       this.$emit('click-card', id)
     },
     paddingBottom(artwork) {
@@ -213,7 +191,6 @@ export default {
           closeOnPopstate: true,
           closeable: true,
           loop: false,
-          transition: 'fade',
         })
       }
     },

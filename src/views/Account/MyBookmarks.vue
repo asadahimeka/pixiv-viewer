@@ -1,39 +1,26 @@
 <template>
   <div class="favorite">
-    <van-list
-      v-model="loading"
-      :loading-text="$t('tips.loading')"
+    <ImageList
+      :list="artList"
+      :loading="loading"
       :finished="finished"
-      :finished-text="$t('tips.no_more')"
-      :error.sync="error"
-      :offset="800"
-      :error-text="$t('tips.net_err')"
-      @load="getMemberFavorite()"
-    >
-      <wf-cont>
-        <ImageCard
-          v-for="art in artList"
-          :key="art.id"
-          mode="all"
-          :artwork="art"
-          @click-card="toArtwork(art)"
-        />
-      </wf-cont>
-    </van-list>
+      :error="error"
+      :on-load-more="getMemberFavorite"
+    />
   </div>
 </template>
 
 <script>
 import _ from '@/lib/lodash'
 import { mapState } from 'vuex'
-import ImageCard from '@/components/ImageCard'
+import ImageList from '@/components/ImageList.vue'
 import { getBookmarkIllusts } from '@/api/user'
 import api from '@/api'
 
 export default {
   name: 'MyBookmarks',
   components: {
-    ImageCard,
+    ImageList,
   },
   data() {
     return {
@@ -56,6 +43,10 @@ export default {
       }
     },
   },
+  created() {
+    this.reset()
+    this.getMemberFavorite()
+  },
   methods: {
     reset() {
       this.next = 0
@@ -70,7 +61,7 @@ export default {
         : this.getBookmarksWeb()
     },
     getBookmarksWeb: _.throttle(async function () {
-      if (!this.user?.id) return
+      if (!this.user?.id || this.loading || this.finished) return
       this.loading = true
       const res = await getBookmarkIllusts(this.curPage, this.user.id)
       if (res.status === 0) {
@@ -90,7 +81,7 @@ export default {
       }
     }, 1500),
     getBookmarks: _.throttle(async function () {
-      if (!this.user?.id) return
+      if (!this.user?.id || this.loading || this.finished) return
       if (this.next == null) return
       this.loading = true
       const res = await api.getMemberFavorite(this.user.id, this.next, true)
@@ -110,13 +101,6 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
   },
 }
 </script>

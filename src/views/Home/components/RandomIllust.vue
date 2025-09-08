@@ -6,40 +6,28 @@
         <span class="title">{{ $t('common.random_view') }}</span>
       </template>
     </van-cell>
-    <van-list
-      v-model="loading"
-      class="artwork-list"
-      :loading-text="$t('tips.loading')"
+    <ImageList
+      list-class="artwork-list"
+      :list="artList"
+      :loading="loading"
       :finished="finished"
-      :finished-text="$t('tips.no_more')"
-      :error.sync="error"
-      :offset="800"
-      :error-text="$t('tips.net_err')"
-      @load="getRankList"
-    >
-      <wf-cont>
-        <ImageCard
-          v-for="art in artList"
-          :key="art.id"
-          mode="all"
-          :artwork="art"
-          @click-card="toArtwork(art)"
-        />
-      </wf-cont>
-    </van-list>
+      :error="error"
+      :on-load-more="getRankList"
+    />
   </div>
 </template>
 
 <script>
-import ImageCard from '@/components/ImageCard'
-import api from '@/api'
-import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
+import _ from '@/lib/lodash'
+import api from '@/api'
 import { filterHomeIllust } from '@/utils/filter'
+import ImageList from '@/components/ImageList.vue'
+
 export default {
   name: 'RandomIllust',
   components: {
-    ImageCard,
+    ImageList,
   },
   data() {
     return {
@@ -51,11 +39,12 @@ export default {
       rankModes: ['day', 'week', 'month', 'week_original', 'day_male'],
     }
   },
+  created() {
+    this.getRankList()
+  },
   methods: {
-    url(id, index) {
-      return api.url(id, index)
-    },
     getRankList: _.throttle(async function () {
+      if (this.loading || this.finished) return
       this.loading = true
       const mode = _.sample(this.rankModes)
       const date = dayjs().subtract(_.random(2, 14), 'days').format('YYYY-MM-DD')
@@ -77,13 +66,6 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
   },
 }
 </script>

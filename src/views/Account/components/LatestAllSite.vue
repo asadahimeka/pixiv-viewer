@@ -1,36 +1,26 @@
 <template>
-  <van-list
-    v-model="loading"
-    class="artwork-list"
-    :loading-text="$t('tips.loading')"
-    :finished="finished"
-    :finished-text="$t('tips.no_more')"
-    :error.sync="error"
-    :offset="800"
-    :error-text="$t('tips.net_err')"
-    @load="getRankList"
-  >
-    <wf-cont>
-      <ImageCard
-        v-for="art in artList"
-        :key="art.id"
-        mode="all"
-        :artwork="art"
-        @click-card="toArtwork(art)"
-      />
-    </wf-cont>
-  </van-list>
+  <div>
+    <ImageList
+      list-class="artwork-list"
+      :list="artList"
+      :loading="loading"
+      :finished="finished"
+      :error="error"
+      :on-load-more="getRankList"
+    />
+    <van-loading v-show="loading" class="loading-fixed" size="50px" />
+  </div>
 </template>
 
 <script>
-import { getNewIllusts } from '@/api/user'
-import ImageCard from '@/components/ImageCard'
 import _ from '@/lib/lodash'
+import { getNewIllusts } from '@/api/user'
+import ImageList from '@/components/ImageList.vue'
 
 export default {
   name: 'LatestAllSite',
   components: {
-    ImageCard,
+    ImageList,
   },
   data() {
     return {
@@ -42,8 +32,12 @@ export default {
       lastId: 0,
     }
   },
+  created() {
+    this.getRankList()
+  },
   methods: {
     getRankList: _.throttle(async function () {
+      if (this.loading || this.finished) return
       this.loading = true
       const res = await getNewIllusts(this.curPage, this.lastId)
       if (res.status === 0) {
@@ -63,13 +57,6 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
   },
 }
 </script>

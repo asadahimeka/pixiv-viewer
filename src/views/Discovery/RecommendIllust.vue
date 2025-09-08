@@ -2,22 +2,13 @@
   <div class="HomeRecommIllust illusts">
     <top-bar />
     <h3 class="af_title">{{ $t('common.recomm_art') }}</h3>
-    <wf-cont>
-      <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
-    </wf-cont>
-    <van-loading v-if="!showLoadMoreBtn && loading" class="loading" :size="'50px'" />
-    <van-empty v-if="!loading && !artList.length" :description="$t('tips.no_data')" />
-    <div v-if="showLoadMoreBtn && !finished" class="flex-c" style="margin: .5rem 0;">
-      <van-button
-        size="small"
-        loading-size="1em"
-        :loading-text="$t('tips.loading')"
-        :loading="loading"
-        @click="loadMore"
-      >
-        {{ $t('tips.load_more') }}
-      </van-button>
-    </div>
+    <ImageList
+      :list="artList"
+      :loading="loading"
+      :finished="finished"
+      :on-load-more="loadMore"
+    />
+    <van-loading v-show="loading" class="loading-fixed" size="50px" />
   </div>
 </template>
 
@@ -27,14 +18,14 @@ import api from '@/api'
 import { filterRecommIllust, filterCensoredIllust } from '@/utils/filter'
 import { tryURL } from '@/utils'
 import TopBar from '@/components/TopBar'
-import ImageCard from '@/components/ImageCard'
+import ImageList from '@/components/ImageList.vue'
 import { SessionStorage } from '@/utils/storage'
 
 export default {
   name: 'RecommendIllust',
   components: {
     TopBar,
-    ImageCard,
+    ImageList,
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -58,14 +49,13 @@ export default {
     this.init()
   },
   methods: {
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
     async loadMore() {
+      console.log('load-more')
+      if (!this.showLoadMoreBtn) {
+        this.finished = true
+        return
+      }
+      if (this.loading || this.finished) return
       console.log('this.nextUrl: ', this.nextUrl)
       const params = {}
       const u = tryURL(this.nextUrl)
@@ -94,6 +84,7 @@ export default {
       this.loading = false
     },
     async getArtList() {
+      if (this.loading || this.finished) return
       this.loading = true
       this.artList = []
       const res = await api.getRecommendedIllust()
@@ -108,8 +99,10 @@ export default {
       }
       this.loading = false
     },
-    init() {
+    async init() {
       if (this.isFromDetail && this.artList.length) return
+      this.artList = []
+      await this.$nextTick()
       const list = SessionStorage.get('recommended.illust')
       console.log('list: ', list)
       if (list) {

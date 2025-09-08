@@ -36,28 +36,15 @@
         </div>
       </span>
     </div>
-    <van-list
-      v-model="loading"
-      class="rank-list"
-      :loading-text="$t('tips.loading')"
+    <ImageList
+      list-class="rank-list"
+      :list="artList"
+      :loading="loading"
       :finished="finished"
-      :finished-text="$t('tips.no_more')"
-      :error.sync="error"
-      :offset="800"
-      :error-text="$t('tips.net_err')"
-      @load="getRankList"
-    >
-      <wf-cont>
-        <ImageCard
-          v-for="(art, i) in artList"
-          :key="art.id"
-          mode="all"
-          :artwork="art"
-          :index="i + 1"
-          @click-card="toArtwork(art)"
-        />
-      </wf-cont>
-    </van-list>
+      :error="error"
+      :on-load-more="getRankList"
+      :image-card-props="i => ({ index: i + 1 })"
+    />
     <van-calendar
       ref="calendar"
       v-model="isDatePickerShow"
@@ -73,13 +60,13 @@
       :show-confirm="false"
       @confirm="v => { date = v; isDatePickerShow = false }"
     />
-    <van-loading v-show="loading" class="loading" :size="'50px'" />
+    <van-loading v-show="loading" class="loading-fixed" size="50px" />
   </div>
 </template>
 
 <script>
 import dayjs from 'dayjs'
-import ImageCard from '@/components/ImageCard'
+import ImageList from '@/components/ImageList.vue'
 import Nav from './components/Nav'
 import _ from '@/lib/lodash'
 import api from '@/api'
@@ -132,7 +119,7 @@ export default {
   name: 'Rank',
   components: {
     RankNav: Nav,
-    ImageCard,
+    ImageList,
   },
   data() {
     const maxDate = dayjs().subtract(new Date().getHours() > 14 ? 1 : 2, 'days').toDate()
@@ -234,6 +221,7 @@ export default {
       return this.menu[type] ? this.menu[type].io : null
     },
     getRankList: _.throttle(async function () {
+      if (this.loading) return
       this.loading = true
       const type = this.getIOType(this.curType)
       let res
@@ -286,13 +274,6 @@ export default {
         this.error = true
       }
     }, 1500),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
     showPopup() {
       this.isDatePickerShow = true
     },
