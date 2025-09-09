@@ -27,7 +27,7 @@
           <DiscoveryCard />
         </div>
         <RandomIllust />
-        <LatestIllustCard v-if="isSelfHibi" />
+        <LatestIllustCard v-if="isSelfHibi && notVirtualList" />
       </template>
     </div>
   </div>
@@ -45,6 +45,7 @@ import Recomm4U from './components/Recomm4U.vue'
 import { notSelfHibiApi } from '@/consts'
 import { existsSessionId } from '@/api/user'
 import api from '@/api'
+import store from '@/store'
 
 const isWebLogin = existsSessionId()
 
@@ -73,6 +74,11 @@ export default {
       title: `Pixiv Viewer - ${this.$t('setting.app_desc')}`,
       titleTemplate: null,
     }
+  },
+  computed: {
+    notVirtualList() {
+      return !store.state.appSetting.wfType.startsWith('Virtual')
+    },
   },
   activated() {
     this.placeholder = _.sample(this.tags)

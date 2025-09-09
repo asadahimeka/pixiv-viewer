@@ -60,7 +60,7 @@ const setObserver = () => {
       props.onLoadMore()
     }
   }, {
-    rootMargin: '0px 50px 80px 0px',
+    rootMargin: '300px 0px 300px 0px',
     threshold: [0],
   })
   observer.value.observe(indicator.value)

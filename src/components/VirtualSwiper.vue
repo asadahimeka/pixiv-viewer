@@ -12,6 +12,7 @@
     </div>
     <div v-if="direction == 'horizontal'" class="swiper-button-prev"></div>
     <div v-if="direction == 'horizontal'" class="swiper-button-next"></div>
+    <van-icon class="vs-full-icon" :name="isVsFull ? 'shrink' : 'expand-o'" @click="toggleVsFull()" />
   </div>
 </template>
 
@@ -36,6 +37,7 @@ export default {
       swiper: null,
       virtualData: { slides: [] },
       direction: getDirection(),
+      isVsFull: false,
     }
   },
   computed: {
@@ -55,10 +57,11 @@ export default {
       this.swiper?.virtual.appendSlide(_.cloneDeep(newList))
     },
   },
-  mounted() {
+  activated() {
     this.initSwiper()
   },
-  beforeDestroy() {
+  deactivated() {
+    if (this.isVsFull) this.toggleVsFull()
     this.$nextTick(() => {
       this.swiper?.destroy()
     })
@@ -109,6 +112,13 @@ export default {
       const src = isLargeWebp ? i0?.l?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') : i0?.m
       return src ? `url(${src}) 0` : 'none'
     },
+    toggleVsFull() {
+      this.isVsFull = !this.isVsFull
+      document.body.classList.toggle('vs-full')
+      this.$nextTick(() => {
+        this.swiper?.update(true)
+      })
+    },
   },
 }
 </script>
@@ -153,5 +163,39 @@ export default {
 }
 .my-virtual-swiper .image-card-wrapper .meta .content {
   padding: 0.24rem;
+}
+.vs-full-icon {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.25rem;
+  font-size: 0.7rem;
+  z-index: 999;
+  cursor: pointer;
+}
+.vs-full .vs-full-icon {
+  top: 0.1rem;
+}
+.vs-full .image-list-comp {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 999;
+  padding: 0 !important;
+  width: 100vw;
+  width: 100dvw;
+  height: 100vh;
+  height: 100dvh;
+  max-width: 100vw !important;
+}
+.vs-full .my-virtual-swiper {
+  height: 100% !important;
+}
+.vs-full .my-virtual-swiper .image-card .layer-num {
+  right: 1.1rem;
+  top: 0.2rem;
+}
+.vs-full .home-i-tabs,
+.vs-full .nav-container {
+  display: none !important;
 }
 </style>

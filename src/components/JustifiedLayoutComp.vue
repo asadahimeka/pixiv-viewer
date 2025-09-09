@@ -50,9 +50,9 @@ export default {
     this.calculate()
     window.addEventListener('resize', this.calculate)
   },
-  // activated() {
-  //   this.calculate()
-  // },
+  activated() {
+    this.calculate()
+  },
   beforeDestroy() {
     window.removeEventListener('resize', this.calculate)
   },

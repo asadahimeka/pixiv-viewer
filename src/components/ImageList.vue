@@ -1,13 +1,13 @@
 <template>
-  <div :class="listClass">
+  <div class="image-list-comp" :class="listClass">
     <VirtualWaterfall
       v-if="listType == 'VirtualMasonry' || listType == 'VirtualGrid'"
       wrapper-height="95vh"
       :gap="10"
+      :items="list"
       :min-column-count="2"
       :item-min-width="280"
-      :preload-screen-count="[1, 1]"
-      :items="list"
+      :preload-screen-count="preloadScreenCount"
       :calc-item-height="vCalcItemHeight"
       :on-load-more="onLoadMore"
     >
@@ -27,7 +27,7 @@
     </VirtualWaterfall>
     <VirtualSwiper
       v-else-if="listType == 'VirtualSlide'"
-      height="86vh"
+      height="84vh"
       :slides="list"
       :on-reach-end="onLoadMore"
     >
@@ -95,8 +95,9 @@ export default {
   props: {
     list: { type: Array, default: () => [] },
     listClass: { type: String, default: '' },
-    vanListProps: { type: Object, default: () => {} },
+    vanListProps: { type: Object, default: () => ({}) },
     imageCardProps: { type: Function, default: () => ({}) },
+    vwtfNoTop: { type: Boolean, default: false },
     loading: { type: Boolean, default: true },
     finished: { type: Boolean, default: false },
     error: { type: Boolean, default: false },
@@ -112,6 +113,9 @@ export default {
   computed: {
     listType() {
       return store.state.appSetting.wfType
+    },
+    preloadScreenCount() {
+      return this.vwtfNoTop ? [2, 1] : [1, 1]
     },
   },
   watch: {

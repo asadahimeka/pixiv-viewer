@@ -10,7 +10,7 @@
       <MangaRankCard />
       <MangaRecommendCard v-if="isSelfHibi" />
       <RandomManga />
-      <LatestMangaCard v-if="isSelfHibi" />
+      <LatestMangaCard v-if="isSelfHibi && notVirtualList" />
     </div>
   </div>
 </template>
@@ -21,6 +21,7 @@ import LatestMangaCard from './components/LatestMangaCard.vue'
 import MangaRankCard from './components/MangaRankCard.vue'
 import MangaRecommendCard from './components/MangaRecommendCard.vue'
 import RandomManga from './components/RandomManga.vue'
+import store from '@/store'
 
 export default {
   name: 'HomeIllust',
@@ -39,6 +40,11 @@ export default {
     return {
       title: this.$t('common.manga'),
     }
+  },
+  computed: {
+    notVirtualList() {
+      return !store.state.appSetting.wfType.startsWith('Virtual')
+    },
   },
 }
 </script>

@@ -8,6 +8,7 @@
     </van-cell>
     <ImageList
       list-class="artwork-list"
+      vwtf-no-top
       :list="artList"
       :loading="loading"
       :finished="finished"
