@@ -27,7 +27,7 @@
         v-longpress="isLongpressDL?e => downloadArtwork(e, index):null"
         :src="getImgUrl(url)"
         :alt="`${artwork.title} - Page ${index + 1}`"
-        :style="index==0?'view-transition-name:artwork-cover':''"
+        :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
         class="image"
         nobg
         @click.native.stop="view(index)"
@@ -100,6 +100,7 @@ export default {
       progressShow: false,
       progress: 0,
       isLongpressDL,
+      isLargeWebp: imgReso == 'Large(WebP)',
     }
   },
   computed: {

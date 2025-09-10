@@ -34,6 +34,7 @@ export default {
   },
   data() {
     return {
+      isActive: false,
       swiper: null,
       virtualData: { slides: [] },
       direction: getDirection(),
@@ -57,17 +58,31 @@ export default {
       this.swiper?.virtual.appendSlide(_.cloneDeep(newList))
     },
   },
-  activated() {
+  mounted() {
     this.initSwiper()
   },
+  activated() {
+    this.isActive = true
+    this.$nextTick(() => {
+      this.swiper?.attachEvents()
+      this.swiper?.update(true)
+    })
+  },
   deactivated() {
-    if (this.isVsFull) this.toggleVsFull()
+    this.isActive = false
+    if (this.isVsFull) this.toggleVsFull(true)
+    this.$nextTick(() => {
+      this.swiper?.detachEvents()
+    })
+  },
+  beforeDestroy() {
     this.$nextTick(() => {
       this.swiper?.destroy()
     })
   },
   methods: {
     initSwiper() {
+      console.log('==========initSwiper: ')
       const options = {
         direction: this.direction,
         spaceBetween: 1,
@@ -75,12 +90,14 @@ export default {
         virtual: {
           slides: this.slides,
           renderExternal: data => {
+            if (!this.isActive) return
             console.log('data: ', data)
             this.virtualData = data
           },
         },
         on: {
           resize: () => {
+            if (!this.isActive) return
             this.direction = getDirection()
             this.$nextTick(() => {
               this.swiper?.changeDirection(this.direction)
@@ -88,7 +105,8 @@ export default {
             })
           },
           reachEnd: () => {
-            console.log('reachEnd')
+            if (!this.isActive) return
+            console.log('reachEnd', this)
             if (this.slides.length) {
               this.onReachEnd()
             }
@@ -112,9 +130,10 @@ export default {
       const src = isLargeWebp ? i0?.l?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') : i0?.m
       return src ? `url(${src}) 0` : 'none'
     },
-    toggleVsFull() {
+    toggleVsFull(dontUpdate = false) {
       this.isVsFull = !this.isVsFull
       document.body.classList.toggle('vs-full')
+      if (dontUpdate) return
       this.$nextTick(() => {
         this.swiper?.update(true)
       })
@@ -180,12 +199,14 @@ export default {
   top: 0;
   left: 0;
   z-index: 999;
+  margin: 0 !important;
   padding: 0 !important;
   width: 100vw;
   width: 100dvw;
   height: 100vh;
   height: 100dvh;
   max-width: 100vw !important;
+  max-height: 100vh !important;
 }
 .vs-full .my-virtual-swiper {
   height: 100% !important;
@@ -195,6 +216,7 @@ export default {
   top: 0.2rem;
 }
 .vs-full .home-i-tabs,
+.vs-full .search .search-bar-wrap,
 .vs-full .nav-container {
   display: none !important;
 }

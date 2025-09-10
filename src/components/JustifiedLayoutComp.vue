@@ -101,6 +101,7 @@ export default {
 
 <style>
 .justified-layout {
+  contain: layout paint;
   position: relative;
   width: 100%;
   max-width: 100%;
