@@ -159,7 +159,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Sponsor
 
-如果你觉得这个项目对你有帮助，欢迎请我喝杯咖啡：
+赞助列表: https://sponsors-yumine.netlify.app/account
+
+如果你觉得这个项目对你有帮助，欢迎请我[喝杯咖啡](https://sponsors-yumine.netlify.app)：
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/sakurayumine)
 

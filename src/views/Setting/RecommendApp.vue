@@ -7,7 +7,7 @@
       label="使用 Flutter 编写的 Pixiv 第三方客户端。支持免代理直连。"
       @click="openLink('https://github.com/Notsfsssf/pixez-flutter')"
     />
-    <van-cell
+    <!-- <van-cell
       center
       title="Pixiv-Shaft (Android)"
       is-link
@@ -20,7 +20,7 @@
       is-link
       label="全新的第三方 pixiv 客户端。"
       @click="openLink('https://github.com/CeuiLiSA/Pixiv-Slinky')"
-    />
+    /> -->
     <van-cell
       center
       title="Materixiv (Android)"

@@ -68,16 +68,15 @@
     </div>
     <div class="list-wrap" :class="{ focus: focus }" :style="{ paddingTop: keywords.trim() ? '1.6rem' : '2.6rem' }">
       <div v-show="keywords.trim()" class="search_params">
-        <van-dropdown-menu class="search_param_sel" active-color="#f2c358">
+        <van-dropdown-menu class="search_param_sel" :class="{ showPopPreview }" active-color="#f2c358">
           <template v-if="!showPopPreview">
             <van-dropdown-item v-model="searchParams.mode" :options="searchModes" />
             <van-dropdown-item v-model="searchParams.order" :options="searchOrders" />
-            <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
             <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
           </template>
           <van-dropdown-item
             ref="s_date"
-            :title="searchParams.start_date? searchParams.start_date + '~' + searchParams.end_date : $t('common.date')"
+            :title="searchParams.start_date ? searchParams.start_date + '~' + searchParams.end_date : $t('common.date')"
             :lazy-render="false"
             @open="onSelDateOpen"
           >
@@ -86,6 +85,7 @@
               color="#f2c358"
               class="sel_search_date"
               type="range"
+              lazy-render
               :confirm-text="$t('common.confirm')"
               :confirm-disabled-text="$t('common.confirm')"
               :default-date="searchDateVals"
@@ -106,6 +106,11 @@
               </van-button>
             </div>
           </van-dropdown-item>
+          <template v-if="!showPopPreview">
+            <van-dropdown-item v-model="searchDurationParam" :options="searchDurations" @change="handleDurationChange" />
+            <van-dropdown-item v-model="searchParams.search_ai_type" :disabled="!isAIOn" :options="searchAIOptions" />
+            <van-dropdown-item v-model="searchParams.searchR18Type" :disabled="!isR18On" :options="searchR18Options" />
+          </template>
         </van-dropdown-menu>
       </div>
       <PopularPreview v-if="showPopPreview && keywords.trim()" ref="popPreview" :word="keywords" :params="searchParams" />
@@ -131,7 +136,7 @@ import dayjs from 'dayjs'
 import api from '@/api'
 import store from '@/store'
 import { notSelfHibiApi } from '@/consts'
-import { mintVerify, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE, BLOCK_SEARCH_WORD_RE, BLOCK_RESULT_RE } from '@/utils/filter'
+import { mintVerify, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE, BLOCK_SEARCH_WORD_RE, BLOCK_RESULT_RE, isAiIllust } from '@/utils/filter'
 import { i18n } from '@/i18n'
 import ImageList from '@/components/ImageList.vue'
 import PopularPreview from './components/PopularPreview.vue'
@@ -169,11 +174,11 @@ export default {
       searchParams: {
         mode: 'partial_match_for_tags',
         order: 'date_desc',
-        duration: '',
         start_date: '',
         end_date: '',
+        search_ai_type: '',
+        searchR18Type: '',
       },
-      searchDateVals: [null, null],
       searchModes: [
         { text: this.$t('search.mode.partial'), value: 'partial_match_for_tags' },
         { text: this.$t('search.mode.exact'), value: 'exact_match_for_tags' },
@@ -183,11 +188,24 @@ export default {
         { text: this.$t('search.date.desc'), value: 'date_desc' },
         { text: this.$t('search.date.asc'), value: 'date_asc' },
       ],
-      searchDuration: [
+      searchDurationParam: '',
+      searchDateVals: [null, null],
+      searchDurations: [
         { text: this.$t('search.dura.ph'), value: '' },
         { text: this.$t('search.dura.day'), value: 'within_last_day' },
         { text: this.$t('search.dura.week'), value: 'within_last_week' },
         { text: this.$t('search.dura.month'), value: 'within_last_month' },
+        { text: this.$t('MA6IA3Iad77L-GFmI1G2e'), value: 'within_last_half_year' },
+        { text: this.$t('AHbKrrnigwX4uyEuNTLhD'), value: 'within_last_year' },
+      ],
+      searchR18Options: [
+        { text: this.$t('ZrjYwXfoy-1VsGd5GPUaG'), value: '' },
+        { text: this.$t('KaQ9vCtHFcDpPCx80CpoW'), value: 'R' },
+        { text: this.$t('q3dZB--IevljTdxWdrQMC'), value: 'S' },
+      ],
+      searchAIOptions: [
+        { text: this.$t('D3kINSMv_LLXKunaXRBkY'), value: '' },
+        { text: this.$t('VTewlLtKnSV8muyw35y8P'), value: '1' },
       ],
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
@@ -200,6 +218,15 @@ export default {
   },
   computed: {
     ...mapState(['searchHistory']),
+    isR18On() {
+      return store.getters.isR18On
+    },
+    isAIOn() {
+      return store.state.contentSetting.ai
+    },
+    searchListMinFavNum() {
+      return Number(store.state.appSetting.searchListMinFavNum)
+    },
     pidOrUidList() {
       return this.keywords.match(/(\d+)/g) || []
     },
@@ -217,7 +244,7 @@ export default {
     searchParams: {
       deep: true,
       handler(val) {
-        console.log('val: ', val)
+        console.log('searchParams: ', val)
         if (this.showPopPreview) {
           this.$refs.popPreview.getList()
         } else {
@@ -227,7 +254,10 @@ export default {
       },
     },
     searchDateVals(vals) {
-      console.log('vals: ', vals)
+      console.log('searchDateVals: ', vals)
+      if (!(Array.isArray(vals) && vals[2])) {
+        this.searchDurationParam = ''
+      }
       Object.assign(this.searchParams, {
         start_date: vals[0] && dayjs(vals[0]).format('YYYY-MM-DD'),
         end_date: vals[1] && dayjs(vals[1]).format('YYYY-MM-DD'),
@@ -314,6 +344,25 @@ export default {
         this.search(keywords)
       }
     },
+    handleDurationChange(val) {
+      console.log('handleDurationChange: ', val)
+      if (!val) {
+        this.searchDateVals = [null, null, true]
+        return
+      }
+      const today = dayjs()
+      /** @type {Record<string, () => dayjs.Dayjs>} */
+      const startDateMap = {
+        within_last_day: () => today.subtract(1, 'day'),
+        within_last_week: () => today.subtract(7, 'days'),
+        within_last_month: () => today.subtract(1, 'month'),
+        within_last_half_year: () => today.subtract(6, 'months'),
+        within_last_year: () => today.subtract(1, 'year'),
+      }
+      const startDate = startDateMap[val] && startDateMap[val]()
+      if (!startDate) return
+      this.searchDateVals = [startDate.toDate(), today.toDate(), true]
+    },
     onSelDateOpen() {
       // this.$nextTick(() => {
       this.$refs.selDate.scrollToDate(this.searchDateVals[0] || this.maxDate)
@@ -359,7 +408,7 @@ export default {
 
       this.setSearchHistory(val)
 
-      if (!(this.$store.state.contentSetting.r18 || this.$store.state.contentSetting.r18g)) {
+      if (!this.isR18On) {
         if (BLOCK_INPUT_WORDS.some(e => e.test(val))) {
           this.artList = []
           this.finished = true
@@ -372,8 +421,11 @@ export default {
       }
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       const params = _.pickBy(this.searchParams, Boolean)
-      if (!this.$store.state.contentSetting.ai) {
-        params.search_ai_type = 1
+      params.search_ai_type && window.umami?.track('search_ai_type', params.search_ai_type)
+      params.searchR18Type && window.umami?.track('searchR18Type', params.searchR18Type)
+      delete params.searchR18Type
+      if (!this.isAIOn || val.includes(' -AI')) {
+        params.search_ai_type = 1 // 不显示AI作品
       }
       if (this.loading || this.finished) return
       this.loading = true
@@ -395,17 +447,21 @@ export default {
             artList = artList.filter(e => e.like > Number(match && match[0]))
           }
 
-          if (this.keywords__.includes(' R-18')) {
+          if (this.searchParams.searchR18Type == 'R' || this.keywords__.includes(' R-18')) {
             artList = artList.filter(e => e.x_restrict > 0)
           }
 
-          if (this.keywords__.includes(' -R-18')) {
+          if (this.searchParams.searchR18Type == 'S' || this.keywords__.includes(' -R-18')) {
             artList = artList.filter(e => e.x_restrict == 0)
+          }
+
+          if (this.searchParams.search_ai_type == '1' || this.keywords__.includes(' -AI')) {
+            artList = artList.filter(e => !isAiIllust(e))
           }
 
           artList = artList.filter(e => {
             return !(
-              e.like < Number(store.state.appSetting.searchListMinFavNum) ||
+              e.like < this.searchListMinFavNum ||
               BLOCK_RESULT_RE.test(JSON.stringify(e.tags)) ||
               BLOCK_RESULT_RE.test(e.title) ||
               BLOCK_RESULT_RE.test(e.caption)
@@ -747,6 +803,42 @@ export default {
 .search_params
   position relative
   top -24px
+  @media screen and (max-width: 1280px)
+    overflow-x: auto;
+    &::-webkit-scrollbar
+      display none
+    ::v-deep .van-dropdown-menu
+      padding-bottom 0.3rem
+  @media screen and (min-width: 1281px)
+    ::v-deep .van-dropdown-menu:not(.showPopPreview)
+      >div:nth-child(2) .van-dropdown-item__content
+        width: 14.29vw
+        border-bottom-right-radius: 8PX
+      >div:nth-child(3) .van-dropdown-item__content
+        width: 14.29vw
+        left: 14.29vw
+        border-bottom-left-radius: 8PX
+        border-bottom-right-radius: 8PX
+      >div:nth-child(4) .van-dropdown-item__content
+        width: 14.29vw
+        left: 14.29vw*2
+        border-bottom-left-radius: 8PX
+        border-bottom-right-radius: 8PX
+      >div:nth-child(6) .van-dropdown-item__content
+        width: 14.29vw
+        left: 14.29vw*4
+        border-bottom-left-radius: 8PX
+        border-bottom-right-radius: 8PX
+      >div:nth-child(7) .van-dropdown-item__content
+        width: 14.29vw
+        left: 14.29vw*5
+        border-bottom-left-radius: 8PX
+        border-bottom-right-radius: 8PX
+      >div:nth-child(8) .van-dropdown-item__content
+        width: 14.29vw
+        left: unset
+        right 0
+        border-bottom-left-radius: 8PX
 
 .search_param_sel
   height 70px
@@ -756,9 +848,10 @@ export default {
   ::v-deep .van-dropdown-menu__bar
     background none
     height 100% !important
-    .van-dropdown-menu__item:first-child,
-    .van-dropdown-menu__item:nth-child(2)
-      flex 1.3
+    @media screen and (max-width: 1280px)
+      .van-dropdown-menu__item
+        min-width: max-content;
+        padding: 0 0.2rem;
 
 .sel_search_date
   width 750px !important

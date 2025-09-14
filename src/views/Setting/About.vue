@@ -13,6 +13,7 @@
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer')"
       />
       <van-cell center :title="$t('QV1uifvU3RRNg7roth-8s')" is-link :label="$t('tips.click_view')" to="/setting/about/faq" />
+      <van-cell center :title="'赞助'" is-link :label="$t('tips.click_view')" @click="openLink('https://sponsors-yumine.netlify.app')" />
     </van-cell-group>
     <van-cell-group :title="$t('about.credits')">
       <van-cell

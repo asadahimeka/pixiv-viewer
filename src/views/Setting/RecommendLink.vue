@@ -23,13 +23,6 @@
     />
     <van-cell
       center
-      title="PixivFE"
-      is-link
-      label="https://pixivfe.cocomi.eu.org"
-      @click="openLink('https://pixivfe.cocomi.eu.org')"
-    />
-    <van-cell
-      center
       title="Pixiviz Kai"
       is-link
       label="https://pixiviz.cocomi.eu.org"
@@ -62,6 +55,13 @@
       is-link
       label="https://pixivlxns.cocomi.eu.org"
       @click="openLink('https://pixivlxns.cocomi.eu.org')"
+    />
+    <van-cell
+      center
+      title="PixivFE"
+      is-link
+      label="https://pixivfe.cocomi.eu.org"
+      @click="openLink('https://pixivfe.cocomi.eu.org')"
     />
     <van-cell
       center
