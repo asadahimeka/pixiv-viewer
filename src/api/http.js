@@ -1,6 +1,7 @@
 import axios from 'axios'
 import nprogress from 'nprogress'
 import { BASE_API_URL } from '@/consts'
+import { retry } from '@/utils'
 
 axios.defaults.baseURL = BASE_API_URL
 axios.defaults.timeout = 20000
@@ -22,16 +23,19 @@ axios.interceptors.response.use(
   }
 )
 
-const get = async (url, params = {}, config = {}) => {
+export async function get(url, params = {}, config = {}) {
   console.log('url: ', url)
   console.log('params: ', params)
   try {
-    let res
-    if (/^\/(?!prks).*/.test(url) && window.APP_CONFIG.useLocalAppApi) {
-      res = await window.__localApiMap__[url]?.({ query: params, ...config })
-    } else {
-      res = (await axios.get(url, { params, ...config })).data
-    }
+    const res = await retry(async () => {
+      let resp
+      if (window.APP_CONFIG.useLocalAppApi && url.startsWith('/')) {
+        resp = await window.__localApiMap__[url]({ query: params, ...config })
+        return resp
+      }
+      resp = await axios.get(url, { params, ...config })
+      return resp.data
+    })
 
     return res
   } catch (error) {
@@ -39,5 +43,3 @@ const get = async (url, params = {}, config = {}) => {
     return { error }
   }
 }
-
-export { get }

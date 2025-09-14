@@ -143,7 +143,7 @@ module.exports = {
         /sitemap\.txt$/,
         /\.user\.js$/,
       ],
-      navigateFallbackDenylist: [/^\/prks\//],
+      // navigateFallbackDenylist: [/^\/prks\//],
       runtimeCaching: [
         {
           urlPattern: /.*\.html$/,
