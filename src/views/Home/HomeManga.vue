@@ -4,7 +4,7 @@
       <div class="com_sel_tab" @click="$router.replace('/')">{{ $t('common.illust') }}</div>
       <div class="com_sel_tab cur">{{ $t('common.manga') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/home_novel')">{{ $t('common.novel') }}</div>
-      <div v-t="'g4JWYmBbfeweCBkRSgGNw'" class="com_sel_tab" @click="$router.push('/lives')"></div>
+      <!-- <div v-t="'g4JWYmBbfeweCBkRSgGNw'" class="com_sel_tab" @click="$router.push('/lives')"></div> -->
     </div>
     <div class="home-m">
       <MangaRankCard />
