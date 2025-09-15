@@ -1,11 +1,11 @@
 <template>
-  <div class="main-layout" :class="{ noImgFillScreen, 'safe-area': safeArea }">
-    <div class="app-main" :class="{ 'image-card-no-radius': imageCardNoRadius }">
+  <div class="main-layout" :class="layoutClasses">
+    <div class="app-main" :class="imageCardClasses">
       <keep-alive :max="10">
         <router-view />
       </keep-alive>
     </div>
-    <my-nav v-show="showNav" :is-nav-appear="hideNavBarOnScroll ? isNavAppear : true" />
+    <my-nav v-show="showNav" :is-nav-appear="myIsNavShow" />
     <div v-show="!showNav" class="back_to_top" :class="{ 'back_to_top--show': !isNavAppear }" @click="scrollToTop()">
       <van-icon name="back-top" />
     </div>
@@ -17,7 +17,7 @@ import Nav from '@/components/Nav'
 import store from '@/store'
 import { throttleScroll } from '@/utils'
 
-const { isImageFitScreen, isImageCardBorderRadius, hideNavBarOnScroll } = store.state.appSetting
+const { isImageFitScreen, isImageCardBorderRadius, isImageCardBoxShadow, hideNavBarOnScroll } = store.state.appSetting
 
 export default {
   components: {
@@ -36,10 +36,22 @@ export default {
   data() {
     return {
       isNavAppear: true,
-      noImgFillScreen: !isImageFitScreen,
-      imageCardNoRadius: !isImageCardBorderRadius,
-      hideNavBarOnScroll,
+      imageCardClasses: {
+        'image-card-no-radius': !isImageCardBorderRadius,
+        'image-card-no-shadow': !isImageCardBoxShadow,
+      },
     }
+  },
+  computed: {
+    myIsNavShow() {
+      return hideNavBarOnScroll ? this.isNavAppear : true
+    },
+    layoutClasses() {
+      return {
+        'noImgFillScreen': !isImageFitScreen,
+        'safe-area': this.safeArea,
+      }
+    },
   },
   mounted() {
     console.log('main-layout mounted')

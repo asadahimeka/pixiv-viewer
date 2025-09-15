@@ -57,6 +57,7 @@ export default new Vuex.Store({
       isImgLazyOb: false,
       searchListMinFavNum: '5',
       isImageCardBorderRadius: true,
+      isImageCardBoxShadow: true,
       ugoiraDefDLFormat: '',
       pageTransition: defPageTransition,
       withBodyBg: true,

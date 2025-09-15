@@ -152,6 +152,11 @@
           <van-switch :value="appSetting.isImageCardBorderRadius" size="24" @change="v => saveAppSetting('isImageCardBorderRadius', v, true)" />
         </template>
       </van-cell>
+      <van-cell center :title="$t('foF5sr3Mc2YROB7MxRm49')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isImageCardBoxShadow" size="24" @change="v => saveAppSetting('isImageCardBoxShadow', v, true)" />
+        </template>
+      </van-cell>
       <van-cell v-if="showAnaSwitch" center title="Enable Umami Analytics">
         <template #right-icon>
           <van-switch :value="isAnalyticsOn" size="24" @change="onAnalyticsChange" />
