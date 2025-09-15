@@ -421,8 +421,8 @@ export default {
       }
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       const params = _.pickBy(this.searchParams, Boolean)
-      params.search_ai_type && window.umami?.track('search_ai_type', params.search_ai_type)
-      params.searchR18Type && window.umami?.track('searchR18Type', params.searchR18Type)
+      params.search_ai_type && window.umami?.track('search_ai_type', { val: params.search_ai_type })
+      params.searchR18Type && window.umami?.track('searchR18Type', { val: params.searchR18Type })
       delete params.searchR18Type
       if (!this.isAIOn || val.includes(' -AI')) {
         params.search_ai_type = 1 // 不显示AI作品

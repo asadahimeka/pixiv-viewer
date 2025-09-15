@@ -5,13 +5,13 @@
     <div style="max-width: 10rem;margin: 0 auto;">
       <van-tabs v-model="activeTab" class="h-tabs" animated swipeable color="#F2C358">
         <van-tab :title="$t('setting.recomm.site')" name="site">
-          <RecommendLink />
+          <RecommendLink v-if="activeTab == 'site'" />
         </van-tab>
         <van-tab :title="$t('setting.recomm.app')" name="app">
-          <RecommendApp />
+          <RecommendApp v-if="activeTab == 'app'" />
         </van-tab>
         <van-tab :title="$t('setting.recomm.tm')" name="tm">
-          <RecommendUserscript />
+          <RecommendUserscript v-if="activeTab == 'tm'" />
         </van-tab>
       </van-tabs>
     </div>

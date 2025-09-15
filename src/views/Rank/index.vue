@@ -24,7 +24,7 @@
       >
         <div class="filter-favs-actions">
           <span @click="isFilterFavs=!isFilterFavs">{{ isFilterFavs ? $t('hHPMdWCYd_B2r9F0icW5Y') : $t('KS3utA342Q7yr0mOFARV-') }}</span>
-          <span @click="isHideManga=!isHideManga">{{ isHideManga ? $t('KBTp7zyXO4ckXvh14iu0K') : $t('1VVoNDWxcoBn236bEV-_H') }}</span>
+          <span v-if="actRankCat == '0'" @click="isHideManga=!isHideManga">{{ isHideManga ? $t('KBTp7zyXO4ckXvh14iu0K') : $t('1VVoNDWxcoBn236bEV-_H') }}</span>
         </div>
         <template #reference>
           <van-icon name="filter-o" class="filter-favs-icon" />
@@ -136,7 +136,7 @@ export default {
       finished: false,
       menus: getRankMenus(),
       showRankCat: false,
-      actRankCat: '1',
+      actRankCat: '0',
       rankCatLabels: getRankCatLabels(),
       rankCatActions: getRankCatActions(),
       showFilterFavsBtn: window.APP_CONFIG.useLocalAppApi,

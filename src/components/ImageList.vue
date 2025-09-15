@@ -22,7 +22,7 @@
       <template #tips>
         <p v-show="loading" class="il-tips-text">{{ $t('tips.loading') }}</p>
         <p v-if="!loading && finished" class="il-tips-text">{{ $t('tips.no_more') }}</p>
-        <p v-if="!loading && error" class="il-tips-text" @ciick="onLoadMore">{{ $t('tips.net_err') }}</p>
+        <p v-if="!loading && error" class="il-tips-text" @click="onLoadMore()">{{ $t('tips.net_err') }}</p>
       </template>
     </VirtualWaterfall>
     <VirtualSwiper
