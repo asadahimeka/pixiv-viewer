@@ -12,6 +12,7 @@
 - Novel reading paging
 - History import/export
 - Add virtual list layouts
+- Image card box shadow setting
 
 ### 🐛 Bug Fixes
 
@@ -30,6 +31,9 @@
 - Virtual swiper glitches
 - Illust search params fix
 - Http get retry
+- Remove home lives tab
+- Bug fixes
+- Drop imt sdk
 
 ### 📚 Documentation
 
@@ -50,6 +54,7 @@
 - Release v1.27.0
 - Release v1.27.1
 - Release v1.27.2
+- Release v1.27.3
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
