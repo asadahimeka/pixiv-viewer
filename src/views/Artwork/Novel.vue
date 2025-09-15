@@ -140,7 +140,7 @@ export default {
       showComments: false,
       showPntPopover: false,
       pntActions: [
-        { text: '加载沉浸式翻译 SDK', className: 'imt', key: 'imt' },
+        // { text: '加载沉浸式翻译 SDK', className: 'imt', key: 'imt' },
         { text: 'AI 翻译(glm-4-9b)', className: 'sc', key: 'sc_glm' },
         // { text: 'AI 翻译(GLM-4-9B-0414)', className: 'sc', key: 'sc_glm_0414' },
         // { text: 'AI 翻译(GLM-Z1-9B-0414)', className: 'sc', key: 'sc_glm_z1' },

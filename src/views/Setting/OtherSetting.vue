@@ -39,11 +39,11 @@
       <van-cell center :title="$t('MIvoTULAIywXTtFIKsEuD')" :label="novelDlFmtLabel" is-link @click="novelDlFmt.show = true" />
       <template v-if="showAutoLoadImtSwitch">
         <van-cell center title="小说默认翻译服务" :label="novelTranslateLabel" is-link @click="novelTranslate.show = true" />
-        <van-cell center title="自动加载沉浸式翻译 SDK 并翻译" label="如已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK">
+        <!-- <van-cell center title="自动加载沉浸式翻译 SDK 并翻译" label="如已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK">
           <template #right-icon>
             <van-switch :value="appSetting.isAutoLoadImt" size="24" @change="changeAutoLoadImt" />
           </template>
-        </van-cell>
+        </van-cell> -->
       </template>
     </van-cell-group>
 
