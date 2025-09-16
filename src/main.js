@@ -13,6 +13,7 @@ import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMeta from 'vue-meta'
 import { Dialog, Lazyload, Notify, Toast } from 'vant'
+import { vOnLongPress } from '@vueuse/components'
 
 import setupVant from '@/lib/vant'
 import SvgIcon, { loadingSvg } from '@/icons'
@@ -23,7 +24,6 @@ import Pximg from '@/components/DirectPximg.vue'
 import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
-import longpress from '@/directives/longpress'
 import { LocalStorage } from '@/utils/storage'
 import { loadCustomFont } from '@/utils/font'
 import { getSelectedLang, i18n, initLocale } from '@/i18n'
@@ -54,7 +54,8 @@ async function setupApp() {
   Vue.use(VueMeta, { keyName: 'head' })
   Vue.use(VueMasonry)
   Vue.use(SvgIcon)
-  Vue.use(longpress)
+
+  Vue.directive('longpress', vOnLongPress)
 
   Vue.component('WfCont', ImageLayout)
   Vue.component('TopBar', TopBar)

@@ -11,6 +11,9 @@ importers:
       '@vant/touch-emulator':
         specifier: 1.4.0
         version: 1.4.0
+      '@vueuse/components':
+        specifier: 11.3.0
+        version: 11.3.0(vue@2.7.16)
       '@vueuse/core':
         specifier: 11.3.0
         version: 11.3.0(vue@2.7.16)
@@ -1111,6 +1114,9 @@ packages:
 
   '@vue/web-component-wrapper@1.3.0':
     resolution: {integrity: sha512-Iu8Tbg3f+emIIMmI2ycSI8QcEuAUgPTgHwesDU1eKMLE4YC/c/sFbGc70QgMq31ijRftV0R7vCm9co6rldCeOA==}
+
+  '@vueuse/components@11.3.0':
+    resolution: {integrity: sha512-sqaGtWPgobXvZmv3atcjW8YW0ypecFuB286OEKFXaPrLsA5b2Y+xAvHvq5V7d+VJRKt705gCK3BNBjxu3g1PdQ==}
 
   '@vueuse/core@11.3.0':
     resolution: {integrity: sha512-7OC4Rl1f9G8IT6rUfi9JrKiXy4bfmHhZ5x2Ceojy0jnd3mHNEvV4JaRygH362ror6/NZ+Nl+n13LPzGiPN8cKA==}
@@ -6127,6 +6133,15 @@ snapshots:
   '@vue/shared@3.5.13': {}
 
   '@vue/web-component-wrapper@1.3.0': {}
+
+  '@vueuse/components@11.3.0(vue@2.7.16)':
+    dependencies:
+      '@vueuse/core': 11.3.0(vue@2.7.16)
+      '@vueuse/shared': 11.3.0(vue@2.7.16)
+      vue-demi: 0.14.10(vue@2.7.16)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+      - vue
 
   '@vueuse/core@11.3.0(vue@2.7.16)':
     dependencies:
