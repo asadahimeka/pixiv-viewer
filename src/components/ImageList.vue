@@ -151,6 +151,7 @@ export default {
 
 <style scoped>
 .il-tips-text {
+  padding-bottom: 50PX;
   color: #969799;
   font-size: 14PX;
   line-height: 50PX;

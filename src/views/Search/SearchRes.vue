@@ -844,7 +844,7 @@ export default {
   height 70px
 
   ::v-deep .van-dropdown-menu__title
-    font-size 0.24rem
+    font-size 0.26rem
   ::v-deep .van-dropdown-menu__bar
     background none
     height 100% !important
@@ -879,4 +879,9 @@ export default {
       width fit-content
       margin: 0px 12px 12px 0
 
+</style>
+<style scoped>
+.search_param_sel ::v-deep .van-dropdown-menu__title {
+  font-size: max(0.26rem, 12PX);
+}
 </style>

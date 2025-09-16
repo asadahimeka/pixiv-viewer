@@ -260,7 +260,7 @@
       v-model="novelTranslate.show"
       :actions="novelTranslate.actions"
       :cancel-text="$t('common.cancel')"
-      description="小说默认翻译服务 (不可与自动加载沉浸式翻译 SDK 同时使用)"
+      description="小说默认翻译服务"
       close-on-click-action
       @select="e => saveAppSetting('novelDefTranslate', e._value)"
     />
