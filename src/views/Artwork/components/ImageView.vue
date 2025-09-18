@@ -24,7 +24,7 @@
       </van-button> -->
       <!-- v-if="lazy" -->
       <Pximg
-        v-longpress="isLongpressDL?e => downloadArtwork(e, index):null"
+        v-longpress="isLongpressDL?e => downloadArtwork(e, index):()=>{}"
         :src="getImgUrl(url)"
         :alt="`${artwork.title} - Page ${index + 1}`"
         :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
@@ -195,6 +195,7 @@ export default {
         confirmButtonText: this.$t('common.confirm'),
       }).catch(() => 'cancel')
       if (res != 'confirm') return
+      window.umami?.track('download_artwork_longpress')
       await this.$nextTick()
       await downloadFile(src, fileName, { subDir: store.state.appSetting.dlSubDirByAuthor ? this.artwork.author.name : undefined })
     },
@@ -411,7 +412,11 @@ export default {
         ctx.drawImage(frame.bmp, 0, 0, width, height)
         gif.addFrame(ctx, { copy: true, delay: frame.delay * offset })
       })
+      gif.on('progress', percent => {
+        this.$toast(this.$t('tip.down_wait') + ': ' + (percent * 100).toFixed(2) + '%')
+      })
       gif.on('finished', async blob => {
+        this.$toast.clear(true)
         await downloadFile(blob, `${getArtworkFileName(this.artwork)}.gif`, { subDir: 'ugoira' })
       })
       gif.render()
@@ -427,7 +432,8 @@ export default {
       }))
       this.resetUgoira()
       const { encode } = await import('modern-mp4')
-      const mp4File = await encode({ frames, width, height, audio: false })
+      const videoBitrate = parseInt(store.state.appSetting.ugoiraMp4Bitrate) * 1e6
+      const mp4File = await encode({ frames, width, height, audio: false, videoBitrate })
       const blob = new Blob([mp4File], { type: 'video/mp4' })
       frames = null
       await downloadFile(blob, `${getArtworkFileName(this.artwork)}.mp4`, { subDir: 'ugoira' })

@@ -73,6 +73,7 @@
       </van-cell>
       <van-cell center :title="$t('m9rhO-859d7Br05Hm5b54')" is-link :label="appSetting.dlFileNameTpl" @click="showDlFileNameTplDialog = true" />
       <van-cell center :title="$t('Rq0GHiUs_LyUxDu-IhfBb')" is-link :label="appSetting.ugoiraDefDLFormat || $t('ks96nwuAms0B8wSWBWhil')" @click="ugoiraDL.show = true" />
+      <van-cell v-if="appSetting.ugoiraDefDLFormat == 'MP4(Browser)'" center :title="$t('C7QksnJamis3gnOQYahco')" is-link :label="appSetting.ugoiraMp4Bitrate" @click="ugoiraBitrates.show = true" />
     </van-cell-group>
 
     <van-cell-group :title="$t('7-drBPGRIz_BsYuc9ybCm')">
@@ -157,6 +158,11 @@
           <van-switch :value="appSetting.isImageCardBoxShadow" size="24" @change="v => saveAppSetting('isImageCardBoxShadow', v, true)" />
         </template>
       </van-cell>
+      <van-cell center title="Show FPS indicator">
+        <template #right-icon>
+          <van-switch :value="appSetting.showFpsDemo" size="24" @change="v => saveAppSetting('showFpsDemo', v, false)" />
+        </template>
+      </van-cell>
       <van-cell v-if="showAnaSwitch" center title="Enable Umami Analytics">
         <template #right-icon>
           <van-switch :value="isAnalyticsOn" size="24" @change="onAnalyticsChange" />
@@ -230,6 +236,14 @@
       :description="$t('Rq0GHiUs_LyUxDu-IhfBb')"
       close-on-click-action
       @select="v => saveAppSetting('ugoiraDefDLFormat', v.name)"
+    />
+    <van-action-sheet
+      v-model="ugoiraBitrates.show"
+      :actions="ugoiraBitrates.actions"
+      :cancel-text="$t('common.cancel')"
+      :description="$t('C7QksnJamis3gnOQYahco')"
+      close-on-click-action
+      @select="v => saveAppSetting('ugoiraMp4Bitrate', v.name)"
     />
     <van-action-sheet
       v-model="pageTransition.show"
@@ -461,6 +475,10 @@ export default {
           { name: 'MP4(Server)', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
           { name: 'Other', subname: i18n.t('artwork.download.mp4') },
         ],
+      },
+      ugoiraBitrates: {
+        show: false,
+        actions: [2, 4, 6, 8, 10, 12].map(i => ({ name: `${i} Mbps` })),
       },
       pageTransition: {
         show: false,

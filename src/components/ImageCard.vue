@@ -35,7 +35,7 @@
         name="play"
         scale="8"
       />
-      <div v-if="mode == 'all' || mode === 'meta'" v-longpress="isTriggerLongpress?onLongpress:null" class="meta">
+      <div v-if="mode == 'all' || mode === 'meta'" v-longpress="isTriggerLongpress?onLongpress:()=>{}" class="meta">
         <div v-if="!isOuterMeta" class="content">
           <h2 class="title" :title="artwork.title + ' ' + artwork.created" @click.stop="onImageTitleClick">{{ artwork.title }}</h2>
           <div class="author-cont" @click.stop="toAuthor">
@@ -239,6 +239,7 @@ export default {
         confirmButtonText: this.$t('common.confirm'),
       }).catch(() => 'cancel')
       if (res != 'confirm') return
+      window.umami?.track('download_artwork_longpress')
       await this.$nextTick()
       const len = this.artwork.images.length
       for (let index = 0; index < len; index++) {
