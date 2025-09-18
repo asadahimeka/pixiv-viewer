@@ -14,6 +14,7 @@ import Lives from '@/views/Lives/index.vue'
 import LiveDetail from '@/views/Lives/LiveDetail.vue'
 import Discovery from '@/views/Discovery/Discovery.vue'
 import RecommendIllust from '@/views/Discovery/RecommendIllust.vue'
+import RandomIllustPage from '@/views/Home/components/RandomIllustPage.vue'
 import Spotlights from '@/views/Spotlights/Spotlights.vue'
 import Spotlight from '@/views/Spotlights/Spotlight.vue'
 import SpotlightDetail from '@/views/Spotlights/SpotlightDetail.vue'
@@ -288,6 +289,12 @@ const routes = [
             alias: ['/recom_illust'],
             name: 'RecommendIllust',
             component: RecommendIllust,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/random_illust',
+            name: 'RandomIllustPage',
+            component: RandomIllustPage,
             meta: { __depth: 2 },
           },
           {

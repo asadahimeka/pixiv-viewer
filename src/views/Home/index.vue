@@ -20,7 +20,14 @@
         <RankCard />
         <SpotlightCard />
       </div>
-      <Recomm4U v-if="isWebLogin" />
+      <template v-if="isAppLogin">
+        <div class="rec-cards">
+          <RandomIllustCard />
+          <DiscoveryCard />
+        </div>
+        <RecommendIllustHome />
+      </template>
+      <Recomm4U v-else-if="isWebLogin" />
       <template v-else>
         <div v-if="isSelfHibi" class="rec-cards">
           <RecommendIllustCard />
@@ -39,7 +46,9 @@ import RankCard from './components/RankCard.vue'
 import SpotlightCard from '../Spotlights/SpotlightCard.vue'
 import DiscoveryCard from '../Discovery/DiscoveryCard.vue'
 import RecommendIllustCard from '../Discovery/RecommendIllustCard.vue'
+import RecommendIllustHome from '../Discovery/RecommendIllustHome.vue'
 import RandomIllust from './components/RandomIllust.vue'
+import RandomIllustCard from './components/RandomIllustCard.vue'
 import LatestIllustCard from '../Discovery/LatestIllustCard.vue'
 import Recomm4U from './components/Recomm4U.vue'
 import { notSelfHibiApi } from '@/consts'
@@ -56,13 +65,16 @@ export default {
     SpotlightCard,
     DiscoveryCard,
     RecommendIllustCard,
+    RecommendIllustHome,
     RandomIllust,
+    RandomIllustCard,
     LatestIllustCard,
     Recomm4U,
   },
   data() {
     return {
       isSelfHibi: !notSelfHibiApi,
+      isAppLogin: window.APP_CONFIG.useLocalAppApi,
       isWebLogin,
       term: '',
       tags: [],
