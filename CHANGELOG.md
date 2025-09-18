@@ -13,6 +13,9 @@
 - History import/export
 - Add virtual list layouts
 - Image card box shadow setting
+- Ugoira to mp4 bitrate setting
+- Fps indicator
+- Virtual justified layout
 
 ### 🐛 Bug Fixes
 
@@ -34,6 +37,11 @@
 - Remove home lives tab
 - Bug fixes
 - Drop imt sdk
+- Style fix
+- Longpress directive fix
+- Real illust rank index
+- Search date one year limit
+- Home layout after login
 
 ### 📚 Documentation
 
@@ -55,6 +63,7 @@
 - Release v1.27.1
 - Release v1.27.2
 - Release v1.27.3
+- Release v1.27.4
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
