@@ -2,11 +2,13 @@
   <div id="app">
     <Preload />
     <router-view />
+    <FpsDemo v-if="showFpsDemo" />
   </div>
 </template>
 
 <script>
-import Preload from '@/components/Preload'
+import Preload from './components/Preload.vue'
+import FpsDemo from './components/FpsDemo.vue'
 import store from './store'
 import { CURRENT_APP_VERSION } from './consts'
 import { checkIsLogin } from './store/actions/check-login'
@@ -17,6 +19,7 @@ export default {
   name: 'App',
   components: {
     Preload,
+    FpsDemo,
   },
   head() {
     return {
@@ -25,6 +28,11 @@ export default {
       // all titles will be injected into this template
       titleTemplate: '%s | Pixiv Viewer',
     }
+  },
+  computed: {
+    showFpsDemo() {
+      return store.state.appSetting.showFpsDemo
+    },
   },
   async created() {
     checkIsLogin()
