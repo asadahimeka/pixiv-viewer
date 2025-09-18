@@ -174,7 +174,8 @@ export default {
           return { text: i18n.t('8SuotxAmYS7l1QCfLz0Yv', [e]), value: `${e}users入り` }
         }),
       ],
-      minDate: new Date('2007/09/13'),
+      // minDate: new Date('2007/09/13'),
+      minDate: dayjs().subtract(1, 'year').toDate(),
       maxDate: new Date(),
       searchParams: {
         mode: 'partial_match_for_tags',
@@ -188,6 +189,7 @@ export default {
         { text: this.$t('search.mode.partial'), value: 'partial_match_for_tags' },
         { text: this.$t('search.mode.exact'), value: 'exact_match_for_tags' },
         { text: this.$t('-cm0i-Kb6i1rhmSk3FXnf'), value: 'text' },
+        { text: this.$t('vCd3kQ1QluX-OCbnI2v_6'), value: 'keyword' },
       ],
       searchOrders: [
         { text: this.$t('search.date.desc'), value: 'date_desc' },
@@ -381,10 +383,7 @@ export default {
       const res = await api.searchNovel(val, this.curPage, params)
       if (res.status === 0) {
         if (res.data.length) {
-          let artList = _.uniqBy([
-            ...this.artList,
-            ...res.data,
-          ], 'id')
+          let artList = res.data
 
           if (!artList.length) {
             this.finished = true
@@ -404,7 +403,10 @@ export default {
             artList = artList.filter(e => e.x_restrict == 0)
           }
 
-          this.artList = artList
+          this.artList = _.uniqBy([
+            ...this.artList,
+            ...artList,
+          ], 'id')
 
           this.curPage++
           // if (this.curPage > 9) this.finished = true

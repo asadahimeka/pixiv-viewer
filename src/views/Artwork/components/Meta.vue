@@ -395,6 +395,7 @@ export default {
         return
       }
       const len = this.artwork.images.length
+      window.umami?.track('download_artwork_btn', { len })
       for (let index = 0; index < len; index++) {
         const item = this.artwork.images[index]
         const fileName = `${getArtworkFileName(this.artwork, index)}.${item.o.split('.').pop()}`

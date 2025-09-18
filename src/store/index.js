@@ -67,6 +67,8 @@ export default new Vuex.Store({
       hideNavBarOnScroll: true,
       manualLoadRelated: false,
       autoPlayUgoira: false,
+      ugoiraMp4Bitrate: '4 Mbps',
+      showFpsDemo: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

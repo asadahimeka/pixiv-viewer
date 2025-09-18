@@ -71,8 +71,8 @@
         <van-dropdown-menu class="search_param_sel" :class="{ showPopPreview }" active-color="#f2c358">
           <template v-if="!showPopPreview">
             <van-dropdown-item v-model="searchParams.mode" :options="searchModes" />
-            <van-dropdown-item v-model="searchParams.order" :options="searchOrders" />
             <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
+            <van-dropdown-item v-model="searchParams.order" :options="searchOrders" />
           </template>
           <van-dropdown-item
             ref="s_date"
@@ -138,6 +138,7 @@ import store from '@/store'
 import { notSelfHibiApi } from '@/consts'
 import { mintVerify, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE, BLOCK_SEARCH_WORD_RE, BLOCK_RESULT_RE, isAiIllust } from '@/utils/filter'
 import { i18n } from '@/i18n'
+import { sleep } from '@/utils'
 import ImageList from '@/components/ImageList.vue'
 import PopularPreview from './components/PopularPreview.vue'
 
@@ -169,7 +170,8 @@ export default {
           return { text: i18n.t('8SuotxAmYS7l1QCfLz0Yv', [e]), value: `${e}users入り` }
         }),
       ],
-      minDate: new Date('2007/09/13'),
+      // minDate: new Date('2007/09/13'),
+      minDate: dayjs().subtract(1, 'year').toDate(),
       maxDate: new Date(),
       searchParams: {
         mode: 'partial_match_for_tags',
@@ -388,7 +390,7 @@ export default {
       this.reset()
       this.doSearch(this.keywords)
     },
-    doSearch: _.throttle(async function (val) {
+    doSearch: async function (val) {
       val = val || this.keywords
       this.keywords__ = val
       val = val.trim()
@@ -421,8 +423,6 @@ export default {
       }
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       const params = _.pickBy(this.searchParams, Boolean)
-      params.search_ai_type && window.umami?.track('search_ai_type', { val: params.search_ai_type })
-      params.searchR18Type && window.umami?.track('searchR18Type', { val: params.searchR18Type })
       delete params.searchR18Type
       if (!this.isAIOn || val.includes(' -AI')) {
         params.search_ai_type = 1 // 不显示AI作品
@@ -432,15 +432,12 @@ export default {
       const res = await api.search(val, this.curPage, params)
       if (res.status === 0) {
         if (res.data.length) {
-          let artList = _.uniqBy([
-            ...this.artList,
-            ...res.data,
-          ], 'id')
-
-          if (!artList.length) {
-            this.finished = true
-            return
+          if (res.data.length < 10) {
+            console.log('------------- sleep')
+            await sleep(800)
           }
+
+          let artList = res.data
 
           if (this.usersIriTag) {
             const match = this.usersIriTag.match(/(\d+)/)
@@ -468,8 +465,10 @@ export default {
             )
           })
 
-          this.artList = artList
-
+          this.artList = _.uniqBy([
+            ...this.artList,
+            ...artList,
+          ], 'id')
           this.curPage++
           // if (this.curPage > 9) this.finished = true
         } else {
@@ -480,10 +479,11 @@ export default {
         this.$toast({
           message: res.msg,
         })
+        await sleep(800)
         this.loading = false
         this.error = true
       }
-    }, 1000),
+    },
     toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
