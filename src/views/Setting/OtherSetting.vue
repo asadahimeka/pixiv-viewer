@@ -431,6 +431,7 @@ export default {
           { name: 'Justified ', subname: this.$t('setting.layout.j') },
           { name: 'VirtualMasonry', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
           { name: 'VirtualGrid', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.g') + ' - ' + this.$t('setting.lab.title') },
+          { name: 'VirtualJustified', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },
           { name: 'VirtualSlide', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('WrsiY7DP94fbUlQ6SoLlH') + ' - ' + this.$t('setting.lab.title') },
           { name: 'Masonry(CSSGrid)', subname: this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
           { name: 'Justified(Transform)', subname: this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },

@@ -22,10 +22,32 @@
       <template #tips>
         <p v-show="loading" class="il-tips-text">{{ $t('tips.loading') }}</p>
         <p v-if="!loading && finished" class="il-tips-text">{{ $t('tips.no_more') }}</p>
-        <p v-if="!loading && !finished && !listError" class="il-tips-text" @click="onReachEnd()">{{ $t('tips.load_more') }}</p>
-        <p v-if="!loading && listError" class="il-tips-text" @click="onReachEnd()">{{ $t('tips.net_err') }}</p>
+        <p v-if="!loading && !finished && !listError" class="il-tips-text" style="cursor: pointer" @click="onReachEnd()">{{ $t('tips.load_more') }}</p>
+        <p v-if="!loading && listError" class="il-tips-text" style="cursor: pointer" @click="onReachEnd()">{{ $t('tips.net_err') }}</p>
       </template>
     </VirtualWaterfall>
+    <VirtualJustified
+      v-else-if="listType == 'VirtualJustified'"
+      wrapper-height="95vh"
+      :items="list"
+      :preload-screen-count="preloadScreenCount"
+      :on-load-more="onReachEnd"
+    >
+      <template #default="{ item }">
+        <ImageCard
+          mode="all"
+          :artwork="item"
+          v-bind="imageCardProps(item)"
+          @click-card="toArtwork(item)"
+        />
+      </template>
+      <template #tips>
+        <p v-show="loading" class="il-tips-text">{{ $t('tips.loading') }}</p>
+        <p v-if="!loading && finished" class="il-tips-text">{{ $t('tips.no_more') }}</p>
+        <p v-if="!loading && !finished && !listError" class="il-tips-text" style="cursor: pointer" @click="onReachEnd()">{{ $t('tips.load_more') }}</p>
+        <p v-if="!loading && listError" class="il-tips-text" style="cursor: pointer" @click="onReachEnd()">{{ $t('tips.net_err') }}</p>
+      </template>
+    </VirtualJustified>
     <VirtualSwiper
       v-else-if="listType == 'VirtualSlide'"
       height="84vh"
@@ -82,6 +104,7 @@
 import store from '@/store'
 import VirtualSwiper from '@/components/VirtualSwiper.vue'
 import VirtualWaterfall from '@/components/VirtualWaterfall.vue'
+import VirtualJustified from '@/components/VirtualJustified.vue'
 import JustifiedLayout from '@/components/JustifiedLayoutComp.vue'
 import ImageCard from '@/components/ImageCard.vue'
 
@@ -90,6 +113,7 @@ export default {
   components: {
     VirtualSwiper,
     VirtualWaterfall,
+    VirtualJustified,
     JustifiedLayout,
     ImageCard,
   },
@@ -163,6 +187,5 @@ export default {
   font-size: 14PX;
   line-height: 50PX;
   text-align: center;
-  cursor: pointer;
 }
 </style>
