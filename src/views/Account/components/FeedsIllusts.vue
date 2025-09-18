@@ -7,7 +7,7 @@
       :finished="finished"
       :error="error"
       :on-load-more="getRankList"
-      :image-card-props="(_, art) => ({
+      :image-card-props="art => ({
         'data-last-seen-text': isLastSeen(art.id) ? $t('0r7KFznJTs3SQlvp4KQ84') : undefined,
         'class': { 'last-seen': isLastSeen(art.id) }
       })"

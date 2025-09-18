@@ -43,7 +43,7 @@
       :finished="finished"
       :error="error"
       :on-load-more="getRankList"
-      :image-card-props="i => ({ index: i + 1 })"
+      :image-card-props="it => ({ index: it._index })"
     />
     <van-calendar
       ref="calendar"
@@ -220,8 +220,8 @@ export default {
     getIOType(type) {
       return this.menu[type] ? this.menu[type].io : null
     },
-    getRankList: _.throttle(async function () {
-      if (this.loading) return
+    getRankList: async function () {
+      if (this.loading || this.finished) return
       this.loading = true
       const type = this.getIOType(this.curType)
       let res
@@ -273,7 +273,7 @@ export default {
         this.loading = false
         this.error = true
       }
-    }, 1500),
+    },
     showPopup() {
       this.isDatePickerShow = true
     },

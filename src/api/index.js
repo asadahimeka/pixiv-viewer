@@ -908,7 +908,7 @@ const api = {
       })
 
       if (res && res.contents) {
-        rankList = res.contents.map(e => parseAiIllust(e, mode.includes('r18')))
+        rankList = res.contents.map(e => ({ ...parseAiIllust(e, mode.includes('r18')), _index: e.rank }))
         rankList.length && setCache(cacheKey, rankList, 60 * 60 * 24 * 14)
       } else {
         return {
@@ -936,7 +936,7 @@ const api = {
       })
 
       if (res && res.contents) {
-        rankList = res.contents.map(e => parseWebRankIllust(e, mode, content))
+        rankList = res.contents.map(e => ({ ...parseWebRankIllust(e, mode, content), _index: e.rank }))
         rankList.length && setCache(cacheKey, rankList, 60 * 60 * 24 * 14)
       } else {
         return {
@@ -1016,7 +1016,7 @@ const api = {
       })
 
       if (res.illusts) {
-        rankList = res.illusts.map(art => parseIllust(art))
+        rankList = res.illusts.map((art, i) => ({ ...parseIllust(art), _index: (page - 1) * 30 + i + 1 }))
         rankList.length && setCache(cacheKey, rankList, 60 * 60 * 24 * 14)
       } else if (res.error) {
         return {

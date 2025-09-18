@@ -9,56 +9,57 @@
       :item-min-width="280"
       :preload-screen-count="preloadScreenCount"
       :calc-item-height="vCalcItemHeight"
-      :on-load-more="onLoadMore"
+      :on-load-more="onReachEnd"
     >
-      <template #default="{ item, index }">
+      <template #default="{ item }">
         <ImageCard
           mode="all"
           :artwork="item"
-          v-bind="imageCardProps(index, item)"
+          v-bind="imageCardProps(item)"
           @click-card="toArtwork(item)"
         />
       </template>
       <template #tips>
         <p v-show="loading" class="il-tips-text">{{ $t('tips.loading') }}</p>
         <p v-if="!loading && finished" class="il-tips-text">{{ $t('tips.no_more') }}</p>
-        <p v-if="!loading && error" class="il-tips-text" @click="onLoadMore()">{{ $t('tips.net_err') }}</p>
+        <p v-if="!loading && !finished && !listError" class="il-tips-text" @click="onReachEnd()">{{ $t('tips.load_more') }}</p>
+        <p v-if="!loading && listError" class="il-tips-text" @click="onReachEnd()">{{ $t('tips.net_err') }}</p>
       </template>
     </VirtualWaterfall>
     <VirtualSwiper
       v-else-if="listType == 'VirtualSlide'"
       height="84vh"
       :slides="list"
-      :on-reach-end="onLoadMore"
+      :on-reach-end="onReachEnd"
     >
-      <template #default="{ slide, index }">
+      <template #default="{ slide }">
         <ImageCard
           mode="all"
           :artwork="slide"
-          v-bind="imageCardProps(index, slide)"
+          v-bind="imageCardProps(slide)"
           @click-card="toArtwork(slide)"
         />
       </template>
     </VirtualSwiper>
     <van-list
       v-else
-      v-model="vanLoading"
+      v-model="listLoading"
       :loading-text="$t('tips.loading')"
       :finished="finished"
       :finished-text="$t('tips.no_more')"
-      :error.sync="vanError"
+      :error.sync="listError"
       :error-text="$t('tips.net_err')"
       :offset="800"
       :immediate-check="false"
       v-bind="vanListProps"
-      @load="onLoadMore"
+      @load="onReachEnd"
     >
       <JustifiedLayout v-if="listType == 'Justified(Transform)'" :items="list">
-        <template #default="{ item, index }">
+        <template #default="{ item }">
           <ImageCard
             mode="all"
             :artwork="item"
-            v-bind="imageCardProps(index, item)"
+            v-bind="imageCardProps(item)"
             @click-card="toArtwork(item)"
           />
         </template>
@@ -69,7 +70,7 @@
           :key="item.id || index"
           mode="all"
           :artwork="item"
-          v-bind="imageCardProps(index, item)"
+          v-bind="imageCardProps(item)"
           @click-card="toArtwork(item)"
         />
       </wf-cont>
@@ -106,8 +107,8 @@ export default {
   },
   data() {
     return {
-      vanLoading: true,
-      vanError: true,
+      listLoading: true,
+      listError: true,
     }
   },
   computed: {
@@ -122,17 +123,22 @@ export default {
     loading: {
       immediate: true,
       handler(val) {
-        this.vanLoading = val
+        if (val) this.listError = false
+        this.listLoading = val
       },
     },
     error: {
       immediate: true,
       handler(val) {
-        this.vanError = val
+        this.listError = val
       },
     },
   },
   methods: {
+    onReachEnd() {
+      if (this.loading || this.finished) return
+      this.onLoadMore()
+    },
     vCalcItemHeight(item, itemWidth) {
       if (this.listType == 'VirtualGrid') return itemWidth
       return item.height * (itemWidth / item.width)
@@ -151,10 +157,12 @@ export default {
 
 <style scoped>
 .il-tips-text {
+  padding-top: 10PX;
   padding-bottom: 50PX;
   color: #969799;
   font-size: 14PX;
   line-height: 50PX;
   text-align: center;
+  cursor: pointer;
 }
 </style>
