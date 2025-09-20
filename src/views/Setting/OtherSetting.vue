@@ -39,6 +39,11 @@
       <van-cell center :title="$t('MIvoTULAIywXTtFIKsEuD')" :label="novelDlFmtLabel" is-link @click="novelDlFmt.show = true" />
       <template v-if="showAutoLoadImtSwitch">
         <van-cell center title="小说默认翻译服务" :label="novelTranslateLabel" is-link @click="novelTranslate.show = true" />
+        <van-cell center title="自动加载 KISS Translator 脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载">
+          <template #right-icon>
+            <van-switch :value="appSetting.isAutoLoadKissT" size="24" @change="changeAutoLoadKissT" />
+          </template>
+        </van-cell>
         <!-- <van-cell center title="自动加载沉浸式翻译 SDK 并翻译" label="如已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK">
           <template #right-icon>
             <van-switch :value="appSetting.isAutoLoadImt" size="24" @change="changeAutoLoadImt" />
@@ -377,6 +382,7 @@ import { LocalStorage, SessionStorage } from '@/utils/storage'
 import { isFsaSupported, getMainDirHandle, setMainDirHandle } from '@/utils/fsa'
 import { getPageFontModel } from '@/utils/font'
 import { getCache, setCache } from '@/utils/storage/siteCache'
+import { aiModelMap } from '@/utils/translate'
 import NovelTextConfig from '../Artwork/components/NovelTextConfig.vue'
 
 export default {
@@ -511,17 +517,13 @@ export default {
       novelTranslate: {
         show: false,
         actions: [
-          { name: '未设置', _value: '' },
-          { name: 'AI 翻译(glm-4-9b)', className: 'sc', key: 'sc_glm' },
-          { name: 'AI 翻译(GLM-4-9B-0414)', className: 'sc', key: 'sc_glm_0414' },
-          { name: 'AI 翻译(GLM-Z1-9B-0414)', className: 'sc', key: 'sc_glm_z1' },
-          { name: 'AI 翻译(Qwen3-8B)', className: 'sc', key: 'sc_qwen3' },
-          { name: 'AI 翻译(Qwen2.5-7B)', className: 'sc', key: 'sc_qwen2_5' },
-          { name: 'AI 翻译(Qwen2-7B)', className: 'sc', key: 'sc_qwen2' },
-          { name: 'AI 翻译(DS-R1-Llama-8B)', className: 'sc', key: 'sc_ds_r1_llama' },
-          { name: 'AI 翻译(DS-R1-Qwen-7B)', className: 'sc', key: 'sc_ds_r1_qwen' },
+          { name: '不设置', _value: '' },
           { name: '微软翻译', _value: 'ms' },
           { name: '谷歌翻译', _value: 'gg' },
+          ...Object.keys(aiModelMap).map(k => ({
+            name: `AI 翻译(${aiModelMap[k].split('/').pop()})`,
+            _value: `sc_${k}`,
+          })),
           { name: '有道翻译', _value: 'yd' },
         ],
       },
@@ -743,11 +745,11 @@ export default {
     showNovelConfig() {
       this.$refs.novelConfigRef?.open()
     },
-    async changeAutoLoadImt(val) {
+    async changeAutoLoadKissT(val) {
       if (val) {
         const res = await Dialog.confirm({
-          title: '自动加载沉浸式翻译 SDK',
-          message: '提示：如果已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK',
+          title: '自动加载 KISS Translator 脚本',
+          message: '提示：如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载',
           lockScroll: false,
           closeOnPopstate: true,
           cancelButtonText: '取消',
@@ -755,8 +757,22 @@ export default {
         }).catch(() => 'cancel')
         if (res != 'confirm') return
       }
-      this.saveAppSetting('isAutoLoadImt', val, true)
+      this.saveAppSetting('isAutoLoadKissT', val, true)
     },
+    // async changeAutoLoadImt(val) {
+    //   if (val) {
+    //     const res = await Dialog.confirm({
+    //       title: '自动加载沉浸式翻译 SDK',
+    //       message: '提示：如果已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK',
+    //       lockScroll: false,
+    //       closeOnPopstate: true,
+    //       cancelButtonText: '取消',
+    //       confirmButtonText: '确定',
+    //     }).catch(() => 'cancel')
+    //     if (res != 'confirm') return
+    //   }
+    //   this.saveAppSetting('isAutoLoadImt', val, true)
+    // },
     changeLang({ _value }) {
       this.lang.value = _value
       window.umami?.track('set_lang', { lang: _value })

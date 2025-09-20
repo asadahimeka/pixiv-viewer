@@ -13,7 +13,7 @@ import store from './store'
 import { CURRENT_APP_VERSION } from './consts'
 import { checkIsLogin } from './store/actions/check-login'
 import { fetchNotices } from './store/actions/fetch-notice'
-import { loadImtSdk } from './utils/translate'
+import { loadKISSTranslator } from './utils/translate'
 
 export default {
   name: 'App',
@@ -42,7 +42,7 @@ export default {
     document.querySelector('#ldio-loading')?.remove()
     window.umami?.track('App Mounted', { host: location.host, ver: CURRENT_APP_VERSION, isHelperInst: !!window.__httpRequest__ })
     if (!localStorage.PXV_ASSETS_LOADED) localStorage.PXV_ASSETS_LOADED = '1'
-    if (store.state.appSetting.isAutoLoadImt) loadImtSdk(true)
+    if (store.state.appSetting.isAutoLoadKissT) loadKISSTranslator(true)
   },
 }
 </script>

@@ -1,7 +1,31 @@
 import { Dialog } from 'vant'
+import { i18n } from '@/i18n'
 import { SILICON_CLOUD_API_KEY } from '@/consts'
 import { loadScript } from '.'
-import { i18n } from '@/i18n'
+
+export async function loadKISSTranslator(isAutoLoad = false) {
+  if (!isAutoLoad && !localStorage.getItem('PXV_KISST_CFMED')) {
+    const res = await Dialog.confirm({
+      title: '加载 KISS Translator 脚本',
+      message: '提示：如果已安装 KISS Translator 浏览器扩展或用户脚本则无需加载。可在偏好设置中打开自动加载 KISS Translator 脚本。',
+      lockScroll: false,
+      closeOnPopstate: true,
+      cancelButtonText: '取消',
+      confirmButtonText: '加载',
+    }).catch(() => 'cancel')
+    if (res != 'confirm') return
+    localStorage.setItem('PXV_KISST_CFMED', '1')
+  }
+  if (document.querySelector('#kiss-translator')) {
+    return
+  }
+  await loadScript('/kiss-translator/KISS-Translator.min.js')
+  if (isAutoLoad) {
+    setTimeout(() => {
+      window._GM_menuCommands?.find(e => e.name == '开启翻译')?.callback()
+    }, 1000)
+  }
+}
 
 export async function loadImtSdk(isAutoLoadImt = false) {
   if (!isAutoLoadImt && !localStorage.getItem('PXV_IMT_SDK_CFMED')) {
@@ -106,15 +130,18 @@ export function getNoTranslateWords(tags = []) {
   })
 }
 
-const aiModelMap = {
+export const aiModelMap = {
   glm: 'THUDM/glm-4-9b-chat',
+  qwen2_5: 'Qwen/Qwen2.5-7B-Instruct',
+  qwen2: 'Qwen/Qwen2-7B-Instruct',
+  qwen3: 'Qwen/Qwen3-8B',
   glm_0414: 'THUDM/GLM-4-9B-0414',
   glm_z1: 'THUDM/GLM-Z1-9B-0414',
-  qwen3: 'Qwen/Qwen3-8B',
-  qwen2: 'Qwen/Qwen2-7B-Instruct',
-  qwen2_5: 'Qwen/Qwen2.5-7B-Instruct',
-  ds_r1_llama: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
+  glm_4_1: 'THUDM/GLM-4.1V-9B-Thinking',
   ds_r1_qwen: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
+  ds_r1_qwen3: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
+  // ds_r1_llama: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
+  hy_mt: 'tencent/Hunyuan-MT-7B',
 }
 export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd = 'glm', onRead = console.log) {
   try {

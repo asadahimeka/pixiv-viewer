@@ -69,6 +69,7 @@ export default new Vuex.Store({
       autoPlayUgoira: false,
       ugoiraMp4Bitrate: '4 Mbps',
       showFpsDemo: false,
+      isAutoLoadKissT: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },
