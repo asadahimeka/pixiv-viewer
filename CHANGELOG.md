@@ -16,6 +16,8 @@
 - Ugoira to mp4 bitrate setting
 - Fps indicator
 - Virtual justified layout
+- KISS Translator script
+- Chrome Native Translator
 
 ### 🐛 Bug Fixes
 
@@ -64,6 +66,7 @@
 - Release v1.27.2
 - Release v1.27.3
 - Release v1.27.4
+- Release v1.28.0
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
