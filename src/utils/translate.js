@@ -217,3 +217,33 @@ function replaceNovelMark(text) {
     .replace(/\[chapter: *([^[\]]+)\]/g, '\n$1\n')
     .replace(/\[uploadedimage:(\d+)\]/g, '')
 }
+
+export const isNativeTranslatorSupported = 'Translator' in self && !navigator.userAgent.includes('Edg/')
+let translator
+async function ensureTranslator() {
+  if (translator) return
+  translator = await window.Translator.create({
+    sourceLanguage: 'ja',
+    targetLanguage: 'zh',
+  })
+}
+export async function nativeTranslate(novelText = '', onRead = () => {}) {
+  try {
+    if (!novelText.trim()) return
+    novelText = replaceNovelMark(novelText)
+    const textArr = novelText.split('\n')
+    await ensureTranslator()
+    for (const text of textArr) {
+      if (!text.trim()) continue
+      const stream = translator.translateStreaming(text)
+      for await (const chunk of stream) {
+        console.log(chunk)
+        onRead({ done: false, content: chunk })
+      }
+      onRead({ done: false, content: '\n' })
+    }
+    onRead({ done: true })
+  } catch (err) {
+    console.log('nativeTranslate err: ', err)
+  }
+}

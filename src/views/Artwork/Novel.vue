@@ -85,7 +85,7 @@ import api from '@/api'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
-import { aiModelMap, getNoTranslateWords, loadKISSTranslator, siliconCloudTranslate } from '@/utils/translate'
+import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
@@ -139,16 +139,7 @@ export default {
       isCollapseMeta: false,
       showComments: false,
       showPntPopover: false,
-      pntActions: [
-        // { text: '加载沉浸式翻译 SDK', className: 'imt', key: 'imt' },
-        { text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' },
-        { text: 'AI 翻译(glm-4-9b)', className: 'sc', key: 'sc_glm' },
-        { text: 'AI 翻译(Qwen2.5-7B)', className: 'sc', key: 'sc_qwen2_5' },
-        { text: 'AI 翻译(Hunyuan-MT-7B)', className: 'sc', key: 'sc_hy_mt' },
-        { text: '微软翻译', className: 'ms', key: 'ms' },
-        { text: '谷歌翻译', className: 'gg', key: 'gg' },
-        { text: '有道翻译', className: 'yd', key: 'yd' },
-      ],
+      pntActions: [],
     }
   },
   head() {
@@ -185,12 +176,16 @@ export default {
     },
   },
   mounted() {
-    // if (document.querySelector('#immersive-translate-popup')) {
-    //   this.pntActions = this.pntActions.filter(e => e.key != 'imt')
-    // }
-    if (document.querySelector('#kiss-translator')) {
-      this.pntActions = this.pntActions.filter(e => e.key != 'kiss_t')
-    }
+    this.pntActions = [
+      document.querySelector('#kiss-translator') && ({ text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' }),
+      isNativeTranslatorSupported && ({ text: 'Chrome 内置翻译', className: 'sc', key: 'native' }),
+      { text: 'AI 翻译(glm-4-9b)', className: 'sc', key: 'sc_glm' },
+      { text: 'AI 翻译(Qwen2.5-7B)', className: 'sc', key: 'sc_qwen2_5' },
+      { text: 'AI 翻译(Hunyuan-MT-7B)', className: 'sc', key: 'sc_hy_mt' },
+      { text: '微软翻译', className: 'ms', key: 'ms' },
+      { text: '谷歌翻译', className: 'gg', key: 'gg' },
+      { text: '有道翻译', className: 'yd', key: 'yd' },
+    ].filter(Boolean)
     this.init()
   },
   methods: {
@@ -325,8 +320,6 @@ export default {
       window.umami?.track('translate_novel', { with: action.text })
       store.commit('setIsNovelViewShrink', false)
       const fns = {
-        // imt: () => loadImtSdk(),
-        kiss_t: () => loadKISSTranslator(),
         ...Object.keys(aiModelMap).reduce((acc, cur) => {
           acc[`sc_${cur}`] = async () => this.fanyi('sc', await getNoTranslateWords(this.artwork.tags), cur)
           return acc
@@ -334,6 +327,8 @@ export default {
         ms: async () => this.fanyi('ms', await getNoTranslateWords(this.artwork.tags)),
         gg: () => this.fanyi('gg'),
         yd: () => this.fanyi('yd'),
+        kiss_t: () => loadKISSTranslator(),
+        native: () => this.aiTranslate('', '', true),
       }
       const fn = fns[action.key]
       if (fn) {
@@ -368,8 +363,8 @@ export default {
         console.log('fanyi err: ', err)
       }
     },
-    async aiTranslate(nots = '', aiModel = 'glm') {
-      const cacheKey = `novel.translate.${this.artwork.id}.sc.${aiModel}.${nots}`
+    async aiTranslate(nots = '', aiModel = 'glm', isNative = false) {
+      const cacheKey = `novel.translate.${this.artwork.id}.sc.${aiModel}.${nots}.${isNative}`
       const cacheText = await getCache(cacheKey)
       if (cacheText) {
         this.novelText.text = cacheText
@@ -379,11 +374,12 @@ export default {
       const novelElement = document.querySelector('.novel_text')
       let resText = ''
       this.novelText.text = this.$t('tips.loading')
-      siliconCloudTranslate(novelTextBak, notsArr, aiModel, chunk => {
+      const callback = chunk => {
         if (chunk.done) {
           novelElement.innerHTML = resText
           this.novelText.text = resText
           setCache(cacheKey, resText)
+          this.$toast('翻译完毕')
           return
         }
 
@@ -401,7 +397,12 @@ export default {
         requestAnimationFrame(() => {
           novelElement.innerHTML = resText
         })
-      })
+      }
+      if (isNative) {
+        nativeTranslate(novelTextBak, callback)
+      } else {
+        siliconCloudTranslate(novelTextBak, notsArr, aiModel, callback)
+      }
     },
   },
 }
