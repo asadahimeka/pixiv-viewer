@@ -177,7 +177,7 @@ export default {
   },
   mounted() {
     this.pntActions = [
-      document.querySelector('#kiss-translator') && ({ text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' }),
+      !document.querySelector('#kiss-translator') && ({ text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' }),
       isNativeTranslatorSupported && ({ text: 'Chrome 内置翻译', className: 'sc', key: 'native' }),
       { text: 'AI 翻译(glm-4-9b)', className: 'sc', key: 'sc_glm' },
       { text: 'AI 翻译(Qwen2.5-7B)', className: 'sc', key: 'sc_qwen2_5' },
