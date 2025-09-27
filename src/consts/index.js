@@ -17,3 +17,4 @@ export const notSelfHibiApi = !/cocomi\.eu\.org|pixiv\.pictures|169889\.xyz|pxve
 export const PIXIV_NEXT_URL = 'https://api.cocomi.eu.org'
 export const PIXIV_NOW_URL = `${PIXIV_NEXT_URL}/api/pixiv-now/http`
 export const SILICON_CLOUD_API_KEY = process.env.VUE_APP_SILICON_CLOUD_API_KEY
+export const ugoiraAvifSrc = id => `https://ugoira.perennialte.ch/ugoira/${id}`

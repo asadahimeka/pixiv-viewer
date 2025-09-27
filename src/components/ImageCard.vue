@@ -68,8 +68,9 @@ import { isAiIllust } from '@/utils/filter'
 import { fancyboxShow, downloadFile } from '@/utils'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
+import { ugoiraAvifSrc } from '@/consts'
 
-const { isImageCardOuterMeta, isLongpressDL, isLongpressBlock, imgReso } = store.state.appSetting
+const { isImageCardOuterMeta, isLongpressDL, isLongpressBlock, imgReso, isUgoiraAvifSrc } = store.state.appSetting
 const isLargeWebp = imgReso == 'Large(WebP)'
 const getLargeWebpSrc = (src, fbk) => {
   return src?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') || fbk
@@ -105,6 +106,9 @@ export default {
   },
   computed: {
     imgSrc() {
+      if (this.artwork.type == 'ugoira' && isUgoiraAvifSrc) {
+        return ugoiraAvifSrc(this.artwork.id)
+      }
       const i0 = this.artwork.images[0]
       if (this.square) return i0.s
       return isLargeWebp ? getLargeWebpSrc(i0.l, i0.m) : i0.m

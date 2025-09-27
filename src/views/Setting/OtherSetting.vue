@@ -84,6 +84,11 @@
       <van-cell center :title="$t('m9rhO-859d7Br05Hm5b54')" is-link :label="appSetting.dlFileNameTpl" @click="showDlFileNameTplDialog = true" />
       <van-cell center :title="$t('Rq0GHiUs_LyUxDu-IhfBb')" is-link :label="appSetting.ugoiraDefDLFormat || $t('ks96nwuAms0B8wSWBWhil')" @click="ugoiraDL.show = true" />
       <van-cell v-if="appSetting.ugoiraDefDLFormat == 'MP4(Browser)'" center :title="$t('C7QksnJamis3gnOQYahco')" is-link :label="appSetting.ugoiraMp4Bitrate" @click="ugoiraBitrates.show = true" />
+      <van-cell v-if="appSetting.ugoiraDefDLFormat == 'APNG'" center :title="$t('1c9AB2NdmH-9CpwIEK2jg')" :label="$t('X6XWoxxKCWK5k7s8oOiGi')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isUgoiraApngSaveAsPng" size="24" @change="v => saveAppSetting('isUgoiraApngSaveAsPng', v)" />
+        </template>
+      </van-cell>
     </van-cell-group>
 
     <van-cell-group :title="$t('7-drBPGRIz_BsYuc9ybCm')">
@@ -141,6 +146,11 @@
       <van-cell center :title="$t('60RSxzAvXAF1Lfp_oqv7h')">
         <template #right-icon>
           <van-switch :value="appSetting.autoPlayUgoira" size="24" @change="v => saveAppSetting('autoPlayUgoira', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell v-if="clientConfig.useLocalAppApi" center :title="$t('OHSPV09hSKNSbdJgbYJfV')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isUgoiraAvifSrc" size="24" @change="v => saveAppSetting('isUgoiraAvifSrc', v, true)" />
         </template>
       </van-cell>
       <van-cell v-if="isNavSHSetShow" center :title="$t('Gry1iNTJ2wm_9FMG_JpBT')">
@@ -439,7 +449,7 @@ export default {
         actions: [
           { name: 'Masonry', subname: this.$t('setting.layout.m') },
           { name: 'Grid', subname: this.$t('setting.layout.g') },
-          { name: 'Justified ', subname: this.$t('setting.layout.j') },
+          { name: 'Justified', subname: this.$t('setting.layout.j') },
           // { name: 'VirtualMasonry', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
           // { name: 'VirtualGrid', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.g') + ' - ' + this.$t('setting.lab.title') },
           // { name: 'VirtualJustified', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },

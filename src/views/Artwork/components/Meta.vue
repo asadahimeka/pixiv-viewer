@@ -38,6 +38,10 @@
         <Icon name="like" class="icon" />
         {{ convertToK(artwork.like) }}
       </span>
+      <span v-if="artwork.totalComment" class="view">
+        <van-icon class="icon" name="comment-o" />
+        {{ convertToK(artwork.totalComment) }}
+      </span>
       <span class="created" :class="{ is_novel: isNovel }">{{ formatDate(artwork.created) }}</span>
     </div>
     <div class="pid_link">

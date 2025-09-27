@@ -2,7 +2,7 @@
   <div
     ref="view"
     class="image-view"
-    :class="{ shrink: isShrink, loaded: artwork.images, censored }"
+    :class="{ shrink: isShrink, loaded: !!artwork.images, censored }"
     @click="showFull"
   >
     <div
@@ -11,8 +11,6 @@
       class="image-box"
       :style="index==0&&artworkRatio>0.6?`--ratio:${artworkRatio}`:''"
     >
-      <!-- :style="index === 0 ? { width: `${displayWidth}px`, height: `${displayWidth / (artwork.width / artwork.height)}px` } : null" -->
-      <!-- :style="{height: `${(375/artwork.width*artwork.height).toFixed(2)}px`}" -->
       <!-- <van-button
         v-if="artwork.illust_ai_type != 2 && maybeAiAuthor"
         class="check-ai-btn"
@@ -22,9 +20,8 @@
       >
         AI Check
       </van-button> -->
-      <!-- v-if="lazy" -->
       <Pximg
-        v-longpress="isLongpressDL?e => downloadArtwork(e, index):()=>{}"
+        v-longpress="isLongpressDL ? e => downloadArtwork(e, index) : () => {}"
         :src="getImgUrl(url)"
         :alt="`${artwork.title} - Page ${index + 1}`"
         :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
@@ -34,16 +31,8 @@
         @contextmenu.native="preventContext"
       />
       <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
-      <!-- <img
-        v-else
-        :src="getImgUrl(url)"
-        :alt="`${artwork.title} - Page ${index + 1}`"
-        class="image"
-        :style="{ width: displayWidth, height: ((artwork.width / displayWidth) * artwork.height) * (artwork.width / artwork.height) }"
-        @click.stop="view(index, isCensored(artwork))"
-      > -->
       <canvas
-        v-if="artwork.type === 'ugoira'"
+        v-if="showUgoiraControl"
         id="ugoira"
         ref="ugoira"
         class="ugoira"
@@ -53,7 +42,7 @@
       ></canvas>
     </div>
     <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
-    <div v-if="artwork.type === 'ugoira'" class="ugoira-controls">
+    <div v-if="showUgoiraControl" class="ugoira-controls">
       <div v-if="ugoiraPlaying" class="btn-pause" @click="drawCanvas('pause')">
         <Icon class="pause" name="pause" scale="6" />
       </div>
@@ -77,12 +66,12 @@ import axios from 'axios'
 // import tsWhammy from 'ts-whammy'
 // import { encode as encodeMP4 } from 'modern-mp4'
 import api from '@/api'
-import { BASE_URL } from '@/consts'
+import { BASE_URL, ugoiraAvifSrc } from '@/consts'
 import { sleep, fancyboxShow, loadScript, downloadFile } from '@/utils'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 
-const { isLongpressDL, imgReso, autoPlayUgoira } = store.state.appSetting
+const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
 
 export default {
   props: {
@@ -101,15 +90,16 @@ export default {
       progress: 0,
       isLongpressDL,
       isLargeWebp: imgReso == 'Large(WebP)',
+      isUgoiraAvifSrc,
     }
   },
   computed: {
-    original() {
-      return this.artwork.images.map(url => url.o)
-    },
     ...mapGetters(['isCensored']),
     censored() {
       return this.isCensored(this.artwork)
+    },
+    original() {
+      return this.artwork.images.map(url => url.o)
     },
     artworkRatio() {
       return this.artwork.width / this.artwork.height
@@ -118,15 +108,9 @@ export default {
       const tagNames = this.artwork.tags?.map(t => t.name) || []
       const match = this.$store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
       return match?.src || ''
-
-      // let src = ''
-      // this.artwork.tags?.some(t => {
-      //   const act = effects?.find(e => e.tag == t.name)
-      //   if (!act) return false
-      //   src = act.src
-      //   return true
-      // })
-      // return src
+    },
+    showUgoiraControl() {
+      return this.artwork.type === 'ugoira' && !isUgoiraAvifSrc
     },
   },
   watch: {
@@ -144,6 +128,9 @@ export default {
   },
   methods: {
     getImgUrl(urls) {
+      if (this.artwork.type == 'ugoira' && isUgoiraAvifSrc) {
+        return ugoiraAvifSrc(this.artwork.id)
+      }
       const urlMap = {
         'Medium': urls.l,
         'Large(WebP)': urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/'),
@@ -157,6 +144,16 @@ export default {
         this.$toast({
           message: this.$t('common.content.hide'),
           icon: require('@/icons/ban-view.svg'),
+        })
+        return
+      }
+      if (this.artwork.type == 'ugoira' && isUgoiraAvifSrc) {
+        ImagePreview({
+          className: 'image-preview',
+          images: [ugoiraAvifSrc(this.artwork.id)],
+          startPosition: 0,
+          closeOnPopstate: true,
+          closeable: true,
         })
         return
       }
@@ -231,24 +228,30 @@ export default {
         })
       }
     },
-    async playUgoira() {
+    async playUgoira(action) {
+      const dontPlay = action == 'dontPlay'
       if (this.progressShow) return
-
       if (this.ugoira) {
-        this.drawCanvas('play')
+        !dontPlay && this.drawCanvas('play')
         return
       }
-
-      const ugoira = await this.ugoiraMetadata()
-      this.ugoira = {
-        zip: ugoira.zip,
-        frames: ugoira.frames.reduce((res, frame) => {
-          res[frame.file] = frame
-          return res
-        }, {}),
+      if (dontPlay) {
+        this.$toast.loading({
+          message: this.$t('tips.loading'),
+          duration: 0,
+          forbidClick: true,
+        })
       }
 
       try {
+        const ugoira = await this.ugoiraMetadata()
+        this.ugoira = {
+          zip: ugoira.zip,
+          frames: ugoira.frames.reduce((res, frame) => {
+            res[frame.file] = frame
+            return res
+          }, {}),
+        }
         this.progressShow = true
         const resp = await axios.get(ugoira.zip, {
           responseType: 'blob',
@@ -268,8 +271,9 @@ export default {
           this.ugoira.frames[name].bmp = bmp
         }))
         console.info('Frames loaded:', `frames ${files.length}`, `size ${resp.data.size}`)
+        console.log('this.ugoira: ', this.ugoira)
         this.progressShow = false
-        this.drawCanvas('play')
+        dontPlay ? this.$toast.clear(true) : this.drawCanvas('play')
       } catch (err) {
         this.resetUgoira()
         this.$toast({
@@ -279,32 +283,21 @@ export default {
     },
     drawCanvas(action) {
       const ctx = this.$refs.ugoira[0].getContext('2d')
-      // console.log(ctx);
       const { width, height } = this.artwork
-
       const frames = Object.values(this.ugoira.frames)
-
       const draw = () => {
         this.curIndex++
         setTimeout(
           () => {
             if (!this.ugoira || !this.ugoiraPlaying) return
-
-            // const imgUri = URL.createObjectURL(frames[this.curIndex - 1].data);
-            // const imgData = new Image();
-            // imgData.onload = () => {
             ctx.clearRect(0, 0, width, height)
             ctx.drawImage(frames[this.curIndex - 1].bmp, 0, 0, width, height)
-
             if (this.curIndex >= frames.length) this.curIndex = 0
             draw()
-            // };
-            // imgData.src = imgUri;
           },
           this.curIndex === 0 ? 0 : frames[this.curIndex - 1].delay
         )
       }
-
       if (action === 'play') {
         this.ugoiraPlaying = true
         draw()
@@ -327,10 +320,10 @@ export default {
       await sleep(200)
 
       const { width, height } = this.artwork
-      const canvas = document.createElement('canvas')
+      let canvas = document.createElement('canvas')
       canvas.width = width
       canvas.height = height
-      const ctx = canvas.getContext('2d', { willReadFrequently: true })
+      let ctx = canvas.getContext('2d', { willReadFrequently: true })
 
       let images = []
       const delays = []
@@ -344,8 +337,12 @@ export default {
       const blob = new Blob([pngFile], { type: 'image/vnd.mozilla.apng' })
 
       images = null
+      ctx = null
+      canvas = null
 
-      await downloadFile(blob, `${getArtworkFileName(this.artwork)}.apng`, { subDir: 'ugoira' })
+      const { isUgoiraApngSaveAsPng } = store.state.appSetting
+      const suffix = isUgoiraApngSaveAsPng ? 'png' : 'apng'
+      await downloadFile(blob, `${getArtworkFileName(this.artwork)}.${suffix}`, { subDir: 'ugoira' })
     },
     async downloadWebM() {
       this.$toast(this.$t('tip.down_wait'))
@@ -353,10 +350,10 @@ export default {
 
       const { width, height } = this.artwork
 
-      const cacheCanvas = document.createElement('canvas')
+      let cacheCanvas = document.createElement('canvas')
       cacheCanvas.width = width
       cacheCanvas.height = height
-      const ctx = cacheCanvas.getContext('2d')
+      let ctx = cacheCanvas.getContext('2d')
 
       // const encoder = new global.Whammy.Video()
       // Object.values(this.ugoira.frames).forEach(frame => {
@@ -366,7 +363,7 @@ export default {
       // })
       // const webm = encoder.compile()
 
-      const images = []
+      let images = []
       let duration = 0
       Object.values(this.ugoira.frames).forEach(frame => {
         ctx.clearRect(0, 0, width, height)
@@ -377,6 +374,10 @@ export default {
 
       const { default: tsWhammy } = await import('ts-whammy')
       const webm = tsWhammy.fromImageArrayWithOptions(images, { duration: duration / 1000 })
+
+      images = null
+      ctx = null
+      cacheCanvas = null
 
       await downloadFile(webm, `${getArtworkFileName(this.artwork)}.webm`, { subDir: 'ugoira' })
     },
@@ -438,10 +439,13 @@ export default {
       frames = null
       await downloadFile(blob, `${getArtworkFileName(this.artwork)}.mp4`, { subDir: 'ugoira' })
     },
-    download(type) {
+    async download(type) {
       if (this.progressShow) {
         this.$toast(this.$t('tips.loading'))
         return
+      }
+      if (isUgoiraAvifSrc) {
+        await this.playUgoira('dontPlay')
       }
       const needPlay = !['MP4(Server)', 'Other'].includes(type)
       if (!this.ugoira && needPlay) {
@@ -486,8 +490,6 @@ export default {
     init() {
       this.resetUgoira()
       this.$nextTick(() => {
-        // this.displayWidth = document.getElementById('app').getBoundingClientRect().width
-        // this.displayHeight = this.displayWidth / (this.artwork.width / this.artwork.height)
         setTimeout(() => {
           if (this.artwork.images && this.artwork.images.length >= 3) {
             this.isShrink = true
@@ -495,7 +497,7 @@ export default {
             this.isShrink = false
           }
 
-          if (this.artwork.type == 'ugoira' && autoPlayUgoira) {
+          if (this.artwork.type == 'ugoira' && autoPlayUgoira && !isUgoiraAvifSrc) {
             this.playUgoira()
           }
         }, 0)

@@ -71,6 +71,8 @@ export default new Vuex.Store({
       showFpsDemo: false,
       isAutoLoadKissT: false,
       isVirtualList: false,
+      isUgoiraAvifSrc: false,
+      isUgoiraApngSaveAsPng: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

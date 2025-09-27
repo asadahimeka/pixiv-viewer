@@ -111,6 +111,7 @@ const parseIllust = data => {
     count: data.page_count,
     view: total_view,
     like: total_bookmarks,
+    totalComment: data.total_comments,
     x_restrict,
     illust_ai_type,
     type,
