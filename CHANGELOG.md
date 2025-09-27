@@ -18,6 +18,7 @@
 - Virtual justified layout
 - KISS Translator script
 - Chrome Native Translator
+- List ugoira auto play
 
 ### 🐛 Bug Fixes
 
@@ -44,6 +45,7 @@
 - Real illust rank index
 - Search date one year limit
 - Home layout after login
+- Virtual list setting
 
 ### 📚 Documentation
 
@@ -67,6 +69,7 @@
 - Release v1.27.3
 - Release v1.27.4
 - Release v1.28.0
+- Release v1.28.1
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
