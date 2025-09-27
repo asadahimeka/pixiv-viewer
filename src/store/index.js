@@ -70,6 +70,7 @@ export default new Vuex.Store({
       ugoiraMp4Bitrate: '4 Mbps',
       showFpsDemo: false,
       isAutoLoadKissT: false,
+      isVirtualList: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

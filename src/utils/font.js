@@ -8,7 +8,7 @@ const defPageFontModel = {
     { name: '霞鹜晰黑 MN', _value: 'LXGW XiHei MN' },
     { name: '霞鹜漫黑', _value: 'LXGW Marker Gothic' },
     { name: '霞鹜铭心宋', _value: 'LXGW Heart Serif' },
-    { name: '霞鹜975朦胧黑体', _value: 'LXGW 975 HazyGo SC 500W' },
+    { name: '霞鹜 975 朦胧黑体', _value: 'LXGW 975 HazyGo SC 500W' },
     { name: '975 圆体', _value: '975Maru SC' },
     { name: '悠哉字体', _value: 'Yozai' },
     { name: '更纱黑体 Mono SC', _value: 'Sarasa Mono SC' },

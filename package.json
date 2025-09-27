@@ -50,6 +50,7 @@
     "@vue/eslint-config-standard": "8.0.1",
     "babel-eslint": "10.1.0",
     "babel-plugin-import": "1.13.8",
+    "bumpp": "9.1.1",
     "eslint": "8.57.0",
     "eslint-plugin-vue": "9.23.0",
     "postcss-pxtorem": "5.1.1",

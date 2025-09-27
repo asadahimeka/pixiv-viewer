@@ -32,6 +32,11 @@
         </template>
       </van-cell>
       <van-cell v-if="isPageTransitionSelShow" center :title="$t('Cy6qJLutMa5O3jJr8TawB')" :label="pageTransitionLabel" is-link @click="pageTransition.show = true" />
+      <van-cell center :title="$t('4DPjs7ecYtMrqrD1DNkAE')" :label="$t('setting.lab.title') +' - ' + $t('9nsjvMfdZrtrkkwjKuyAh')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isVirtualList" size="24" @change="v => saveAppSetting('isVirtualList', v, true)" />
+        </template>
+      </van-cell>
     </van-cell-group>
 
     <van-cell-group :title="$t('novel.settings.title')">
@@ -39,7 +44,7 @@
       <van-cell center :title="$t('MIvoTULAIywXTtFIKsEuD')" :label="novelDlFmtLabel" is-link @click="novelDlFmt.show = true" />
       <template v-if="showAutoLoadImtSwitch">
         <van-cell center title="小说默认翻译服务" :label="novelTranslateLabel" is-link @click="novelTranslate.show = true" />
-        <van-cell center title="自动加载 KISS Translator 脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载">
+        <van-cell center title="自动加载简约翻译(KISS Translator)脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载">
           <template #right-icon>
             <van-switch :value="appSetting.isAutoLoadKissT" size="24" @change="changeAutoLoadKissT" />
           </template>
@@ -435,10 +440,10 @@ export default {
           { name: 'Masonry', subname: this.$t('setting.layout.m') },
           { name: 'Grid', subname: this.$t('setting.layout.g') },
           { name: 'Justified ', subname: this.$t('setting.layout.j') },
-          { name: 'VirtualMasonry', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
-          { name: 'VirtualGrid', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.g') + ' - ' + this.$t('setting.lab.title') },
-          { name: 'VirtualJustified', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },
-          { name: 'VirtualSlide', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('WrsiY7DP94fbUlQ6SoLlH') + ' - ' + this.$t('setting.lab.title') },
+          // { name: 'VirtualMasonry', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
+          // { name: 'VirtualGrid', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.g') + ' - ' + this.$t('setting.lab.title') },
+          // { name: 'VirtualJustified', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },
+          { name: 'VirtualSlide', subname: this.$t('WrsiY7DP94fbUlQ6SoLlH') + ' - ' + this.$t('setting.lab.title') },
           { name: 'Masonry(CSSGrid)', subname: this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
           { name: 'Justified(Transform)', subname: this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },
           { name: 'Masonry(FlexOrder)', subname: this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },

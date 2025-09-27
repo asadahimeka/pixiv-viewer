@@ -137,7 +137,13 @@ export default {
   },
   computed: {
     listType() {
-      return store.state.appSetting.wfType
+      const { wfType, isVirtualList } = store.state.appSetting
+      if (isVirtualList) {
+        if (['Masonry', 'Grid', 'Justified'].includes(wfType)) return `Virtual${wfType}`
+        if (wfType == 'Justified(Transform)') return 'VirtualJustified'
+        if (wfType == 'Masonry(CSSGrid)') return 'VirtualMasonry'
+      }
+      return wfType
     },
     preloadScreenCount() {
       return this.vwtfNoTop ? [2, 1] : [1, 1]
