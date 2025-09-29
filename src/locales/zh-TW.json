@@ -570,5 +570,10 @@
   "9nsjvMfdZrtrkkwjKuyAh": "頁面瀏覽卡頓或占用內存高時可嘗試打開此選項",
   "OHSPV09hSKNSbdJgbYJfV": "列表頁自動播放動圖(Ugoira)",
   "1c9AB2NdmH-9CpwIEK2jg": "動圖 APNG 保存為 PNG",
-  "X6XWoxxKCWK5k7s8oOiGi": "保存 apng 格式的動圖時文件後綴名使用 .png"
+  "X6XWoxxKCWK5k7s8oOiGi": "保存 apng 格式的動圖時文件後綴名使用 .png",
+  "FQPdJ3lYL_mVbUQ09Ly4m": "屏蔽過長標籤的小說",
+  "6jy3lpKMK-SRoKaOYC9es": "小說標籤長度最大值",
+  "deioz-o-xyQumyCC0nxcg": "小說標籤用“/”分割後的個數最大值",
+  "D4Sg4TcGKn13JicohFGvG": "屏蔽極短小說",
+  "qZpSERwayoTSDmMpi0w57": "小說正文長度最小值"
 }

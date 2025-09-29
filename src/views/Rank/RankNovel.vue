@@ -34,10 +34,10 @@
     >
       <masonry v-bind="$store.getters.novelMyProps">
         <NovelCard
-          v-for="(art, i) in artList"
+          v-for="art in artList"
           :key="art.id"
           :artwork="art"
-          :index="i + 1"
+          :index="art._index"
           @click-card="toArtwork($event)"
         />
       </masonry>

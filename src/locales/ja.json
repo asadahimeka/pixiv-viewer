@@ -570,5 +570,10 @@
   "9nsjvMfdZrtrkkwjKuyAh": "ページの閲覧が遅い場合やメモリ使用量が多い場合は、このオプションをオンにしてみてください",
   "OHSPV09hSKNSbdJgbYJfV": "画像リストでうごイラを自動的に再生します",
   "1c9AB2NdmH-9CpwIEK2jg": "うごイラapngはpngとして保存します",
-  "X6XWoxxKCWK5k7s8oOiGi": "ugoiraをAPNG形式で保存するときは、.pngファイルサフィックス名を使用します"
+  "X6XWoxxKCWK5k7s8oOiGi": "ugoiraをAPNG形式で保存するときは、.pngファイルサフィックス名を使用します",
+  "FQPdJ3lYL_mVbUQ09Ly4m": "長いタグ小説をブロックします",
+  "6jy3lpKMK-SRoKaOYC9es": "小説タグの最大長",
+  "deioz-o-xyQumyCC0nxcg": "「/」によって分割された小說タグの最大数",
+  "D4Sg4TcGKn13JicohFGvG": "非常に短い小説をブロックします",
+  "qZpSERwayoTSDmMpi0w57": "小說テキストの最小長"
 }

@@ -570,5 +570,9 @@
   "9nsjvMfdZrtrkkwjKuyAh": "Essayez d'allumer cette option lorsque la page navigue sur le bégaiement ou que la mémoire occupe haut",
   "OHSPV09hSKNSbdJgbYJfV": "Jouez automatiquement Ugoira dans la liste d'images",
   "1c9AB2NdmH-9CpwIEK2jg": "Ugoira apng sauve en png",
-  "X6XWoxxKCWK5k7s8oOiGi": "Lors de l'enregistrement de ugoira au format APNG, utilisez le nom du suffixe de fichier .png"
+  "X6XWoxxKCWK5k7s8oOiGi": "Lors de l'enregistrement de ugoira au format APNG, utilisez le nom du suffixe de fichier .png",
+  "FQPdJ3lYL_mVbUQ09Ly4m": "Bloquer un étiquette trop longue roman",
+  "6jy3lpKMK-SRoKaOYC9es": "Longueur maximale de la nouvelle étiquette",
+  "D4Sg4TcGKn13JicohFGvG": "Bloquer un roman très court",
+  "qZpSERwayoTSDmMpi0w57": "Longueur minimale du nouveau texte"
 }

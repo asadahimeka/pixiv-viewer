@@ -3,7 +3,7 @@ import { get } from './http'
 import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
-import { filterCensoredIllusts } from '@/utils/filter'
+import { filterCensoredIllusts, filterCensoredNovels } from '@/utils/filter'
 import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL } from '@/consts'
 
 const isSupportWebP = (() => {
@@ -196,7 +196,7 @@ const parseWebRankIllust = (d, mode, content) => {
     o: 'https://i.loli.best/' + d.illust_id,
   }]
 
-  let avatar = d.profileImageUrl || ''
+  let avatar = d.profile_img || ''
   if (avatar && !avatar.includes('s.pximg.net')) {
     avatar = imgProxy(avatar)
   }
@@ -369,7 +369,7 @@ const api = {
 
     console.log('latestList: ', latestList)
 
-    return { status: 0, data: latestList }
+    return { status: 0, data: filterCensoredNovels(latestList) }
   },
 
   /**
@@ -438,7 +438,7 @@ const api = {
 
     console.log('relatedList: ', relatedList)
 
-    return { status: 0, data: relatedList }
+    return { status: 0, data: filterCensoredNovels(relatedList) }
   },
 
   async getRecommendedIllust(params) {
@@ -528,7 +528,7 @@ const api = {
 
     console.log('getRecommendedNovel: ', relatedList)
 
-    return { status: 0, data: relatedList }
+    return { status: 0, data: filterCensoredNovels(relatedList) }
   },
 
   async getPopularPreview(word, params = {}) {
@@ -580,7 +580,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: relatedList }
+    return { status: 0, data: filterCensoredNovels(relatedList) }
   },
 
   async getRecommendedUser() {
@@ -1048,7 +1048,7 @@ const api = {
       })
 
       if (res.novels) {
-        rankList = res.novels.map(art => parseNovel(art))
+        rankList = res.novels.map((art, i) => ({ ...parseNovel(art), _index: (page - 1) * 30 + i + 1 }))
         rankList.length && setCache(cacheKey, rankList, 60 * 60 * 24 * 14)
       } else if (res.error) {
         return {
@@ -1063,7 +1063,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: rankList }
+    return { status: 0, data: filterCensoredNovels(rankList) }
   },
 
   /**
@@ -1128,7 +1128,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: searchList }
+    return { status: 0, data: filterCensoredNovels(searchList) }
   },
 
   async getNovelDetail(id) {
@@ -1612,7 +1612,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: memberArtwork }
+    return { status: 0, data: filterCensoredNovels(memberArtwork) }
   },
 
   /**
@@ -1903,7 +1903,7 @@ export const localApi = {
       }
     }
 
-    return { status: 0, data: list }
+    return { status: 0, data: filterCensoredNovels(list) }
   },
   async illustBookmarkAdd(id, restrict = 'public') {
     if (!id) return false

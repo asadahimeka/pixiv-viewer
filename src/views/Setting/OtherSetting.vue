@@ -55,6 +55,52 @@
           </template>
         </van-cell> -->
       </template>
+      <van-cell center :title="$t('FQPdJ3lYL_mVbUQ09Ly4m')">
+        <template #right-icon>
+          <van-switch :value="appSetting.novelFilterNoLongTag" size="24" @change="v => saveAppSetting('novelFilterNoLongTag', v, true)" />
+        </template>
+      </van-cell>
+      <van-field
+        v-if="appSetting.novelFilterNoLongTag"
+        v-model="novelFilterTagLenMax"
+        type="digit"
+        class="searchMinFavNum_field"
+        :label="$t('6jy3lpKMK-SRoKaOYC9es')"
+        placeholder=" "
+      >
+        <template #button>
+          <van-button size="small" type="info" @click="saveAppSetting('novelFilterTagLenMax', novelFilterTagLenMax, true)">{{ $t('common.save') }}</van-button>
+        </template>
+      </van-field>
+      <van-field
+        v-if="appSetting.novelFilterNoLongTag"
+        v-model="novelFilterTagSplitMax"
+        type="digit"
+        class="searchMinFavNum_field"
+        :label="$t('deioz-o-xyQumyCC0nxcg')"
+        placeholder=" "
+      >
+        <template #button>
+          <van-button size="small" type="info" @click="saveAppSetting('novelFilterTagSplitMax', novelFilterTagSplitMax, true)">{{ $t('common.save') }}</van-button>
+        </template>
+      </van-field>
+      <van-cell center :title="$t('D4Sg4TcGKn13JicohFGvG')">
+        <template #right-icon>
+          <van-switch :value="appSetting.novelFilterNoShortLen" size="24" @change="v => saveAppSetting('novelFilterNoShortLen', v, true)" />
+        </template>
+      </van-cell>
+      <van-field
+        v-if="appSetting.novelFilterNoShortLen"
+        v-model="novelFilterTextLenMin"
+        type="digit"
+        class="searchMinFavNum_field"
+        :label="$t('qZpSERwayoTSDmMpi0w57')"
+        placeholder=" "
+      >
+        <template #button>
+          <van-button size="small" type="info" @click="saveAppSetting('novelFilterTextLenMin', novelFilterTextLenMin, true)">{{ $t('common.save') }}</van-button>
+        </template>
+      </van-field>
     </van-cell-group>
 
     <van-cell-group :title="$t('j2tFt08r6GGMmsfbF4HAN')">
@@ -555,6 +601,9 @@ export default {
       isAnalyticsOn: LocalStorage.get('PXV_ANALYTICS', true),
       isPageTransitionSelShow: Boolean(document.startViewTransition),
       isNavSHSetShow: document.documentElement.clientWidth <= 1270,
+      novelFilterTextLenMin: store.state.appSetting.novelFilterTextLenMin,
+      novelFilterTagLenMax: store.state.appSetting.novelFilterTagLenMax,
+      novelFilterTagSplitMax: store.state.appSetting.novelFilterTagSplitMax,
     }
   },
   head() {

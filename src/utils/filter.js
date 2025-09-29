@@ -60,6 +60,30 @@ export function filterCensoredIllusts(list = []) {
   return list.filter(filterCensoredIllust)
 }
 
+export function filterCensoredNovel(artwork) {
+  if (store.state.appSetting.novelFilterNoLongTag) {
+    const maxTagLen = Number(store.state.appSetting.novelFilterTagLenMax)
+    const maxTagSplit = Number(store.state.appSetting.novelFilterTagSplitMax)
+    const tagFlag = artwork.tags?.some(e => {
+      if (!isNaN(maxTagLen) && e.name?.length > maxTagLen) return true
+      if (!isNaN(maxTagSplit) && e.name?.split(/[/#、]/).length > maxTagSplit) return true
+      return false
+    })
+    if (tagFlag) return false
+  }
+  if (store.state.appSetting.novelFilterNoShortLen) {
+    const minTextLen = Number(store.state.appSetting.novelFilterTextLenMin)
+    if (!isNaN(minTextLen) && artwork.text_length < minTextLen) {
+      return false
+    }
+  }
+  return isArtworkNotCensored(artwork, store.state)
+}
+
+export function filterCensoredNovels(list = []) {
+  return list.filter(filterCensoredNovel)
+}
+
 const aiTags = [
   'ai',
   'ai生成',
@@ -118,11 +142,10 @@ export async function mintVerify(word = '', forceCheck = false) {
  * @param {string[]|undefined} value
  */
 export function isBlockTagHit(blockTags, value) {
-  let tags = Array.isArray(value) ? value : []
+  const tags = Array.isArray(value) ? value : []
   if (!tags.length || !blockTags.length) return false
-  if (typeof tags[0] != 'string') tags = tags.map(e => e.name)
-  const tagSet = new Set(tags)
-  return blockTags.some(tag => tagSet.has(tag))
+  const blockTagsSet = new Set(blockTags)
+  return tags.some(tag => blockTagsSet.has(typeof tag == 'string' ? tag : tag.name))
 }
 
 export const BLOCK_INPUT_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]

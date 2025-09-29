@@ -570,5 +570,10 @@
   "9nsjvMfdZrtrkkwjKuyAh": "页面浏览卡顿或占用内存高时可尝试打开此选项",
   "OHSPV09hSKNSbdJgbYJfV": "列表页自动播放动图(Ugoira)",
   "1c9AB2NdmH-9CpwIEK2jg": "动图 APNG 保存为 PNG",
-  "X6XWoxxKCWK5k7s8oOiGi": "保存 apng 格式的动图时文件后缀名使用 .png"
+  "X6XWoxxKCWK5k7s8oOiGi": "保存 apng 格式的动图时文件后缀名使用 .png",
+  "FQPdJ3lYL_mVbUQ09Ly4m": "屏蔽过长标签小说",
+  "6jy3lpKMK-SRoKaOYC9es": "小说标签长度最大值",
+  "deioz-o-xyQumyCC0nxcg": "小说标签用“/”分割后的个数最大值",
+  "D4Sg4TcGKn13JicohFGvG": "屏蔽极短小说",
+  "qZpSERwayoTSDmMpi0w57": "小说正文长度最小值"
 }

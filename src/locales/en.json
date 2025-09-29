@@ -571,5 +571,10 @@
   "9nsjvMfdZrtrkkwjKuyAh": "Try turning on this option when the page browses stutter or the memory occupies high",
   "OHSPV09hSKNSbdJgbYJfV": "Automatically play Ugoira in the image list",
   "1c9AB2NdmH-9CpwIEK2jg": "Ugoira APNG Save as PNG",
-  "X6XWoxxKCWK5k7s8oOiGi": "When saving Ugoira in apng format, use .png file suffix name"
+  "X6XWoxxKCWK5k7s8oOiGi": "When saving Ugoira in apng format, use .png file suffix name",
+  "FQPdJ3lYL_mVbUQ09Ly4m": "Block over-long tag novel",
+  "6jy3lpKMK-SRoKaOYC9es": "Maximum length of the novel tag",
+  "deioz-o-xyQumyCC0nxcg": "Maximum number of novel tags split by \"/\"",
+  "D4Sg4TcGKn13JicohFGvG": "Block very short novel",
+  "qZpSERwayoTSDmMpi0w57": "Minimum length of novel text"
 }

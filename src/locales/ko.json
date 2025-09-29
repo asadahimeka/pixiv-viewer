@@ -571,5 +571,9 @@
   "9nsjvMfdZrtrkkwjKuyAh": "페이지가 말더퍼를 눈에 띄거나 메모리가 높게 차지할 때이 옵션을 켜십시오.",
   "OHSPV09hSKNSbdJgbYJfV": "이미지 목록에서 Ugoira를 자동으로 재생합니다",
   "1c9AB2NdmH-9CpwIEK2jg": "Ugoira apng는 png로 저장합니다",
-  "X6XWoxxKCWK5k7s8oOiGi": "APNG 형식으로 Ugoira를 저장할 때 .png 파일 접미사 이름을 사용하십시오."
+  "X6XWoxxKCWK5k7s8oOiGi": "APNG 형식으로 Ugoira를 저장할 때 .png 파일 접미사 이름을 사용하십시오.",
+  "FQPdJ3lYL_mVbUQ09Ly4m": "길고 긴 태그 소설을 차단합니다",
+  "6jy3lpKMK-SRoKaOYC9es": "소설 태그의 최대 길이",
+  "D4Sg4TcGKn13JicohFGvG": "매우 짧은 소설을 차단하십시오",
+  "qZpSERwayoTSDmMpi0w57": "새로운 텍스트의 최소 길이"
 }
