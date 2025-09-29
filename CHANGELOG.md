@@ -46,6 +46,8 @@
 - Search date one year limit
 - Home layout after login
 - Virtual list setting
+- Lock file
+- Novel filter
 
 ### 📚 Documentation
 
@@ -70,6 +72,7 @@
 - Release v1.27.4
 - Release v1.28.0
 - Release v1.28.1
+- Release v1.28.2
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
