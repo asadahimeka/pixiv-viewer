@@ -70,8 +70,6 @@
           <template v-if="!showPopPreview">
             <van-dropdown-item v-model="searchParams.mode" :options="searchModes" />
             <van-dropdown-item v-model="searchParams.sort" :options="searchOrders" />
-            <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
-            <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
           </template>
           <van-dropdown-item
             ref="s_date"
@@ -104,6 +102,11 @@
               </van-button>
             </div>
           </van-dropdown-item>
+          <template v-if="!showPopPreview">
+            <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
+            <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
+            <van-dropdown-item v-if="showNonCNLangParam" v-model="nonCNLang" :options="nonCNLangOptions" />
+          </template>
         </van-dropdown-menu>
       </div>
       <PopularPreviewNovel v-if="(isSelfHibi && showPopPreview && keywords.trim())" ref="popPreview" :word="keywords" :params="searchParams" />
@@ -142,7 +145,9 @@ import { notSelfHibiApi } from '@/consts'
 import NovelCard from '@/components/NovelCard.vue'
 import PopularPreviewNovel from './components/PopularPreviewNovel.vue'
 import { mintVerify, BLOCK_SEARCH_WORD_RE, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE } from '@/utils/filter'
-import { i18n } from '@/i18n'
+import { i18n, isCNLocale } from '@/i18n'
+import { detectLanguage } from '@/utils/novel'
+import { sleep } from '@/utils'
 
 export default {
   name: 'Search',
@@ -201,6 +206,12 @@ export default {
         { text: this.$t('search.dura.week'), value: 'within_last_week' },
         { text: this.$t('search.dura.month'), value: 'within_last_month' },
       ],
+      showNonCNLangParam: window.APP_CONFIG.useLocalAppApi && isCNLocale(),
+      nonCNLang: 'no',
+      nonCNLangOptions: [
+        { text: '显示非中文', value: 'no' },
+        { text: '隐藏非中文', value: 'yes' },
+      ],
     }
   },
   head() {
@@ -221,6 +232,10 @@ export default {
   },
   watch: {
     usersIriTag() {
+      this.reset()
+      this.doSearch(this.keywords)
+    },
+    nonCNLang() {
       this.reset()
       this.doSearch(this.keywords)
     },
@@ -395,12 +410,21 @@ export default {
             artList = artList.filter(e => e.like > Number(match && match[0]))
           }
 
+          if (this.nonCNLang == 'yes') {
+            artList = artList.filter(e => detectLanguage(e.title + e.caption).language == 'zh')
+          }
+
           if (this.keywords__.includes(' R-18')) {
             artList = artList.filter(e => e.x_restrict > 0)
           }
 
           if (this.keywords__.includes(' -R-18')) {
             artList = artList.filter(e => e.x_restrict == 0)
+          }
+
+          if (artList.length < 10) {
+            console.log('------------- sleep')
+            await sleep(800)
           }
 
           this.artList = _.uniqBy([
@@ -719,6 +743,12 @@ export default {
 .search_params
   position relative
   top -24px
+  @media screen and (max-width: 1280px)
+    overflow-x: auto;
+    &::-webkit-scrollbar
+      display none
+    ::v-deep .van-dropdown-menu
+      padding-bottom 0.3rem
 
 .search_param_sel
   height 70px
@@ -728,9 +758,10 @@ export default {
   ::v-deep .van-dropdown-menu__bar
     background none
     height 100% !important
-    .van-dropdown-menu__item:first-child,
-    .van-dropdown-menu__item:nth-child(2)
-      flex 1.3
+    @media screen and (max-width: 1280px)
+      .van-dropdown-menu__item
+        min-width: max-content;
+        padding: 0 0.2rem;
 
 .sel_search_date
   width 750px !important

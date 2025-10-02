@@ -15,6 +15,21 @@
       </van-popover>
       <div class="nav_divi"></div>
       <RankNav :menu="menu" is-novel />
+      <van-popover
+        v-if="showFavFilter || showLangFilter"
+        v-model="showFilterFavsPop"
+        placement="bottom-end"
+        theme="dark"
+        trigger="click"
+      >
+        <div class="filter-favs-actions">
+          <span v-if="showFavFilter" @click="changeFavFilter('isFilterFavs')">{{ isFilterFavs ? $t('hHPMdWCYd_B2r9F0icW5Y') : $t('KS3utA342Q7yr0mOFARV-') }}</span>
+          <span v-if="showLangFilter" @click="changeFavFilter('isFilterNonCNLang')">{{ isFilterNonCNLang ? '显示非中文小说' : '隐藏非中文小说' }}</span>
+        </div>
+        <template #reference>
+          <van-icon name="filter-o" class="filter-favs-icon" />
+        </template>
+      </van-popover>
       <span style="display: inline-block;">
         <div class="calendar" @click="isDatePickerShow = true">
           <div class="date">{{ dateNum }}</div>
@@ -68,6 +83,7 @@ import _ from '@/lib/lodash'
 import api from '@/api'
 import NovelCard from '@/components/NovelCard.vue'
 import { i18n } from '@/i18n'
+import { detectLanguage } from '@/utils/novel'
 
 const getRankMenus = () => ({
   day: { name: i18n.t('rank.day'), io: 'day', cat: '4' },
@@ -111,6 +127,9 @@ export default {
       actRankCat: '4',
       rankCatLabels: getRankCatLabels(),
       rankCatActions: getRankCatActions(),
+      showFilterFavsPop: false,
+      isFilterFavs: false,
+      isFilterNonCNLang: false,
     }
   },
   head() {
@@ -121,6 +140,12 @@ export default {
   computed: {
     dateNum() {
       return dayjs(this.date).date()
+    },
+    showFavFilter() {
+      return window.APP_CONFIG.useLocalAppApi
+    },
+    showLangFilter() {
+      return i18n.locale.includes('zh')
     },
   },
   watch: {
@@ -143,11 +168,19 @@ export default {
   },
   activated() {
     this.showRankCat = false
+    this.showFilterFavsPop = false
   },
   methods: {
     onRankCatSel({ _v }) {
       const link = rankCatLinks[_v]
       this.$router.replace(link)
+    },
+    changeFavFilter(key) {
+      this[key] = !this[key]
+      window.umami?.track(`rank_novel_filter_change_${key}`, { val: this[key] })
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+      this.showFilterFavsPop = false
+      this.init()
     },
     reset() {
       this.curType = this.$route.params.type || 'daily'
@@ -168,10 +201,19 @@ export default {
       const type = this.getIOType(this.curType)
       const res = await api.getNovelRankList(type, this.curPage, this.date)
       if (res.status === 0) {
-        const newList = res.data
+        let newList = res.data
         if (newList.length == 0) {
           this.finished = true
         } else {
+          if (!this.menu[this.curType]?.x) {
+            newList = newList.filter(e => !/R-?18|18\+/i.test(JSON.stringify(e.tags)))
+          }
+          if (this.isFilterFavs) {
+            newList = newList.filter(e => !e.is_bookmarked)
+          }
+          if (this.isFilterNonCNLang) {
+            newList = newList.filter(e => detectLanguage(e.title + e.caption).language == 'zh')
+          }
           this.artList = _.uniqBy([
             ...this.artList,
             ...newList,
@@ -215,6 +257,21 @@ export default {
   height 24px
   margin 0 15px
   background #000
+}
+
+.filter-favs-icon {
+  margin-left 0.2rem
+  padding 0.1rem 0
+  font-size 0.55rem
+  transform: translateY(-2px)
+  cursor pointer
+}
+
+.filter-favs-actions span {
+  display block
+  padding 10PX 16PX
+  cursor pointer
+  font-size 14PX
 }
 
 .rank {

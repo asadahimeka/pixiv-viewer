@@ -432,11 +432,6 @@ export default {
       const res = await api.search(val, this.curPage, params)
       if (res.status === 0) {
         if (res.data.length) {
-          if (res.data.length < 10) {
-            console.log('------------- sleep')
-            await sleep(800)
-          }
-
           let artList = res.data
 
           if (this.usersIriTag) {
@@ -464,6 +459,11 @@ export default {
               BLOCK_RESULT_RE.test(e.caption)
             )
           })
+
+          if (artList.length < 10) {
+            console.log('------------- sleep')
+            await sleep(800)
+          }
 
           this.artList = _.uniqBy([
             ...this.artList,
