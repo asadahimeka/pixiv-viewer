@@ -1,6 +1,6 @@
 import { LocalStorage } from '@/utils/storage'
 
-export const CURRENT_APP_VERSION = 'v1.29.0'
+export const CURRENT_APP_VERSION = 'v1.29.1'
 export const isProduction = process.env.NODE_ENV === 'production'
 export const BASE_URL = process.env.BASE_URL
 export const DEF_HIBIAPI_MAIN = process.env.VUE_APP_DEF_HIBIAPI_MAIN

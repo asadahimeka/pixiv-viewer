@@ -24,6 +24,8 @@
 - Novel text indent setting
 - Illust search aspect ratio filter
 - Search list pagination
+- Novel save as pdf
+- Novel save as doc/markdown
 
 ### 🐛 Bug Fixes
 
@@ -53,9 +55,12 @@
 - Virtual list setting
 - Lock file
 - Novel filter
+- Novel download
+- Home popular illusts
 
 ### 📚 Documentation
 
+- Update locales
 - Update locales
 
 ### ⚙️ Miscellaneous Tasks
@@ -79,6 +84,7 @@
 - Release v1.28.1
 - Release v1.28.2
 - Release v1.28.3
+- Release v1.29.0
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
