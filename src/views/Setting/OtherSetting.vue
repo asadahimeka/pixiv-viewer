@@ -42,6 +42,11 @@
     <van-cell-group :title="$t('novel.settings.title')">
       <van-cell center :title="$t('j1tomH0kHtIiXUQ-6NhcS')" :label="$t('UiF3Ob-tYkIolJhNVMUFM')" is-link @click="showNovelConfig" />
       <van-cell center :title="$t('MIvoTULAIywXTtFIKsEuD')" :label="novelDlFmtLabel" is-link @click="novelDlFmt.show = true" />
+      <van-cell v-if="appSetting.novelDlFormat == 'epub'" center :title="$t('sJimI61fn8ruloG-3ObJs')">
+        <template #right-icon>
+          <van-switch :value="appSetting.novelDlRmStyle" size="24" @change="v => saveAppSetting('novelDlRmStyle', v)" />
+        </template>
+      </van-cell>
       <template v-if="showAutoLoadImtSwitch">
         <van-cell center title="小说默认翻译服务" :label="novelTranslateLabel" is-link @click="novelTranslate.show = true" />
         <van-cell center title="自动加载简约翻译(KISS Translator)脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载">
@@ -573,6 +578,7 @@ export default {
         actions: [
           { name: 'TXT', _value: 'txt' },
           { name: 'HTML', _value: 'html' },
+          { name: 'EPUB', _value: 'epub' },
         ],
       },
       novelTranslate: {

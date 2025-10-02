@@ -28,9 +28,22 @@
           <van-button type="info" size="small" plain block @click="showShare = true">
             {{ $t('artwork.share.share') }}
           </van-button>
-          <van-button type="info" size="small" plain block @click="downloadNovel">
+          <van-button v-if="isNovelDlFormatSet" type="info" size="small" plain block @click="downloadNovel()">
             {{ $t('common.download') }}
           </van-button>
+          <van-popover
+            v-else
+            v-model="showDlPopover"
+            :actions="novelDlOptions"
+            trigger="click"
+            placement="top"
+            style="width: 100%;"
+            @select="downloadNovel"
+          >
+            <template #reference>
+              <van-button type="info" size="small" plain block style="margin-bottom: 10px;">{{ $t('common.download') }}</van-button>
+            </template>
+          </van-popover>
           <van-button type="info" size="small" plain block @click="showComments = true">
             {{ $t('user.view_comments') }}
           </van-button>
@@ -87,6 +100,7 @@ import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
+import { convertHtmlToEpub } from '@/utils/novel'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
@@ -140,6 +154,12 @@ export default {
       showComments: false,
       showPntPopover: false,
       pntActions: [],
+      showDlPopover: false,
+      novelDlOptions: [
+        { text: 'TXT', val: 'txt' },
+        { text: 'HTML', val: 'html' },
+        { text: 'EPUB', val: 'epub' },
+      ],
     }
   },
   head() {
@@ -160,6 +180,9 @@ export default {
     },
     isNovelDefTranslateSet() {
       return Boolean(store.state.appSetting.novelDefTranslate)
+    },
+    isNovelDlFormatSet() {
+      return Boolean(store.state.appSetting.novelDlFormat)
     },
   },
   watch: {
@@ -296,19 +319,25 @@ export default {
     toggleNovelConfigShow() {
       this.$refs.novelConfigRef?.toggle()
     },
-    async downloadNovel() {
-      window.umami?.track('download_novel')
+    async downloadNovel(format) {
+      const ext = format?.val || store.state.appSetting.novelDlFormat
+      window.umami?.track('download_novel', { format })
       const actions = {
-        txt: () => novelTextBak,
-        html: () => {
+        txt: async () => new Blob([novelTextBak], { type: 'text/plain;charset=utf-8' }),
+        html: async () => {
           const el = document.querySelector('.novel-view').cloneNode(true)
           el.querySelector('svg').remove()
-          return '<meta charset="utf-8">' + el.outerHTML
+          return new Blob(['<meta charset="utf-8">' + el.outerHTML], { type: 'text/html;charset=utf-8' })
+        },
+        epub: async () => {
+          const el = document.querySelector('.novel_text').cloneNode(true)
+          const style = store.state.appSetting.novelDlRmStyle ? '' : el.getAttribute('style')
+          const res = await convertHtmlToEpub(el.innerHTML, style, this.artwork)
+          return res
         },
       }
-      const ext = store.state.appSetting.novelDlFormat
-      const novelText = actions[ext]()
-      await downloadFile(new Blob([novelText]), `${getArtworkFileName(this.artwork)}.${ext}`, { subDir: 'novel' })
+      const blob = await actions[ext]()
+      if (blob) await downloadFile(blob, `${getArtworkFileName(this.artwork)}.${ext}`, { subDir: 'novel' })
     },
     doDefPnt() {
       const key = store.state.appSetting.novelDefTranslate

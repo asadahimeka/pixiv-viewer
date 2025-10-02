@@ -576,5 +576,10 @@
   "6jy3lpKMK-SRoKaOYC9es": "Maximum length of the novel tag",
   "deioz-o-xyQumyCC0nxcg": "Maximum number of novel tags split by \"/\"",
   "D4Sg4TcGKn13JicohFGvG": "Block very short novel",
-  "qZpSERwayoTSDmMpi0w57": "Minimum length of novel text"
+  "qZpSERwayoTSDmMpi0w57": "Minimum length of novel text",
+  "mK4Dqnx_FvC3JhJMR4B4t": "author",
+  "iz3RSFqi1q9gMqF9CUGSp": "Publisher",
+  "ofVgseiGUCwCT-0m7Gr1h": "Caption",
+  "1NIKIVhrUKhUHhuWv3Sxt": "Tags",
+  "sJimI61fn8ruloG-3ObJs": "Remove page style when saving as EPUB"
 }

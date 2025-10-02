@@ -207,10 +207,10 @@ export default {
         title: this.$t('1a1meIFthYyv_s7C4M4L0'),
         message: `
         <div id="sel_block_dialog">
-          <p style="margin:0.2rem 0">Author</p>
+          <p style="margin:0.2rem 0">${this.$t('mK4Dqnx_FvC3JhJMR4B4t')}</p>
           <div class="sel_block_chks"><input type="checkbox" data-author="${this.artwork.author.id}">${this.artwork.author.name}(${this.artwork.author.id})</div>
           <div style="height:1px;margin:0.2rem 0;border-bottom:1px solid #ccc"></div>
-          <p style="margin:0.2rem 0">Tags</p>
+          <p style="margin:0.2rem 0">${this.$t('1NIKIVhrUKhUHhuWv3Sxt')}</p>
           ${this.artwork.tags.map(e => `<div class="sel_block_chks"><input type="checkbox" data-tagname="${e.name}">${e.name}</div>`).join('')}
         </div>`,
         lockScroll: false,
