@@ -2,14 +2,14 @@
   <div
     ref="view"
     class="image-view"
-    :class="{ shrink: isShrink, loaded: !!artwork.images, censored }"
+    :class="{ shrink: isShrink, loaded: !!artwork.images, censored, overlong }"
     @click="showFull"
   >
     <div
       v-for="(url, index) in artwork.images"
       :key="index"
       class="image-box"
-      :style="index==0&&artworkRatio>0.6?`--ratio:${artworkRatio}`:''"
+      :style="index == 0 && artworkRatio > 0.6 ? `--ratio:${artworkRatio}` : ''"
     >
       <!-- <van-button
         v-if="artwork.illust_ai_type != 2 && maybeAiAuthor"
@@ -111,6 +111,9 @@ export default {
     },
     showUgoiraControl() {
       return this.artwork.type === 'ugoira' && !isUgoiraAvifSrc
+    },
+    overlong() {
+      return this.artwork?.images?.length > 2
     },
   },
   watch: {
@@ -664,6 +667,10 @@ export default {
   background: var(--bg) no-repeat center center / contain;
 }
 @media screen and (max-width: 600px) {
+  .ia-cont .ia-left .image-view.loaded.overlong {
+    height: calc(100vh - 2.4rem);
+    overflow-y: auto;
+  }
   .ia-cont .ia-left .image-box {
     aspect-ratio: var(--ratio);
   }

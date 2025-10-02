@@ -117,14 +117,30 @@
       <PopularPreview v-if="showPopPreview && keywords.trim()" ref="popPreview" :word="keywords" :params="searchParams" />
       <ImageList
         v-else-if="keywords.trim()"
-        list-class="result-list"
+        :list-class="`result-list${isPagination ? ' is-pagination' : ''}`"
         :list="artList"
         :loading="loading"
         :finished="finished"
         :error="error"
-        :on-load-more="doSearch"
+        :on-load-more="onLoadMore"
       />
-      <van-loading v-show="keywords.trim() && artList.length == 0 && !finished" class="loading" :size="'50px'" />
+      <van-loading v-if="isPagination && loading" size="50px" style="margin: 32vh;text-align: center;" />
+      <van-pagination
+        v-if="isPagination"
+        :value="curPage"
+        :items-per-page="30"
+        :page-count="totalPages"
+        :show-page-size="pageBtnNum"
+        @change="onPageChange"
+      >
+        <template #prev-text>
+          <van-icon name="arrow-left" />
+        </template>
+        <template #next-text>
+          <van-icon name="arrow" />
+        </template>
+      </van-pagination>
+      <van-loading v-if="!isPagination && keywords.trim() && artList.length == 0 && !finished" class="loading" :size="'50px'" />
       <div class="mask" @click="focus = false"></div>
     </div>
   </div>
@@ -219,6 +235,8 @@ export default {
       ],
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
+      totalPages: 166,
+      pageBtnNum: document.documentElement.clientWidth / 80,
     }
   },
   head() {
@@ -244,6 +262,10 @@ export default {
       return store.getters.isR18On &&
         !this.pidOrUidList.length &&
         !this.keywords.includes('R-18')
+    },
+    isPagination() {
+      const { isVirtualList, searchListPagination } = store.state.appSetting
+      return !isVirtualList && searchListPagination
     },
   },
   watch: {
@@ -334,6 +356,21 @@ export default {
   //   this.doSearch(this.keywords)
   // },
   methods: {
+    onLoadMore() {
+      if (this.isPagination) {
+        this.loading = false
+        this.finished = true
+        return
+      }
+      this.doSearch()
+    },
+    onPageChange(page) {
+      document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
+      this.curPage = page
+      this.loading = false
+      this.artList = []
+      this.doSearch()
+    },
     reset() {
       this.curPage = 1
       this.artList = []
@@ -436,7 +473,7 @@ export default {
       if (!this.isAIOn || val.includes(' -AI')) {
         params.search_ai_type = 1 // 不显示AI作品
       }
-      if (this.loading || this.finished) return
+      if (this.loading || (!this.isPagination && this.finished)) return
       this.loading = true
       const res = await api.search(val, this.curPage, params)
       if (res.status === 0) {
@@ -484,12 +521,15 @@ export default {
             await sleep(800)
           }
 
-          this.artList = _.uniqBy([
-            ...this.artList,
-            ...artList,
-          ], 'id')
-          this.curPage++
-          // if (this.curPage > 9) this.finished = true
+          if (this.isPagination) {
+            this.artList = artList
+          } else {
+            this.artList = _.uniqBy([
+              ...this.artList,
+              ...artList,
+            ], 'id')
+            this.curPage++
+          }
         } else {
           this.finished = true
         }
@@ -903,6 +943,10 @@ export default {
       width fit-content
       margin: 0px 12px 12px 0
 
+.search .list-wrap .result-list.is-pagination
+  margin-bottom 0.5rem
+  ::v-deep .van-list__finished-text
+    display none
 </style>
 <style scoped>
 .search_param_sel ::v-deep .van-dropdown-menu__title {

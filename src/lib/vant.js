@@ -34,6 +34,7 @@ import Empty from 'vant/lib/empty'
 import Uploader from 'vant/lib/uploader'
 import Checkbox from 'vant/lib/checkbox'
 import NoticeBar from 'vant/lib/notice-bar'
+import Pagination from 'vant/lib/pagination'
 
 export default function setupVant() {
   Vue.use(Button)
@@ -71,4 +72,5 @@ export default function setupVant() {
   Vue.use(Uploader)
   Vue.use(Checkbox)
   Vue.use(NoticeBar)
+  Vue.use(Pagination)
 }

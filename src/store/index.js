@@ -79,6 +79,7 @@ export default new Vuex.Store({
       novelFilterNoLongTag: false,
       novelFilterTagLenMax: 30,
       novelFilterTagSplitMax: 5,
+      searchListPagination: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },
