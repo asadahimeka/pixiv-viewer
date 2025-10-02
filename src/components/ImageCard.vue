@@ -39,7 +39,7 @@
         <div v-if="!isOuterMeta" class="content">
           <h2 class="title" :title="artwork.title + ' ' + artwork.created" @click.stop="onImageTitleClick">{{ artwork.title }}</h2>
           <div class="author-cont" @click.stop="toAuthor">
-            <Pximg :src="artwork.author.avatar" :alt="artwork.author.name" nobg class="avatar" />
+            <Pximg v-if="artwork.author.avatar" :src="artwork.author.avatar" :alt="artwork.author.name" nobg class="avatar" />
             <div class="author">{{ artwork.author.name }}</div>
           </div>
         </div>
@@ -51,7 +51,7 @@
           {{ artwork.title }}
         </h2>
         <div class="author-cont" @click="toAuthor">
-          <Pximg :src="artwork.author.avatar" :alt="artwork.author.name" nobg class="avatar" />
+          <Pximg v-if="artwork.author.avatar" :src="artwork.author.avatar" :alt="artwork.author.name" nobg class="avatar" />
           <div class="author">{{ artwork.author.name }}</div>
         </div>
       </div>

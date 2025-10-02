@@ -7,4 +7,4 @@ https://pixiv.pictures/setting/about
 https://pixiv.pictures/setting/osusume
 https://pixiv.pictures/spotlights
 https://pixiv.pictures/osusume_illust
-https://pixiv.pictures/discovery
+https://pixiv.pictures/popular_illust

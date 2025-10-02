@@ -2,7 +2,7 @@
   <div class="Discovery illusts">
     <top-bar />
     <h3 class="af_title">
-      {{ $t('common.discovery') }}
+      {{ $t('qLlCQvCG0kXud25b-hKEv') }}
       <div class="clear-ih" @click="getArtList">
         <Icon name="random" scale="2" />
       </div>
@@ -21,7 +21,7 @@ import ImageCard from '@/components/ImageCard'
 import api from '@/api'
 
 export default {
-  name: 'Discovery',
+  name: 'DiscoveryPollution',
   components: {
     TopBar,
     ImageCard,
@@ -49,7 +49,7 @@ export default {
     async getArtList() {
       this.loading = true
       this.artList = []
-      const res = await api.getDiscoveryList('safe', 18, true)
+      const res = await api.getDiscoveryArtworks('safe')
       if (res.status === 0) {
         this.artList = res.data
       } else {

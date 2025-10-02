@@ -112,13 +112,4 @@ export default {
     padding-top 20px
     background transparent
 
-  .card-box
-    padding: 0 12px
-    display: flex
-    flex-direction: row
-
-    .image-card
-      max-height: 360px
-      margin: 4px 2px
-
 </style>

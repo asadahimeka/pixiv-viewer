@@ -13,6 +13,8 @@ import HomeNovel from '@/views/Home/HomeNovel.vue'
 import Lives from '@/views/Lives/index.vue'
 import LiveDetail from '@/views/Lives/LiveDetail.vue'
 import Discovery from '@/views/Discovery/Discovery.vue'
+import DiscoveryPollution from '@/views/Discovery/DiscoveryPollution.vue'
+import PopularIllust from '@/views/Discovery/PopularIllust.vue'
 import RecommendIllust from '@/views/Discovery/RecommendIllust.vue'
 import RandomIllustPage from '@/views/Home/components/RandomIllustPage.vue'
 import Spotlights from '@/views/Spotlights/Spotlights.vue'
@@ -279,9 +281,21 @@ const routes = [
             meta: { __depth: 2 },
           },
           {
-            path: '/discovery',
+            path: '/discovery/anonymous',
             name: 'Discovery',
             component: Discovery,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/discovery/pollution',
+            name: 'DiscoveryPollution',
+            component: DiscoveryPollution,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/popular_illust',
+            name: 'PopularIllust',
+            component: PopularIllust,
             meta: { __depth: 2 },
           },
           {

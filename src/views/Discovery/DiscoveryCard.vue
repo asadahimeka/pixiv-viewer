@@ -3,7 +3,7 @@
     <van-cell class="cell" :border="false" is-link @click="toDiscovery">
       <template #title>
         <Icon class="icon discovery-icon" name="discovery" />
-        <span class="title">{{ $t('common.discovery') }}</span>
+        <span class="title">{{ $t('Oz0zZHqnxZoCjYysARbO1') }}</span>
       </template>
     </van-cell>
     <div class="card-box">
@@ -33,7 +33,7 @@
 <script>
 import _ from '@/lib/lodash'
 import api from '@/api'
-import { SessionStorage } from '@/utils/storage'
+// import { SessionStorage } from '@/utils/storage'
 import ImageCard from '@/components/ImageCard'
 import ImageSlide from '@/components/ImageSlide'
 
@@ -79,7 +79,8 @@ export default {
   methods: {
     async getRankList() {
       this.loading = true
-      const res = await api.getDiscoveryList('safe', 18)
+      // const res = await api.getDiscoveryList('safe', 18)
+      const res = await api.getPopularIllusts(1)
       if (res.status === 0) {
         this.artList = _.shuffle(res.data)
       } else {
@@ -91,9 +92,9 @@ export default {
       this.loading = false
     },
     toDiscovery() {
-      SessionStorage.set('discovery.illusts', this.artList)
+      // SessionStorage.set('discovery.illusts', this.artList)
       this.$router.push({
-        name: 'Discovery',
+        name: 'PopularIllust',
       })
     },
     toArtwork(art) {

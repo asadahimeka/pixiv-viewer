@@ -3,7 +3,7 @@ import { get } from './http'
 import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
-import { filterCensoredIllusts, filterCensoredNovels } from '@/utils/filter'
+import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit } from '@/utils/filter'
 import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL } from '@/consts'
 
 const isSupportWebP = (() => {
@@ -262,6 +262,37 @@ export const parseWebApiIllust = d => {
     x_restrict: d.xRestrict,
     illust_ai_type: d.aiType,
     type: ['illust', 'manga', 'ugoira'][d.illustType || 0],
+  }
+
+  return artwork
+}
+
+export const parseWebPopularIllust = d => {
+  const url = 'https://i.pximg.net' + d.url.replace('/-/', '/')
+  const images = [{
+    s: imgProxy(url),
+    m: imgProxy(url),
+    l: imgProxy(url.replace(/\/c\/\d+x\d+\w*\//i, '/')),
+    o: 'https://i.loli.best/' + d.illust_id,
+  }]
+
+  const artwork = {
+    id: d.illust_id,
+    title: d.illust_title,
+    caption: '',
+    author: { id: d.illust_user_id, name: d.user_name },
+    created: d.illust_create_date,
+    images,
+    tags: d.tags.map(e => ({ name: e })),
+    tools: [],
+    width: +d.illust_width,
+    height: +d.illust_height,
+    count: d.illust_page_count,
+    view: 0,
+    like: 0,
+    x_restrict: d.illust_x_restrict,
+    illust_ai_type: d.illust_ai_type,
+    type: ['illust', 'manga', 'ugoira'][d.illust_type || 0],
   }
 
   return artwork
@@ -963,7 +994,8 @@ const api = {
 
     const illust = res?.thumbnails?.illust
     if (illust) {
-      list = illust.filter(e => !e.isAdContainer).map(e => parseWebApiIllust(e))
+      const blockTags = ['拷问', '重口', '猎奇', '羞辱', '萝莉 ', '虐待 ', '虐杀 ', '血腥', '足控', '敗北', '足裏', '足指', '裸足', '处刑', '束缚', '内臓', '銃フェラ', 'sexy', 'honeyselect2', 'honeyselect', 'HoneySelect', '3D', '斗罗大陆']
+      list = illust.filter(e => !e.isAdContainer && !isBlockTagHit(blockTags, e.tags)).map(e => parseWebApiIllust(e))
     } else {
       return {
         status: 0,
@@ -984,7 +1016,7 @@ const api = {
       params._t = Date.now()
     }
 
-    const res = await get(`${PIXIV_NOW_URL}/ajax/illust/discovery`, params, { baseURL: '/' })
+    const res = await get(`${PIXIV_NOW_URL}/ajax/illust/discovery`, params)
 
     if (res && res.illusts) {
       list = res.illusts.filter(e => !e.isAdContainer).map(e => parseWebApiIllust(e))
@@ -996,6 +1028,32 @@ const api = {
     }
 
     return { status: 0, data: filterCensoredIllusts(list) }
+  },
+
+  async getPopularIllusts(page = 1) {
+    const cacheKey = `popular_illust_${page}`
+    let artList = await getCache(cacheKey)
+
+    if (!artList) {
+      const res = await get(`${PIXIV_NOW_URL}/touch/ajax_api/ajax_api.php`, {
+        p: page,
+        mode: 'popular_illust',
+        _anon: 1,
+      })
+
+      console.log('getPopularIllusts: ', res)
+      if (Array.isArray(res)) {
+        artList = res.map(parseWebPopularIllust)
+        artList.length && setCache(cacheKey, artList, 60 * 60 * 24 * 14)
+      } else {
+        return {
+          status: 0,
+          data: [],
+        }
+      }
+    }
+
+    return { status: 0, data: filterCensoredIllusts(artList) }
   },
 
   /**
