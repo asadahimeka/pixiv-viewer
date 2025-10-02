@@ -19,6 +19,11 @@
 - KISS Translator script
 - Chrome Native Translator
 - List ugoira auto play
+- Novel save as epub
+- Non-Chinese novel filter
+- Novel text indent setting
+- Illust search aspect ratio filter
+- Search list pagination
 
 ### 🐛 Bug Fixes
 
@@ -73,6 +78,7 @@
 - Release v1.28.0
 - Release v1.28.1
 - Release v1.28.2
+- Release v1.28.3
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
