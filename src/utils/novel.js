@@ -6,6 +6,9 @@ import { loadScript } from '.'
 export async function convertHtmlToEpub(html, style, artwork) {
   try {
     style = style.replace(/"/g, '&quot;')
+    if (!style) {
+      html = html.split('<br>').filter(Boolean).join('<br>')
+    }
 
     const loading = Toast.loading({
       duration: 0,

@@ -192,5 +192,6 @@ export const novelTextConfig = Vue.observable({
   direction: 'h',
   color: '#1f1f1f',
   bg: '#ffffff',
+  indent: false,
   ...getSettingDef('PXV_TEXT_CONFIG', {}),
 })

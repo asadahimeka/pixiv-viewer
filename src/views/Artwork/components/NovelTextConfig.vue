@@ -1,13 +1,23 @@
 <template>
   <van-action-sheet v-model="showSettings" class="setting-actions" :title="$t('novel.settings.title')" :overlay="false">
     <div class="configs">
-      <div class="conf-title">{{ $t('novel.settings.text.size') }}</div>
-      <div class="conf-inp">
-        <van-slider v-model="novelTextConfig.size" :min="12" :max="36" class="conf-slider" @change="onSizeChange">
-          <template #button>
-            <div class="van-slider__button">{{ novelTextConfig.size }}</div>
-          </template>
-        </van-slider>
+      <div class="conf-fcont">
+        <div class="conf-fitem">
+          <div class="conf-title">{{ $t('novel.settings.text.size') }}</div>
+          <div class="conf-inp">
+            <van-slider v-model="novelTextConfig.size" :min="12" :max="36" class="conf-slider" @change="onSizeChange">
+              <template #button>
+                <div class="van-slider__button">{{ novelTextConfig.size }}</div>
+              </template>
+            </van-slider>
+          </div>
+        </div>
+        <div class="conf-fitem" style="flex: 0.3;text-align: center;">
+          <div class="conf-title">{{ $t('BL3mClhoBiB1ETwTnJpqV') }}</div>
+          <div class="conf-inp" style="padding-right: 0.26667rem;">
+            <van-switch v-model="novelTextConfig.indent" size="18" />
+          </div>
+        </div>
       </div>
       <div class="conf-fcont">
         <div class="conf-fitem">
