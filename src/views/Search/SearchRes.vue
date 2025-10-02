@@ -110,6 +110,7 @@
             <van-dropdown-item v-model="searchDurationParam" :options="searchDurations" @change="handleDurationChange" />
             <van-dropdown-item v-model="searchParams.search_ai_type" :disabled="!isAIOn" :options="searchAIOptions" />
             <van-dropdown-item v-model="searchParams.searchR18Type" :disabled="!isR18On" :options="searchR18Options" />
+            <van-dropdown-item v-model="searchParams.ratioFilter" :options="ratioOptions" />
           </template>
         </van-dropdown-menu>
       </div>
@@ -180,6 +181,7 @@ export default {
         end_date: '',
         search_ai_type: '',
         searchR18Type: '',
+        ratioFilter: '',
       },
       searchModes: [
         { text: this.$t('search.mode.partial'), value: 'partial_match_for_tags' },
@@ -208,6 +210,12 @@ export default {
       searchAIOptions: [
         { text: this.$t('D3kINSMv_LLXKunaXRBkY'), value: '' },
         { text: this.$t('VTewlLtKnSV8muyw35y8P'), value: '1' },
+      ],
+      ratioOptions: [
+        { text: this.$t('60rHZkbSVyvMXR5mxfOUS'), value: '' },
+        { text: this.$t('4qZPW5NFW8YYDwkKtrKjz'), value: 'w>h' },
+        { text: this.$t('lveNeJo4VKOxFL7t6wvN_'), value: 'w=h' },
+        { text: this.$t('Fe6ZIApJoqbXO5UU5S001'), value: 'w<h' },
       ],
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
@@ -424,6 +432,7 @@ export default {
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       const params = _.pickBy(this.searchParams, Boolean)
       delete params.searchR18Type
+      delete params.ratioFilter
       if (!this.isAIOn || val.includes(' -AI')) {
         params.search_ai_type = 1 // 不显示AI作品
       }
@@ -449,6 +458,16 @@ export default {
 
           if (this.searchParams.search_ai_type == '1' || this.keywords__.includes(' -AI')) {
             artList = artList.filter(e => !isAiIllust(e))
+          }
+
+          const { ratioFilter } = this.searchParams
+          if (ratioFilter) {
+            artList = artList.filter(e => {
+              if (ratioFilter == 'w>h') return e.width > e.height
+              if (ratioFilter == 'w=h') return e.width == e.height
+              if (ratioFilter == 'w<h') return e.width < e.height
+              return true
+            })
           }
 
           artList = artList.filter(e => {
@@ -812,30 +831,35 @@ export default {
   @media screen and (min-width: 1281px)
     ::v-deep .van-dropdown-menu:not(.showPopPreview)
       >div:nth-child(2) .van-dropdown-item__content
-        width: 14.29vw
+        width: 14.5vw
         border-bottom-right-radius: 8PX
       >div:nth-child(3) .van-dropdown-item__content
-        width: 14.29vw
-        left: 14.29vw
+        width: 12.5vw
+        left: 12.5vw
         border-bottom-left-radius: 8PX
         border-bottom-right-radius: 8PX
       >div:nth-child(4) .van-dropdown-item__content
-        width: 14.29vw
-        left: 14.29vw*2
+        width: 12.5vw
+        left: 12.5vw*2
         border-bottom-left-radius: 8PX
         border-bottom-right-radius: 8PX
       >div:nth-child(6) .van-dropdown-item__content
-        width: 14.29vw
-        left: 14.29vw*4
+        width: 12.5vw
+        left: 12.5vw*4
         border-bottom-left-radius: 8PX
         border-bottom-right-radius: 8PX
       >div:nth-child(7) .van-dropdown-item__content
-        width: 14.29vw
-        left: 14.29vw*5
+        width: 12.5vw
+        left: 12.5vw*5
         border-bottom-left-radius: 8PX
         border-bottom-right-radius: 8PX
       >div:nth-child(8) .van-dropdown-item__content
-        width: 14.29vw
+        width: 12.5vw
+        left: 12.5vw*6
+        border-bottom-left-radius: 8PX
+        border-bottom-right-radius: 8PX
+      >div:nth-child(9) .van-dropdown-item__content
+        width: 12.5vw
         left: unset
         right 0
         border-bottom-left-radius: 8PX

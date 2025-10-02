@@ -77,7 +77,7 @@ export default {
       let res = this.textObj.text
       if (!res) return ''
       res = this.textConfig.indent
-        ? res.split(/\n/).map(e => `<p style="${e ? '' : 'padding: 1em 0'}">${e}</p>`).join('')
+        ? res.split(/\n/).map(e => `<p${e ? '' : ' style="padding: 1em 0"'}>${e}</p>`).join('')
         : res.replace(/\n/g, '<br>')
       res = res
         .replace(/\[newpage\]/g, '<hr style="margin: 1rem 0;font-weight: bold;font-size: 1.2em;">')
