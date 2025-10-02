@@ -163,3 +163,48 @@ export function detectLanguage(text) {
     counts,
   }
 }
+
+export function printNovelNewWindow(html, fileName) {
+  const myWindow = window.open('', 'PRINT', 'height=800,width=1280')
+  myWindow.document.write(`<html><head><title>${fileName}</title></head><body>${html}</body></html>`)
+  myWindow.document.close()
+  myWindow.focus()
+  myWindow.onload = () => {
+    myWindow.print()
+  }
+  myWindow.onafterprint = () => {
+    myWindow.close()
+  }
+}
+
+export async function convertHtmlToPdf(element, fileName) {
+  try {
+    const loading = Toast.loading({
+      duration: 0,
+      forbidClick: true,
+      message: i18n.t('tips.loading'),
+    })
+
+    if (!window.html2pdf) {
+      await loadScript(`${BASE_URL}static/js/html2pdf.bundle.min.js`)
+    }
+
+    const blob = await window.html2pdf()
+      .from(element)
+      .set({
+        margin: 10,
+        filename: `${fileName}.pdf`,
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
+      })
+      .outputPdf('blob')
+
+    loading.clear()
+    return blob
+  } catch (err) {
+    Toast.clear(true)
+    Toast(`导出 PDF 出错：${err}`)
+    return null
+  }
+}

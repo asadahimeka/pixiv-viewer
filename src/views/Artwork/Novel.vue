@@ -100,7 +100,7 @@ import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
-import { convertHtmlToEpub } from '@/utils/novel'
+import { convertHtmlToEpub, convertHtmlToPdf, printNovelNewWindow } from '@/utils/novel'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
@@ -156,8 +156,10 @@ export default {
       pntActions: [],
       showDlPopover: false,
       novelDlOptions: [
+        { text: i18n.t('Uf25j8CV8zHmOiUk7dn-M'), val: 'print' },
         { text: 'TXT', val: 'txt' },
         { text: 'HTML', val: 'html' },
+        { text: 'PDF', val: 'pdf' },
         { text: 'EPUB', val: 'epub' },
       ],
     }
@@ -321,12 +323,17 @@ export default {
     },
     async downloadNovel(format) {
       const ext = format?.val || store.state.appSetting.novelDlFormat
+      const fileName = `${getArtworkFileName(this.artwork)}`
       window.umami?.track('download_novel', { format })
       const actions = {
         txt: async () => new Blob([novelTextBak], { type: 'text/plain;charset=utf-8' }),
         html: async () => {
           const el = document.querySelector('.novel-view').cloneNode(true)
           el.querySelector('svg').remove()
+          const coverBox = el.querySelector('.image-box')
+          coverBox.setAttribute('style', 'padding: 1em 0;text-align:center')
+          coverBox.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p>`)
+          coverBox.insertAdjacentHTML('beforeend', '<hr style="margin: 1em 0;color:gray"><br>')
           return new Blob(['<meta charset="utf-8">' + el.outerHTML], { type: 'text/html;charset=utf-8' })
         },
         epub: async () => {
@@ -335,9 +342,27 @@ export default {
           const res = await convertHtmlToEpub(el.innerHTML, style, this.artwork)
           return res
         },
+        print: async () => {
+          const el = document.querySelector('.novel-view').cloneNode(true)
+          el.querySelector('svg').remove()
+          const coverBox = el.querySelector('.image-box')
+          coverBox.setAttribute('style', 'padding: 1em 0;text-align:center')
+          coverBox.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p>`)
+          coverBox.insertAdjacentHTML('beforeend', '<hr style="margin: 1em 0;color:gray"><br>')
+          printNovelNewWindow(el.outerHTML, fileName)
+        },
+        pdf: async () => {
+          const el = document.querySelector('.novel_text').cloneNode(true)
+          el.querySelectorAll('img').forEach(img => {
+            img.setAttribute('crossorigin', 'anonymous')
+          })
+          el.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p><hr style="margin: 1em 0;color:gray"><br>`)
+          const res = await convertHtmlToPdf(el, fileName)
+          return res
+        },
       }
       const blob = await actions[ext]()
-      if (blob) await downloadFile(blob, `${getArtworkFileName(this.artwork)}.${ext}`, { subDir: 'novel' })
+      if (blob) await downloadFile(blob, `${fileName}.${ext}`, { subDir: 'novel' })
     },
     doDefPnt() {
       const key = store.state.appSetting.novelDefTranslate
