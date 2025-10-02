@@ -100,7 +100,7 @@ import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
-import { convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovelNewWindow } from '@/utils/novel'
+import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovelNewWindow } from '@/utils/novel'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
@@ -156,12 +156,12 @@ export default {
       pntActions: [],
       showDlPopover: false,
       novelDlOptions: [
-        { text: i18n.t('Uf25j8CV8zHmOiUk7dn-M'), val: 'print' },
         { text: 'TXT', val: 'txt' },
-        { text: 'MD', val: 'md' },
         { text: 'HTML', val: 'html' },
+        { text: 'MD', val: 'md' },
         { text: 'DOC', val: 'doc' },
         { text: 'PDF', val: 'pdf' },
+        { text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' },
         { text: 'EPUB', val: 'epub' },
       ],
     }
@@ -357,21 +357,8 @@ export default {
           const res = await convertHtmlToPdf(el, fileName)
           return res
         },
-        doc: async () => {
-          const preHtml = `
-<html xmlns:o='urn:schemas-microsoft-com:office:office'
-      xmlns:w='urn:schemas-microsoft-com:office:word'
-      xmlns='http://www.w3.org/TR/REC-html40'>
-<head><meta charset='utf-8'></head><body>`
-          const postHtml = '</body></html>'
-          const html = preHtml + getOuterHTML() + postHtml
-          const res = new Blob(['\ufeff', html], { type: 'application/msword' })
-          return res
-        },
-        md: async () => {
-          const res = convertNovelToMarkdown(this.novelText, this.artwork)
-          return new Blob([res], { type: 'text/markdown;charset=utf-8' })
-        },
+        doc: async () => convertHtmlToDoc(getOuterHTML()),
+        md: async () => convertNovelToMarkdown(this.novelText, this.artwork),
       }
       const blob = await actions[ext]()
       if (blob) await downloadFile(blob, `${fileName}.${ext}`, { subDir: 'novel' })

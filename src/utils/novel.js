@@ -197,7 +197,6 @@ export async function convertHtmlToPdf(element, fileName) {
         filename: `${fileName}.pdf`,
         html2canvas: { scale: 2, useCORS: true },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-        pagebreak: { mode: ['avoid-all', 'css', 'legacy'] },
       })
       .outputPdf('blob')
 
@@ -210,6 +209,18 @@ export async function convertHtmlToPdf(element, fileName) {
   }
 }
 
+export function convertHtmlToDoc(outerHTML) {
+  const preHtml = `
+<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset='utf-8'></head><body>`
+  const postHtml = '</body></html>'
+  const html = preHtml + outerHTML + postHtml
+  const res = new Blob(['\ufeff', html], { type: 'application/msword' })
+  return res
+}
+
 export function convertNovelToMarkdown(textObj, artwork) {
   let { text } = textObj
   const getEmbedImg = id => {
@@ -217,7 +228,7 @@ export function convertNovelToMarkdown(textObj, artwork) {
     return imgProxy(urls?.['1200x1200'] || urls?.original || '')
   }
   text = text
-    .replace(/\[newpage\]/g, '---')
+    .replace(/\[newpage\]/g, '\n---\n')
     .replace(/\[\[rb:([^>[\]]+) *> *([^>[\]]+)\]\]/g, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>')
     .replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '[$1]($2)')
     .replace(/\[pixivimage:([\d-]+)\]/g, '![$1](https://pixiv.re/$1.png)')
@@ -236,5 +247,5 @@ ${artwork.author.name}
 
 ${text}`
 
-  return text
+  return new Blob([text], { type: 'text/markdown;charset=utf-8' })
 }

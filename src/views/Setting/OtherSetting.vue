@@ -584,10 +584,10 @@ export default {
           { name: 'TXT', _value: 'txt' },
           { name: 'HTML', _value: 'html' },
           { name: 'EPUB', _value: 'epub' },
+          { name: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, _value: 'print' },
           { name: 'PDF', _value: 'pdf' },
           { name: 'DOC', _value: 'doc' },
           { name: 'MD', _value: 'md' },
-          { name: i18n.t('Uf25j8CV8zHmOiUk7dn-M'), _value: 'print' },
         ],
       },
       novelTranslate: {
