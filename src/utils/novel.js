@@ -1,6 +1,7 @@
 import { Toast } from 'vant'
 import { i18n } from '@/i18n'
 import { BASE_URL } from '@/consts'
+import { imgProxy } from '@/api'
 import { loadScript } from '.'
 
 export async function convertHtmlToEpub(html, style, artwork) {
@@ -207,4 +208,33 @@ export async function convertHtmlToPdf(element, fileName) {
     Toast(`导出 PDF 出错：${err}`)
     return null
   }
+}
+
+export function convertNovelToMarkdown(textObj, artwork) {
+  let { text } = textObj
+  const getEmbedImg = id => {
+    const urls = textObj.embedImgs?.[id]?.urls
+    return imgProxy(urls?.['1200x1200'] || urls?.original || '')
+  }
+  text = text
+    .replace(/\[newpage\]/g, '---')
+    .replace(/\[\[rb:([^>[\]]+) *> *([^>[\]]+)\]\]/g, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>')
+    .replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '[$1]($2)')
+    .replace(/\[pixivimage:([\d-]+)\]/g, '![$1](https://pixiv.re/$1.png)')
+    .replace(/\[chapter: *([^[\]]+)\]/g, '## $1')
+    .replace(/\[uploadedimage:(\d+)\]/g, (_, $1) => `![${$1}](${getEmbedImg($1)})`)
+    .replace(/若想浏览插图，还请使用网页版。/g, '\n')
+
+  text = `
+# ${artwork.title}
+
+${artwork.author.name}
+
+![cover](${artwork.images?.[0]?.l})
+
+---
+
+${text}`
+
+  return text
 }

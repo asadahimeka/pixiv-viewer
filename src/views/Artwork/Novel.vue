@@ -100,7 +100,7 @@ import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
-import { convertHtmlToEpub, convertHtmlToPdf, printNovelNewWindow } from '@/utils/novel'
+import { convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovelNewWindow } from '@/utils/novel'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
@@ -158,7 +158,9 @@ export default {
       novelDlOptions: [
         { text: i18n.t('Uf25j8CV8zHmOiUk7dn-M'), val: 'print' },
         { text: 'TXT', val: 'txt' },
+        { text: 'MD', val: 'md' },
         { text: 'HTML', val: 'html' },
+        { text: 'DOC', val: 'doc' },
         { text: 'PDF', val: 'pdf' },
         { text: 'EPUB', val: 'epub' },
       ],
@@ -323,19 +325,20 @@ export default {
     },
     async downloadNovel(format) {
       const ext = format?.val || store.state.appSetting.novelDlFormat
+      window.umami?.track('download_novel', { ext })
       const fileName = `${getArtworkFileName(this.artwork)}`
-      window.umami?.track('download_novel', { format })
+      const getOuterHTML = () => {
+        const el = document.querySelector('.novel-view').cloneNode(true)
+        el.querySelector('svg').remove()
+        const coverBox = el.querySelector('.image-box')
+        coverBox.setAttribute('style', 'padding: 1em 0;text-align:center')
+        coverBox.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p>`)
+        coverBox.insertAdjacentHTML('beforeend', '<hr style="margin: 1em 0;color:gray"><br>')
+        return el.outerHTML
+      }
       const actions = {
         txt: async () => new Blob([novelTextBak], { type: 'text/plain;charset=utf-8' }),
-        html: async () => {
-          const el = document.querySelector('.novel-view').cloneNode(true)
-          el.querySelector('svg').remove()
-          const coverBox = el.querySelector('.image-box')
-          coverBox.setAttribute('style', 'padding: 1em 0;text-align:center')
-          coverBox.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p>`)
-          coverBox.insertAdjacentHTML('beforeend', '<hr style="margin: 1em 0;color:gray"><br>')
-          return new Blob(['<meta charset="utf-8">' + el.outerHTML], { type: 'text/html;charset=utf-8' })
-        },
+        html: async () => new Blob(['<meta charset="utf-8">' + getOuterHTML()], { type: 'text/html;charset=utf-8' }),
         epub: async () => {
           const el = document.querySelector('.novel_text').cloneNode(true)
           const style = store.state.appSetting.novelDlRmStyle ? '' : el.getAttribute('style')
@@ -343,13 +346,7 @@ export default {
           return res
         },
         print: async () => {
-          const el = document.querySelector('.novel-view').cloneNode(true)
-          el.querySelector('svg').remove()
-          const coverBox = el.querySelector('.image-box')
-          coverBox.setAttribute('style', 'padding: 1em 0;text-align:center')
-          coverBox.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p>`)
-          coverBox.insertAdjacentHTML('beforeend', '<hr style="margin: 1em 0;color:gray"><br>')
-          printNovelNewWindow(el.outerHTML, fileName)
+          printNovelNewWindow(getOuterHTML(), fileName)
         },
         pdf: async () => {
           const el = document.querySelector('.novel_text').cloneNode(true)
@@ -359,6 +356,21 @@ export default {
           el.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p><hr style="margin: 1em 0;color:gray"><br>`)
           const res = await convertHtmlToPdf(el, fileName)
           return res
+        },
+        doc: async () => {
+          const preHtml = `
+<html xmlns:o='urn:schemas-microsoft-com:office:office'
+      xmlns:w='urn:schemas-microsoft-com:office:word'
+      xmlns='http://www.w3.org/TR/REC-html40'>
+<head><meta charset='utf-8'></head><body>`
+          const postHtml = '</body></html>'
+          const html = preHtml + getOuterHTML() + postHtml
+          const res = new Blob(['\ufeff', html], { type: 'application/msword' })
+          return res
+        },
+        md: async () => {
+          const res = convertNovelToMarkdown(this.novelText, this.artwork)
+          return new Blob([res], { type: 'text/markdown;charset=utf-8' })
         },
       }
       const blob = await actions[ext]()
