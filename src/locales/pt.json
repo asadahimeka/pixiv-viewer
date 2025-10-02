@@ -125,7 +125,7 @@
     },
     "succ_tip": "Sucesso no login",
     "t": {
-      "d1": "Certifique-se de ter a extensão do navegador Tampermonkey instalada e o script de usuário HTTP Helper instalado, caso contrário, ative o proxy AppApi",
+      "d1": "Certifique-se de ter a extensão do navegador Tampermonkey instalada e o script de usuário HTTP Helper instalado, caso contrário, ative o proxy AppAPI",
       "d2": "Por favor preencha o RefreshToken, consulte o link abaixo para saber como obtê-lo",
       "d3": "Por favor preencha RefreshToken",
       "d4": "RefreshToken está malformado"
@@ -290,16 +290,16 @@
     "other": {
       "api_proxy": {
         "def_ph": "Se o proxy padrão não puder ser usado, você pode tentar outro proxy",
-        "sel_desc": "Selecione o proxy AppApi",
-        "title": "Selecione o proxy AppApi"
+        "sel_desc": "Selecione o proxy AppAPI",
+        "title": "Selecione o proxy AppAPI"
       },
       "cp_token_label": "Copie o RefreshToken atual para a área de transferência",
       "cp_token_title": "Exportar RefreshToken",
       "direct_mode": {
         "confirm": {
-          "msg": "O modo de conexão direta suporta apenas o navegador Firefox, e você precisa garantir que o Tampermonkey e o script de usuário Helper estejam instalados, e a velocidade seja lenta e a estabilidade não seja garantida.\n\nNão pode ser habilitado ao mesmo tempo que o proxy AppApi.\n\nSe você encontrar um erro de rede após ativar a conexão direta, abra manualmente o link abaixo, clique em \"Avançado\" - \"Aceite o risco e continue\" e retorne a este site para atualizar a página após 421 aparecer.",
-          "proxy_msg": "O encaminhamento de solicitações locais de AppApi por meio de serviços em nuvem de terceiros não pode garantir estabilidade e segurança.\n\nNão pode ser ativado ao mesmo tempo que o modo de conexão direta.",
-          "proxy_title": "Tem certeza de ativar o proxy AppApi?",
+          "msg": "O modo de conexão direta suporta apenas o navegador Firefox, e você precisa garantir que o Tampermonkey e o script de usuário Helper estejam instalados, e a velocidade seja lenta e a estabilidade não seja garantida.\n\nNão pode ser habilitado ao mesmo tempo que o proxy AppAPI.\n\nSe você encontrar um erro de rede após ativar a conexão direta, abra manualmente o link abaixo, clique em \"Avançado\" - \"Aceite o risco e continue\" e retorne a este site para atualizar a página após 421 aparecer.",
+          "proxy_msg": "O encaminhamento de solicitações locais de AppAPI por meio de serviços em nuvem de terceiros não pode garantir estabilidade e segurança.\n\nNão pode ser ativado ao mesmo tempo que o modo de conexão direta.",
+          "proxy_title": "Tem certeza de ativar o proxy AppAPI?",
           "title": "Tem certeza de ativar o modo direto?"
         },
         "host": {
@@ -309,10 +309,10 @@
         "host_msg": "Tem certeza de que deseja limpar os registros de cache dos hosts no modo de conexão direta?",
         "label": "Se deve ignorar o SNI por meio de fronting de domínio",
         "proxy": {
-          "label": "Se deve fazer proxy de solicitações AppApi locais por meio de serviços em nuvem",
-          "title": "Habilitar proxy AppApi"
+          "label": "Se deve fazer proxy de solicitações AppAPI locais por meio de serviços em nuvem",
+          "title": "Habilitar proxy App API"
         },
-        "title": "Ativar modo direto"
+        "title": "Ativar Modo de conexão direta da API APP"
       },
       "lang": "Linguagem",
       "lang_ph": "Selecione o idioma",

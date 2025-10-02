@@ -232,16 +232,16 @@
       "manual_input_label": "打開此開關可在下方手動輸入連結",
       "api_proxy": {
         "def_ph": "預設代理無法使用的話可以嘗試其他代理",
-        "sel_desc": "請選擇 AppApi 代理",
-        "title": "選擇 AppApi 代理"
+        "sel_desc": "請選擇 AppAPI 代理",
+        "title": "選擇 AppAPI 代理"
       },
       "cp_token_label": "複製當前 RefreshToken 到剪貼板",
       "cp_token_title": "導出 RefreshToken",
       "direct_mode": {
         "confirm": {
-          "msg": "直連模式僅支援 Firefox 瀏覽器，需確保油猴與 HTTP Helper 腳本已安裝，且速度較慢、不保證穩定性。\n不可與 AppApi 代理同時開啟。\n開啟直連後如果遇到網絡錯誤的話，請手動打開下面的連結後，點擊「高級」 - 「接受風險並繼續」，出現 421 後回到本站刷新頁面。",
-          "proxy_msg": "通過第三方雲服務轉發本地 AppApi 請求，無法保證穩定性與安全性。\n不可與直連模式同時開啟。",
-          "proxy_title": "確認啟用 AppApi 代理？",
+          "msg": "直連模式僅支援 Firefox 瀏覽器，需確保油猴與 HTTP Helper 腳本已安裝，且速度較慢、不保證穩定性。\n不可與 AppAPI 代理同時開啟。\n開啟直連後如果遇到網絡錯誤的話，請手動打開下面的連結後，點擊「高級」 - 「接受風險並繼續」，出現 421 後回到本站刷新頁面。",
+          "proxy_msg": "通過第三方雲服務轉發本地 AppAPI 請求，無法保證穩定性與安全性。\n不可與直連模式同時開啟。",
+          "proxy_title": "確認啟用 AppAPI 代理？",
           "title": "確認啟用直連模式？"
         },
         "host": {
@@ -251,10 +251,10 @@
         "host_msg": "確認清除直連模式 hosts 快取記錄?",
         "label": "是否通過域前置繞過 SNI 嗅探",
         "proxy": {
-          "label": "是否通過雲服務代理本地 AppApi 請求",
-          "title": "啟用 AppApi 代理"
+          "label": "是否通過雲服務代理本地 AppAPI 請求",
+          "title": "啟用 App API 代理"
         },
-        "title": "啟用直連模式"
+        "title": "啟用 App API 直連模式"
       },
       "swipe_toggle": "詳情頁左右滑動瀏覽作品"
     },
@@ -385,7 +385,7 @@
     },
     "succ_tip": "登入成功",
     "t": {
-      "d1": "請確保已安裝油猴瀏覽器擴充功能並安裝 HTTP Helper 使用者腳本，否則請開啟 AppApi 代理",
+      "d1": "請確保已安裝油猴瀏覽器擴充功能並安裝 HTTP Helper 使用者腳本，否則請開啟 AppAPI 代理",
       "d2": "請填寫 RefreshToken，獲取方式參考以下連結",
       "d3": "請填寫 RefreshToken",
       "d4": "RefreshToken 格式不正確"

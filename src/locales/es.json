@@ -125,7 +125,7 @@
     },
     "succ_tip": "Acceso exitoso",
     "t": {
-      "d1": "Asegúrese de tener instalada la extensión del navegador Tampermonkey y el script de usuario HTTP Helper; de lo contrario, active el proxy AppApi.",
+      "d1": "Asegúrese de tener instalada la extensión del navegador Tampermonkey y el script de usuario HTTP Helper; de lo contrario, active el proxy AppAPI.",
       "d2": "Complete el RefreshToken; consulte el enlace a continuación para saber cómo obtenerlo.",
       "d3": "Por favor complete RefreshToken",
       "d4": "RefreshToken tiene un formato incorrecto"
@@ -290,16 +290,16 @@
     "other": {
       "api_proxy": {
         "def_ph": "Si no se puede utilizar el proxy predeterminado, puede probar con otro proxy.",
-        "sel_desc": "Seleccione el proxy AppApi",
-        "title": "Seleccione el proxy AppApi"
+        "sel_desc": "Seleccione el proxy AppAPI",
+        "title": "Seleccione el proxy AppAPI"
       },
       "cp_token_label": "Copie el RefreshToken actual al portapapeles",
       "cp_token_title": "Exportar token de actualización",
       "direct_mode": {
         "confirm": {
-          "msg": "El modo de conexión directa solo es compatible con el navegador Firefox y debe asegurarse de que Tampermonkey y el script de usuario Helper estén instalados, que la velocidad sea lenta y no se garantice la estabilidad.\n\nNo se puede habilitar al mismo tiempo que el proxy AppApi.\n\nSi encuentra un error de red después de habilitar la conexión directa, abra manualmente el enlace a continuación, haga clic en \"Avanzado\" - \"Aceptar el riesgo y continuar\" y regrese a este sitio para actualizar la página después de que aparezca 421.",
-          "proxy_msg": "El reenvío de solicitudes de AppApi locales a través de servicios en la nube de terceros no puede garantizar la estabilidad y la seguridad.\n\nNo se puede activar al mismo tiempo que el modo de conexión directa.",
-          "proxy_title": "¿Está seguro de habilitar el proxy AppApi?",
+          "msg": "El modo de conexión directa solo es compatible con el navegador Firefox y debe asegurarse de que Tampermonkey y el script de usuario Helper estén instalados, que la velocidad sea lenta y no se garantice la estabilidad.\n\nNo se puede habilitar al mismo tiempo que el proxy AppAPI.\n\nSi encuentra un error de red después de habilitar la conexión directa, abra manualmente el enlace a continuación, haga clic en \"Avanzado\" - \"Aceptar el riesgo y continuar\" y regrese a este sitio para actualizar la página después de que aparezca 421.",
+          "proxy_msg": "El reenvío de solicitudes de AppAPI locales a través de servicios en la nube de terceros no puede garantizar la estabilidad y la seguridad.\n\nNo se puede activar al mismo tiempo que el modo de conexión directa.",
+          "proxy_title": "¿Está seguro de habilitar el proxy AppAPI?",
           "title": "¿Estás seguro de habilitar el modo directo?"
         },
         "host": {
@@ -309,10 +309,10 @@
         "host_msg": "¿Está seguro de borrar los registros de caché de los hosts en el modo de conexión directa?",
         "label": "Si se debe omitir SNI a través del dominio frontal",
         "proxy": {
-          "label": "Si enviar solicitudes locales de AppApi a través de servicios en la nube",
-          "title": "Habilitar el proxy AppApi"
+          "label": "Si enviar solicitudes locales de AppAPI a través de servicios en la nube",
+          "title": "Habilitar el proxy App API"
         },
-        "title": "Habilitar modo directo"
+        "title": "Habilitar el modo de conexión directa de la API API"
       },
       "lang": "Idioma",
       "lang_ph": "Por favor seleccione idioma",

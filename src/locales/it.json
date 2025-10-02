@@ -273,16 +273,16 @@
       "manual_input": "Non utilizzare l'API predefinita o il proxy di immagine",
       "api_proxy": {
         "def_ph": "Se non è possibile utilizzare il proxy predefinito, puoi provare un altro proxy",
-        "sel_desc": "Seleziona AppApi Proxy",
-        "title": "Selezionare AppApi Proxy"
+        "sel_desc": "Seleziona AppAPI Proxy",
+        "title": "Selezionare AppAPI Proxy"
       },
       "cp_token_label": "Copia il RefreshToken corrente negli appunti",
       "cp_token_title": "Esporta RefreshToken",
       "direct_mode": {
         "confirm": {
-          "msg": "La modalità di connessione diretta supporta solo il browser Firefox e devi assicurarti che Tampermonkey e Helper userscript siano installati e che la velocità sia lenta e la stabilità non sia garantita.\n\nNon può essere abilitato contemporaneamente al proxy AppApi.\n\nSe riscontri un errore di rete dopo aver abilitato la connessione diretta, apri manualmente il collegamento sottostante, fai clic su \"Avanzate\" - \"Accetta il rischio e continua\" e torna su questo sito per aggiornare la pagina dopo la visualizzazione del messaggio 421.",
-          "proxy_msg": "L'inoltro di richieste AppApi locali tramite servizi cloud di terze parti non può garantire stabilità e sicurezza.\n\nNon può essere attivato contemporaneamente alla modalità di connessione diretta.",
-          "proxy_title": "Sei sicuro di abilitare il proxy AppApi?",
+          "msg": "La modalità di connessione diretta supporta solo il browser Firefox e devi assicurarti che Tampermonkey e Helper userscript siano installati e che la velocità sia lenta e la stabilità non sia garantita.\n\nNon può essere abilitato contemporaneamente al proxy AppAPI.\n\nSe riscontri un errore di rete dopo aver abilitato la connessione diretta, apri manualmente il collegamento sottostante, fai clic su \"Avanzate\" - \"Accetta il rischio e continua\" e torna su questo sito per aggiornare la pagina dopo la visualizzazione del messaggio 421.",
+          "proxy_msg": "L'inoltro di richieste AppAPI locali tramite servizi cloud di terze parti non può garantire stabilità e sicurezza.\n\nNon può essere attivato contemporaneamente alla modalità di connessione diretta.",
+          "proxy_title": "Sei sicuro di abilitare il proxy AppAPI?",
           "title": "Sei sicuro di abilitare la modalità diretta?"
         },
         "host": {
@@ -292,10 +292,10 @@
         "host_msg": "Sei sicuro di cancellare i record della cache degli host in modalità di connessione diretta?",
         "label": "Se bypassare SNI tramite il fronting del dominio",
         "proxy": {
-          "label": "Indica se inoltrare le richieste AppApi locali tramite i servizi cloud",
-          "title": "Abilita proxy AppApi"
+          "label": "Indica se inoltrare le richieste AppAPI locali tramite i servizi cloud",
+          "title": "Abilita proxy App API"
         },
-        "title": "Attiva la modalità diretta"
+        "title": "Abilita la modalità di connessione diretta API dell'app"
       },
       "swipe_toggle": "Scorri verso sinistra e verso destra nella pagina dei dettagli per sfogliare le opere"
     },
@@ -385,7 +385,7 @@
     },
     "succ_tip": "Accesso riuscito",
     "t": {
-      "d1": "Assicurati di avere installato l'estensione del browser Tampermonkey e lo script utente HTTP Helper installato, altrimenti attiva il proxy AppApi",
+      "d1": "Assicurati di avere installato l'estensione del browser Tampermonkey e lo script utente HTTP Helper installato, altrimenti attiva il proxy AppAPI",
       "d2": "Si prega di compilare il RefreshToken, fare riferimento al link sottostante per come ottenerlo",
       "d3": "Si prega di compilare RefreshToken",
       "d4": "RefreshToken non è valido"

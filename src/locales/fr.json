@@ -232,17 +232,17 @@
       "manual_input": "Ne pas utiliser l'API par défaut ou le proxy d'image",
       "api_proxy": {
         "def_ph": "Si le proxy par défaut ne peut pas être utilisé, vous pouvez essayer un autre proxy",
-        "sel_desc": "Veuillez sélectionner le proxy AppApi",
-        "title": "Sélectionnez le proxy AppApi"
+        "sel_desc": "Veuillez sélectionner le proxy AppAPI",
+        "title": "Sélectionnez le proxy AppAPI"
       },
       "swipe_toggle": "Balayez vers la gauche et vers la droite sur la page de détails pour parcourir les œuvres",
       "cp_token_label": "Copiez le RefreshToken actuel dans le presse-papiers",
       "cp_token_title": "Exporter le jeton d'actualisation",
       "direct_mode": {
         "confirm": {
-          "msg": "Le mode de connexion directe ne prend en charge que le navigateur Firefox, et vous devez vous assurer que les scripts utilisateur Tampermonkey et Helper sont installés, que la vitesse est lente et que la stabilité n'est pas garantie.\n\nIl ne peut pas être activé en même temps que le proxy AppApi.\n\nSi vous rencontrez une erreur de réseau après avoir activé la connexion directe, veuillez ouvrir manuellement le lien ci-dessous, cliquez sur \"Avancé\" - \"Accepter le risque et continuer\", et revenez sur ce site pour actualiser la page après l'apparition de 421.",
-          "proxy_msg": "Le transfert de requêtes AppApi locales via des services cloud tiers ne peut pas garantir la stabilité et la sécurité.\n\nIl ne peut pas être activé en même temps que le mode de connexion directe.",
-          "proxy_title": "Êtes-vous sûr d'avoir activé le proxy AppApi ?",
+          "msg": "Le mode de connexion directe ne prend en charge que le navigateur Firefox, et vous devez vous assurer que les scripts utilisateur Tampermonkey et Helper sont installés, que la vitesse est lente et que la stabilité n'est pas garantie.\n\nIl ne peut pas être activé en même temps que le proxy AppAPI.\n\nSi vous rencontrez une erreur de réseau après avoir activé la connexion directe, veuillez ouvrir manuellement le lien ci-dessous, cliquez sur \"Avancé\" - \"Accepter le risque et continuer\", et revenez sur ce site pour actualiser la page après l'apparition de 421.",
+          "proxy_msg": "Le transfert de requêtes AppAPI locales via des services cloud tiers ne peut pas garantir la stabilité et la sécurité.\n\nIl ne peut pas être activé en même temps que le mode de connexion directe.",
+          "proxy_title": "Êtes-vous sûr d'avoir activé le proxy AppAPI ?",
           "title": "Êtes-vous sûr d'avoir activé le mode direct ?"
         },
         "host": {
@@ -252,10 +252,10 @@
         "host_msg": "Êtes-vous sûr d'effacer les enregistrements du cache des hôtes en mode de connexion directe ?",
         "label": "S'il faut contourner SNI via la façade de domaine",
         "proxy": {
-          "label": "S'il faut proxy les requêtes AppApi locales via les services cloud",
-          "title": "Activer le proxy AppApi"
+          "label": "S'il faut proxy les requêtes AppAPI locales via les services cloud",
+          "title": "Activer le proxy App API"
         },
-        "title": "Activer le mode direct"
+        "title": "Activer le mode de connexion directe de l'API API"
       }
     },
     "recomm": {
@@ -385,7 +385,7 @@
     },
     "succ_tip": "Connexion réussie",
     "t": {
-      "d1": "Veuillez vous assurer que l'extension de navigateur Tampermonkey et le script utilisateur HTTP Helper sont installés, sinon activez le proxy AppApi.",
+      "d1": "Veuillez vous assurer que l'extension de navigateur Tampermonkey et le script utilisateur HTTP Helper sont installés, sinon activez le proxy AppAPI.",
       "d2": "Veuillez remplir le RefreshToken, reportez-vous au lien ci-dessous pour savoir comment l'obtenir",
       "d3": "Veuillez remplir RefreshToken",
       "d4": "RefreshToken est malformé"

@@ -232,16 +232,16 @@
       "manual_input": "기본 API 또는 이미지 프록시를 사용하지 않음",
       "api_proxy": {
         "def_ph": "기본 프록시를 사용할 수 없는 경우 다른 프록시를 사용해 볼 수 있습니다.",
-        "sel_desc": "AppApi 프록시를 선택하세요.",
-        "title": "AppApi 프록시 선택"
+        "sel_desc": "AppAPI 프록시를 선택하세요.",
+        "title": "AppAPI 프록시 선택"
       },
       "cp_token_label": "현재 RefreshToken을 클립보드에 복사",
       "cp_token_title": "RefreshToken 내보내기",
       "direct_mode": {
         "confirm": {
           "msg": "직접접속 모드는 파이어폭스 브라우저만 지원하며, Tampermonkey와 HTTP Helper userscript가 설치되어 있는지 확인이 필요하며, 속도가 느리고 안정성이 보장되지 않습니다.\n\nAppApi 프록시와 동시에 활성화할 수 없습니다.\n\n직접 연결을 활성화한 후 네트워크 오류가 발생하면 아래 링크를 수동으로 열고 \"고급\" - \"위험을 감수하고 계속\"을 클릭한 다음 421이 나타난 후 이 사이트로 돌아와 페이지를 새로 고치십시오.",
-          "proxy_msg": "타사 클라우드 서비스를 통해 로컬 AppApi 요청을 전달하는 것은 안정성과 보안을 보장할 수 없습니다.\n\n직접 연결 모드와 동시에 켤 수 없습니다.",
-          "proxy_title": "AppApi 프록시를 활성화하시겠습니까?",
+          "proxy_msg": "타사 클라우드 서비스를 통해 로컬 AppAPI 요청을 전달하는 것은 안정성과 보안을 보장할 수 없습니다.\n\n직접 연결 모드와 동시에 켤 수 없습니다.",
+          "proxy_title": "AppAPI 프록시를 활성화하시겠습니까?",
           "title": "직접 모드를 활성화하시겠습니까?"
         },
         "host": {
@@ -251,10 +251,10 @@
         "host_msg": "직접 연결 모드에서 호스트 캐시 레코드를 지우시겠습니까?",
         "label": "도메인 프론팅을 통해 SNI를 우회할지 여부",
         "proxy": {
-          "label": "클라우드 서비스를 통해 로컬 AppApi 요청을 프록시할지 여부",
-          "title": "AppApi 프록시 활성화"
+          "label": "클라우드 서비스를 통해 로컬 AppAPI 요청을 프록시할지 여부",
+          "title": "App API 프록시 활성화"
         },
-        "title": "다이렉트 모드 활성화"
+        "title": "APP API 직접 연결 모드를 활성화합니다"
       },
       "swipe_toggle": "세부정보 페이지에서 좌우로 스와이프하여 작품을 찾아보세요."
     },
@@ -385,7 +385,7 @@
     },
     "succ_tip": "로그인 성공",
     "t": {
-      "d1": "Tampermonkey 브라우저 확장이 설치되어 있고 HTTP Helper 사용자 스크립트가 설치되어 있는지 확인하세요. 그렇지 않으면 AppApi 프록시를 켜세요.",
+      "d1": "Tampermonkey 브라우저 확장이 설치되어 있고 HTTP Helper 사용자 스크립트가 설치되어 있는지 확인하세요. 그렇지 않으면 AppAPI 프록시를 켜세요.",
       "d2": "RefreshToken을 입력하세요. 획득 방법은 아래 링크를 참조하세요.",
       "d3": "RefreshToken을 입력하세요.",
       "d4": "RefreshToken의 형식이 잘못되었습니다."

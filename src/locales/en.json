@@ -1,4 +1,14 @@
 {
   "h_6GIulP5_rWoGwBbyuMf": "Loading illustration search results using paginator",
-  "XmZ5gQefKGSI43SZ5Kb--": "Loading with a paginator instead of infinite loading"
+  "XmZ5gQefKGSI43SZ5Kb--": "Loading with a paginator instead of infinite loading",
+  "setting": {
+    "other": {
+      "direct_mode": {
+        "proxy": {
+          "title": "Enable App API proxy"
+        },
+        "title": "Enable App API direct connection mode"
+      }
+    }
+  }
 }

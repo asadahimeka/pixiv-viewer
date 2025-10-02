@@ -220,11 +220,11 @@
       "cp_token_label": "复制当前 RefreshToken 到剪贴板",
       "cp_token_title": "导出 RefreshToken",
       "direct_mode": {
-        "title": "启用直连模式",
+        "title": "启用 App API 直连模式",
         "label": "是否通过域前置绕过 SNI 嗅探",
         "proxy": {
-          "title": "启用 AppApi 代理",
-          "label": "是否通过云服务代理本地 AppApi 请求"
+          "title": "启用 App API 代理",
+          "label": "是否通过云服务代理本地 AppAPI 请求"
         },
         "host": {
           "title": "清除直连 hosts 缓存",
@@ -232,17 +232,17 @@
         },
         "confirm": {
           "title": "确认启用直连模式？",
-          "msg": "直连模式仅支持 Firefox 浏览器，需确保 Tampermonkey 与 HTTP Helper 脚本已安装，且速度较慢、不保证稳定性。不可与 AppApi 代理同时开启。开启直连后如果遇到网络错误的话，请手动打开下面的链接后，点击“高级” - “接受风险并继续”，出现 421 后回到本站刷新页面。",
-          "proxy_title": "确认启用 AppApi 代理？",
-          "proxy_msg": "通过第三方云服务转发本地 AppApi 请求，无法保证稳定性与安全性。不可与直连模式同时开启。"
+          "msg": "直连模式仅支持 Firefox 浏览器，需确保 Tampermonkey 与 HTTP Helper 脚本已安装，且速度较慢、不保证稳定性。不可与 AppAPI 代理同时开启。开启直连后如果遇到网络错误的话，请手动打开下面的链接后，点击“高级” - “接受风险并继续”，出现 421 后回到本站刷新页面。",
+          "proxy_title": "确认启用 AppAPI 代理？",
+          "proxy_msg": "通过第三方云服务转发本地 AppAPI 请求，无法保证稳定性与安全性。不可与直连模式同时开启。"
         },
         "host_msg": "确认清除直连模式 hosts 缓存记录?"
       },
       "swipe_toggle": "详情页左右滑动浏览作品",
       "api_proxy": {
         "def_ph": "默认代理无法使用的话可以尝试其他代理",
-        "title": "选择 AppApi 代理",
-        "sel_desc": "请选择 AppApi 代理"
+        "title": "选择 AppAPI 代理",
+        "sel_desc": "请选择 AppAPI 代理"
       }
     },
     "recomm": {
@@ -382,7 +382,7 @@
       "desc7": "点击安装 HTTP Helper 用户脚本"
     },
     "t": {
-      "d1": "请确保已安装 Tampermonkey 浏览器扩展并安装 HTTP Helper 用户脚本，否则请打开 AppApi 代理",
+      "d1": "请确保已安装 Tampermonkey 浏览器扩展并安装 HTTP Helper 用户脚本，否则请打开 AppAPI 代理",
       "d2": "请填写 RefreshToken，获取方式参考如下链接",
       "d3": "请填写 RefreshToken",
       "d4": "RefreshToken 格式不正确"

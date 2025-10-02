@@ -232,16 +232,16 @@
       "manual_input": "Standard-API oder Bild-Proxy werden nicht verwendet",
       "api_proxy": {
         "def_ph": "Wenn der Standard-Proxy nicht verwendet werden kann, können Sie es mit einem anderen Proxy versuchen",
-        "sel_desc": "Bitte wählen Sie AppApi Proxy",
-        "title": "Wählen Sie AppApi-Proxy aus"
+        "sel_desc": "Bitte wählen Sie AppAPI Proxy",
+        "title": "Wählen Sie AppAPI-Proxy aus"
       },
       "cp_token_label": "Kopieren Sie das aktuelle RefreshToken in die Zwischenablage",
       "cp_token_title": "RefreshToken exportieren",
       "direct_mode": {
         "confirm": {
-          "msg": "Der Direktverbindungsmodus unterstützt nur den Firefox-Browser. Sie müssen sicherstellen, dass Tampermonkey und Helper Userscript installiert sind. Die Geschwindigkeit ist langsam und die Stabilität ist nicht garantiert.\n\nEs kann nicht gleichzeitig mit dem AppApi-Proxy aktiviert werden.\n\nWenn nach der Aktivierung der Direktverbindung ein Netzwerkfehler auftritt, öffnen Sie bitte manuell den Link unten, klicken Sie auf „Erweitert“ – „Risiko akzeptieren und fortfahren“ und kehren Sie zu dieser Website zurück, um die Seite zu aktualisieren, nachdem 421 angezeigt wird.",
-          "proxy_msg": "Die Weiterleitung lokaler AppApi-Anfragen über Cloud-Dienste von Drittanbietern kann keine Stabilität und Sicherheit garantieren.\n\nEs kann nicht gleichzeitig mit dem Direktverbindungsmodus aktiviert werden.",
-          "proxy_title": "Sind Sie sicher, dass Sie den AppApi-Proxy aktivieren?",
+          "msg": "Der Direktverbindungsmodus unterstützt nur den Firefox-Browser. Sie müssen sicherstellen, dass Tampermonkey und Helper Userscript installiert sind. Die Geschwindigkeit ist langsam und die Stabilität ist nicht garantiert.\n\nEs kann nicht gleichzeitig mit dem AppAPI-Proxy aktiviert werden.\n\nWenn nach der Aktivierung der Direktverbindung ein Netzwerkfehler auftritt, öffnen Sie bitte manuell den Link unten, klicken Sie auf „Erweitert“ – „Risiko akzeptieren und fortfahren“ und kehren Sie zu dieser Website zurück, um die Seite zu aktualisieren, nachdem 421 angezeigt wird.",
+          "proxy_msg": "Die Weiterleitung lokaler AppAPI-Anfragen über Cloud-Dienste von Drittanbietern kann keine Stabilität und Sicherheit garantieren.\n\nEs kann nicht gleichzeitig mit dem Direktverbindungsmodus aktiviert werden.",
+          "proxy_title": "Sind Sie sicher, dass Sie den AppAPI-Proxy aktivieren?",
           "title": "Sind Sie sicher, dass Sie den Direktmodus aktivieren?"
         },
         "host": {
@@ -251,10 +251,10 @@
         "host_msg": "Sind Sie sicher, dass die Host-Cache-Datensätze im Direktverbindungsmodus gelöscht werden?",
         "label": "Ob SNI über Domain-Fronting umgangen werden soll",
         "proxy": {
-          "label": "Ob lokale AppApi-Anfragen über Cloud-Dienste weitergeleitet werden sollen",
-          "title": "Aktivieren Sie den AppApi-Proxy"
+          "label": "Ob lokale AppAPI-Anfragen über Cloud-Dienste weitergeleitet werden sollen",
+          "title": "Aktivieren Sie den AppAPI-Proxy"
         },
-        "title": "Aktivieren Sie den Direktmodus"
+        "title": "Aktivieren Sie den Appapi Direct Connect -Modus"
       },
       "swipe_toggle": "Wischen Sie auf der Detailseite nach links und rechts, um Werke zu durchsuchen"
     },
@@ -385,7 +385,7 @@
     },
     "succ_tip": "Einloggen erfolgreich",
     "t": {
-      "d1": "Bitte stellen Sie sicher, dass Sie die Tampermonkey-Browsererweiterung und das HTTP Helper-Benutzerskript installiert haben. Andernfalls schalten Sie den AppApi-Proxy ein",
+      "d1": "Bitte stellen Sie sicher, dass Sie die Tampermonkey-Browsererweiterung und das HTTP Helper-Benutzerskript installiert haben. Andernfalls schalten Sie den AppAPI-Proxy ein",
       "d2": "Bitte füllen Sie das RefreshToken aus. Klicken Sie auf den Link unten, um zu erfahren, wie Sie es erhalten",
       "d3": "Bitte füllen Sie RefreshToken aus",
       "d4": "RefreshToken ist fehlerhaft"
