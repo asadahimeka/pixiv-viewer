@@ -186,7 +186,7 @@ export default {
       return Boolean(store.state.appSetting.novelDefTranslate)
     },
     isNovelDlFormatSet() {
-      return Boolean(store.state.appSetting.novelDlFormat)
+      return Boolean(store.state.appSetting.novelDefDlFormat)
     },
   },
   watch: {
@@ -324,7 +324,7 @@ export default {
       this.$refs.novelConfigRef?.toggle()
     },
     async downloadNovel(format) {
-      const ext = format?.val || store.state.appSetting.novelDlFormat
+      const ext = format?.val || store.state.appSetting.novelDefDlFormat
       window.umami?.track('download_novel', { ext })
       const fileName = `${getArtworkFileName(this.artwork)}`
       const getOuterHTML = () => {

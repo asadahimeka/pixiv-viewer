@@ -47,7 +47,7 @@
     <van-cell-group :title="$t('novel.settings.title')">
       <van-cell center :title="$t('j1tomH0kHtIiXUQ-6NhcS')" :label="$t('UiF3Ob-tYkIolJhNVMUFM')" is-link @click="showNovelConfig" />
       <van-cell center :title="$t('MIvoTULAIywXTtFIKsEuD')" :label="novelDlFmtLabel" is-link @click="novelDlFmt.show = true" />
-      <van-cell v-if="appSetting.novelDlFormat == 'epub'" center :title="$t('sJimI61fn8ruloG-3ObJs')">
+      <van-cell v-if="appSetting.novelDefDlFormat == 'epub'" center :title="$t('sJimI61fn8ruloG-3ObJs')">
         <template #right-icon>
           <van-switch :value="appSetting.novelDlRmStyle" size="24" @change="v => saveAppSetting('novelDlRmStyle', v)" />
         </template>
@@ -344,7 +344,7 @@
       :cancel-text="$t('common.cancel')"
       :description="$t('MIvoTULAIywXTtFIKsEuD')"
       close-on-click-action
-      @select="e => saveAppSetting('novelDlFormat', e._value)"
+      @select="e => saveAppSetting('novelDefDlFormat', e._value)"
     />
     <van-action-sheet
       v-model="novelTranslate.show"
@@ -581,14 +581,15 @@ export default {
       novelDlFmt: {
         show: false,
         actions: [
+          { name: 'unset', _value: '' },
           { name: 'TXT', _value: 'txt' },
           { name: 'HTML', _value: 'html' },
           { name: 'EPUB', _value: 'epub' },
-          { name: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, _value: 'print' },
+          !store.state.isMobile && ({ name: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, _value: 'print' }),
           { name: 'PDF', _value: 'pdf' },
           { name: 'DOC', _value: 'doc' },
           { name: 'MD', _value: 'md' },
-        ],
+        ].filter(Boolean),
       },
       novelTranslate: {
         show: false,
@@ -644,7 +645,7 @@ export default {
       return this.pageTransition.actions.find(e => e._value == store.state.appSetting.pageTransition)?.name || ''
     },
     novelDlFmtLabel() {
-      return this.novelDlFmt.actions.find(e => e._value == store.state.appSetting.novelDlFormat)?.name || ''
+      return this.novelDlFmt.actions.find(e => e._value == store.state.appSetting.novelDefDlFormat)?.name || ''
     },
     novelTranslateLabel() {
       return this.novelTranslate.actions.find(e => e._value == store.state.appSetting.novelDefTranslate)?.name || ''

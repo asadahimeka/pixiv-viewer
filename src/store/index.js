@@ -61,7 +61,7 @@ export default new Vuex.Store({
       ugoiraDefDLFormat: '',
       pageTransition: defPageTransition,
       withBodyBg: true,
-      novelDlFormat: '',
+      novelDefDlFormat: '',
       novelDlRmStyle: false,
       novelDefTranslate: '',
       pageFont: /zh-|ja/.test(getSelectedLang()) ? 'LXGW WenKai Screen' : '',

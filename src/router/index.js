@@ -282,6 +282,7 @@ const routes = [
           },
           {
             path: '/discovery/anonymous',
+            alias: ['/discovery'],
             name: 'Discovery',
             component: Discovery,
             meta: { __depth: 2 },

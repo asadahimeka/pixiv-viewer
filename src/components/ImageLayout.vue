@@ -2,7 +2,7 @@
   <div class="image-layout" :class="wfClass">
     <template v-if="isMasonry">
       <true-masonry
-        v-if="wfType == 'Masonry(CSSGrid)'"
+        v-if="!layout && wfType == 'Masonry(CSSGrid)'"
         class="true-masonry"
         :gap="{default:10}"
         :cols="masonryProps.cols"
@@ -10,7 +10,7 @@
         <slot></slot>
       </true-masonry>
       <flex-waterfall
-        v-else-if="wfType == 'Masonry(FlexOrder)'"
+        v-else-if="!layout && wfType == 'Masonry(FlexOrder)'"
         class="flex-waterfall"
         align-content="center"
         col="5"

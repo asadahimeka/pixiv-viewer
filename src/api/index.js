@@ -994,8 +994,9 @@ const api = {
 
     const illust = res?.thumbnails?.illust
     if (illust) {
-      const blockTags = ['拷问', '重口', '猎奇', '羞辱', '萝莉 ', '虐待 ', '虐杀 ', '血腥', '足控', '敗北', '足裏', '足指', '裸足', '处刑', '束缚', '内臓', '銃フェラ', 'sexy', 'honeyselect2', 'honeyselect', 'HoneySelect', '3D', '斗罗大陆']
-      list = illust.filter(e => !e.isAdContainer && !isBlockTagHit(blockTags, e.tags)).map(e => parseWebApiIllust(e))
+      const blockIds = res?.recommendedIllusts?.filter(e => JSON.stringify(e).includes('illust_for_user_mf_vh_bookmark'))?.map(e => `${e.illustId}`) || []
+      const blockTags = ['拷问', '重口', '猎奇', '羞辱', '萝莉 ', '虐待', '虐杀', '血腥', '足控', '敗北', '足裏', '足指', '裸足', '处刑', '束缚', '内臓', '銃フェラ', 'sexy', 'honeyselect2', 'honeyselect', 'HoneySelect', 'HS2', '3D', '斗罗大陆', '漫画', 'manga', '中文', '中国語']
+      list = illust.filter(e => !e.isAdContainer && !blockIds.includes(`${e.id}`) && !isBlockTagHit(blockTags, e.tags)).map(e => parseWebApiIllust(e))
     } else {
       return {
         status: 0,
@@ -1031,25 +1032,21 @@ const api = {
   },
 
   async getPopularIllusts(page = 1) {
-    const cacheKey = `popular_illust_${page}`
-    let artList = await getCache(cacheKey)
+    let artList
 
-    if (!artList) {
-      const res = await get(`${PIXIV_NOW_URL}/touch/ajax_api/ajax_api.php`, {
-        p: page,
-        mode: 'popular_illust',
-        _anon: 1,
-      })
+    const res = await get(`${PIXIV_NOW_URL}/touch/ajax_api/ajax_api.php`, {
+      p: page,
+      mode: 'popular_illust',
+      _anon: 1,
+    })
 
-      console.log('getPopularIllusts: ', res)
-      if (Array.isArray(res)) {
-        artList = res.map(parseWebPopularIllust)
-        artList.length && setCache(cacheKey, artList, 60 * 60 * 24 * 14)
-      } else {
-        return {
-          status: 0,
-          data: [],
-        }
+    console.log('getPopularIllusts: ', res)
+    if (Array.isArray(res)) {
+      artList = res.map(parseWebPopularIllust)
+    } else {
+      return {
+        status: 0,
+        data: [],
       }
     }
 

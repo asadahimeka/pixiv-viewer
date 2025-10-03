@@ -96,7 +96,7 @@ export default {
 <style lang="stylus" scoped>
 .af_title
   position relative
-  margin-top 0.25rem
+  margin-top 0.3rem
   margin-bottom 40px
   text-align center
   font-size 28px

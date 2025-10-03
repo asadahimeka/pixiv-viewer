@@ -231,11 +231,13 @@ export default {
     },
   },
   watch: {
-    usersIriTag() {
+    usersIriTag(val) {
+      window.umami?.track('search_novel_usersIriTag', { val })
       this.reset()
       this.doSearch(this.keywords)
     },
-    nonCNLang() {
+    nonCNLang(val) {
+      window.umami?.track('search_novel_nonCNLang', { val })
       this.reset()
       this.doSearch(this.keywords)
     },
@@ -243,6 +245,7 @@ export default {
       deep: true,
       handler(val) {
         console.log('val: ', val)
+        window.umami?.track('search_novel_params', { val })
         if (this.showPopPreview) {
           this.$refs.popPreview.getList()
         } else {
