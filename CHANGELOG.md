@@ -57,6 +57,7 @@
 - Novel filter
 - Novel download
 - Home popular illusts
+- Bug fixes
 
 ### 📚 Documentation
 
@@ -85,6 +86,7 @@
 - Release v1.28.2
 - Release v1.28.3
 - Release v1.29.0
+- Release v1.29.1
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
