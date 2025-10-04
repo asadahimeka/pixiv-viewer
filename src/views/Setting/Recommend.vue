@@ -3,39 +3,159 @@
     <top-bar />
     <h3 class="af_title">{{ $t('setting.recomm.title') }}</h3>
     <div style="max-width: 10rem;margin: 0 auto;">
-      <van-tabs v-model="activeTab" class="h-tabs" animated swipeable color="#F2C358">
-        <van-tab :title="$t('setting.recomm.site')" name="site">
-          <RecommendLink v-if="activeTab == 'site'" />
-        </van-tab>
-        <van-tab :title="$t('setting.recomm.app')" name="app">
-          <RecommendApp v-if="activeTab == 'app'" />
-        </van-tab>
-        <van-tab :title="$t('setting.recomm.tm')" name="tm">
-          <RecommendUserscript v-if="activeTab == 'tm'" />
-        </van-tab>
-      </van-tabs>
+      <div class="setting-page">
+        <van-cell
+          center
+          title="PixivNow"
+          is-link
+          label="https://pixiv.js.org"
+          @click="openLink('https://pixiv.js.org')"
+        />
+        <van-cell
+          center
+          title="Pixiviz"
+          is-link
+          label="https://pixiviz.xyz"
+          @click="openLink('https://pixiviz.xyz')"
+        />
+        <van-cell
+          center
+          title="Pixivel Kai"
+          is-link
+          label="https://pxelk.cocomi.eu.org"
+          @click="openLink('https://pxelk.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="Pixiviz Kai"
+          is-link
+          label="https://pixiviz.cocomi.eu.org"
+          @click="openLink('https://pixiviz.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="PixivNow Kai"
+          is-link
+          label="https://pxnow.cocomi.eu.org"
+          @click="openLink('https://pxnow.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="pixiv萌え改"
+          is-link
+          label="https://pixivmoe.cocomi.eu.org"
+          @click="openLink('https://pixivmoe.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="PixivLxns"
+          is-link
+          label="https://pixivlxns.cocomi.eu.org"
+          @click="openLink('https://pixivlxns.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="PixivFE"
+          is-link
+          label="https://pixiv.perennialte.ch"
+          @click="openLink('https://pixiv.perennialte.ch')"
+        />
+        <van-cell
+          center
+          title="MixPiv"
+          is-link
+          label="https://mixpiv.cocomi.eu.org"
+          @click="openLink('https://mixpiv.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="Pixiv Daily"
+          is-link
+          label="https://www.nanoka.top/illust/pixiv/"
+          @click="openLink('https://www.nanoka.top/illust/pixiv/')"
+        />
+        <van-cell
+          center
+          title="Ugoira Converter"
+          is-link
+          label="https://ugoira.cocomi.eu.org"
+          @click="openLink('https://ugoira.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="PixivCollection"
+          is-link
+          label="https://pxc.cocomi.eu.org"
+          @click="openLink('https://pxc.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="PixivCollection (Windows)"
+          is-link
+          label="Pixiv本地收藏夹图片管理"
+          @click="openLink('https://github.com/asadahimeka/PixivCollection/releases')"
+        />
+        <van-cell
+          center
+          :title="$t('iqjnYM1N-k0dRi9zK1qhY')"
+          is-link
+          label="https://sleazyfork.org/scripts/444885"
+          @click="openLink('https://sleazyfork.org/scripts/444885')"
+        />
+        <van-cell
+          center
+          title="Moeview"
+          is-link
+          label="https://moeview.cocomi.eu.org"
+          @click="openLink('https://moeview.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="Booru Masonry"
+          is-link
+          label="https://booru.cocomi.eu.org"
+          @click="openLink('https://booru.cocomi.eu.org')"
+        />
+        <van-cell
+          center
+          title="Wotaku - The Otaku Index"
+          is-link
+          label="https://wotaku.moe"
+          @click="openLink('https://wotaku.moe')"
+        />
+        <van-cell
+          center
+          title="AnimeGarden - Anime Torrent aggregation site"
+          is-link
+          label="https://animes.garden"
+          @click="openLink('https://animes.garden')"
+        />
+        <van-cell
+          center
+          title="EverythingMoe - Index of best Anime/Manga sites"
+          is-link
+          label="https://everythingmoe.com"
+          @click="openLink('https://everythingmoe.com')"
+        />
+        <van-cell
+          center
+          title="Nekon - ≡ω≡"
+          is-link
+          label="https://nekon.app"
+          @click="openLink('https://nekon.app')"
+        />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import TopBar from '@/components/TopBar'
-import RecommendApp from './RecommendApp.vue'
-import RecommendLink from './RecommendLink.vue'
-import RecommendUserscript from './RecommendUserscript.vue'
 
 export default {
-  name: 'SettingHistory',
+  name: 'SettingRecommend',
   components: {
     TopBar,
-    RecommendLink,
-    RecommendApp,
-    RecommendUserscript,
-  },
-  data() {
-    return {
-      activeTab: 'site',
-    }
   },
   head() {
     return { title: this.$t('setting.recomm.title') }

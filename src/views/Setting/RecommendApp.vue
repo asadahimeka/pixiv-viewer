@@ -142,10 +142,10 @@
     />
     <van-cell
       center
-      title="kobi ( Android,iOS,macOS,Windows,Linux)"
+      title="kobi (Android,iOS,macOS,Windows,Linux)"
       is-link
       label="拷贝漫画客户端"
-      @click="openLink('https://github.com/Predidit/Kazumi')"
+      @click="openLink('https://github.com/niuhuan/kobi')"
     />
     <van-cell
       center

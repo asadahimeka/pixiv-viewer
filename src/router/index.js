@@ -39,6 +39,7 @@ import SettingDisclaimer from '@/views/Setting/Disclaimer.vue'
 import SettingDownApp from '@/views/Setting/DownloadApp.vue'
 import SettingAccentColor from '@/views/Setting/AccentColor.vue'
 import Recommend from '@/views/Setting/Recommend.vue'
+import RecommendAll from '@/views/Setting/Recommend_.vue'
 import Artwork from '@/views/Artwork/index.vue'
 import Novel from '@/views/Artwork/Novel.vue'
 import Users from '@/views/Users/index.vue'
@@ -269,9 +270,15 @@ const routes = [
           },
           {
             path: '/setting/osusume',
-            alias: ['/setting/recommend'],
             name: 'SettingRecommend',
             component: Recommend,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/recommend',
+            alias: ['/recommend_links', 'links'],
+            name: 'SettingRecommendAll',
+            component: RecommendAll,
             meta: { __depth: 2 },
           },
           {
