@@ -435,6 +435,7 @@
         </div>
       </div>
       <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="3.5em" />
+      <van-cell>文件名示例：{{ sampleArtFileName }}</van-cell>
     </van-dialog>
     <NovelTextConfig ref="novelConfigRef" style="left: 50%;right: unset;" />
   </div>
@@ -447,6 +448,7 @@ import localDb from '@/utils/storage/localDb'
 import store from '@/store'
 import { APP_API_PROXYS, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, HIBIAPI_ALTS, PXIMG_PROXYS } from '@/consts'
 import { i18n } from '@/i18n'
+import { getSampleFileName } from '@/store/actions/filename'
 import { checkImgAvailable, checkUrlAvailable, copyText, downloadURL, isURL, readTextFile } from '@/utils'
 import { mintVerify } from '@/utils/filter'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
@@ -649,6 +651,9 @@ export default {
     },
     novelTranslateLabel() {
       return this.novelTranslate.actions.find(e => e._value == store.state.appSetting.novelDefTranslate)?.name || ''
+    },
+    sampleArtFileName() {
+      return getSampleFileName(this.dlFileNameTpl)
     },
   },
   watch: {

@@ -118,7 +118,7 @@ export function tryURL(url) {
   }
 }
 
-function replaceValidFileName(str = '', isDir = false) {
+export function replaceValidFileName(str = '', isDir = false) {
   const maxLen = 128
   if (isDir) {
     str = str.replace(/[\\/|?*:<>'"\s.]/g, '_')
