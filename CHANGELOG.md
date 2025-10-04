@@ -26,6 +26,8 @@
 - Search list pagination
 - Novel save as pdf
 - Novel save as doc/markdown
+- Users page age filter
+- Add private bookmark
 
 ### 🐛 Bug Fixes
 
@@ -58,6 +60,8 @@
 - Novel download
 - Home popular illusts
 - Bug fixes
+- Artwork filename example
+- Update recommend links
 
 ### 📚 Documentation
 
@@ -87,6 +91,7 @@
 - Release v1.28.3
 - Release v1.29.0
 - Release v1.29.1
+- Release v1.29.2
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
