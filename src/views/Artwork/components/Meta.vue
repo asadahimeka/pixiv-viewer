@@ -109,6 +109,7 @@
       <div v-show="isBtnsShow" class="meta_btns" :class="{ censored }">
         <van-button
           v-if="isLoggedIn"
+          v-longpress="showBookmarkDialog"
           size="small"
           :loading="favLoading"
           :icon="bookmarkId ? 'like' : 'like-o'"
@@ -163,7 +164,7 @@ import { Dialog } from 'vant'
 import { copyText, isSafari, downloadFile, formatIntlDate, formatIntlNumber } from '@/utils'
 import { i18n, isCNLocale } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
-import { localApi } from '@/api'
+import { getBookmarkRestrictTags, localApi } from '@/api'
 import { toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { isAiIllust } from '@/utils/filter'
 import CommentsArea from './Comment/CommentsArea.vue'
@@ -295,6 +296,23 @@ export default {
               this.bookmarkId = data?.last_bookmark_id || null
             }
           })
+      }
+    },
+    async showBookmarkDialog(/** @type {Event} */ ev) {
+      ev.preventDefault()
+      if (this.bookmarkId) return
+      if (this.isBookmarked) return
+      const { restrict, tags } = await getBookmarkRestrictTags(this.artwork.tags)
+      console.log('restrict: ', restrict)
+      console.log('tags: ', tags)
+      this.favLoading = true
+      const isOk = await localApi.illustBookmarkAdd(this.artwork.id, restrict, tags)
+      this.favLoading = false
+      if (isOk) {
+        this.bookmarkId = true
+        toggleBookmarkCache(this.artwork, true)
+      } else {
+        this.$toast(this.$t('artwork.fav_fail'))
       }
     },
     async drawMask() {

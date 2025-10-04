@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { Dialog } from 'vant'
 import { get } from './http'
 import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
@@ -1962,12 +1963,13 @@ export const localApi = {
 
     return { status: 0, data: filterCensoredNovels(list) }
   },
-  async illustBookmarkAdd(id, restrict = 'public') {
+  async illustBookmarkAdd(id, restrict = 'public', tags) {
     if (!id) return false
     try {
       const res = await reqPost('v2/illust/bookmark/add', {
         illust_id: `${id}`,
         restrict,
+        tags,
       })
       return !res.error
     } catch (error) {
@@ -2008,4 +2010,46 @@ export const localApi = {
       return false
     }
   },
+}
+
+export function getBookmarkRestrictTags(tags = []) {
+  return new Promise(resolve => {
+    Dialog.confirm({
+      title: i18n.t('user.fav'),
+      message: `
+          <div id="sel_block_dialog">
+            <p style="margin:0.2rem 0">${i18n.t('r7d1o2ui8dhVA0A4rAwHq')}</p>
+            <div class="sel_block_chks" style="justify-content: center;">
+              <input type="radio" id="get_fav_restrict_public" name="restrict" value="public" checked />
+              <label for="get_fav_restrict_public" style="margin-right: 10px;">${i18n.t('tMMgcuNAMSfxgPmaTDPuN')}</label>
+              <input type="radio" id="get_fav_restrict_private" name="restrict" value="private" />
+              <label for="get_fav_restrict_private">${i18n.t('WUegrN0Qk6zuHdl9EHUa-')}</label>
+            </div>
+            <div style="height:1px;margin:0.2rem 0;border-bottom:1px solid #ccc"></div>
+            <p style="margin:0.2rem 0">${i18n.t('gJIMYUgtWdroLrG3seGNl')}</p>
+            <input id="get_fav_tags_input" type="text" style="margin-bottom:0.2rem">
+            ${tags.map(e => `
+            <div class="sel_block_chks" style="margin-bottom:0.1rem">
+              <input type="checkbox" data-tag="${e.name}">
+              <span style="text-align: left;">${e.name}</span>
+            </div>`).join('')}
+          </div>`,
+      lockScroll: false,
+      closeOnPopstate: true,
+      cancelButtonText: i18n.t('common.cancel'),
+      confirmButtonText: i18n.t('common.confirm'),
+      beforeClose: (action, done) => {
+        if (action == 'confirm') {
+          const restrict = document.querySelector('#sel_block_dialog input[name="restrict"]:checked')?.value
+          const tagsInput = document.querySelector('#get_fav_tags_input')?.value
+          const tags = document.querySelectorAll('#sel_block_dialog input[data-tag]:checked')
+          resolve({
+            restrict,
+            tags: [...tags].map(e => e.getAttribute('data-tag')).concat(tagsInput.split(/\s+/)).filter(Boolean),
+          })
+        }
+        done()
+      },
+    }).catch(() => {})
+  })
 }

@@ -25,7 +25,7 @@
         <Icon name="layer" scale="1.5" />
         {{ artwork.count }}
       </div>
-      <div v-if="(mode == 'all' || mode == 'cover') && showBookmarkBtn" class="bookmark" @click.stop="toggleBookmark">
+      <div v-if="(mode == 'all' || mode == 'cover') && showBookmarkBtn" v-longpress="showBookmarkDialog" class="bookmark" @click.stop="toggleBookmark">
         <van-loading v-if="bLoading" color="#ff4060" />
         <van-icon v-else :name="isBookmarked?'like':'like-o'" color="#ff4060" />
       </div>
@@ -62,7 +62,7 @@
 <script>
 import { Dialog, ImagePreview } from 'vant'
 import { mapGetters } from 'vuex'
-import { localApi } from '@/api'
+import { getBookmarkRestrictTags, localApi } from '@/api'
 import { getCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { isAiIllust } from '@/utils/filter'
 import { fancyboxShow, downloadFile } from '@/utils'
@@ -131,30 +131,51 @@ export default {
     }
   },
   methods: {
+    async addBookmark(restrict, tags) {
+      try {
+        const isOk = await localApi.illustBookmarkAdd(this.artwork.id, restrict, tags)
+        if (isOk) {
+          this.isBookmarked = true
+          toggleBookmarkCache(this.artwork, true)
+        } else {
+          this.$toast(this.$t('artwork.fav_fail'))
+        }
+      } catch (err) {
+        console.log('addBookmark err: ', err)
+      }
+    },
+    async deleteBookmark() {
+      try {
+        const isOk = await localApi.illustBookmarkDelete(this.artwork.id)
+        if (isOk) {
+          this.isBookmarked = false
+          toggleBookmarkCache(this.artwork, false)
+        } else {
+          this.$toast(this.$t('artwork.unfav_fail'))
+        }
+      } catch (err) {
+        console.log('deleleBookmark err: ', err)
+      }
+    },
     async toggleBookmark() {
       if (this.bLoading) return
       this.bLoading = true
-      try {
-        if (this.isBookmarked) {
-          const isOk = await localApi.illustBookmarkDelete(this.artwork.id)
-          if (isOk) {
-            this.isBookmarked = false
-            toggleBookmarkCache(this.artwork, false)
-          } else {
-            this.$toast(this.$t('artwork.unfav_fail'))
-          }
-        } else {
-          const isOk = await localApi.illustBookmarkAdd(this.artwork.id)
-          if (isOk) {
-            this.isBookmarked = true
-            toggleBookmarkCache(this.artwork, true)
-          } else {
-            this.$toast(this.$t('artwork.fav_fail'))
-          }
-        }
-      } finally {
-        this.bLoading = false
+      if (this.isBookmarked) {
+        await this.deleteBookmark()
+      } else {
+        await this.addBookmark()
       }
+      this.bLoading = false
+    },
+    async showBookmarkDialog(/** @type {Event} */ ev) {
+      ev.preventDefault()
+      if (this.isBookmarked) return
+      const { restrict, tags } = await getBookmarkRestrictTags(this.artwork.tags)
+      console.log('restrict: ', restrict)
+      console.log('tags: ', tags)
+      this.bLoading = true
+      await this.addBookmark(restrict, tags)
+      this.bLoading = false
     },
     click(id) {
       if (!id || (this.$route.name == 'Artwork' && this.$route.params.id == id)) {
@@ -211,7 +232,7 @@ export default {
           <div class="sel_block_chks"><input type="checkbox" data-author="${this.artwork.author.id}">${this.artwork.author.name}(${this.artwork.author.id})</div>
           <div style="height:1px;margin:0.2rem 0;border-bottom:1px solid #ccc"></div>
           <p style="margin:0.2rem 0">${this.$t('1NIKIVhrUKhUHhuWv3Sxt')}</p>
-          ${this.artwork.tags.map(e => `<div class="sel_block_chks"><input type="checkbox" data-tagname="${e.name}">${e.name}</div>`).join('')}
+          ${this.artwork.tags.map(e => `<div class="sel_block_chks" style="margin-bottom:0.1rem"><input type="checkbox" data-tagname="${e.name}"><span style="text-align: left;">${e.name}</span></div>`).join('')}
         </div>`,
         lockScroll: false,
         closeOnPopstate: true,

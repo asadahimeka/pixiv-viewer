@@ -313,9 +313,9 @@ function initApp(pixiv) {
     console.log('data: ', data)
     const d = JSON.parse(data)
     const fns = {
-      'v2/illust/bookmark/add': () => pixiv.bookmarkIllust(d.illust_id),
+      'v2/illust/bookmark/add': () => pixiv.bookmarkIllust(d.illust_id, d.restrict, d.tags),
       'v1/illust/bookmark/delete': () => pixiv.unbookmarkIllust(d.illust_id),
-      'v1/user/follow/add': () => pixiv.followUser(d.user_id),
+      'v1/user/follow/add': () => pixiv.followUser(d.user_id, d.restrict),
       'v1/user/follow/delete': () => pixiv.unfollowUser(d.user_id),
     }
     return fns[path]?.()
