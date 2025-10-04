@@ -178,9 +178,9 @@ export default {
     height: 365px;
 
     @media screen and (max-width: 500px) {
-      height 5.1rem
+      height 4.88rem
       .swipe-item {
-        width 9.4rem !important
+        width 9rem !important
       }
     }
 

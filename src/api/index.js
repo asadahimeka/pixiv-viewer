@@ -1434,12 +1434,14 @@ const api = {
    * 获取画师作品标签
    * @param {Number} id 画师ID
    */
-  async getMemberTags(id) {
-    const cacheKey = `memberTags_${id}`
+  async getMemberTags(id, isR18On = false) {
+    const params = { lang: 'zh' }
+    if (isR18On) params.all = '1'
+    const cacheKey = `memberTags_${id}_${isR18On}`
     let memberInfo = await getCache(cacheKey)
 
     if (!memberInfo) {
-      const res = await get(`${PIXIV_NOW_URL}/ajax/user/${id}/illusts/tags`)
+      const res = await get(`${PIXIV_NOW_URL}/ajax/user/${id}/illusts/tags`, params)
 
       if (!Array.isArray(res)) {
         return {

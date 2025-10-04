@@ -12,6 +12,20 @@
       <h3 v-else class="af_title">{{ $t('user.art_title', [authorName + iTypeText]) }}</h3>
     </template>
     <div v-if="iType == 'illust'" class="member-tags" :class="{ 'one-line': showAllTags }">
+      <template v-if="showR18TagFilter">
+        <div class="member-tag" style="background: #ed4675;color: #fff;" @click="setAgeFilter('R')">
+          <div class="member-tag-main">
+            <span>R-18</span>
+            <van-icon v-if="ageFilter == 'R'" class="member-tag-check" name="checked" />
+          </div>
+        </div>
+        <div class="member-tag" style="background: #375fd7;color: #fff;" @click="setAgeFilter('S')">
+          <div class="member-tag-main">
+            <span>全年龄</span>
+            <van-icon v-if="ageFilter == 'S'" class="member-tag-check" name="checked" />
+          </div>
+        </div>
+      </template>
       <div v-for="t in memberTagsDisplay" :key="t.tag" class="member-tag" :style="getTagStyle()" @click="setSelTag(t.tag)">
         <div class="member-tag-main">
           <span>#{{ t.tag }}</span>
@@ -42,7 +56,7 @@
       :error-text="$t('tips.net_err')"
       @load="getMemberArtwork()"
     >
-      <wf-cont layout="selTag">
+      <wf-cont layout="Grid">
         <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
       </wf-cont>
     </van-list>
@@ -61,7 +75,7 @@
 <script>
 import _ from '@/lib/lodash'
 import api from '@/api'
-import { generateRandomColor, getContrastingTextColor } from '@/utils'
+import { generateRandomColor, getContrastingTextColor, sleep } from '@/utils'
 import ImageCard from '@/components/ImageCard.vue'
 import ImageList from '@/components/ImageList.vue'
 
@@ -107,6 +121,7 @@ export default {
       selTag: '',
       showAllTags: false,
       tagArtsCount: 0,
+      ageFilter: '',
     }
   },
   computed: {
@@ -124,6 +139,9 @@ export default {
     memberTagsDisplay() {
       if (this.selTag) return this.memberTags.filter(e => e.tag == this.selTag)
       return this.showAllTags ? this.memberTags : this.memberTags.slice(0, 20)
+    },
+    showR18TagFilter() {
+      return window.APP_CONFIG.useLocalAppApi && this.$store.getters.isR18On
     },
   },
   mounted() {
@@ -146,6 +164,7 @@ export default {
       this.resetList()
       this.memberTags = []
       this.selTag = ''
+      this.ageFilter = ''
       this.showAllTags = false
       this.tagArtsCount = 0
     },
@@ -163,13 +182,24 @@ export default {
         this.getMemberArtwork()
         return
       }
-      // window.umami?.track('sel_user_tag', { tag })
+      window.umami?.track('sel_user_tag')
       this.selTag = tag
       this.getMemberTagArtworks()
     },
+    setAgeFilter(type) {
+      this.resetList()
+      if (type == this.ageFilter) {
+        this.ageFilter = ''
+        this.getMemberArtwork()
+        return
+      }
+      window.umami?.track('sel_user_age_filter', { type })
+      this.ageFilter = type
+      this.getMemberArtwork()
+    },
     async getMemberTags() {
       if (this.iType != 'illust') return
-      const res = await api.getMemberTags(this.id)
+      const res = await api.getMemberTags(this.id, this.$store.getters.isR18On)
       if (res.status === 0) {
         this.memberTags = res.data
       } else {
@@ -184,6 +214,20 @@ export default {
       const res = await api.getMemberTagArtworks(this.id, this.selTag, this.curPage)
       if (res.status === 0) {
         newList = res.data.works
+
+        if (this.ageFilter == 'R') {
+          newList = newList.filter(e => e.x_restrict > 0)
+        }
+
+        if (this.ageFilter == 'S') {
+          newList = newList.filter(e => e.x_restrict == 0)
+        }
+
+        if (newList.length < 10) {
+          console.log('------------- sleep')
+          await sleep(800)
+        }
+
         this.artList = _.uniqBy([
           ...this.artList,
           ...newList,
@@ -214,6 +258,20 @@ export default {
       const res = await api.getMemberArtwork(this.id, this.curPage, this.iType)
       if (res.status === 0) {
         newList = res.data
+
+        if (this.ageFilter == 'R') {
+          newList = newList.filter(e => e.x_restrict > 0)
+        }
+
+        if (this.ageFilter == 'S') {
+          newList = newList.filter(e => e.x_restrict == 0)
+        }
+
+        if (newList.length < 10) {
+          console.log('------------- sleep')
+          await sleep(800)
+        }
+
         if (this.once) newList = newList.slice(0, 10)
         this.artList = _.uniqBy([
           ...this.artList,
@@ -315,6 +373,14 @@ member-tags-one-line() {
     right: 0.2rem;
     font-size: 1.2em;
     font-weight: bold;
+  }
+
+  &-check {
+    position: absolute;
+    top: -0.1rem;
+    right: -0.1rem;
+    font-size: 1.5em;
+    color: #5fe96b;
   }
 }
 
