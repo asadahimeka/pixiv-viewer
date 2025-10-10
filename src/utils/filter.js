@@ -150,7 +150,7 @@ export function isBlockTagHit(blockTags, value) {
 
 export const BLOCK_INPUT_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]
 export const BLOCK_LAST_WORD_RE = /(^\d+$)|スカラ|散|雀魂|じゃんたま/i
-export const BLOCK_SEARCH_WORD_RE = /スカラマシュ|散兵|放浪者|流浪者|雀魂|じゃんたま/i
-export const BLOCK_RESULT_RE = /恋童|ペド|幼女|进群|加好友|度盘|低价|スカラマシュ|散兵|雀魂|じゃんたま/
+export const BLOCK_SEARCH_WORD_RE = /スカラマシュ|散兵|放浪者|流浪者|雀魂|じゃんたま|Snowbreak|尘白禁区|スノウブレイク/i
+export const BLOCK_RESULT_RE = /恋童|ペド|幼女|进群|加好友|度盘|低价|スカラマシュ|散兵|雀魂|じゃんたま|Snowbreak|尘白禁区|スノウブレイク/i
 export const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682, 16106315, 10760589, 18758563]
 export const AUTHORS_NO_TYPE_AI = [10758107, 88598928, 31909437, 21470736, 14225123, 60651589, 127064402, 87931615, 95485582, 101555203, 20557152, 91255148]

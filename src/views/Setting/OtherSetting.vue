@@ -435,7 +435,7 @@
         </div>
       </div>
       <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="3.5em" />
-      <van-cell>文件名示例：{{ sampleArtFileName }}</van-cell>
+      <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}: {{ sampleArtFileName }}</van-cell>
     </van-dialog>
     <NovelTextConfig ref="novelConfigRef" style="left: 50%;right: unset;" />
   </div>
@@ -514,7 +514,7 @@ export default {
           { name: 'VirtualSlide', subname: this.$t('WrsiY7DP94fbUlQ6SoLlH') + ' - ' + this.$t('setting.lab.title') },
           { name: 'Masonry(CSSGrid)', subname: this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
           { name: 'Justified(Transform)', subname: this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },
-          { name: 'Masonry(FlexOrder)', subname: this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
+          // { name: 'Masonry(FlexOrder)', subname: this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
         ],
       },
       imgRes: {

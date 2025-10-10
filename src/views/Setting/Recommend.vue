@@ -69,7 +69,7 @@
         />
         <van-cell
           center
-          title="Pixiv Daily"
+          title="Pixiv Ranking"
           is-link
           label="https://www.nanoka.top/illust/pixiv/"
           @click="openLink('https://www.nanoka.top/illust/pixiv/')"

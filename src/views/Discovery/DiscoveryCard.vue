@@ -128,7 +128,7 @@ export default {
     // padding: 0 12px;
     height: 365px;
     @media screen and (max-width: 500px) {
-      height 4.5rem
+      height 4.64rem
     }
 
     .swipe-wrap {
@@ -141,7 +141,7 @@ export default {
         margin-right: 12px;
 
         @media screen and (max-width: 500px) {
-          width 4.35rem
+          width 4.5rem
         }
 
         &:last-child {

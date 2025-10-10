@@ -46,9 +46,10 @@ export default {
   },
   methods: {
     async getList() {
-      if (!this.word || this.loading || this.finished) return
-      this.loading = true
+      if (!this.word || this.loading) return
       this.artList = []
+      this.finished = false
+      this.loading = true
       const res = await api.getPopularPreview(this.word, _.pickBy(this.params, Boolean))
       if (res.status === 0) {
         this.artList = res.data

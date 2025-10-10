@@ -25,7 +25,7 @@
       <div
         v-if="(isSelfHibi && keywords.trim() && artList.length)"
         class="show_pop_icon"
-        @click="(showPopPreview = !showPopPreview)"
+        @click="togglePopPreview"
       >
         <Icon class="icon" name="popular" />
       </div>
@@ -126,7 +126,7 @@
       />
       <van-loading v-if="isPagination && loading" size="50px" style="margin: 32vh;text-align: center;" />
       <van-pagination
-        v-if="isPagination"
+        v-if="isPagination && !showPopPreview"
         :value="curPage"
         :items-per-page="30"
         :page-count="totalPages"
@@ -416,6 +416,15 @@ export default {
       // this.$nextTick(() => {
       this.$refs.selDate.scrollToDate(this.searchDateVals[0] || this.maxDate)
       // })
+    },
+    togglePopPreview() {
+      this.showPopPreview = !this.showPopPreview
+      if (!this.showPopPreview) {
+        this.$nextTick(() => {
+          this.reset()
+          this.doSearch(this.keywords)
+        })
+      }
     },
     async search(keywords) {
       keywords = keywords.trim()

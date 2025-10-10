@@ -45,7 +45,7 @@ export default {
       this.loading = true
       const res = await api.getTags()
       if (res.status === 0) {
-        this.tags = res.data
+        this.tags = res.data.filter(e => !this.$store.state.blockTags.includes(e.name))
       } else {
         this.$toast({
           message: res.msg,

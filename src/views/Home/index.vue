@@ -22,16 +22,16 @@
       </div>
       <template v-if="isAppLogin">
         <div class="rec-cards">
-          <RandomIllustCard />
           <DiscoveryCard />
+          <RandomIllustCard />
         </div>
         <RecommendIllustHome />
       </template>
       <Recomm4U v-else-if="isWebLogin" />
       <template v-else>
         <div v-if="isSelfHibi" class="rec-cards">
-          <RecommendIllustCard />
           <DiscoveryCard />
+          <RecommendIllustCard />
         </div>
         <RandomIllust />
         <LatestIllustCard v-if="isSelfHibi && notVirtualList" />
@@ -102,7 +102,7 @@ export default {
     async initSearch() {
       const res = await api.getTags()
       if (res.status === 0) {
-        this.tags = res.data.map(e => e.name)
+        this.tags = res.data.map(e => e.name).filter(e => !this.$store.state.blockTags.includes(e))
         this.placeholder = _.sample(this.tags)
       }
     },
