@@ -71,7 +71,7 @@ import Nav from './components/Nav'
 import _ from '@/lib/lodash'
 import api from '@/api'
 import { i18n } from '@/i18n'
-import { isAiIllust } from '@/utils/filter'
+import { AUTHORS_NO_TYPE_AI, AUTHORS_NO_TYPE_MANGA, isAiIllust } from '@/utils/filter'
 import { getCache } from '@/utils/storage/siteCache'
 import store from '@/store'
 
@@ -111,8 +111,6 @@ const getRankMenus = () => ({
 const getRankCatLabels = () => [i18n.t('common.overall'), i18n.t('common.illust'), i18n.t('common.ugoira'), i18n.t('common.manga'), i18n.t('common.novel')]
 const getRankCatActions = () => getRankCatLabels().map((e, i) => ({ text: e, _v: i.toString() }))
 
-const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682, 16106315, 10760589, 18758563]
-const AUTHORS_NO_TYPE_AI = [10758107, 88598928, 31909437, 21470736, 14225123, 60651589, 127064402, 87931615, 95485582, 101555203, 20557152, 91255148]
 const isHideManga = store.state.appSetting.isHideRankManga
 
 export default {
@@ -169,8 +167,8 @@ export default {
     },
     date(val, old) {
       if (val !== old) {
+        document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
         this.init()
-        // window.umami?.track('change_rank_date', { rank_date: val?.toLocaleDateString() })
       }
     },
     isFilterFavs(val) {

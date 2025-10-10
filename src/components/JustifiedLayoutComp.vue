@@ -43,6 +43,8 @@ export default {
     items(val) {
       if (val?.length) {
         this.calculate()
+      } else {
+        this.boxes = []
       }
     },
   },
@@ -69,7 +71,7 @@ export default {
       })
     },
     getGeometry(list, containerWidth) {
-      if (!list?.length) return []
+      if (!list?.length) return { containerHeight: 0, boxes: [] }
       return justifiedLayout(list, {
         // The width that boxes will be contained within irrelevant of padding.
         containerWidth,

@@ -6,12 +6,12 @@ import { COMMON_PROXY } from '@/consts'
 const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵|雀魂|じゃんたま/i
 const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐|スカラマシュ|散兵|雀魂|じゃんたま/i
 
-const blockedUserIds = [24517, 14002767, 16776564, 33333, 423251, 27526, 13150573]
+const HOME_BLOCKED_USER_IDS = [24517, 14002767, 16776564, 33333, 423251, 27526, 13150573, 119489738]
 export function filterHomeIllust(e) {
   if (e.type == 'manga') return false
   if (e.images.length != 1) return false
   if (isAiIllust(e)) return false
-  if (blockedUserIds.includes(+e.author.id)) return false
+  if (HOME_BLOCKED_USER_IDS.includes(+e.author.id)) return false
   return !re1.test(JSON.stringify(e.tags))
 }
 
@@ -152,3 +152,5 @@ export const BLOCK_INPUT_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$
 export const BLOCK_LAST_WORD_RE = /(^\d+$)|スカラ|散|雀魂|じゃんたま/i
 export const BLOCK_SEARCH_WORD_RE = /スカラマシュ|散兵|放浪者|流浪者|雀魂|じゃんたま/i
 export const BLOCK_RESULT_RE = /恋童|ペド|幼女|进群|加好友|度盘|低价|スカラマシュ|散兵|雀魂|じゃんたま/
+export const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682, 16106315, 10760589, 18758563]
+export const AUTHORS_NO_TYPE_AI = [10758107, 88598928, 31909437, 21470736, 14225123, 60651589, 127064402, 87931615, 95485582, 101555203, 20557152, 91255148]

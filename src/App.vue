@@ -40,7 +40,7 @@ export default {
   },
   mounted() {
     document.querySelector('#ldio-loading')?.remove()
-    window.umami?.track('App Mounted', { host: location.host, ver: CURRENT_APP_VERSION, isHelperInst: !!window.__httpRequest__ })
+    window.umami?.track('App Mounted', { host: location.host, ver: CURRENT_APP_VERSION })
     if (!localStorage.PXV_ASSETS_LOADED) localStorage.PXV_ASSETS_LOADED = '1'
     if (store.state.appSetting.isAutoLoadKissT) loadKISSTranslator(true)
   },

@@ -339,6 +339,10 @@ export default {
     init() {
       this.loading = true
       const id = +this.$route.params.id
+      if (this.$store.state.blockUids.includes(`${id}`)) {
+        this.$toast(this.$t('common.content.hide'))
+        return
+      }
       this.userInfo = {}
       this.activeTab = 'illusts'
       this.getMemberInfo(id)

@@ -245,7 +245,7 @@ export default {
       deep: true,
       handler(val) {
         console.log('val: ', val)
-        window.umami?.track('search_novel_params', { val })
+        // window.umami?.track('search_novel_params', { val })
         if (this.showPopPreview) {
           this.$refs.popPreview.getList()
         } else {

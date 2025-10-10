@@ -8,7 +8,7 @@
       </template>
       <template #right-icon>
         <van-button type="info" size="small" @click="clearCache('db')">
-          <span data-umami-event="clear_db_cache">{{ $t('cache.clear') }}</span>
+          <span>{{ $t('cache.clear') }}</span>
         </van-button>
       </template>
     </van-cell>
@@ -18,7 +18,7 @@
       </template>
       <template #right-icon>
         <van-button size="small" color="linear-gradient(to right, #ff6034, #ee0a24)" @click="clearCache('local')">
-          <span data-umami-event="clear_local_cache">{{ $t('cache.clear') }}</span>
+          <span>{{ $t('cache.clear') }}</span>
         </van-button>
       </template>
     </van-cell>
@@ -28,7 +28,7 @@
       </template>
       <template #right-icon>
         <van-button type="primary" size="small" @click="clearCache('session')">
-          <span data-umami-event="clear_session_cache">{{ $t('cache.clear') }}</span>
+          <span>{{ $t('cache.clear') }}</span>
         </van-button>
       </template>
     </van-cell>
@@ -110,6 +110,7 @@ export default {
         confirmButtonText: this.$t('common.confirm'),
         cancelButtonText: this.$t('common.cancel'),
       }).then(async () => {
+        window.umami?.track('clear_cache', { type })
         if (type === 'db') {
           await localDb.clear()
           const keyList = await caches.keys()

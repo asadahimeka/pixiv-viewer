@@ -4,14 +4,14 @@ module.exports = {
   ],
   plugins: [
     '@babel/plugin-transform-optional-chaining',
-    // [
-    //   'import',
-    //   {
-    //     libraryName: 'vant',
-    //     libraryDirectory: 'es',
-    //     style: true
-    //   },
-    //   'vant'
-    // ]
+    [
+      'import',
+      {
+        libraryName: 'vant',
+        libraryDirectory: 'es',
+        style: true,
+      },
+      'vant',
+    ],
   ],
 }
