@@ -62,6 +62,8 @@
 - Bug fixes
 - Artwork filename example
 - Update recommend links
+- Fix some glitches
+- Fix some glitches
 
 ### 📚 Documentation
 
@@ -92,6 +94,7 @@
 - Release v1.29.0
 - Release v1.29.1
 - Release v1.29.2
+- Release v1.29.3
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
