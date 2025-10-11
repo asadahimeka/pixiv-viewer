@@ -64,6 +64,8 @@
 - Update recommend links
 - Fix some glitches
 - Fix some glitches
+- Novel pdf fix
+- Comment/profile filter
 
 ### 📚 Documentation
 
@@ -95,6 +97,7 @@
 - Release v1.29.1
 - Release v1.29.2
 - Release v1.29.3
+- Release v1.29.4
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
