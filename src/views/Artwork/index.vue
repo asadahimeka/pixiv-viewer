@@ -79,6 +79,7 @@ import IconWeibo from '@/assets/images/share-sheet-weibo.png'
 import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
+// import { mintFilter } from '@/utils/filter'
 
 const { isAutoLoadImt, isEnableSwipe } = store.state.appSetting
 
@@ -179,6 +180,7 @@ export default {
       if (!art) art = this.$route.params.art
       console.log('artwork detail: ', id, art)
       if (art && art.type != 'ugoira' && !art.images[0].o.includes('i.loli.best')) {
+        // art.caption = await mintFilter(art.caption)
         this.artwork = art
         this.loading = false
         SessionStorage.set(`param_art_detail_${id}`, art)
@@ -195,6 +197,7 @@ export default {
       await this.$nextTick()
       const res = await api.getArtwork(id)
       if (res.status === 0) {
+        // res.data.caption = await mintFilter(res.data.caption)
         this.artwork = res.data
         this.loading = false
 

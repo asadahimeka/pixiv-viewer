@@ -28,7 +28,7 @@
 <script>
 import axios from 'axios'
 import _ from '@/lib/lodash'
-import { mintVerify } from '@/utils/filter'
+import { mintFilter } from '@/utils/filter'
 import { PIXIV_NOW_URL } from '@/consts'
 import Comment from './Comment.vue'
 
@@ -77,15 +77,12 @@ export default {
           }
         )
         this.hasNext = data.hasNext
-        const res = []
         for (let i = 0; i < data.comments.length; i++) {
           const element = data.comments[i]
-          const text = element.userName + element.comment
-          if (await mintVerify(text, true)) {
-            res.push(element)
-          }
+          element.userName = await mintFilter(element.userName)
+          element.comment = await mintFilter(element.comment)
         }
-        this.comments = _.uniqBy(this.comments.concat(res), 'id')
+        this.comments = _.uniqBy(this.comments.concat(data.comments), 'id')
         this.offset += data.comments.length
       } catch (err) {
         console.warn('Comments fetch error', err)
@@ -106,16 +103,12 @@ export default {
             },
           }
         )
-        const res = []
         for (let i = 0; i < data.comments.length; i++) {
           const element = data.comments[i]
-          const text = element.userName + element.comment
-          if (await mintVerify(text, true)) {
-            res.push(element)
-          }
+          element.userName = await mintFilter(element.userName)
+          element.comment = await mintFilter(element.comment)
         }
-        console.log('res: ', res)
-        this.$set(this.qComments, id, _.uniqBy(res, 'id'))
+        this.$set(this.qComments, id, _.uniqBy(data.comments, 'id'))
         this.$set(this.qShowMap, id, true)
       } catch (err) {
         console.warn('Comments fetch error', err)

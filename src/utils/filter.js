@@ -112,28 +112,41 @@ export function isAiIllust(artwork) {
 
 /** @type {Mint} */
 let mint
-const presetWords = ['vpn', 'VPN', '推荐', '好用', '梯子']
+const presetWords = ['vpn', 'VPN', '推荐', '好用', '梯子', '机场', 'clash', 'Clash', '下载']
 export async function mintVerify(word = '', forceCheck = false) {
-  if (presetWords.some(e => word.includes(e))) {
+  if (presetWords.some(e => word.toLowerCase().includes(e.toLowerCase()))) {
     return false
   }
   if (!forceCheck && store.getters.isR18On) {
     return true
   }
-  word = word.replace(/[A-Za-z\d\s~`!@#$%^&*()_+\-=[\]{};':"\\|,./<>?]+/g, '')
   try {
-    if (!mint) {
-      let filterWords = await getCache('s.filter.words')
-      if (!filterWords) {
-        const resp = await fetch(`${COMMON_PROXY}https://unpkg.com/@dragon-fish/sensitive-words-filter@2.0.1/lib/words.txt`)
-        filterWords = (await resp.text()).split(/\s+/)
-        setCache('s.filter.words', filterWords, -1)
-      }
-      mint = new Mint(filterWords)
-    }
+    await ensureMint()
     return mint.verify(word)
   } catch (error) {
     return true
+  }
+}
+export async function mintFilter(word = '') {
+  try {
+    await ensureMint()
+    const res = mint.filter(word)
+    console.log('res: ', res)
+    return res.text
+  } catch (error) {
+    return word
+  }
+}
+async function ensureMint() {
+  if (!mint) {
+    let filterWords = await getCache('s.filter.words')
+    if (!filterWords) {
+      const resp = await fetch(`${COMMON_PROXY}https://unpkg.com/@dragon-fish/sensitive-words-filter@2.0.1/lib/words.txt`)
+      const reg = /^[A-Za-z\d\s~`!@#$%^&*()_+\-=[\]{};':"\\|,./<>?]+$/
+      filterWords = (await resp.text()).split(/\s+/).filter(e => !reg.test(e)).concat(presetWords)
+      setCache('s.filter.words', filterWords, -1)
+    }
+    mint = new Mint(filterWords)
   }
 }
 

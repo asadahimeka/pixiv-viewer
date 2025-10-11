@@ -4,7 +4,7 @@ import { get } from './http'
 import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
-import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit } from '@/utils/filter'
+import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit, mintFilter } from '@/utils/filter'
 import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL } from '@/consts'
 
 const isSupportWebP = (() => {
@@ -1421,6 +1421,7 @@ const api = {
             memberInfo.twitter_url = webRes?.social?.twitter?.url || ''
             memberInfo.twitter_account = webRes?.social?.twitter?.url?.split('/').pop() || ''
           }
+          memberInfo.comment = await mintFilter(memberInfo.comment)
         } catch (err) {
           console.log('err: ', err)
         }
