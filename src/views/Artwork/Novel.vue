@@ -100,7 +100,7 @@ import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
-import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovelNewWindow } from '@/utils/novel'
+import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel } from '@/utils/novel'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
@@ -330,6 +330,7 @@ export default {
       const getOuterHTML = () => {
         const el = document.querySelector('.novel-view').cloneNode(true)
         el.querySelector('svg').remove()
+        el.style.padding = '1rem'
         const coverBox = el.querySelector('.image-box')
         coverBox.setAttribute('style', 'padding: 1em 0;text-align:center')
         coverBox.insertAdjacentHTML('afterbegin', `<h1 style="font-size:1.2em;font-weight:bold;text-align:center">${this.artwork.title}</h1><p style="color:gray;text-align:center">${this.artwork.author.name}</p>`)
@@ -346,10 +347,11 @@ export default {
           return res
         },
         print: async () => {
-          printNovelNewWindow(getOuterHTML(), fileName)
+          printNovel(getOuterHTML(), fileName)
         },
         pdf: async () => {
           const el = document.querySelector('.novel_text').cloneNode(true)
+          el.innerHTML = el.innerHTML.split('<br>').map(e => `<p${e ? '' : ' style="padding: 1em 0"'}>${e}</p>`).join('')
           el.querySelectorAll('img').forEach(img => {
             img.setAttribute('crossorigin', 'anonymous')
           })

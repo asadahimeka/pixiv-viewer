@@ -165,16 +165,17 @@ export function detectLanguage(text) {
   }
 }
 
-export function printNovelNewWindow(html, fileName) {
-  const myWindow = window.open('', 'PRINT', 'height=800,width=1280')
-  myWindow.document.write(`<html><head><title>${fileName}</title></head><body>${html}</body></html>`)
-  myWindow.document.close()
-  myWindow.focus()
-  myWindow.onload = () => {
-    myWindow.print()
-  }
-  myWindow.onafterprint = () => {
-    myWindow.close()
+export function printNovel(html, fileName) {
+  const iframe = document.createElement('iframe')
+  iframe.setAttribute('style', 'position:fixed;top:-9999px;left:-9999px')
+  iframe.srcdoc = `<html><head><title>${fileName}</title></head><body style="-webkit-print-color-adjust: exact;">${html}</body></html>`
+  document.body.appendChild(iframe)
+  iframe.onload = () => {
+    iframe.contentWindow.focus()
+    iframe.contentWindow.print()
+    setTimeout(() => {
+      iframe.remove()
+    }, 1000)
   }
 }
 
@@ -196,7 +197,8 @@ export async function convertHtmlToPdf(element, fileName) {
         margin: 10,
         filename: `${fileName}.pdf`,
         html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait', hotfixes: ['px_scaling'] },
+        pagebreak: { mode: ['avoid-all', 'css', 'legacy'], avoid: 'p,img' },
       })
       .outputPdf('blob')
 
@@ -236,8 +238,7 @@ export function convertNovelToMarkdown(textObj, artwork) {
     .replace(/\[uploadedimage:(\d+)\]/g, (_, $1) => `![${$1}](${getEmbedImg($1)})`)
     .replace(/若想浏览插图，还请使用网页版。/g, '\n')
 
-  text = `
-# ${artwork.title}
+  text = `# ${artwork.title}
 
 ${artwork.author.name}
 
@@ -245,7 +246,8 @@ ${artwork.author.name}
 
 ---
 
-${text}`
+${text}
+`
 
   return new Blob([text], { type: 'text/markdown;charset=utf-8' })
 }
