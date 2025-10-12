@@ -21,7 +21,10 @@
       </div>
       <div class="conf-fcont">
         <div class="conf-fitem">
-          <div class="conf-title">{{ $t('novel.settings.text.font') }}</div>
+          <div class="conf-title">
+            <span>{{ $t('novel.settings.text.font') }}</span>
+            <a href="javascript:;" style="float: right;margin-top: 2PX;font-size: 0.8em;" @click="openFontSelect">{{ $t('k8lr4kQuHztU5VK45a39z') }}</a>
+          </div>
           <div class="conf-inp">
             <van-radio-group v-model="novelTextConfig.font" direction="horizontal">
               <van-radio name="sans-serif" style="font-family: sans-serif;">{{ $t('novel.settings.text.sans') }}</van-radio>
@@ -96,18 +99,23 @@
           </div>
         </div>
       </div>
+
+      <PageFontSelect ref="pageFontSelRef" dont-set-doc-prop :current-font="novelTextConfig.font" @change="novelTextConfig.font = $event" />
     </div>
   </van-action-sheet>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { Toast } from 'vant'
 import { i18n } from '@/i18n'
 import { LocalStorage } from '@/utils/storage'
 import { novelTextConfig } from '@/store'
+import PageFontSelect from './PageFontSelect.vue'
+import { loadCustomFont } from '@/utils/font'
 
 const showSettings = ref(false)
+const pageFontSelRef = ref()
 const textColorPresets = ref([
   ['#ffffff', '#1f1f1f'],
   ['#fafafa', '#1f1f1f'],
@@ -119,10 +127,22 @@ const textColorPresets = ref([
 watch(
   () => novelTextConfig,
   val => {
+    window.umami?.track('set_novelTextConfig', val)
     LocalStorage.set('PXV_TEXT_CONFIG', val)
   },
   { deep: true }
 )
+
+onMounted(() => {
+  console.log('-------------------------NovelTextConfig mounted', novelTextConfig.font)
+  if (!['inherit', 'sans-serif', 'serif'].includes(novelTextConfig.font)) {
+    loadCustomFont(novelTextConfig.font, true)
+  }
+})
+
+function openFontSelect() {
+  pageFontSelRef.value?.open()
+}
 
 function onSizeChange(value) {
   Toast(i18n.t('tips.current_value') + value)

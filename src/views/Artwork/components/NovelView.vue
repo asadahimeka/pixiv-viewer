@@ -34,6 +34,7 @@ import { mapGetters } from 'vuex'
 import { imgProxy } from '@/api'
 import store, { novelTextConfig } from '@/store'
 import _ from '@/lib/lodash'
+import { fontFallback } from '@/utils/font'
 
 const fontMap = {
   'inherit': 'inherit',
@@ -94,7 +95,7 @@ export default {
         fontSize: this.textConfig.size + 'px',
         lineHeight: this.textConfig.height,
         fontWeight: this.textConfig.weight,
-        fontFamily: fontMap[this.textConfig.font],
+        fontFamily: fontMap[this.textConfig.font] || `'${this.textConfig.font}', ${fontFallback}`,
         color: this.textConfig.color,
         ...(this.textConfig.indent ? { textIndent: '2em' } : {}),
       }

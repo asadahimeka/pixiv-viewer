@@ -171,11 +171,10 @@ export function printNovel(html, fileName) {
   iframe.srcdoc = `<html><head><title>${fileName}</title></head><body style="-webkit-print-color-adjust: exact;">${html}</body></html>`
   document.body.appendChild(iframe)
   iframe.onload = () => {
-    iframe.contentWindow.focus()
-    iframe.contentWindow.print()
-    setTimeout(() => {
-      iframe.remove()
-    }, 1000)
+    const w = iframe.contentWindow
+    w.focus()
+    w.print()
+    w.onafterprint = () => { iframe.remove() }
   }
 }
 

@@ -9,14 +9,14 @@
           title="PixivNow"
           is-link
           label="https://pixiv.js.org"
-          @click="openLink('https://pixiv.js.org')"
+          @click="openLink('https://pixiv.js.org/?ref=pixiv.pictures')"
         />
         <van-cell
           center
           title="Pixiviz"
           is-link
           label="https://pixiviz.xyz"
-          @click="openLink('https://pixiviz.xyz')"
+          @click="openLink('https://pixiviz.xyz/?ref=pixiv.pictures')"
         />
         <van-cell
           center
@@ -58,7 +58,7 @@
           title="PixivFE"
           is-link
           label="https://pixiv.perennialte.ch"
-          @click="openLink('https://pixiv.perennialte.ch')"
+          @click="openLink('https://pixiv.perennialte.ch/?ref=pixiv.pictures')"
         />
         <van-cell
           center
@@ -121,28 +121,28 @@
           title="Wotaku - The Otaku Index"
           is-link
           label="https://wotaku.moe"
-          @click="openLink('https://wotaku.moe')"
+          @click="openLink('https://wotaku.moe/?ref=pixiv.pictures')"
         />
         <van-cell
           center
           title="AnimeGarden - Anime Torrent aggregation site"
           is-link
           label="https://animes.garden"
-          @click="openLink('https://animes.garden')"
+          @click="openLink('https://animes.garden/?ref=pixiv.pictures')"
         />
         <van-cell
           center
           title="EverythingMoe - Index of best Anime/Manga sites"
           is-link
           label="https://everythingmoe.com"
-          @click="openLink('https://everythingmoe.com')"
+          @click="openLink('https://everythingmoe.com/?ref=pixiv.pictures')"
         />
         <van-cell
           center
           title="Nekon - ≡ω≡"
           is-link
           label="https://nekon.app"
-          @click="openLink('https://nekon.app')"
+          @click="openLink('https://nekon.app/?ref=pixiv.pictures')"
         />
       </div>
     </div>

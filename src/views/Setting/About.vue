@@ -42,7 +42,7 @@
         title="Pixiv.cat"
         is-link
         :label="$t('R7wR59U5tm8NR3Gn1FKAw')"
-        @click="openLink('https://pixiv.re')"
+        @click="openLink('https://pixiv.re/?ref=pixiv.pictures')"
       />
       <van-cell
         center
@@ -78,6 +78,12 @@
         is-link
         :label="$t('tQaYxaOwYjOgf1OAnQm4J')"
         @click="openLink('https://github.com/Mikubill/pixivpy-async')"
+      /><van-cell
+        center
+        title="ZeoSeven Fonts (ZSFT)"
+        is-link
+        label="释放字体自由！"
+        @click="openLink('https://fonts.zeoseven.com/?ref=pixiv.pictures')"
       />
     </van-cell-group>
     <van-cell-group :title="$t('about.feedback')">

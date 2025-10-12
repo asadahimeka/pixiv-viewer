@@ -329,15 +329,7 @@
       close-on-click-action
       @select="onPageTransitionChange"
     />
-    <van-action-sheet
-      v-model="pageFont.show"
-      style="font-family: Arial, Helvetica, sans-serif"
-      :actions="pageFont.actions"
-      :cancel-text="$t('common.cancel')"
-      :description="$t('SLO07VkQh2wjFJJ1MLvUl')"
-      close-on-click-action
-      @select="e => saveAppSetting('pageFont', e._value, true)"
-    />
+    <PageFontSelect ref="pageFontSelRef" :current-font="appSetting.pageFont" @change="saveAppSetting('pageFont', $event)" />
     <van-action-sheet
       v-model="novelDlFmt.show"
       :actions="novelDlFmt.actions"
@@ -379,6 +371,7 @@
       class="hibiapi-actions"
       @select="changeHibiapi_"
     />
+    <NovelTextConfig ref="novelConfigRef" style="left: 50%;right: unset;" />
     <van-dialog
       v-model="showDlFileNameTplDialog"
       width="9rem"
@@ -437,7 +430,6 @@
       <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="3.5em" />
       <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}: {{ sampleArtFileName }}</van-cell>
     </van-dialog>
-    <NovelTextConfig ref="novelConfigRef" style="left: 50%;right: unset;" />
   </div>
 </template>
 
@@ -453,15 +445,16 @@ import { checkImgAvailable, checkUrlAvailable, copyText, downloadURL, isURL, rea
 import { mintVerify } from '@/utils/filter'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import { isFsaSupported, getMainDirHandle, setMainDirHandle } from '@/utils/fsa'
-import { getPageFontModel } from '@/utils/font'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { aiModelMap } from '@/utils/translate'
 import NovelTextConfig from '../Artwork/components/NovelTextConfig.vue'
+import PageFontSelect from '../Artwork/components/PageFontSelect.vue'
 
 export default {
   name: 'SettingOthers',
   components: {
     NovelTextConfig,
+    PageFontSelect,
   },
   data() {
     return {
@@ -575,10 +568,6 @@ export default {
           { name: 'parallax', _value: 'f7-parallax' },
           { name: 'push', _value: 'f7-push' },
         ],
-      },
-      pageFont: {
-        show: false,
-        actions: [],
       },
       novelDlFmt: {
         show: false,
@@ -822,10 +811,8 @@ export default {
       this.saveAppSetting('pageTransition', _value, false)
       setTimeout(() => location.assign('/'), 200)
     },
-    async showPageFontSel() {
-      const pageFont = await getPageFontModel()
-      pageFont.show = true
-      this.pageFont = pageFont
+    showPageFontSel() {
+      this.$refs.pageFontSelRef?.open()
     },
     showNovelConfig() {
       this.$refs.novelConfigRef?.open()
@@ -1017,4 +1004,5 @@ export default {
       flex-wrap wrap
       gap 8px
       padding 20px
+
 </style>
