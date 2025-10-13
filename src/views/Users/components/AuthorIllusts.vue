@@ -11,7 +11,7 @@
       </van-cell>
       <h3 v-else class="af_title">{{ $t('user.art_title', [authorName + iTypeText]) }}</h3>
     </template>
-    <div v-if="iType == 'illust'" class="member-tags" :class="{ 'one-line': showAllTags }">
+    <div v-if="iType == 'illust'" class="member-tags" :class="{ 'show-all-tags': showAllTags }">
       <template v-if="showR18TagFilter">
         <div class="member-tag" style="background: #ed4675;color: #fff;" @click="setAgeFilter('R')">
           <div class="member-tag-main">
@@ -318,17 +318,6 @@ export default {
   font-size 28px
 }
 
-member-tags-one-line() {
-  flex-wrap nowrap
-  margin-bottom 30px
-  padding-bottom 10px
-  overflow-x auto
-
-  .member-tag {
-    min-width fit-content
-  }
-}
-
 .member-tags {
   display flex
   flex-wrap wrap
@@ -336,12 +325,21 @@ member-tags-one-line() {
   margin-top 20px
   margin-bottom 40px
 
-  &.one-line {
-    member-tags-one-line()
+  &.show-all-tags {
+    max-height 3.6rem
+    margin-bottom 0.4rem
+    overflow-y auto
   }
 
   @media screen and (max-width: 1200px) {
-    member-tags-one-line()
+    flex-wrap nowrap
+    margin-bottom 30px
+    padding-bottom 10px
+    overflow-x auto
+
+    .member-tag {
+      min-width fit-content
+    }
   }
 }
 
@@ -365,6 +363,7 @@ member-tags-one-line() {
 
   &-cnt {
     margin-right 0.4rem
+    vertical-align: 0.1em
   }
 
   &-close {

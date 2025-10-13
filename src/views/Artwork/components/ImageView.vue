@@ -667,7 +667,7 @@ export default {
   background: var(--bg) no-repeat center center / contain;
 }
 @media screen and (max-width: 600px) {
-  .ia-cont .ia-left .image-view.loaded.overlong {
+  .ia-cont .ia-left .image-view.loaded.overlong:not(.shrink) {
     height: calc(100vh - 2.4rem);
     overflow-y: auto;
   }

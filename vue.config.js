@@ -141,7 +141,12 @@ module.exports = {
         /vant-locale-.*\.js$/,
         /robots\.txt$/,
         /sitemap\.txt$/,
-        /\.user\.js$/,
+        /helper[\\/].*\.js(on)?$/,
+        /img[\\/]icons[\\/].*/,
+        /img[\\/]font_preview[\\/].*/,
+        /kiss-translator[\\/].*/,
+        /static[\\/](js|css)[\\/](?!flexible\..*)/,
+        /test[\\/].*/,
       ],
       // navigateFallbackDenylist: [/^\/prks\//],
       runtimeCaching: [

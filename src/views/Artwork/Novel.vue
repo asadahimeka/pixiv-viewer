@@ -161,9 +161,9 @@ export default {
         { text: 'MD', val: 'md' },
         { text: 'DOC', val: 'doc' },
         { text: 'PDF', val: 'pdf' },
-        { text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' },
+        !store.state.isMobile && ({ text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' }),
         { text: 'EPUB', val: 'epub' },
-      ],
+      ].filter(Boolean),
     }
   },
   head() {

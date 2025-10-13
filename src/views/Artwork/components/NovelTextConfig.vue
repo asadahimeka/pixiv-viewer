@@ -127,7 +127,6 @@ const textColorPresets = ref([
 watch(
   () => novelTextConfig,
   val => {
-    window.umami?.track('set_novelTextConfig', val)
     LocalStorage.set('PXV_TEXT_CONFIG', val)
   },
   { deep: true }
@@ -138,6 +137,7 @@ onMounted(() => {
   if (!['inherit', 'sans-serif', 'serif'].includes(novelTextConfig.font)) {
     loadCustomFont(novelTextConfig.font, true)
   }
+  window.umami?.track('novelTextConfig', novelTextConfig)
 })
 
 function openFontSelect() {

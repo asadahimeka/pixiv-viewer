@@ -104,7 +104,7 @@
         const val = [...document.querySelectorAll('#q_imgs .act')].map(e => e.getAttribute('data-index')).join(',')
         const res = isAnsEnc ? dec(ans, val) : ans
         if (val == res) {
-          track('captcha_answer_correct', { val: q('#q_title').innerText + ': ' + val })
+          track('captcha_answer_correct', { val: q('#q_title').innerText })
           alert('回答正确')
           localStorage.setItem('PXV_NSFW_ON', '{"data":0,"expires":-1}')
           location.replace('/')

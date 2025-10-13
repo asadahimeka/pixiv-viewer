@@ -329,7 +329,7 @@
       close-on-click-action
       @select="onPageTransitionChange"
     />
-    <PageFontSelect ref="pageFontSelRef" :current-font="appSetting.pageFont" @change="saveAppSetting('pageFont', $event)" />
+    <PageFontSelect ref="pageFontSelRef" :current-font="appSetting.pageFont" @change="v => saveAppSetting('pageFont', v, !v)" />
     <van-action-sheet
       v-model="novelDlFmt.show"
       :actions="novelDlFmt.actions"
