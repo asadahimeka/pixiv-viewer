@@ -118,6 +118,8 @@ const parseIllust = data => {
     type,
     is_bookmarked: data.is_bookmarked,
     series: data.series,
+    seasonal_effect: data.seasonal_effect_animation_urls?.webp,
+    event_banners: data.event_banners,
   }
 
   return artwork

@@ -155,14 +155,14 @@ const routes = [
         children: [
           {
             path: '/artworks/:id',
-            alias: ['/illust/:id', '/i/:id'],
+            alias: ['/illusts/:id', '/illust/:id', '/i/:id'],
             name: 'Artwork',
             component: Artwork,
             meta: { __depth: 10 },
           },
           {
             path: '/novel/:id',
-            alias: ['/n/:id'],
+            alias: ['/novels/:id', '/n/:id'],
             name: 'NovelDetail',
             component: Novel,
             meta: { __depth: 10 },

@@ -105,6 +105,7 @@ export default {
       return this.artwork.width / this.artwork.height
     },
     seasonEffectSrc() {
+      if (this.artwork.seasonal_effect) return this.artwork.seasonal_effect
       const tagNames = this.artwork.tags?.map(t => t.name) || []
       const match = this.$store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
       return match?.src || ''

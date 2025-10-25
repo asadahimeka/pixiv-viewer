@@ -71,6 +71,12 @@
         @contextmenu="preventContext"
       >UID:{{ artwork.author.id }}<Icon name="copy" style="margin-left: 1px;" /></span>
     </div>
+    <template v-if="artwork.event_banners">
+      <div v-for="banner in artwork.event_banners" :key="banner.tap_url" class="event_banner">
+        <img :src="banner.icon_url" alt="">
+        <a @click="$router.push(banner.tap_url.replace('pixiv:/', ''))">{{ banner.title }}</a>
+      </div>
+    </template>
     <ul class="tag-list" :class="{ censored }">
       <li v-if="isAiIllust">
         <van-tag class="x_tag" size="large" color="#FFB11B">{{ $t('common.ai_gen') }}</van-tag>
@@ -702,6 +708,23 @@ export default {
       display inline-block
       margin-right 10px
       padding 6px 4px
+    }
+  }
+
+  .event_banner {
+    display flex
+    align-items center
+    gap 10px
+    margin 20px 0
+    img {
+      width 40px
+    }
+    a {
+      font-size 1.2em
+      cursor pointer
+      &:hover {
+        text-decoration underline
+      }
     }
   }
 
