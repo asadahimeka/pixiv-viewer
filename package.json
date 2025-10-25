@@ -1,6 +1,6 @@
 {
   "name": "pixiv-viewer",
-  "version": "1.29.5",
+  "version": "1.29.6",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

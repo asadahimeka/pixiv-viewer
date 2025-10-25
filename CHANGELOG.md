@@ -28,6 +28,10 @@
 - Novel save as doc/markdown
 - Users page age filter
 - Add private bookmark
+- Novel font select
+- Navbar alt style
+- Home image list slides
+- App start page setting
 
 ### 🐛 Bug Fixes
 
@@ -66,11 +70,16 @@
 - Fix some glitches
 - Novel pdf fix
 - Comment/profile filter
+- Bug fixes
+- Import history error
+- Season effect
+- Novel translate button hide
 
 ### 📚 Documentation
 
 - Update locales
 - Update locales
+- Update readme
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -98,6 +107,7 @@
 - Release v1.29.2
 - Release v1.29.3
 - Release v1.29.4
+- Release v1.29.5
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
