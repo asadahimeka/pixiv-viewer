@@ -1,8 +1,15 @@
 <template>
   <div class="HomeRecommIllust illusts">
     <top-bar />
-    <h3 class="af_title">{{ $t('common.recomm_art') }}</h3>
+    <h3 class="af_title">
+      {{ $t('common.recomm_art') }}
+      <div class="clear-ih" @click="toggleSlide">
+        <Icon name="swiper-symbol" scale="1.5" />
+      </div>
+    </h3>
     <ImageList
+      v-if="showImageList"
+      :force-layout="forceSlideLayout ? 'VirtualSlide' : ''"
       :list="artList"
       :loading="loading"
       :finished="finished"
@@ -40,6 +47,8 @@ export default {
       finished: false,
       nextUrl: null,
       showLoadMoreBtn: window.APP_CONFIG.useLocalAppApi,
+      showImageList: true,
+      forceSlideLayout: false,
     }
   },
   head() {
@@ -49,6 +58,13 @@ export default {
     this.init()
   },
   methods: {
+    toggleSlide() {
+      this.showImageList = false
+      this.forceSlideLayout = !this.forceSlideLayout
+      this.$nextTick(() => {
+        this.showImageList = true
+      })
+    },
     async loadMore() {
       console.log('load-more')
       if (!this.showLoadMoreBtn) {
@@ -123,6 +139,13 @@ export default {
   margin-bottom 40px
   text-align center
   font-size 28px
+
+  .clear-ih
+    position absolute
+    top 50%
+    right 0
+    transform translateY(-50%)
+    cursor pointer
 
 .illusts
   position relative

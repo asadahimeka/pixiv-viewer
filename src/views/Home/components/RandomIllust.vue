@@ -5,10 +5,17 @@
         <Icon class="icon random" name="random" />
         <span class="title">{{ $t('common.random_view') }}</span>
       </template>
+      <template #right-icon>
+        <span style="cursor:pointer" @click="toggleSlide">
+          <Icon class="icon" name="swiper-symbol" />
+        </span>
+      </template>
     </van-cell>
     <ImageList
+      v-if="showImageList"
       list-class="artwork-list"
       vwtf-no-top
+      :force-layout="forceSlideLayout ? 'VirtualSlide' : ''"
       :list="artList"
       :loading="loading"
       :finished="finished"
@@ -38,12 +45,21 @@ export default {
       loading: false,
       finished: false,
       rankModes: ['day', 'week', 'month', 'week_original', 'day_male'],
+      showImageList: true,
+      forceSlideLayout: false,
     }
   },
   created() {
     this.getRankList()
   },
   methods: {
+    toggleSlide() {
+      this.showImageList = false
+      this.forceSlideLayout = !this.forceSlideLayout
+      this.$nextTick(() => {
+        this.showImageList = true
+      })
+    },
     getRankList: _.throttle(async function () {
       if (this.loading || this.finished) return
       this.loading = true

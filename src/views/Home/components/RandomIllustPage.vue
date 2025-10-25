@@ -1,9 +1,16 @@
 <template>
   <div class="HomeRecommIllust illusts">
     <top-bar />
-    <h3 class="af_title">{{ $t('common.random_view') }}</h3>
+    <h3 class="af_title">
+      {{ $t('common.random_view') }}
+      <div class="clear-ih" @click="toggleSlide">
+        <Icon name="swiper-symbol" scale="1.5" />
+      </div>
+    </h3>
     <ImageList
+      v-if="showImageList"
       list-class="artwork-list"
+      :force-layout="forceSlideLayout ? 'VirtualSlide' : ''"
       :list="artList"
       :loading="loading"
       :finished="finished"
@@ -43,6 +50,8 @@ export default {
       finished: false,
       rankModes: ['day', 'week', 'month', 'week_original', 'day_male'],
       isFromDetail: false,
+      showImageList: true,
+      forceSlideLayout: false,
     }
   },
   head() {
@@ -52,6 +61,13 @@ export default {
     this.init()
   },
   methods: {
+    toggleSlide() {
+      this.showImageList = false
+      this.forceSlideLayout = !this.forceSlideLayout
+      this.$nextTick(() => {
+        this.showImageList = true
+      })
+    },
     getRankList: async function () {
       if (this.loading || this.finished) return
       this.loading = true
@@ -98,6 +114,13 @@ export default {
   margin-bottom 40px
   text-align center
   font-size 28px
+
+  .clear-ih
+    position absolute
+    top 50%
+    right 0
+    transform translateY(-50%)
+    cursor pointer
 
 .illusts
   position relative

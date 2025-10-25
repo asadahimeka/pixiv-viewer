@@ -94,6 +94,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    forceLargeWebp: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -111,7 +115,8 @@ export default {
       }
       const i0 = this.artwork.images[0]
       if (this.square) return i0.s
-      return isLargeWebp ? getLargeWebpSrc(i0.l, i0.m) : i0.m
+      if (isLargeWebp || this.forceLargeWebp) return getLargeWebpSrc(i0.l, i0.m)
+      return i0.m
     },
     isAiIllust() {
       return isAiIllust(this.artwork)

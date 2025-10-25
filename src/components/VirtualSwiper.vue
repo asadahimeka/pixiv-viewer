@@ -34,7 +34,7 @@ export default {
   },
   data() {
     return {
-      isActive: false,
+      isActive: true,
       swiper: null,
       virtualData: { slides: [] },
       direction: getDirection(),

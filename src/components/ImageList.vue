@@ -15,6 +15,7 @@
         <ImageCard
           mode="all"
           :artwork="item"
+          :square="listType == 'VirtualGrid'"
           v-bind="imageCardProps(item)"
           @click-card="toArtwork(item)"
         />
@@ -57,6 +58,7 @@
       <template #default="{ slide }">
         <ImageCard
           mode="all"
+          force-large-webp
           :artwork="slide"
           v-bind="imageCardProps(slide)"
           @click-card="toArtwork(slide)"
@@ -86,11 +88,12 @@
           />
         </template>
       </JustifiedLayout>
-      <wf-cont v-else>
+      <wf-cont v-else :layout="forceLayout">
         <ImageCard
           v-for="(item, index) in list"
           :key="item.id || index"
           mode="all"
+          :square="listType == 'Grid'"
           :artwork="item"
           v-bind="imageCardProps(item)"
           @click-card="toArtwork(item)"
@@ -120,6 +123,7 @@ export default {
   props: {
     list: { type: Array, default: () => [] },
     listClass: { type: String, default: '' },
+    forceLayout: { type: String, default: '' },
     vanListProps: { type: Object, default: () => ({}) },
     imageCardProps: { type: Function, default: () => ({}) },
     vwtfNoTop: { type: Boolean, default: false },
@@ -137,6 +141,7 @@ export default {
   },
   computed: {
     listType() {
+      if (this.forceLayout) return this.forceLayout
       const { wfType, isVirtualList } = store.state.appSetting
       if (isVirtualList) {
         if (['Masonry', 'Grid', 'Justified'].includes(wfType)) return `Virtual${wfType}`

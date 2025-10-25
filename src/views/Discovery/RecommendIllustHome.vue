@@ -5,9 +5,16 @@
         <Icon class="icon" name="rec_heart" />
         <span class="title">{{ $t('sp.recomm_4u') }}</span>
       </template>
+      <template #right-icon>
+        <span style="cursor:pointer" @click="toggleSlide">
+          <Icon class="icon" name="swiper-symbol" />
+        </span>
+      </template>
     </van-cell>
     <ImageList
+      v-if="showImageList"
       vwtf-no-top
+      :force-layout="forceSlideLayout ? 'VirtualSlide' : ''"
       :list="artList"
       :loading="loading"
       :finished="finished"
@@ -36,12 +43,21 @@ export default {
       finished: false,
       nextUrl: null,
       showLoadMoreBtn: window.APP_CONFIG.useLocalAppApi,
+      showImageList: true,
+      forceSlideLayout: false,
     }
   },
   created() {
     this.getArtList()
   },
   methods: {
+    toggleSlide() {
+      this.showImageList = false
+      this.forceSlideLayout = !this.forceSlideLayout
+      this.$nextTick(() => {
+        this.showImageList = true
+      })
+    },
     async loadMore() {
       console.log('load-more')
       if (!this.showLoadMoreBtn) {

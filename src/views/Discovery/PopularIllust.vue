@@ -7,29 +7,20 @@
         <div class="com_sel_tab" @click="$router.push('/discovery/anonymous')">{{ $t('common.discovery') }}</div>
         <div class="com_sel_tab" @click="$router.push('/discovery/pollution')">{{ $t('qLlCQvCG0kXud25b-hKEv') }}</div>
       </div>
+      <div class="clear-ih" @click="toggleSlide">
+        <Icon name="swiper-symbol" scale="1.5" />
+      </div>
     </div>
-    <van-list
-      v-model="loading"
-      class="artwork-list"
-      :loading-text="$t('tips.loading')"
+    <ImageList
+      v-if="showImageList"
+      list-class="artwork-list"
+      :force-layout="forceSlideLayout ? 'VirtualSlide' : 'Grid'"
+      :list="artList"
+      :loading="loading"
       :finished="finished"
-      :finished-text="$t('tips.no_more')"
-      :error.sync="error"
-      :offset="800"
-      :error-text="$t('tips.net_err')"
-      @load="getRankList"
-    >
-      <wf-cont layout="Grid">
-        <ImageCard
-          v-for="art in artList"
-          :key="art.id"
-          mode="all"
-          square
-          :artwork="art"
-          @click-card="toArtwork(art)"
-        />
-      </wf-cont>
-    </van-list>
+      :error="error"
+      :on-load-more="getRankList"
+    />
     <van-loading v-show="loading" class="loading-fixed" size="50px" />
   </div>
 </template>
@@ -38,13 +29,13 @@
 import _ from '@/lib/lodash'
 import api from '@/api'
 import TopBar from '@/components/TopBar'
-import ImageCard from '@/components/ImageCard.vue'
+import ImageList from '@/components/ImageList.vue'
 
 export default {
   name: 'PopularIllust',
   components: {
     TopBar,
-    ImageCard,
+    ImageList,
   },
   data() {
     return {
@@ -53,12 +44,24 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      showImageList: true,
+      forceSlideLayout: false,
     }
   },
   head() {
     return { title: this.$t('Oz0zZHqnxZoCjYysARbO1') }
   },
+  created() {
+    this.getRankList()
+  },
   methods: {
+    toggleSlide() {
+      this.showImageList = false
+      this.forceSlideLayout = !this.forceSlideLayout
+      this.$nextTick(() => {
+        this.showImageList = true
+      })
+    },
     getRankList: _.throttle(async function () {
       this.loading = true
       const res = await api.getPopularIllusts(this.curPage)
@@ -82,13 +85,6 @@ export default {
         this.error = true
       }
     }, 800),
-    toArtwork(art) {
-      this.$store.dispatch('setGalleryList', this.artList)
-      this.$router.push({
-        name: 'Artwork',
-        params: { id: art.id, art },
-      })
-    },
   },
 }
 </script>
@@ -100,6 +96,13 @@ export default {
   margin-bottom 40px
   text-align center
   font-size 28px
+
+  .clear-ih
+    position absolute
+    top 50%
+    right 0
+    transform translateY(-50%)
+    cursor pointer
 
 .discovery-tabs
   display flex
