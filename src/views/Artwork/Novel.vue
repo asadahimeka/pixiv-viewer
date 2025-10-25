@@ -176,8 +176,8 @@ export default {
   computed: {
     ...mapGetters(['isCensored']),
     showPntBtn() {
+      if (store.state.appSetting.isAutoLoadKissT) return false
       return (
-        !store.state.appSetting.isAutoLoadImt &&
         i18n.locale.includes('zh') &&
         !/中文|中国语|Chinese|中國語|中国語/.test(JSON.stringify(this.artwork.tags))
       )

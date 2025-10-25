@@ -4,7 +4,7 @@
     <div class="mask">
       <canvas ref="mask" class="mask-text"></canvas>
     </div>
-    <div class="author-info" :class="{ is_novel: isNovel, isAutoLoadImt }">
+    <div class="author-info" :class="{ is_novel: isNovel, isAutoLoadKissT }">
       <Pximg
         v-if="!isNovel"
         class="avatar"
@@ -177,7 +177,7 @@ import CommentsArea from './Comment/CommentsArea.vue'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 
-const { isAutoLoadImt } = store.state.appSetting
+const { isAutoLoadKissT } = store.state.appSetting
 
 export default {
   name: 'ArtworkMeta',
@@ -202,7 +202,7 @@ export default {
       bookmarkId: null,
       favLoading: false,
       showComments: false,
-      isAutoLoadImt,
+      isAutoLoadKissT,
     }
   },
   computed: {
@@ -322,7 +322,7 @@ export default {
       }
     },
     async drawMask() {
-      if (this.isAutoLoadImt || isSafari()) return
+      if (this.isAutoLoadKissT || isSafari()) return
       if (this.isNovel) return
 
       await this.$nextTick()
@@ -620,7 +620,7 @@ export default {
     }
 
     &.is_novel,
-    &.isAutoLoadImt {
+    &.isAutoLoadKissT {
       .author {
         margin-top 20px
         font-size 24px
@@ -640,7 +640,7 @@ export default {
       }
     }
 
-    &.isAutoLoadImt {
+    &.isAutoLoadKissT {
       .avatar {
         display none
       }

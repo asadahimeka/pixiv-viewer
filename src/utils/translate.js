@@ -27,82 +27,82 @@ export async function loadKISSTranslator(isAutoLoad = false) {
   }
 }
 
-export async function loadImtSdk(isAutoLoadImt = false) {
-  if (!isAutoLoadImt && !localStorage.getItem('PXV_IMT_SDK_CFMED')) {
-    const res = await Dialog.confirm({
-      title: '加载沉浸式翻译 SDK',
-      message: '提示：如果已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK。可在偏好设置中打开自动加载沉浸式翻译 SDK。',
-      lockScroll: false,
-      closeOnPopstate: true,
-      cancelButtonText: '取消',
-      confirmButtonText: '加载',
-    }).catch(() => 'cancel')
-    if (res != 'confirm') return
-    localStorage.setItem('PXV_IMT_SDK_CFMED', '1')
-  }
-  if (window.immersiveTranslateConfig) return
-  window.immersiveTranslateConfig = {
-    isAutoTranslate: isAutoLoadImt,
-    pageRule: {
-      selectors: [
-        '.novel_text',
-        '.artwork-meta .name-box .title',
-        '.artwork-meta .name-box .series',
-        '.artwork-meta .caption',
-        '.artwork .series-btns',
-        '.users .info .detail .content',
-        '.comments-popup .content',
-        '.live_detail .content .title',
-        '.live_detail .content .chat-item span:last-child',
-      ],
-      translationClasses: ['imt-res-text'],
-    },
-  }
-  await loadScript('https://download.immersivetranslate.com/immersive-translate-sdk-latest.js')
-  const style = document.createElement('style')
-  style.innerHTML = `
-  .imt-fb-more-buttons .btn-animate:first-child,
-  .imt-fb-more-buttons .btn-animate:last-child,
-  .btn-animate[title="关闭悬浮球"],
-  .popup-container .popup-content > div.flex:first-child,
-  .popup-container .trial-pro-container,
-  .popup-container .text-sm.px-1.text-gray-2,
-  .popup-container .widgets-container.mt-5,
-  .popup-container footer,
-  .translation-service-container .custom-select-item:has(.custom-select-item-pro),
-  .translation-service-container select option[value="deepl"],
-  .translation-service-container select option[value="openai"],
-  .translation-service-container select option[value="gemini"],
-  .translation-service-container select option[value="claude"],
-  .translation-service-container select option[value="more"] {
-    display: none !important;
-  }`
-  setTimeout(() => {
-    document.querySelector('#immersive-translate-popup')?.shadowRoot?.appendChild(style)
-    try {
-      const buildinConfig = JSON.parse(localStorage.buildinConfig).buildinConfig
-      buildinConfig.telemetry = false
-      // buildinConfig.translationService = 'bing'
-      buildinConfig.translationService = 'siliconcloud'
-      buildinConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
-      buildinConfig.translationServices.siliconcloud.assistantId = 'common'
-      buildinConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2-7B-Instruct'
-      localStorage.buildinConfig = JSON.stringify({ buildinConfig })
-      const userConfig = JSON.parse(localStorage.userConfig).userConfig
-      userConfig.telemetry = false
-      // userConfig.translationService = 'bing'
-      userConfig.translationService = 'siliconcloud'
-      userConfig.translationServices = userConfig.translationServices || {}
-      userConfig.translationServices.siliconcloud = userConfig.translationServices.siliconcloud || {}
-      userConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
-      userConfig.translationServices.siliconcloud.assistantId = 'common'
-      userConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2-7B-Instruct'
-      localStorage.userConfig = JSON.stringify({ userConfig })
-    } catch (err) {
-      console.log('err: ', err)
-    }
-  }, 800)
-}
+// export async function loadImtSdk(isAutoLoadImt = false) {
+//   if (!isAutoLoadImt && !localStorage.getItem('PXV_IMT_SDK_CFMED')) {
+//     const res = await Dialog.confirm({
+//       title: '加载沉浸式翻译 SDK',
+//       message: '提示：如果已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK。可在偏好设置中打开自动加载沉浸式翻译 SDK。',
+//       lockScroll: false,
+//       closeOnPopstate: true,
+//       cancelButtonText: '取消',
+//       confirmButtonText: '加载',
+//     }).catch(() => 'cancel')
+//     if (res != 'confirm') return
+//     localStorage.setItem('PXV_IMT_SDK_CFMED', '1')
+//   }
+//   if (window.immersiveTranslateConfig) return
+//   window.immersiveTranslateConfig = {
+//     isAutoTranslate: isAutoLoadImt,
+//     pageRule: {
+//       selectors: [
+//         '.novel_text',
+//         '.artwork-meta .name-box .title',
+//         '.artwork-meta .name-box .series',
+//         '.artwork-meta .caption',
+//         '.artwork .series-btns',
+//         '.users .info .detail .content',
+//         '.comments-popup .content',
+//         '.live_detail .content .title',
+//         '.live_detail .content .chat-item span:last-child',
+//       ],
+//       translationClasses: ['imt-res-text'],
+//     },
+//   }
+//   await loadScript('https://download.immersivetranslate.com/immersive-translate-sdk-latest.js')
+//   const style = document.createElement('style')
+//   style.innerHTML = `
+//   .imt-fb-more-buttons .btn-animate:first-child,
+//   .imt-fb-more-buttons .btn-animate:last-child,
+//   .btn-animate[title="关闭悬浮球"],
+//   .popup-container .popup-content > div.flex:first-child,
+//   .popup-container .trial-pro-container,
+//   .popup-container .text-sm.px-1.text-gray-2,
+//   .popup-container .widgets-container.mt-5,
+//   .popup-container footer,
+//   .translation-service-container .custom-select-item:has(.custom-select-item-pro),
+//   .translation-service-container select option[value="deepl"],
+//   .translation-service-container select option[value="openai"],
+//   .translation-service-container select option[value="gemini"],
+//   .translation-service-container select option[value="claude"],
+//   .translation-service-container select option[value="more"] {
+//     display: none !important;
+//   }`
+//   setTimeout(() => {
+//     document.querySelector('#immersive-translate-popup')?.shadowRoot?.appendChild(style)
+//     try {
+//       const buildinConfig = JSON.parse(localStorage.buildinConfig).buildinConfig
+//       buildinConfig.telemetry = false
+//       // buildinConfig.translationService = 'bing'
+//       buildinConfig.translationService = 'siliconcloud'
+//       buildinConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
+//       buildinConfig.translationServices.siliconcloud.assistantId = 'common'
+//       buildinConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2-7B-Instruct'
+//       localStorage.buildinConfig = JSON.stringify({ buildinConfig })
+//       const userConfig = JSON.parse(localStorage.userConfig).userConfig
+//       userConfig.telemetry = false
+//       // userConfig.translationService = 'bing'
+//       userConfig.translationService = 'siliconcloud'
+//       userConfig.translationServices = userConfig.translationServices || {}
+//       userConfig.translationServices.siliconcloud = userConfig.translationServices.siliconcloud || {}
+//       userConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
+//       userConfig.translationServices.siliconcloud.assistantId = 'common'
+//       userConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2-7B-Instruct'
+//       localStorage.userConfig = JSON.stringify({ userConfig })
+//     } catch (err) {
+//       console.log('err: ', err)
+//     }
+//   }, 800)
+// }
 
 export function getNoTranslateWords(tags = []) {
   return new Promise(resolve => {

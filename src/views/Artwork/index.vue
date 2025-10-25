@@ -1,5 +1,5 @@
 <template>
-  <div class="artwork" :class="{ isSafari, isAutoLoadImt, isSimulatedMeta }">
+  <div class="artwork" :class="{ isSafari, isAutoLoadKissT, isSimulatedMeta }">
     <TopBar />
     <div class="share_btn" @click="share">
       <Icon class="icon" name="share" />
@@ -81,7 +81,7 @@ import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 // import { mintFilter } from '@/utils/filter'
 
-const { isAutoLoadImt, isEnableSwipe } = store.state.appSetting
+const { isAutoLoadKissT, isEnableSwipe } = store.state.appSetting
 
 export default {
   name: 'Artwork',
@@ -138,7 +138,7 @@ export default {
       ],
       maybeAiAuthor: false,
       isSafari: isSafari(),
-      isAutoLoadImt,
+      isAutoLoadKissT,
       disableSwipe: !isEnableSwipe,
     }
   },
@@ -496,7 +496,7 @@ img[src*="https://api.moedog.org/qr/?url="]
   ::v-deep .top-bar-wrap
     width 2rem
     background none
-  &.isSafari, &.isAutoLoadImt
+  &.isSafari, &.isAutoLoadKissT
     .image-view.loaded
       min-height auto
     .ia-right ::v-deep .artwork-meta

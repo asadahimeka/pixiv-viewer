@@ -48,7 +48,6 @@ export default new Vuex.Store({
       isImageFitScreen: getSettingDef('PXV_IMG_FIT_SCREEN', true),
       isImageCardOuterMeta: getSettingDef('PXV_IMG_META_OUTER', true),
       isDirectPximg: getSettingDef('PXV_PXIMG_DIRECT', false),
-      isAutoLoadImt: getSettingDef('PXV_AUTO_LOAD_IMT', false),
       preferDownloadByFsa: false,
       preferDownloadByTm: false,
       dlSubDirByAuthor: false,
