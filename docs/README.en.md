@@ -2,6 +2,7 @@
 
 <h1 align="center">Pixiv Viewer <sup><small>Kai</small></sup></h1>
 <p align="center">Yet Another Pixiv Illustration & Novel Viewer.</p>
+<p align="center">Port of <a href="https://github.com/journey-ad/pixiv-viewer">journey-ad/pixiv-viewer</a></p>
 
 <p align="center">
 <img src="https://img.shields.io/badge/JavaScript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E" alt >
@@ -109,18 +110,18 @@ https://github.com/asadahimeka/pixiv-viewer/discussions
 
 ## Alternatives
 
-- [PixiviFE](https://pixivfe.cocomi.eu.org/)
-- [Pixiviz](https://pixiviz.cocomi.eu.org/)
 - [Pixivel](https://pxelk.cocomi.eu.org/)
+- [Pixiviz](https://pixiviz.cocomi.eu.org/)
 - [PixivNow](https://pxnow.cocomi.eu.org/)
 - [PixivMoe](https://pixivmoe.cocomi.eu.org/)
 - [PixivLxns](https://pixivlxns.cocomi.eu.org/)
 - [MixPiv](https://mixpiv.cocomi.eu.org/)
+- [PixiviFE](https://pixivfe.cocomi.eu.org/)
 - [pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
 - [moeview](https://moeview.cocomi.eu.org/)
 - [booruwf](https://booru.cocomi.eu.org/)
-- [RankTop50](https://www.nanoka.top/illust/pixiv/)
+- [PixivRanking](https://www.nanoka.top/illust/pixiv/)
 
 ## Project Setup
 ```sh
