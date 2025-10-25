@@ -216,12 +216,12 @@
       </van-cell>
       <van-cell center :title="$t('GnyWarxXoDw49xCft4IlS')">
         <template #right-icon>
-          <van-switch :value="appSetting.isImgLazy" size="24" @change="v => saveAppSetting('isImgLazy', v, true)" />
+          <van-switch :value="appSetting.isImgLazyload" size="24" @change="v => saveAppSetting('isImgLazyload', v, true)" />
         </template>
       </van-cell>
       <van-cell center :title="$t('2CmJxHkq8O-uA68cU90Lx')">
         <template #right-icon>
-          <van-switch :value="appSetting.isImgLazyOb" size="24" @change="v => saveAppSetting('isImgLazyOb', v, true)" />
+          <van-switch :value="appSetting.isImgLazyloadOb" size="24" @change="v => saveAppSetting('isImgLazyloadOb', v, true)" />
         </template>
       </van-cell>
       <van-cell center :title="$t('_E9iTJP6wHVE-Qxau80YA')">
@@ -232,6 +232,11 @@
       <van-cell center :title="$t('foF5sr3Mc2YROB7MxRm49')">
         <template #right-icon>
           <van-switch :value="appSetting.isImageCardBoxShadow" size="24" @change="v => saveAppSetting('isImageCardBoxShadow', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center title="Navbar Alternative Style">
+        <template #right-icon>
+          <van-switch :value="appSetting.navBarAltStyle" size="24" @change="v => saveAppSetting('navBarAltStyle', v, true)" />
         </template>
       </van-cell>
       <van-cell center title="Show FPS indicator">
@@ -652,16 +657,30 @@ export default {
         LocalStorage.set('HIBIAPI_BASE', DEF_HIBIAPI_MAIN)
         LocalStorage.set('PXIMG_PROXY', DEF_PXIMG_MAIN)
       }
-      setTimeout(() => {
-        location.reload()
-      }, 500)
+      this.reloadPage()
     },
   },
   async created() {
     const { name } = (await getMainDirHandle()) || {}
     if (name) this.dlDirName = name
   },
+  mounted() {
+    const scrollTop = sessionStorage.getItem('PXV_SETTING_PAGE_SCROLL_TOP')
+    console.log('scrollTop: ', scrollTop)
+    if (scrollTop) {
+      sessionStorage.removeItem('PXV_SETTING_PAGE_SCROLL_TOP')
+      this.$nextTick(() => {
+        document.documentElement.scrollTop = +scrollTop
+      })
+    }
+  },
   methods: {
+    reloadPage() {
+      sessionStorage.setItem('PXV_SETTING_PAGE_SCROLL_TOP', document.documentElement.scrollTop)
+      setTimeout(() => {
+        location.reload()
+      }, 200)
+    },
     copyToken() {
       const t = this.clientConfig.refreshToken
       if (!t) return
@@ -669,15 +688,13 @@ export default {
     },
     async saveClientConfig() {
       PixivAuth.writeConfig(this.clientConfig)
-      setTimeout(() => {
-        location.reload()
-      }, 500)
+      this.reloadPage()
     },
     saveAppSetting(/** @type {keyof typeof store.state.appSetting} */ key, val, needReload = false) {
       console.log(key, val)
       window.umami?.track(`set:${key}`, { val })
       store.commit('setAppSetting', { [key]: val })
-      if (needReload) setTimeout(() => location.reload(), 200)
+      if (needReload) this.reloadPage()
     },
     async setDownloadDir() {
       try {
@@ -754,9 +771,7 @@ export default {
       window.umami?.track(`set:${key}`, { val })
       this.$nextTick(() => {
         LocalStorage.set(key, val)
-        setTimeout(() => {
-          location.reload()
-        }, 500)
+        this.reloadPage()
       })
     },
     async changePximgBed() {
@@ -849,9 +864,7 @@ export default {
       this.lang.value = _value
       window.umami?.track('set_lang', { lang: _value })
       localStorage.setItem('PXV_LANG', _value)
-      setTimeout(() => {
-        location.reload()
-      }, 500)
+      this.reloadPage()
     },
     onAnalyticsChange(val) {
       window.umami?.track('AnalyticsChange', { val })
@@ -874,9 +887,7 @@ export default {
           })
           window.umami?.track('importSettings')
           this.$toast.success(this.$t('0NCaoKpvYXQvFiCsbcPpK'))
-          setTimeout(() => {
-            location.reload()
-          }, 500)
+          this.reloadPage()
         } catch (err) {
           console.log('err: ', err)
           this.$toast(`${this.$t('-LmNvXZulUIIHq_iCdxda')}: ${err.message}`)
@@ -911,9 +922,7 @@ export default {
           }))
           window.umami?.track('importHistory')
           this.$toast.success(this.$t('0NCaoKpvYXQvFiCsbcPpK'))
-          setTimeout(() => {
-            location.reload()
-          }, 500)
+          this.reloadPage()
         } catch (err) {
           console.log('err: ', err)
           this.$toast(`${this.$t('-LmNvXZulUIIHq_iCdxda')}: ${err.message}`)
@@ -939,7 +948,7 @@ export default {
             confirmButtonText: 'Close',
             message: 'Invalid URL input.',
           }).then(() => {
-            location.reload()
+            this.reloadPage()
           })
         } else {
           Dialog.alert({
@@ -948,7 +957,7 @@ export default {
             confirmButtonText: 'Close',
             message: '<img src="https://upload-bbs.miyoushe.com/upload/2023/05/21/190122060/911b2f7ef84a863194dfb247c2dfdac9_4125491471312265373.png" alt style="width:100%">',
           }).then(() => {
-            location.reload()
+            this.reloadPage()
           })
         }
         return false
@@ -968,7 +977,7 @@ export default {
           message: this.$t('tip.connect_err'),
           confirmButtonText: 'OK',
         }).then(() => {
-          location.reload()
+          this.reloadPage()
         })
         return false
       }

@@ -21,7 +21,7 @@ import store from '@/store'
 const loadingSvg = loadSvg(localStorage.PXV_ACT_COLOR || '#38a9f5')
 const defSrc = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw=='
 
-const { isImgLazy, isDirectPximg } = store.state.appSetting
+const { isImgLazyload, isDirectPximg } = store.state.appSetting
 
 export default {
   name: 'DirectPximg',
@@ -43,7 +43,7 @@ export default {
     return {
       loading: true,
       localSrc: '',
-      isVLazy: isImgLazy,
+      isVLazy: isImgLazyload,
       direct: isDirectPximg,
     }
   },

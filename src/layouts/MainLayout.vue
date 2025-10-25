@@ -17,7 +17,7 @@ import Nav from '@/components/Nav'
 import store from '@/store'
 import { throttleScroll } from '@/utils'
 
-const { isImageFitScreen, isImageCardBorderRadius, isImageCardBoxShadow, hideNavBarOnScroll } = store.state.appSetting
+const { isImageFitScreen, isImageCardBorderRadius, isImageCardBoxShadow, hideNavBarOnScroll, navBarAltStyle } = store.state.appSetting
 
 export default {
   components: {
@@ -50,6 +50,7 @@ export default {
       return {
         'noImgFillScreen': !isImageFitScreen,
         'safe-area': this.safeArea,
+        'navbar-alt-style': navBarAltStyle,
       }
     },
   },

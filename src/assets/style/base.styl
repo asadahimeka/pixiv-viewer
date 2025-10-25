@@ -710,6 +710,58 @@ html:has(.dark)
     border-bottom-left-radius 8PX
     border-bottom-right-radius 8PX
     background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.95)), var(--accent-color, #f7f8fa);
+  @media screen and (min-width: 1280px)
+    .search .search-bar-wrap .search-bar
+      padding: 10px 7rem !important
+    .search .search-bar-wrap .search-bar-word
+      left: 8rem !important
+      top: 0.72rem !important
+    .search .image-search
+      right: 7rem !important
+      top: 0.4rem !important
+
+@media screen and (min-width: 1400px)
+  #app .noImgFillScreen .Home .home-i-tabs
+    justify-content: space-between;
+    padding: 0.3rem calc(50vw - 600PX);
+    .home-title
+        position: relative;
+        order: 1;
+        margin-left: 0.2rem;
+        transform: none
+        left: unset
+        top: unset
+    .sel-tabs
+        order: 3;
+    .home-search
+        order: 2;
+        position: relative;
+        transform: none
+        left: unset
+        top: unset
+
+#app .navbar-alt-style .nav-container .nav-bar
+  width: 90%;
+  transform: translateY(-0.2rem);
+  border-radius: 1rem;
+  li:has(.active)
+    color: var(--accent-color, #f2c358)
+    &::before
+      content ''
+      position absolute
+      top 50%
+      left 50%
+      z-index -1
+      transform translate(-50%, -50%)
+      width 100%
+      height 88%
+      border-radius: 1rem
+      background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)), var(--accent-color, #f2c358)
+  @media screen and (min-width: 1280px)
+    transform: translateX(-0.2rem);
+    li:has(.active)
+      &::before
+        display none
 
 .app-main:has(.live_detail)
   border-top 4PX solid #F2C358

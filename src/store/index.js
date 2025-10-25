@@ -53,8 +53,8 @@ export default new Vuex.Store({
       preferDownloadByTm: false,
       dlSubDirByAuthor: false,
       dlFileNameTpl: '{author}_{title}_{pid}_p{index}',
-      isImgLazy: false,
-      isImgLazyOb: false,
+      isImgLazyload: true,
+      isImgLazyloadOb: false,
       searchListMinFavNum: '5',
       isImageCardBorderRadius: true,
       isImageCardBoxShadow: true,
@@ -80,6 +80,7 @@ export default new Vuex.Store({
       novelFilterTagLenMax: 30,
       novelFilterTagSplitMax: 5,
       searchListPagination: false,
+      navBarAltStyle: isSafari(),
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },
@@ -160,9 +161,8 @@ export default new Vuex.Store({
       state.seasonEffects = val
     },
     setAppSetting(state, obj) {
-      const setting = { ...state.appSetting, ...obj }
-      state.appSetting = setting
-      LocalStorage.set('PXV_APP_SETTING', setting)
+      state.appSetting = { ...state.appSetting, ...obj }
+      LocalStorage.set('PXV_APP_SETTING', { ...getSettingDef('PXV_APP_SETTING', {}), ...obj })
     },
     setRouteHistory(state, val) {
       state.routeHistory = val
