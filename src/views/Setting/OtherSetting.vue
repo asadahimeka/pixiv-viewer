@@ -234,6 +234,7 @@
           <van-switch :value="appSetting.isImageCardBoxShadow" size="24" @change="v => saveAppSetting('isImageCardBoxShadow', v, true)" />
         </template>
       </van-cell>
+      <van-cell center :title="$t('-Awb9ThE8xXqaFTAHFHE2')" is-link @click="appStartPage.show = true" />
       <van-cell center title="Navbar Alternative Style">
         <template #right-icon>
           <van-switch :value="appSetting.navBarAltStyle" size="24" @change="v => saveAppSetting('navBarAltStyle', v, true)" />
@@ -350,6 +351,14 @@
       description="小说默认翻译服务"
       close-on-click-action
       @select="e => saveAppSetting('novelDefTranslate', e._value)"
+    />
+    <van-action-sheet
+      v-model="appStartPage.show"
+      :actions="appStartPage.actions"
+      :cancel-text="$t('common.cancel')"
+      :description="$t('-Awb9ThE8xXqaFTAHFHE2')"
+      close-on-click-action
+      @select="e => saveAppSetting('appStartPage', e._value)"
     />
     <van-action-sheet
       v-model="lang.show"
@@ -545,6 +554,7 @@ export default {
       ugoiraDL: {
         show: false,
         actions: [
+          { name: '', subname: i18n.t('ks96nwuAms0B8wSWBWhil') },
           { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
           { name: 'GIF', subname: i18n.t('artwork.download.gif') },
           { name: 'WebM', subname: i18n.t('artwork.download.webm') },
@@ -598,6 +608,39 @@ export default {
             _value: `sc_${k}`,
           })),
           { name: '有道翻译', _value: 'yd' },
+        ],
+      },
+      appStartPage: {
+        show: false,
+        actions: [
+          { name: i18n.t('nav.home') + ' - ' + i18n.t('common.illust'), _value: '/' },
+          { name: i18n.t('nav.home') + ' - ' + i18n.t('common.manga'), _value: '/home_manga' },
+          { name: i18n.t('nav.home') + ' - ' + i18n.t('common.novel'), _value: '/home_novel' },
+          { name: i18n.t('nav.home') + ' - ' + i18n.t('sp.title'), _value: '/spotlights' },
+          { name: i18n.t('nav.home') + ' - ' + i18n.t('Oz0zZHqnxZoCjYysARbO1'), _value: '/popular_illust' },
+          { name: i18n.t('nav.home') + ' - ' + i18n.t('common.recomm'), _value: '/osusume_illust' },
+          { name: i18n.t('nav.home') + ' - ' + i18n.t('common.random_view'), _value: '/random_illust' },
+          { name: i18n.t('nav.search') + ' - ' + i18n.t('common.illust_manga'), _value: '/search' },
+          { name: i18n.t('nav.search') + ' - ' + i18n.t('common.user'), _value: '/search_novel' },
+          { name: i18n.t('nav.search') + ' - ' + i18n.t('common.novel'), _value: '/search_user' },
+          { name: i18n.t('nav.rank') + ' - ' + i18n.t('common.overall'), _value: '/rank/daily' },
+          { name: i18n.t('nav.rank') + ' - AI', _value: '/rank/daily_ai' },
+          { name: i18n.t('nav.rank') + ' - ' + i18n.t('common.illust'), _value: '/rank/daily_illust' },
+          { name: i18n.t('nav.rank') + ' - ' + i18n.t('common.ugoira'), _value: '/rank/daily_ugoira' },
+          { name: i18n.t('nav.rank') + ' - ' + i18n.t('common.manga'), _value: '/rank/daily_manga' },
+          { name: i18n.t('nav.rank') + ' - ' + i18n.t('common.novel'), _value: '/rank_novel/day' },
+          ...(store.getters.isLoggedIn
+            ? [
+                { name: i18n.t('nav.follow') + ' - ' + i18n.t('common.illust_manga'), _value: '/following' },
+                { name: i18n.t('nav.follow') + ' - ' + i18n.t('common.novel'), _value: '/following/5' },
+                { name: i18n.t('nav.follow') + ' - ' + i18n.t('follow.fav') + ' - ' + i18n.t('common.illust_manga'), _value: '/following/2' },
+                { name: i18n.t('nav.follow') + ' - ' + i18n.t('follow.fav') + ' - ' + i18n.t('common.novel'), _value: '/following/7' },
+                { name: i18n.t('nav.follow') + ' - ' + i18n.t('follow.user'), _value: '/following/3' },
+                { name: i18n.t('nav.follow') + ' - ' + i18n.t('iHxoO4eLVL-CHSVMoVynN'), _value: '/following/6' },
+                { name: i18n.t('nav.follow') + ' - ' + i18n.t('follow.latest'), _value: '/following/4' },
+              ]
+            : []),
+          { name: i18n.t('nav.setting'), _value: '/setting' },
         ],
       },
       hideApSelect: LocalStorage.get('__HIDE_AP_SEL', false),

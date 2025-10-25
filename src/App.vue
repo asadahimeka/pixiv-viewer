@@ -34,6 +34,15 @@ export default {
       return store.state.appSetting.showFpsDemo
     },
   },
+  beforeCreate() {
+    if (location.pathname != '/') return
+    if (sessionStorage.getItem('PXV_WELCOME_PAGE_DONE')) return
+    const { appStartPage } = store.state.appSetting
+    if (appStartPage) {
+      sessionStorage.setItem('PXV_WELCOME_PAGE_DONE', '1')
+      this.$router.replace(appStartPage)
+    }
+  },
   async created() {
     checkIsLogin()
     fetchNotices()

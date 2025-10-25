@@ -141,6 +141,12 @@ const routes = [
             meta: { __depth: 1 },
           },
           {
+            path: '/following/:tab',
+            name: 'FollowingWithTab',
+            component: Following,
+            meta: { __depth: 1 },
+          },
+          {
             path: '/setting',
             name: 'Setting',
             component: Setting,

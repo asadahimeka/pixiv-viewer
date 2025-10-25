@@ -80,6 +80,7 @@ export default new Vuex.Store({
       novelFilterTagSplitMax: 5,
       searchListPagination: false,
       navBarAltStyle: isSafari(),
+      appStartPage: '',
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },
