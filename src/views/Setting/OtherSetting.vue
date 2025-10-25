@@ -907,8 +907,7 @@ export default {
           console.log('history: ', history)
           const keys = ['illusts.history', 'novels.history', 'users.history']
           await Promise.all(history.map(async (arr, i) => {
-            if (!Array.isArray(arr)) throw new Error('Data incorrect')
-            return setCache(keys[i], arr)
+            if (Array.isArray(arr)) return setCache(keys[i], arr)
           }))
           window.umami?.track('importHistory')
           this.$toast.success(this.$t('0NCaoKpvYXQvFiCsbcPpK'))
