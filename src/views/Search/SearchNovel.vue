@@ -232,7 +232,7 @@ export default {
   },
   watch: {
     usersIriTag(val) {
-      window.umami?.track('search_novel_usersIriTag', { val })
+      // window.umami?.track('search_novel_usersIriTag', { val })
       this.reset()
       this.doSearch(this.keywords)
     },

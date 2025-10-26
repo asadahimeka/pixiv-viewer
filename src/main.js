@@ -40,9 +40,9 @@ async function setupApp() {
   await initLocalApi()
 
   Vue.use(Toast)
-  if (store.state.appSetting.isImgLazyload) {
+  if (store.state.appSetting.isImgLazy) {
     Vue.use(Lazyload, {
-      observer: store.state.appSetting.isImgLazyloadOb,
+      observer: store.state.appSetting.isImgLazyOb,
       observerOptions: { rootMargin: '0px 50px 50px 0px', threshold: [0] },
       lazyComponent: false,
       loading: loadingSvg(localStorage.PXV_ACT_COLOR || '#38a9f5'),

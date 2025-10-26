@@ -216,12 +216,12 @@
       </van-cell>
       <van-cell center :title="$t('GnyWarxXoDw49xCft4IlS')">
         <template #right-icon>
-          <van-switch :value="appSetting.isImgLazyload" size="24" @change="v => saveAppSetting('isImgLazyload', v, true)" />
+          <van-switch :value="appSetting.isImgLazy" size="24" @change="v => saveAppSetting('isImgLazy', v, true)" />
         </template>
       </van-cell>
       <van-cell center :title="$t('2CmJxHkq8O-uA68cU90Lx')">
         <template #right-icon>
-          <van-switch :value="appSetting.isImgLazyloadOb" size="24" @change="v => saveAppSetting('isImgLazyloadOb', v, true)" />
+          <van-switch :value="appSetting.isImgLazyOb" size="24" @change="v => saveAppSetting('isImgLazyOb', v, true)" />
         </template>
       </van-cell>
       <van-cell center :title="$t('_E9iTJP6wHVE-Qxau80YA')">
@@ -234,7 +234,7 @@
           <van-switch :value="appSetting.isImageCardBoxShadow" size="24" @change="v => saveAppSetting('isImageCardBoxShadow', v, true)" />
         </template>
       </van-cell>
-      <van-cell center :title="$t('-Awb9ThE8xXqaFTAHFHE2')" is-link @click="appStartPage.show = true" />
+      <van-cell center :title="$t('-Awb9ThE8xXqaFTAHFHE2')" :label="appSetting.appStartPage" is-link @click="appStartPage.show = true" />
       <van-cell center title="Navbar Alternative Style">
         <template #right-icon>
           <van-switch :value="appSetting.navBarAltStyle" size="24" @change="v => saveAppSetting('navBarAltStyle', v, true)" />

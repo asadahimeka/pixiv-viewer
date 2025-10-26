@@ -137,7 +137,7 @@ onMounted(() => {
   if (!['inherit', 'sans-serif', 'serif'].includes(novelTextConfig.font)) {
     loadCustomFont(novelTextConfig.font, true)
   }
-  window.umami?.track('novelTextConfig', novelTextConfig)
+  // window.umami?.track('novelTextConfig', novelTextConfig)
 })
 
 function openFontSelect() {

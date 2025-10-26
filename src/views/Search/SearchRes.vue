@@ -270,7 +270,7 @@ export default {
   },
   watch: {
     usersIriTag(val) {
-      window.umami?.track('search_illust_usersIriTag', { val })
+      // window.umami?.track('search_illust_usersIriTag', { val })
       this.reset()
       this.doSearch(this.keywords)
     },
@@ -278,7 +278,7 @@ export default {
       deep: true,
       handler(val) {
         console.log('searchParams: ', val)
-        window.umami?.track('search_illust_params', { val })
+        // window.umami?.track('search_illust_params', { val })
         if (this.showPopPreview) {
           this.$refs.popPreview.getList()
         } else {
