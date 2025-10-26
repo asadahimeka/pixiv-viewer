@@ -30,6 +30,9 @@
           <van-icon name="filter-o" class="filter-favs-icon" />
         </template>
       </van-popover>
+      <span v-if="actRankCat == '0'" style="display: inline-block;cursor: pointer;margin: -.1rem 0 0 .2rem;" @click="toggleSlide">
+        <Icon name="swiper-symbol" scale="2.5" />
+      </span>
       <span style="display: inline-block;cursor: pointer;">
         <div class="calendar" @click="isDatePickerShow = true">
           <div class="date">{{ dateNum }}</div>
@@ -37,7 +40,9 @@
       </span>
     </div>
     <ImageList
+      v-if="showImageList"
       list-class="rank-list"
+      :force-layout="forceSlideLayout ? 'VirtualSlide' : ''"
       :list="artList"
       :loading="loading"
       :finished="finished"
@@ -141,6 +146,8 @@ export default {
       showFilterFavsPop: false,
       isFilterFavs: false,
       isHideManga,
+      showImageList: true,
+      forceSlideLayout: false,
     }
   },
   head() {
@@ -188,6 +195,13 @@ export default {
     this.showFilterFavsPop = false
   },
   methods: {
+    toggleSlide() {
+      this.showImageList = false
+      this.forceSlideLayout = !this.forceSlideLayout
+      this.$nextTick(() => {
+        this.showImageList = true
+      })
+    },
     onRankCatSel({ _v }) {
       if (_v == '4') {
         this.$router.replace('/rank_novel/day')

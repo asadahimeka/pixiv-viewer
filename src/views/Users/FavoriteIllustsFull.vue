@@ -2,7 +2,7 @@
   <div class="user-illusts">
     <div class="illusts">
       <TopBar />
-      <FavoriteIllusts :id="+$route.params.id" key="multi-favorite" :not-from-artwork="notFromArtwork" />
+      <FavoriteIllusts :id="+$route.params.id" key="multi-favorite" :not-from-artwork="notFromArtwork" :is-current-user="!!$route.query.isCurrentUser" />
     </div>
   </div>
 </template>

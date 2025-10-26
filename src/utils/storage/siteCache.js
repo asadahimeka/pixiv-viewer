@@ -26,7 +26,7 @@ export async function initBookmarkCache() {
   if (!favMap) setCache('local.fav.map', {})
 }
 
-export async function toggleBookmarkCache(item, bool) {
+export async function toggleBookmarkCache(item, bool, isNovel = false) {
   const favMapKey = 'local.fav.map'
   const favMap = await getCache(favMapKey, {})
   if (bool) {
@@ -35,13 +35,14 @@ export async function toggleBookmarkCache(item, bool) {
     delete favMap[item.id]
   }
   await setCache(favMapKey, favMap)
-  const itemKey = `artwork_${item.id}`
+  const itemKey = isNovel ? `novel_${item.id}` : `artwork_${item.id}`
   const artwork = await getCache(itemKey)
   if (artwork) {
     artwork.is_bookmarked = bool
     await setCache(itemKey, artwork, 60 * 60 * 6)
   }
-  const listKey = `memberFavorite_${store.state.user?.id}_m0`
+  const uid = store.state.user?.id
+  const listKey = isNovel ? `member_fav_novel_${uid}_m0 ` : `memberFavorite_${uid}_m0`
   const list = await getCache(listKey)
   if (list?.illusts) {
     if (bool) {

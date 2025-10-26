@@ -2013,6 +2013,30 @@ export const localApi = {
       return false
     }
   },
+  async novelBookmarkAdd(id, restrict = 'public', tags) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v2/novel/bookmark/add', {
+        novel_id: `${id}`,
+        restrict,
+        tags,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async novelBookmarkDelete(id) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/novel/bookmark/delete', {
+        novel_id: `${id}`,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
 }
 
 export function getBookmarkRestrictTags(tags = []) {
@@ -2020,23 +2044,23 @@ export function getBookmarkRestrictTags(tags = []) {
     Dialog.confirm({
       title: i18n.t('user.fav'),
       message: `
-          <div id="sel_block_dialog">
-            <p style="margin:0.2rem 0">${i18n.t('r7d1o2ui8dhVA0A4rAwHq')}</p>
-            <div class="sel_block_chks" style="justify-content: center;">
-              <input type="radio" id="get_fav_restrict_public" name="restrict" value="public" checked />
-              <label for="get_fav_restrict_public" style="margin-right: 10px;">${i18n.t('tMMgcuNAMSfxgPmaTDPuN')}</label>
-              <input type="radio" id="get_fav_restrict_private" name="restrict" value="private" />
-              <label for="get_fav_restrict_private">${i18n.t('WUegrN0Qk6zuHdl9EHUa-')}</label>
-            </div>
-            <div style="height:1px;margin:0.2rem 0;border-bottom:1px solid #ccc"></div>
-            <p style="margin:0.2rem 0">${i18n.t('gJIMYUgtWdroLrG3seGNl')}</p>
-            <input id="get_fav_tags_input" type="text" style="margin-bottom:0.2rem">
-            ${tags.map(e => `
-            <div class="sel_block_chks" style="margin-bottom:0.1rem">
-              <input type="checkbox" data-tag="${e.name}">
-              <span style="text-align: left;">${e.name}</span>
-            </div>`).join('')}
-          </div>`,
+        <div id="sel_block_dialog">
+          <p style="margin:0.2rem 0">${i18n.t('r7d1o2ui8dhVA0A4rAwHq')}</p>
+          <div class="sel_block_chks" style="justify-content: center;">
+            <input type="radio" id="get_fav_restrict_public" name="restrict" value="public" checked />
+            <label for="get_fav_restrict_public" style="margin-right: 10px;">${i18n.t('tMMgcuNAMSfxgPmaTDPuN')}</label>
+            <input type="radio" id="get_fav_restrict_private" name="restrict" value="private" />
+            <label for="get_fav_restrict_private">${i18n.t('WUegrN0Qk6zuHdl9EHUa-')}</label>
+          </div>
+          <div style="height:1px;margin:0.2rem 0;border-bottom:1px solid #ccc"></div>
+          <p style="margin:0.2rem 0">${i18n.t('gJIMYUgtWdroLrG3seGNl')}</p>
+          <input id="get_fav_tags_input" type="text" style="margin-bottom:0.2rem">
+          ${tags.map(e => `
+          <div class="sel_block_chks" style="margin-bottom:0.1rem">
+            <input type="checkbox" data-tag="${e.name}">
+            <span style="text-align: left;">${e.name}</span>
+          </div>`).join('')}
+        </div>`,
       lockScroll: false,
       closeOnPopstate: true,
       cancelButtonText: i18n.t('common.cancel'),

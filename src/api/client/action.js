@@ -317,6 +317,8 @@ function initApp(pixiv) {
       'v1/illust/bookmark/delete': () => pixiv.unbookmarkIllust(d.illust_id),
       'v1/user/follow/add': () => pixiv.followUser(d.user_id, d.restrict),
       'v1/user/follow/delete': () => pixiv.unfollowUser(d.user_id),
+      'v2/novel/bookmark/add': () => pixiv.bookmarkNovel(d.novel_id, d.restrict, d.tags),
+      'v1/novel/bookmark/delete': () => pixiv.unbookmarkNovel(d.novel_id),
     }
     return fns[path]?.()
   })

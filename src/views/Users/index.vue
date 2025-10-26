@@ -219,6 +219,7 @@
               :not-from-artwork="notFromArtwork"
               :once="false"
               :show-title="false"
+              :is-current-user="isCurrentUser"
               @onCilck="showSub('favorite')"
             />
           </van-tab>
@@ -231,6 +232,7 @@
               :not-from-artwork="notFromArtwork"
               :once="false"
               :show-title="false"
+              :is-current-user="isCurrentUser"
               @onCilck="showSub('fav_novel')"
             />
           </van-tab>
@@ -384,7 +386,7 @@ export default {
         this.userInfo = res.data
         this.loading = false
         this.$nextTick(() => {
-          this.getCommentHeight()
+          this.commentHeight = this.$refs.comment.clientHeight
         })
 
         let historyList = await getCache('users.history', [])
@@ -400,9 +402,6 @@ export default {
           duration: 3000,
         })
       }
-    },
-    getCommentHeight() {
-      this.commentHeight = this.$refs.comment.clientHeight
     },
     copyId() {
       copyText(

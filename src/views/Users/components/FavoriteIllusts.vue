@@ -9,7 +9,12 @@
           </span>
         </template>
       </van-cell>
-      <h3 v-else class="af_title">{{ $t('user.fav_title') }}</h3>
+      <h3 v-else class="af_title">
+        <div class="discovery-tabs">
+          <div class="com_sel_tab cur">{{ $t('user.fav_title') }}</div>
+          <div class="com_sel_tab" @click="$router.replace($route.fullPath.replace('favorites', 'favorite_novels'))">{{ $t('user.fav_novel_title') }}</div>
+        </div>
+      </h3>
     </template>
     <ImageList
       :list="artList"
@@ -52,6 +57,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    isCurrentUser: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -84,7 +93,7 @@ export default {
       if (this.next == null) return
       this.loading = true
       let newList
-      const res = await api.getMemberFavorite(this.id, this.next)
+      const res = await api.getMemberFavorite(this.id, this.next, this.isCurrentUser)
       if (res.status === 0) {
         this.next = res.data.next
         newList = res.data.illusts
@@ -116,6 +125,13 @@ export default {
   margin-bottom 40px
   text-align center
   font-size 28px
+
+.discovery-tabs
+  display flex
+  justify-content center
+  align-items center
+  gap 10px
+  width 100%
 
 .favorite {
   .cell {

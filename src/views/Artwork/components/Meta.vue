@@ -307,7 +307,6 @@ export default {
     async showBookmarkDialog(/** @type {Event} */ ev) {
       ev.preventDefault()
       if (this.bookmarkId) return
-      if (this.isBookmarked) return
       const { restrict, tags } = await getBookmarkRestrictTags(this.artwork.tags)
       console.log('restrict: ', restrict)
       console.log('tags: ', tags)

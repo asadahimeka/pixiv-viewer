@@ -28,6 +28,18 @@
           <van-button type="info" size="small" plain block @click="showShare = true">
             {{ $t('artwork.share.share') }}
           </van-button>
+          <van-button
+            v-if="showBookmarkBtn"
+            v-longpress="showBookmarkDialog"
+            :loading="favLoading"
+            type="info"
+            size="small"
+            plain
+            block
+            @click="toggleBookmark"
+          >
+            {{ artwork.is_bookmarked ? $t('user.faved'): $t('user.fav') }}
+          </van-button>
           <van-button v-if="isNovelDlFormatSet" type="info" size="small" plain block @click="downloadNovel()">
             {{ $t('common.download') }}
           </van-button>
@@ -94,14 +106,14 @@
 import _ from '@/lib/lodash'
 import { mapGetters } from 'vuex'
 import { ImagePreview } from 'vant'
-import api from '@/api'
+import api, { getBookmarkRestrictTags, localApi } from '@/api'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
 import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel } from '@/utils/novel'
-import { getCache, setCache } from '@/utils/storage/siteCache'
+import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
 import NovelView from './components/NovelView.vue'
@@ -164,6 +176,8 @@ export default {
         !store.state.isMobile && ({ text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' }),
         { text: 'EPUB', val: 'epub' },
       ].filter(Boolean),
+      showBookmarkBtn: window.APP_CONFIG.useLocalAppApi,
+      favLoading: false,
     }
   },
   head() {
@@ -264,6 +278,46 @@ export default {
           icon: require('@/icons/error.svg'),
           duration: 3000,
         })
+      }
+    },
+    toggleBookmark() {
+      this.favLoading = true
+      if (this.artwork.is_bookmarked) {
+        localApi.novelBookmarkDelete(this.artwork.id).then(isOk => {
+          this.favLoading = false
+          if (isOk) {
+            this.artwork.is_bookmarked = false
+            toggleBookmarkCache(this.artwork, false, true)
+          } else {
+            this.$toast(this.$t('artwork.unfav_fail'))
+          }
+        })
+      } else {
+        localApi.novelBookmarkAdd(this.artwork.id).then(isOk => {
+          this.favLoading = false
+          if (isOk) {
+            this.artwork.is_bookmarked = true
+            toggleBookmarkCache(this.artwork, true, true)
+          } else {
+            this.$toast(this.$t('artwork.fav_fail'))
+          }
+        })
+      }
+    },
+    async showBookmarkDialog(/** @type {Event} */ ev) {
+      ev.preventDefault()
+      if (this.artwork.is_bookmarked) return
+      const { restrict, tags } = await getBookmarkRestrictTags(this.artwork.tags)
+      console.log('restrict: ', restrict)
+      console.log('tags: ', tags)
+      this.favLoading = true
+      const isOk = await localApi.novelBookmarkAdd(this.artwork.id, restrict, tags)
+      this.favLoading = false
+      if (isOk) {
+        this.artwork.is_bookmarked = true
+        toggleBookmarkCache(this.artwork, true, true)
+      } else {
+        this.$toast(this.$t('artwork.fav_fail'))
       }
     },
     onShareSel(_, index) {
