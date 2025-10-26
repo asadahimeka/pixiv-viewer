@@ -74,6 +74,7 @@
 - Import history error
 - Season effect
 - Novel translate button hide
+- Rollback the fucking v-lazy defaults to false
 
 ### 📚 Documentation
 
@@ -108,6 +109,7 @@
 - Release v1.29.3
 - Release v1.29.4
 - Release v1.29.5
+- Release v1.29.6
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
