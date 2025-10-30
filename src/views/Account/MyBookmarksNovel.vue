@@ -1,5 +1,6 @@
 <template>
   <div class="favorite">
+    <BookmarkTags type="novel" @update-sel-tag="updateSelTag" @update-restrict="updateRestrict" />
     <van-list
       v-model="loading"
       :loading-text="$t('tips.loading')"
@@ -22,11 +23,13 @@ import { mapState } from 'vuex'
 import _ from '@/lib/lodash'
 import api from '@/api'
 import NovelCard from '@/components/NovelCard.vue'
+import BookmarkTags from '@/views/Account/components/BookmarkTags.vue'
 
 export default {
   name: 'MyBookmarksNovel',
   components: {
     NovelCard,
+    BookmarkTags,
   },
   data() {
     return {
@@ -45,6 +48,8 @@ export default {
           default: 4,
         },
       },
+      restrict: 'public',
+      bookmarkTag: '',
     }
   },
   computed: {
@@ -59,6 +64,17 @@ export default {
     },
   },
   methods: {
+    updateRestrict(val) {
+      this.restrict = val
+      this.bookmarkTag = ''
+      this.reset()
+      this.getMemberFavorite()
+    },
+    updateSelTag(val) {
+      this.bookmarkTag = val
+      this.reset()
+      this.getMemberFavorite()
+    },
     reset() {
       this.next = 0
       this.curPage = 0
@@ -67,10 +83,13 @@ export default {
       this.finished = false
     },
     getMemberFavorite: _.throttle(async function () {
-      if (!this.user?.id) return
+      if (!this.user?.id || this.loading || this.finished) return
       if (this.next == null) return
       this.loading = true
-      const res = await api.getMemberFavoriteNovel(this.user.id, this.next, true)
+      const options = {}
+      if (this.restrict) options.restrict = this.restrict
+      if (this.bookmarkTag) options.tag = this.bookmarkTag
+      const res = await api.getMemberFavoriteNovel(this.user.id, this.next, true, options)
       if (res.status === 0) {
         this.next = res.data.next
         this.artList = _.uniqBy([

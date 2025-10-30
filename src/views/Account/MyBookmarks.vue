@@ -1,5 +1,6 @@
 <template>
   <div class="favorite">
+    <BookmarkTags v-if="isAppLogin" type="illust" @update-sel-tag="updateSelTag" @update-restrict="updateRestrict" />
     <ImageList
       :list="artList"
       :loading="loading"
@@ -14,6 +15,7 @@
 import _ from '@/lib/lodash'
 import { mapState } from 'vuex'
 import ImageList from '@/components/ImageList.vue'
+import BookmarkTags from '@/views/Account/components/BookmarkTags.vue'
 import { getBookmarkIllusts } from '@/api/user'
 import api from '@/api'
 
@@ -21,6 +23,7 @@ export default {
   name: 'MyBookmarks',
   components: {
     ImageList,
+    BookmarkTags,
   },
   data() {
     return {
@@ -30,6 +33,9 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      isAppLogin: window.APP_CONFIG.useLocalAppApi,
+      restrict: 'public',
+      bookmarkTag: '',
     }
   },
   computed: {
@@ -48,6 +54,17 @@ export default {
     this.getMemberFavorite()
   },
   methods: {
+    updateRestrict(val) {
+      this.restrict = val
+      this.bookmarkTag = ''
+      this.reset()
+      this.getMemberFavorite()
+    },
+    updateSelTag(val) {
+      this.bookmarkTag = val
+      this.reset()
+      this.getMemberFavorite()
+    },
     reset() {
       this.next = 0
       this.curPage = 0
@@ -56,7 +73,7 @@ export default {
       this.finished = false
     },
     getMemberFavorite() {
-      window.APP_CONFIG.useLocalAppApi
+      this.isAppLogin
         ? this.getBookmarks()
         : this.getBookmarksWeb()
     },
@@ -84,7 +101,10 @@ export default {
       if (!this.user?.id || this.loading || this.finished) return
       if (this.next == null) return
       this.loading = true
-      const res = await api.getMemberFavorite(this.user.id, this.next, true)
+      const options = {}
+      if (this.restrict) options.restrict = this.restrict
+      if (this.bookmarkTag) options.tag = this.bookmarkTag
+      const res = await api.getMemberFavorite(this.user.id, this.next, true, options)
       if (res.status === 0) {
         this.next = res.data.next
         this.artList = _.uniqBy([

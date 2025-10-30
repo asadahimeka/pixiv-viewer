@@ -301,9 +301,12 @@ function initApp(pixiv) {
     const { path, params } = req.query
     console.log('path: ', path)
     console.log('params: ', params)
+    const options = JSON.parse(params)
     const fns = {
-      'v2/illust/follow': () => pixiv.illustFollow(JSON.parse(params)),
-      'v1/novel/follow': () => pixiv.novelFollow(JSON.parse(params)),
+      'v2/illust/follow': () => pixiv.illustFollow(options),
+      'v1/novel/follow': () => pixiv.novelFollow(options),
+      'v1/user/bookmark-tags/illust': () => pixiv.userBookmarkIllustTags(options),
+      'v1/user/bookmark-tags/novel': () => pixiv.userBookmarkNovelTags(options),
     }
     return fns[path]?.()
   })

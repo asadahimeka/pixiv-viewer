@@ -97,13 +97,11 @@ export default {
   },
   watch: {
     activeTab() {
-      this.curPage = 1
-      this.artList = []
-      this.getList()
+      this.init()
     },
   },
   activated() {
-    this.init()
+    if (this.notFromDetail) this.init()
   },
   methods: {
     toArtwork(id) {
@@ -144,9 +142,9 @@ export default {
       }
     }, 1500),
     init() {
-      if (this.notFromDetail) {
-        this.getList()
-      }
+      this.curPage = 1
+      this.artList = []
+      this.getList()
     },
   },
 }

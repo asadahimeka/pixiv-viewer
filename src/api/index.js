@@ -1681,14 +1681,14 @@ const api = {
    * @param {Number} id 画师ID
    * @param {Number} max_bookmark_id max_bookmark_id
    */
-  async getMemberFavorite(id, max_bookmark_id, nocache = false) {
+  async getMemberFavorite(id, max_bookmark_id, nocache = false, options = {}) {
     const cacheKey = `memberFavorite_${id}_m${max_bookmark_id}`
     let memberFavorite = nocache ? null : await getCache(cacheKey)
 
     if (!memberFavorite) {
       memberFavorite = {}
 
-      const params = { id, max_bookmark_id }
+      const params = { id, max_bookmark_id, ...options }
       const headers = {}
       if (nocache) {
         params.t = Date.now()
@@ -1719,14 +1719,14 @@ const api = {
     return { status: 0, data: memberFavorite }
   },
 
-  async getMemberFavoriteNovel(id, max_bookmark_id, nocache = false) {
+  async getMemberFavoriteNovel(id, max_bookmark_id, nocache = false, options = {}) {
     const cacheKey = `member_fav_novel_${id}_m${max_bookmark_id}`
     let memberFavorite = nocache ? null : await getCache(cacheKey)
 
     if (!memberFavorite) {
       memberFavorite = {}
 
-      const params = { id, max_bookmark_id }
+      const params = { id, max_bookmark_id, ...options }
       const headers = {}
       if (nocache) {
         params.t = Date.now()
@@ -2035,6 +2035,26 @@ export const localApi = {
       return !res.error
     } catch (error) {
       return false
+    }
+  },
+  async userBookmarkTags(page = 1, restrict = 'public', type = 'illust') {
+    const res = await reqGet(`v1/user/bookmark-tags/${type}`, {
+      restrict,
+      offset: (page - 1) * 30,
+    })
+    console.log('userBookmarkTags: ', type, res)
+    if (res.bookmark_tags) {
+      return { status: 0, data: res.bookmark_tags }
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: dealErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
     }
   },
 }

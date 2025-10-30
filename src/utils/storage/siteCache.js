@@ -17,7 +17,7 @@ export async function getCache(key, def) {
     val = await localDb.get(key, def)
     _siteCacheData.set(key, val)
   }
-  console.log('getCache', key, val)
+  console.log('getCache', key, key == 'local.fav.map' ? '' : val)
   return val
 }
 

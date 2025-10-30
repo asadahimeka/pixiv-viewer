@@ -16,6 +16,7 @@
         </div>
       </h3>
     </template>
+    <BookmarkTags v-if="isCurrentUser" type="illust" @update-sel-tag="updateSelTag" @update-restrict="updateRestrict" />
     <ImageList
       :list="artList"
       :loading="loading"
@@ -31,11 +32,13 @@
 import _ from '@/lib/lodash'
 import api from '@/api'
 import ImageList from '@/components/ImageList.vue'
+import BookmarkTags from '@/views/Account/components/BookmarkTags.vue'
 
 export default {
   name: 'FavoriteIllusts',
   components: {
     ImageList,
+    BookmarkTags,
   },
   props: {
     id: {
@@ -69,6 +72,8 @@ export default {
       error: false,
       loading: false,
       finished: false,
+      restrict: 'public',
+      bookmarkTag: '',
     }
   },
   mounted() {
@@ -82,6 +87,17 @@ export default {
     }
   },
   methods: {
+    updateRestrict(val) {
+      this.restrict = val
+      this.bookmarkTag = ''
+      this.reset()
+      this.getMemberFavorite()
+    },
+    updateSelTag(val) {
+      this.bookmarkTag = val
+      this.reset()
+      this.getMemberFavorite()
+    },
     reset() {
       this.next = 0
       this.artList = []
@@ -93,7 +109,12 @@ export default {
       if (this.next == null) return
       this.loading = true
       let newList
-      const res = await api.getMemberFavorite(this.id, this.next, this.isCurrentUser)
+      const options = {}
+      if (this.isCurrentUser) {
+        if (this.restrict) options.restrict = this.restrict
+        if (this.bookmarkTag) options.tag = this.bookmarkTag
+      }
+      const res = await api.getMemberFavorite(this.id, this.next, this.isCurrentUser, options)
       if (res.status === 0) {
         this.next = res.data.next
         newList = res.data.illusts
