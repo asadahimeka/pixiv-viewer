@@ -486,7 +486,7 @@ img[src*="https://api.moedog.org/qr/?url="]
     display: flex !important
     flex-direction: column
     .ia-left
-      flex 1
+      // flex 1
       min-height 55vh
     .ia-right
       position: relative

@@ -11,7 +11,7 @@
       </van-cell>
       <h3 v-else class="af_title">{{ $t('user.art_title', [authorName + iTypeText]) }}</h3>
     </template>
-    <div v-if="iType == 'illust'" class="member-tags" :class="{ 'show-all-tags': showAllTags }">
+    <div v-if="iType == 'illust'" class="member-tags">
       <template v-if="showR18TagFilter">
         <div class="member-tag" style="background: #ed4675;color: #fff;" @click="setAgeFilter('R')">
           <div class="member-tag-main">
@@ -26,7 +26,7 @@
           </div>
         </div>
       </template>
-      <div v-for="t in memberTagsDisplay" :key="t.tag" class="member-tag" :style="getTagStyle()" @click="setSelTag(t.tag)">
+      <div v-for="t in memberTagsDisplay" :key="t.tag" class="member-tag" :style="t.style" @click="setSelTag(t.tag)">
         <div class="member-tag-main">
           <span>#{{ t.tag }}</span>
           <template v-if="selTag">
@@ -37,13 +37,32 @@
         <div v-if="t.tag_translation">{{ t.tag_translation }}</div>
       </div>
       <div
-        v-if="!selTag && memberTags.length > 20 && !showAllTags"
+        v-if="!selTag && memberTags.length > 20"
         class="member-tag"
         style="background: #efefef;color: #333;"
         @click="showAllTags = true"
       >
         {{ $t('Tx35SIS0MBLD-pgz1XgXh') }}
       </div>
+      <van-popup
+        v-model="showAllTags"
+        round
+        closeable
+        get-container="body"
+        style="width: 80vw;max-width: 10rem;height:60vh;overflow: hidden;"
+      >
+        <div v-if="showAllTags" style="height: 90%;margin-top: 0.7rem;overflow-y: auto;">
+          <div class="member-tags popup" style="padding: 0.3rem">
+            <div v-for="t in memberTags" :key="t.tag" class="member-tag" :style="t.style" @click="setSelTag(t.tag)">
+              <div class="member-tag-main">
+                <span>#{{ t.tag }}</span>
+                <van-tag class="member-tag-cnt" style="margin-right: 0;">{{ t.cnt }}</van-tag>
+              </div>
+              <div v-if="t.tag_translation">{{ t.tag_translation }}</div>
+            </div>
+          </div>
+        </div>
+      </van-popup>
     </div>
     <van-list
       v-if="selTag"
@@ -138,7 +157,7 @@ export default {
     },
     memberTagsDisplay() {
       if (this.selTag) return this.memberTags.filter(e => e.tag == this.selTag)
-      return this.showAllTags ? this.memberTags : this.memberTags.slice(0, 20)
+      return this.memberTags.slice(0, 20)
     },
     showR18TagFilter() {
       return window.APP_CONFIG.useLocalAppApi && this.$store.getters.isR18On
@@ -176,6 +195,7 @@ export default {
     },
     setSelTag(tag) {
       this.resetList()
+      this.showAllTags = false
       if (tag == this.selTag) {
         this.selTag = ''
         this.tagArtsCount = 0
@@ -201,7 +221,7 @@ export default {
       if (this.iType != 'illust') return
       const res = await api.getMemberTags(this.id, this.$store.getters.isR18On)
       if (res.status === 0) {
-        this.memberTags = res.data
+        this.memberTags = res.data.map(e => ({ ...e, style: e.style || this.getTagStyle() }))
       } else {
         this.$toast({ message: res.msg })
         this.memberTags = []
@@ -325,20 +345,29 @@ export default {
   margin-top 20px
   margin-bottom 40px
 
-  &.show-all-tags {
-    max-height 3.6rem
-    margin-bottom 0.4rem
-    overflow-y auto
+  &.popup {
+    justify-content: center;
+    .member-tag {
+      content-visibility auto
+      contain-intrinsic-size auto 0.8rem
+    }
   }
 
   @media screen and (max-width: 1200px) {
-    flex-wrap nowrap
-    margin-bottom 30px
-    padding-bottom 10px
-    overflow-x auto
-
-    .member-tag {
-      min-width fit-content
+    &.popup {
+      .member-tag {
+        min-width 90%
+        min-height 0.9rem
+      }
+    }
+    &:not(.popup) {
+      flex-wrap nowrap
+      margin-bottom 30px
+      padding-bottom 10px
+      overflow-x auto
+      .member-tag {
+        min-width fit-content
+      }
     }
   }
 }
