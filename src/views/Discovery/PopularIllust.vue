@@ -124,4 +124,7 @@ export default {
     padding-top 20px
     background transparent
 
+  ::v-deep .bookmark
+    display none
+
 </style>

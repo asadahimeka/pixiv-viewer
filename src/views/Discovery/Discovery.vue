@@ -105,6 +105,9 @@ export default {
     margin-top: 2rem;
     text-align: center;
 
+  ::v-deep .bookmark
+    display none
+
   ::v-deep .top-bar-wrap
     width 30%
     padding-top 20px
