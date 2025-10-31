@@ -127,6 +127,7 @@ export default {
       showShare: false,
       shareOptions: [
         { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
+        { name: i18n.t('NpehaslwZK0m14UfYZaHO'), icon: IconLink },
         { name: i18n.t('artwork.share.type.copylink'), icon: IconLink },
         { name: i18n.t('artwork.share.type.qrcode'), icon: IconQrcode },
         { name: i18n.t('artwork.share.type.weibo'), icon: IconWeibo },
@@ -279,6 +280,13 @@ export default {
         },
         () => {
           copyText(
+            `${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`,
+            () => this.$toast(this.$t('tips.copylink.succ')),
+            err => this.$toast(this.$t('tips.copy_err') + err)
+          )
+        },
+        () => {
+          copyText(
             shareUrl,
             () => this.$toast(this.$t('tips.copylink.success')),
             err => this.$toast(this.$t('tips.copylink.error') + err)
@@ -310,6 +318,7 @@ export default {
         },
       ]
       actions[index]?.()
+      this.showShare = false
     },
     openUrl(url) {
       window.open(url, '_blank', 'noopener noreferrer')
