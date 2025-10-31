@@ -30,7 +30,7 @@
         @click.native.stop="view(index)"
         @contextmenu.native="preventContext"
       />
-      <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
+      <div v-if="seasonEffectSrc" class="season-effect" :style="`--ratio:${artworkRatio};--bg:url(${seasonEffectSrc})`"></div>
       <canvas
         v-if="showUgoiraControl"
         id="ugoira"
@@ -662,10 +662,11 @@ export default {
   left: 50%;
   z-index: 99;
   transform: translate(-50%, -50%);
-  width: 100%;
+  /* width: 100%; */
   height: 100%;
+  aspect-ratio: var(--ratio);
   pointer-events: none;
-  background: var(--bg) no-repeat center center / contain;
+  background: var(--bg) no-repeat center center / cover;
 }
 @media screen and (max-width: 600px) {
   .ia-cont .ia-left .image-view.loaded.overlong:not(.shrink) {
