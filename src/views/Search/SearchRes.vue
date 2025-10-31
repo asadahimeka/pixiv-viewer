@@ -125,21 +125,29 @@
         :on-load-more="onLoadMore"
       />
       <van-loading v-if="isPagination && loading" size="50px" style="margin: 32vh;text-align: center;" />
-      <van-pagination
-        v-if="isPagination && !showPopPreview"
-        :value="curPage"
-        :items-per-page="30"
-        :page-count="totalPages"
-        :show-page-size="pageBtnNum"
-        @change="onPageChange"
-      >
-        <template #prev-text>
-          <van-icon name="arrow-left" />
-        </template>
-        <template #next-text>
-          <van-icon name="arrow" />
-        </template>
-      </van-pagination>
+      <div v-if="isPagination && !showPopPreview" style="display: flex;justify-content: center;">
+        <van-pagination
+          :value="curPage"
+          :items-per-page="30"
+          :page-count="totalPages"
+          :show-page-size="pageBtnNum"
+          @change="onPageChange"
+        >
+          <template #prev-text>
+            <van-icon name="arrow-left" />
+          </template>
+          <template #next-text>
+            <van-icon name="arrow" />
+          </template>
+        </van-pagination>
+        <van-field
+          type="digit"
+          maxlength="3"
+          placeholder="Go"
+          style="width: 1.7rem;height: 40px;"
+          @keydown.enter="onPageChange(+$event.target.value)"
+        />
+      </div>
       <van-loading v-if="!isPagination && keywords.trim() && artList.length == 0 && !finished" class="loading" :size="'50px'" />
       <div class="mask" @click="focus = false"></div>
     </div>
@@ -367,6 +375,8 @@ export default {
       this.doSearch()
     },
     onPageChange(page) {
+      console.log('page: ', page)
+      if (!page) return
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
       this.curPage = page
       this.loading = false

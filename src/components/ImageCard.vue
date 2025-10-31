@@ -326,9 +326,6 @@ export default {
     position: absolute;
     top: 10px;
     right: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background: rgba(#000, 0.3);
     color: #fff;
     padding: 4px 8px;
@@ -336,8 +333,8 @@ export default {
     border-radius: 5px;
 
     svg
-      vertical-align: bottom;
-      margin-right: 4px;
+      vertical-align: middle;
+      margin-right: 1PX;
 
   .bookmark
     position absolute
