@@ -1,5 +1,16 @@
 <template>
   <div>
+    <van-radio-group
+      v-if="isAppLogin"
+      v-model="restrict"
+      direction="horizontal"
+      style="margin: 0.2rem 0 0.4rem;justify-content: center;"
+      @change="onRestrictChange"
+    >
+      <van-radio name="all">{{ $t('dR97TVmXFMlpOBpKF2bRL') }}</van-radio>
+      <van-radio name="public">{{ $t('tMMgcuNAMSfxgPmaTDPuN') }}</van-radio>
+      <van-radio name="private">{{ $t('WUegrN0Qk6zuHdl9EHUa-') }}</van-radio>
+    </van-radio-group>
     <ImageList
       list-class="artwork-list"
       :list="artList"
@@ -36,6 +47,8 @@ export default {
       loading: false,
       finished: false,
       lastId: null,
+      isAppLogin: window.APP_CONFIG.useLocalAppApi,
+      restrict: 'all',
     }
   },
   async created() {
@@ -49,11 +62,18 @@ export default {
     isLastSeen(id) {
       return id != this.artList[0]?.id && id == this.lastId
     },
+    onRestrictChange() {
+      this.curPage = 1
+      this.artList = []
+      this.loading = false
+      this.finished = false
+      this.getRankList()
+    },
     getRankList: _.throttle(async function () {
       if (this.loading || this.finished) return
       this.loading = true
-      const res = window.APP_CONFIG.useLocalAppApi
-        ? await localApi.illustFollow(this.curPage)
+      const res = this.isAppLogin
+        ? await localApi.illustFollow(this.curPage, this.restrict)
         : await getFollowingIllusts(this.curPage)
       if (res.status === 0) {
         this.artList = _.uniqBy([

@@ -1943,10 +1943,10 @@ export const localApi = {
 
     return { status: 0, data: filterCensoredIllusts(list) }
   },
-  async novelFollow(page = 1) {
+  async novelFollow(page = 1, restrict = 'all') {
     let list = []
     const offset = (page - 1) * 30
-    const params = {}
+    const params = { restrict }
     if (offset > 0) params.offset = offset
     const res = await reqGet('v1/novel/follow', params)
 

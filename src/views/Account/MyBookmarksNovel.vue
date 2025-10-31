@@ -63,6 +63,10 @@ export default {
       }
     },
   },
+  created() {
+    this.reset()
+    this.getMemberFavorite()
+  },
   methods: {
     updateRestrict(val) {
       this.restrict = val

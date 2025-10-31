@@ -31,6 +31,7 @@
             <div class="follow_btn" :class="{isFollowed}">
               <van-button
                 v-if="showFollowBtn"
+                v-longpress="followUserPrivate"
                 size="small"
                 :plain="!isFollowed"
                 :color="isFollowed ? 'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)' : '#4E4F97'"
@@ -357,7 +358,21 @@ export default {
         await setCache(itemKey, user, 60 * 60 * 6)
       }
     },
-    async toggleFollow() {
+    followUserPrivate() {
+      if (this.isFollowed) return
+      Dialog.confirm({
+        message: this.$t('U7uqf6LXov5GP4PvkrnFk'),
+        lockScroll: false,
+        closeOnPopstate: true,
+        cancelButtonText: this.$t('common.cancel'),
+        confirmButtonText: this.$t('common.confirm'),
+      }).then(res => {
+        if (res == 'confirm') {
+          this.toggleFollow('private')
+        }
+      }).catch(() => {})
+    },
+    async toggleFollow(restrict = 'public') {
       this.favLoading = true
       if (this.isFollowed) {
         const isOk = await localApi.userFollowDelete(this.userInfo.id)
@@ -369,7 +384,7 @@ export default {
           this.$toast(this.$t('user.unfollow_fail'))
         }
       } else {
-        const isOk = await localApi.userFollowAdd(this.userInfo.id)
+        const isOk = await localApi.userFollowAdd(this.userInfo.id, restrict)
         this.favLoading = false
         if (isOk) {
           this.userInfo.is_followed = true
