@@ -32,6 +32,10 @@
 - Navbar alt style
 - Home image list slides
 - App start page setting
+- Novel bookmark add/delete
+- Illust/novel bookmark restrict filter
+- Follow user privately
+- Bookmark & follow settings
 
 ### 🐛 Bug Fixes
 
@@ -75,6 +79,11 @@
 - Season effect
 - Novel translate button hide
 - Rollback the fucking v-lazy defaults to false
+- Hide bookmark button in popular/discovery page
+- Copy share text
+- Season effect cover style
+- Member illust tags style
+- Search results jump page
 
 ### 📚 Documentation
 
@@ -110,6 +119,7 @@
 - Release v1.29.4
 - Release v1.29.5
 - Release v1.29.6
+- Release v1.29.7
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
