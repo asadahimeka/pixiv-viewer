@@ -17,7 +17,7 @@
         </div>
         <div class="ia-right">
           <van-skeleton class="skeleton" title avatar :row="5" row-width="200px" avatar-size="42px" :loading="loading">
-            <ArtworkMeta ref="artworkMeta" :artwork="artwork" :maybe-ai-author="maybeAiAuthor" @ugoira-download="showUgPanelFromDlBtn" />
+            <ArtworkMeta ref="artworkMeta" :artwork="artwork" :maybe-ai-author="maybeAiAuthor" @ugoira-download="showUgPanelFromDlBtn" @update-author-follow="updateAuthorFollow" />
           </van-skeleton>
           <keep-alive>
             <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" @author-change="v => maybeAiAuthor = v" />
@@ -193,6 +193,10 @@ export default {
       } else {
         this.getArtwork(+id)
       }
+    },
+    updateAuthorFollow(val) {
+      if (typeof val != 'boolean') return
+      this.artwork.author.is_followed = val
     },
     async getArtwork(id) {
       await this.$nextTick()

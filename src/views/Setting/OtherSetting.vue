@@ -44,6 +44,49 @@
       </van-cell>
     </van-cell-group>
 
+    <van-cell-group v-if="clientConfig.useLocalAppApi" :title="$t('YEPi_dV_gdvw9NzE4iBEu')">
+      <van-cell center :title="$t('kUXt_VWip1c_DZjKGnfNE')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isDefBookmarkPrivate" size="24" @change="v => saveAppSetting('isDefBookmarkPrivate', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center :title="$t('pPdP_eYRyF6xl83qAZ8py')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isDefFollowPrivate" size="24" @change="v => saveAppSetting('isDefFollowPrivate', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center :title="$t('Kzn-_j_XdwEx0af7BLXWA')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isDefBookmarkAddTags" size="24" @change="v => saveAppSetting('isDefBookmarkAddTags', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center :title="$t('mHj_-v8C_IQvGnmZrub-d')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isAutoFollowAfterBookmark" size="24" @change="v => saveAppSetting('isAutoFollowAfterBookmark', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center :title="$t('J8jpRsD7IP-QHHzpQYvH3')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isAutoDownLoadAfterBookmark" size="24" @change="v => saveAppSetting('isAutoDownLoadAfterBookmark', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center :title="$t('OLNaZsi0wpY8KJRRatM0j')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isAutoBookmarkAfterDownload" size="24" @change="v => saveAppSetting('isAutoBookmarkAfterDownload', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center :title="$t('xlcRGv9gUFiOhgdaPh2cy')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isLongpressPrivateBookmark" size="24" @change="v => saveAppSetting('isLongpressPrivateBookmark', v, true)" />
+        </template>
+      </van-cell>
+      <van-cell center :title="$t('rsyTbSP8LCnLYe326zCa5')">
+        <template #right-icon>
+          <van-switch :value="appSetting.isLongpressPrivateFollow" size="24" @change="v => saveAppSetting('isLongpressPrivateFollow', v, true)" />
+        </template>
+      </van-cell>
+    </van-cell-group>
+
     <van-cell-group :title="$t('novel.settings.title')">
       <van-cell center :title="$t('j1tomH0kHtIiXUQ-6NhcS')" :label="$t('UiF3Ob-tYkIolJhNVMUFM')" is-link @click="showNovelConfig" />
       <van-cell center :title="$t('MIvoTULAIywXTtFIKsEuD')" :label="novelDlFmtLabel" is-link @click="novelDlFmt.show = true" />

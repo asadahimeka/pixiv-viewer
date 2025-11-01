@@ -34,7 +34,6 @@ export default {
   data() {
     return {
       next: 0,
-      curPage: 1,
       artList: [],
       error: false,
       loading: false,
@@ -81,7 +80,6 @@ export default {
     },
     reset() {
       this.next = 0
-      this.curPage = 0
       this.artList = []
       this.loading = false
       this.finished = false

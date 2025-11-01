@@ -1879,11 +1879,12 @@ export const localApi = {
     }
     return null
   },
-  async userFollowing(id, page = 1) {
+  async userFollowing(id, page = 1, restrict = 'public') {
     let list = []
     const res = await get('/following', {
       id,
       page,
+      restrict,
       t: Date.now(),
     }, {
       headers: {

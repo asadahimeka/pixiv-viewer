@@ -63,14 +63,27 @@
 import { Dialog, ImagePreview } from 'vant'
 import { mapGetters } from 'vuex'
 import { getBookmarkRestrictTags, localApi } from '@/api'
-import { getCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
+import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { isAiIllust } from '@/utils/filter'
 import { fancyboxShow, downloadFile } from '@/utils'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { ugoiraAvifSrc } from '@/consts'
 
-const { isImageCardOuterMeta, isLongpressDL, isLongpressBlock, imgReso, isUgoiraAvifSrc } = store.state.appSetting
+const {
+  isImageCardOuterMeta,
+  isLongpressDL,
+  isLongpressBlock,
+  imgReso,
+  isUgoiraAvifSrc,
+  isDefBookmarkPrivate,
+  isDefBookmarkAddTags,
+  isLongpressPrivateBookmark,
+  isDefFollowPrivate,
+  isAutoFollowAfterBookmark,
+  isAutoDownLoadAfterBookmark,
+  isAutoBookmarkAfterDownload,
+} = store.state.appSetting
 const isLargeWebp = imgReso == 'Large(WebP)'
 const getLargeWebpSrc = (src, fbk) => {
   return src?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') || fbk
@@ -136,12 +149,39 @@ export default {
     }
   },
   methods: {
+    async autoAddFollow() {
+      if (!isAutoFollowAfterBookmark || this.artwork.author.is_followed) return
+      const isFollowedCacheKey = `member_is_followed_${this.artwork.author.id}`
+      if (await getCache(isFollowedCacheKey)) return
+      this.bLoading = true
+      const isOk = await localApi.userFollowAdd(this.artwork.author.id, isDefFollowPrivate ? 'private' : 'public')
+      this.bLoading = false
+      if (!isOk) {
+        this.$toast(this.$t('user.follow_fail'))
+        return
+      }
+      await setCache(isFollowedCacheKey, true)
+      const itemKey = `memberInfo_${this.artwork.author.id}`
+      const user = await getCache(itemKey)
+      if (user) {
+        user.is_followed = true
+        await setCache(itemKey, user, 60 * 60 * 6)
+      }
+    },
     async addBookmark(restrict, tags) {
       try {
+        if (!restrict && isDefBookmarkPrivate) {
+          restrict = 'private'
+        }
+        if (!tags && isDefBookmarkAddTags) {
+          tags = this.artwork.tags.map(e => e.name)
+        }
         const isOk = await localApi.illustBookmarkAdd(this.artwork.id, restrict, tags)
         if (isOk) {
           this.isBookmarked = true
           toggleBookmarkCache(this.artwork, true)
+          this.autoAddFollow()
+          if (isAutoDownLoadAfterBookmark) this.downloadArtwork('noConfirm')
         } else {
           this.$toast(this.$t('artwork.fav_fail'))
         }
@@ -175,6 +215,12 @@ export default {
     async showBookmarkDialog(/** @type {Event} */ ev) {
       ev.preventDefault()
       if (this.isBookmarked) return
+      if (isLongpressPrivateBookmark) {
+        this.bLoading = true
+        await this.addBookmark('private', isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0)
+        this.bLoading = false
+        return
+      }
       const { restrict, tags } = await getBookmarkRestrictTags(this.artwork.tags)
       console.log('restrict: ', restrict)
       console.log('tags: ', tags)
@@ -258,17 +304,36 @@ export default {
         },
       }).catch(() => {})
     },
-    async downloadArtwork() {
+    async downloadArtwork(noConfirm) {
       if (this.artwork.type == 'ugoira') return
-      const res = await Dialog.confirm({
-        title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
-        message: this.artwork.title,
-        lockScroll: false,
-        closeOnPopstate: true,
-        cancelButtonText: this.$t('common.cancel'),
-        confirmButtonText: this.$t('common.confirm'),
-      }).catch(() => 'cancel')
-      if (res != 'confirm') return
+      if (noConfirm != 'noConfirm') {
+        const res = await Dialog.confirm({
+          title: this.$t('wuh4SsMnuqgjHpaOVp2rB'),
+          message: this.artwork.title,
+          lockScroll: false,
+          closeOnPopstate: true,
+          cancelButtonText: this.$t('common.cancel'),
+          confirmButtonText: this.$t('common.confirm'),
+        }).catch(() => 'cancel')
+        if (res != 'confirm') return
+      }
+      if (window.APP_CONFIG.useLocalAppApi && !this.isBookmarked && isAutoBookmarkAfterDownload) {
+        this.bLoading = true
+        localApi.illustBookmarkAdd(
+          this.artwork.id,
+          isDefBookmarkPrivate ? 'private' : void 0,
+          isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0
+        )
+          .then(isOk => {
+            this.bLoading = false
+            if (isOk) {
+              this.isBookmarked = true
+              toggleBookmarkCache(this.artwork, true)
+            } else {
+              this.$toast(this.$t('artwork.fav_fail'))
+            }
+          })
+      }
       window.umami?.track('download_artwork_longpress')
       await this.$nextTick()
       const len = this.artwork.images.length

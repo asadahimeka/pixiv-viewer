@@ -150,9 +150,10 @@ function initApp(pixiv) {
     })
   })
   app.get('/following', async req => {
-    const { id, page = 1, size = 30 } = req.query
+    const { id, page = 1, size = 30, restrict } = req.query
     return pixiv.userFollowing(id, {
       offset: (page - 1) * size,
+      restrict,
     })
   })
   app.get('/rank', async req => {

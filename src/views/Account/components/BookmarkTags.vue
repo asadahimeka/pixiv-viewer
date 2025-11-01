@@ -12,7 +12,7 @@
         <van-icon v-if="restrict == 'private'" class="member-tag-check" name="checked" />
       </div>
     </div>
-    <van-loading v-if="loading" size="0.7rem" />
+    <van-loading v-if="loading && !showAllTags" size="0.7rem" />
     <div v-if="selTagItem" class="member-tag" :style="selTagItem.style" @click="setSelTag(selTag)">
       <div class="member-tag-main">
         <span>#{{ selTag }}</span>

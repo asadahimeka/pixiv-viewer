@@ -133,6 +133,15 @@ import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 
 let novelTextBak = ''
+const {
+  isDefBookmarkPrivate,
+  isDefBookmarkAddTags,
+  isLongpressPrivateBookmark,
+  isDefFollowPrivate,
+  isAutoFollowAfterBookmark,
+  isAutoDownLoadAfterBookmark,
+  isAutoBookmarkAfterDownload,
+} = store.state.appSetting
 
 export default {
   name: 'NovelDetail',
@@ -293,32 +302,67 @@ export default {
           }
         })
       } else {
-        localApi.novelBookmarkAdd(this.artwork.id).then(isOk => {
+        localApi.novelBookmarkAdd(
+          this.artwork.id,
+          isDefBookmarkPrivate ? 'private' : void 0,
+          isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0
+        ).then(isOk => {
           this.favLoading = false
           if (isOk) {
             this.artwork.is_bookmarked = true
             toggleBookmarkCache(this.artwork, true, true)
+            this.autoAddFollow()
+            if (isAutoDownLoadAfterBookmark) this.downloadNovel()
           } else {
             this.$toast(this.$t('artwork.fav_fail'))
           }
         })
       }
     },
+    async autoAddFollow() {
+      if (!isAutoFollowAfterBookmark || this.artwork.author.is_followed) return
+      const isFollowedCacheKey = `member_is_followed_${this.artwork.author.id}`
+      if (await getCache(isFollowedCacheKey)) return
+      this.favLoading = true
+      const isOk = await localApi.userFollowAdd(this.artwork.author.id, isDefFollowPrivate ? 'private' : 'public')
+      this.favLoading = false
+      if (!isOk) {
+        this.$toast(this.$t('user.follow_fail'))
+        return
+      }
+      this.artwork.author.is_followed = true
+      await setCache(isFollowedCacheKey, true)
+      const itemKey = `memberInfo_${this.artwork.author.id}`
+      const user = await getCache(itemKey)
+      if (user) {
+        user.is_followed = true
+        await setCache(itemKey, user, 60 * 60 * 6)
+      }
+    },
     async showBookmarkDialog(/** @type {Event} */ ev) {
       ev.preventDefault()
       if (this.artwork.is_bookmarked) return
+      const action = async (restrict, tags) => {
+        this.favLoading = true
+        const isOk = await localApi.novelBookmarkAdd(this.artwork.id, restrict, tags)
+        this.favLoading = false
+        if (isOk) {
+          this.artwork.is_bookmarked = true
+          toggleBookmarkCache(this.artwork, true, true)
+          this.autoAddFollow()
+          if (isAutoDownLoadAfterBookmark) this.downloadNovel()
+        } else {
+          this.$toast(this.$t('artwork.fav_fail'))
+        }
+      }
+      if (isLongpressPrivateBookmark) {
+        await action('private', isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0)
+        return
+      }
       const { restrict, tags } = await getBookmarkRestrictTags(this.artwork.tags)
       console.log('restrict: ', restrict)
       console.log('tags: ', tags)
-      this.favLoading = true
-      const isOk = await localApi.novelBookmarkAdd(this.artwork.id, restrict, tags)
-      this.favLoading = false
-      if (isOk) {
-        this.artwork.is_bookmarked = true
-        toggleBookmarkCache(this.artwork, true, true)
-      } else {
-        this.$toast(this.$t('artwork.fav_fail'))
-      }
+      await action(restrict, tags)
     },
     onShareSel(_, index) {
       const actions = [
@@ -418,6 +462,23 @@ export default {
       }
       const blob = await actions[ext]()
       if (blob) await downloadFile(blob, `${fileName}.${ext}`, { subDir: 'novel' })
+      if (window.APP_CONFIG.useLocalAppApi && !this.artwork.is_bookmarked && isAutoBookmarkAfterDownload) {
+        this.favLoading = true
+        localApi.novelBookmarkAdd(
+          this.artwork.id,
+          isDefBookmarkPrivate ? 'private' : void 0,
+          isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0
+        )
+          .then(isOk => {
+            this.favLoading = false
+            if (isOk) {
+              this.artwork.is_bookmarked = true
+              toggleBookmarkCache(this.artwork, true, true)
+            } else {
+              this.$toast(this.$t('artwork.fav_fail'))
+            }
+          })
+      }
     },
     doDefPnt() {
       const key = store.state.appSetting.novelDefTranslate

@@ -36,7 +36,7 @@
                 :plain="!isFollowed"
                 :color="isFollowed ? 'linear-gradient(60deg, #96deda 0%, #50c9c3 100%)' : '#4E4F97'"
                 :loading="favLoading"
-                @click="toggleFollow"
+                @click="toggleFollow()"
               >
                 {{ isFollowed ? $t('user.followed') : $t('user.follow') }}
               </van-button>
@@ -266,6 +266,9 @@ import { Dialog } from 'vant'
 import api, { localApi } from '@/api'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { copyText } from '@/utils'
+import store from '@/store'
+
+const { isDefFollowPrivate, isLongpressPrivateFollow } = store.state.appSetting
 
 export default {
   name: 'Users',
@@ -350,6 +353,10 @@ export default {
       }
       this.getMemberInfo(id)
     },
+    updateAuthorFollow(val) {
+      if (typeof val != 'boolean') return
+      this.userInfo.is_followed = val
+    },
     async togggleFollowCache(bool) {
       const itemKey = `memberInfo_${this.userInfo.id}`
       const user = await getCache(itemKey)
@@ -360,6 +367,10 @@ export default {
     },
     followUserPrivate() {
       if (this.isFollowed) return
+      if (isLongpressPrivateFollow) {
+        this.toggleFollow('private')
+        return
+      }
       Dialog.confirm({
         message: this.$t('U7uqf6LXov5GP4PvkrnFk'),
         lockScroll: false,
@@ -372,7 +383,7 @@ export default {
         }
       }).catch(() => {})
     },
-    async toggleFollow(restrict = 'public') {
+    async toggleFollow(restrict) {
       this.favLoading = true
       if (this.isFollowed) {
         const isOk = await localApi.userFollowDelete(this.userInfo.id)
@@ -384,6 +395,9 @@ export default {
           this.$toast(this.$t('user.unfollow_fail'))
         }
       } else {
+        if (!restrict && isDefFollowPrivate) {
+          restrict = 'private'
+        }
         const isOk = await localApi.userFollowAdd(this.userInfo.id, restrict)
         this.favLoading = false
         if (isOk) {

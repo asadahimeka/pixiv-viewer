@@ -1,26 +1,38 @@
 <template>
-  <van-list
-    v-model="loading"
-    class="illusts"
-    :loading-text="$t('tips.loading')"
-    :finished="finished"
-    :finished-text="$t('tips.no_more')"
-    :error.sync="error"
-    :offset="800"
-    :error-text="$t('tips.net_err')"
-    @load="getUserList"
-  >
-    <masonry v-bind="masonryProps">
-      <ImageSlide v-for="u in userList" :key="u.id" :images="u.illusts.slice(0, 3)">
-        <div class="link" @click="toUserPage(u.id)">
-          <div class="user_info">
-            <Pximg nobg class="user_avatar" :src="u.avatar" alt="" />
-            <div class="user_name">{{ u.name }}</div>
+  <div>
+    <van-radio-group
+      v-if="isAppLogin"
+      v-model="restrict"
+      direction="horizontal"
+      style="margin: 0.2rem 0 0.4rem;justify-content: center;"
+      @change="onRestrictChange"
+    >
+      <van-radio name="public">{{ $t('tMMgcuNAMSfxgPmaTDPuN') }}</van-radio>
+      <van-radio name="private">{{ $t('WUegrN0Qk6zuHdl9EHUa-') }}</van-radio>
+    </van-radio-group>
+    <van-list
+      v-model="loading"
+      class="illusts"
+      :loading-text="$t('tips.loading')"
+      :finished="finished"
+      :finished-text="$t('tips.no_more')"
+      :error.sync="error"
+      :offset="800"
+      :error-text="$t('tips.net_err')"
+      @load="getUserList"
+    >
+      <masonry v-bind="masonryProps">
+        <ImageSlide v-for="u in userList" :key="u.id" :images="u.illusts.slice(0, 3)">
+          <div class="link" @click="toUserPage(u.id)">
+            <div class="user_info">
+              <Pximg nobg class="user_avatar" :src="u.avatar" alt="" />
+              <div class="user_name">{{ u.name }}</div>
+            </div>
           </div>
-        </div>
-      </ImageSlide>
-    </masonry>
-  </van-list>
+        </ImageSlide>
+      </masonry>
+    </van-list>
+  </div>
 </template>
 
 <script>
@@ -50,12 +62,21 @@ export default {
           default: 4,
         },
       },
+      isAppLogin: window.APP_CONFIG.useLocalAppApi,
+      restrict: 'public',
     }
   },
   mounted() {
     this.init()
   },
   methods: {
+    onRestrictChange() {
+      this.curPage = 1
+      this.userList = []
+      this.loading = false
+      this.finished = false
+      this.getUserList()
+    },
     toUserPage(id) {
       this.$router.push({
         name: 'Users',
@@ -64,8 +85,8 @@ export default {
     },
     getUserList: _.throttle(async function () {
       this.loading = true
-      const res = window.APP_CONFIG.useLocalAppApi
-        ? await localApi.userFollowing(this.$store.state.user.id, this.curPage)
+      const res = this.isAppLogin
+        ? await localApi.userFollowing(this.$store.state.user.id, this.curPage, this.restrict)
         : await getFollowingUsers(this.curPage)
       if (res.status === 0) {
         this.userList = _.uniqBy([

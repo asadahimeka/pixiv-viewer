@@ -171,13 +171,22 @@ import { copyText, isSafari, downloadFile, formatIntlDate, formatIntlNumber } fr
 import { i18n, isCNLocale } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
 import { getBookmarkRestrictTags, localApi } from '@/api'
-import { toggleBookmarkCache } from '@/utils/storage/siteCache'
+import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { isAiIllust } from '@/utils/filter'
 import CommentsArea from './Comment/CommentsArea.vue'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 
-const { isAutoLoadKissT } = store.state.appSetting
+const {
+  isAutoLoadKissT,
+  isDefBookmarkPrivate,
+  isDefBookmarkAddTags,
+  isLongpressPrivateBookmark,
+  isDefFollowPrivate,
+  isAutoFollowAfterBookmark,
+  isAutoDownLoadAfterBookmark,
+  isAutoBookmarkAfterDownload,
+} = store.state.appSetting
 
 export default {
   name: 'ArtworkMeta',
@@ -285,40 +294,77 @@ export default {
           })
       } else {
         window.APP_CONFIG.useLocalAppApi
-          ? localApi.illustBookmarkAdd(this.artwork.id).then(isOk => {
-            this.favLoading = false
-            if (isOk) {
-              this.bookmarkId = true
-              toggleBookmarkCache(this.artwork, true)
-            } else {
-              this.$toast(this.$t('artwork.fav_fail'))
-            }
-          })
-          : addBookmark(this.artwork.id).then(({ data, error }) => {
-            this.favLoading = false
-            if (error) {
-              this.$toast(this.$t('artwork.fav_fail'))
-            } else {
-              this.bookmarkId = data?.last_bookmark_id || null
-            }
-          })
+          ? localApi.illustBookmarkAdd(
+            this.artwork.id,
+            isDefBookmarkPrivate ? 'private' : void 0,
+            isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0
+          )
+            .then(isOk => {
+              this.favLoading = false
+              if (isOk) {
+                this.bookmarkId = true
+                toggleBookmarkCache(this.artwork, true)
+                this.autoAddFollow()
+                if (isAutoDownLoadAfterBookmark) this.downloadArtwork()
+              } else {
+                this.$toast(this.$t('artwork.fav_fail'))
+              }
+            })
+          : addBookmark(this.artwork.id)
+            .then(({ data, error }) => {
+              this.favLoading = false
+              if (error) {
+                this.$toast(this.$t('artwork.fav_fail'))
+              } else {
+                this.bookmarkId = data?.last_bookmark_id || null
+              }
+            })
+      }
+    },
+    async autoAddFollow() {
+      if (!isAutoFollowAfterBookmark || this.artwork.author.is_followed) return
+      const isFollowedCacheKey = `member_is_followed_${this.artwork.author.id}`
+      if (await getCache(isFollowedCacheKey)) return
+      this.favLoading = true
+      const isOk = await localApi.userFollowAdd(this.artwork.author.id, isDefFollowPrivate ? 'private' : 'public')
+      this.favLoading = false
+      if (!isOk) {
+        this.$toast(this.$t('user.follow_fail'))
+        return
+      }
+      this.$emit('update-author-follow', true)
+      await setCache(isFollowedCacheKey, true)
+      const itemKey = `memberInfo_${this.artwork.author.id}`
+      const user = await getCache(itemKey)
+      if (user) {
+        user.is_followed = true
+        await setCache(itemKey, user, 60 * 60 * 6)
       }
     },
     async showBookmarkDialog(/** @type {Event} */ ev) {
       ev.preventDefault()
-      if (this.bookmarkId) return
+      if (this.bookmarkId || !window.APP_CONFIG.useLocalAppApi) return
+      const action = async (restrict, tags) => {
+        this.favLoading = true
+        const isOk = await localApi.illustBookmarkAdd(this.artwork.id, restrict, tags)
+        this.favLoading = false
+        if (isOk) {
+          this.bookmarkId = true
+          toggleBookmarkCache(this.artwork, true)
+          this.autoAddFollow()
+          if (isAutoDownLoadAfterBookmark) this.downloadArtwork()
+        } else {
+          this.$toast(this.$t('artwork.fav_fail'))
+        }
+      }
+      if (isLongpressPrivateBookmark) {
+        await action('private', isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0)
+        return
+      }
       const { restrict, tags } = await getBookmarkRestrictTags(this.artwork.tags)
       console.log('restrict: ', restrict)
       console.log('tags: ', tags)
-      this.favLoading = true
-      const isOk = await localApi.illustBookmarkAdd(this.artwork.id, restrict, tags)
-      this.favLoading = false
-      if (isOk) {
-        this.bookmarkId = true
-        toggleBookmarkCache(this.artwork, true)
-      } else {
-        this.$toast(this.$t('artwork.fav_fail'))
-      }
+      await action(restrict, tags)
     },
     async drawMask() {
       if (this.isAutoLoadKissT || isSafari()) return
@@ -420,6 +466,23 @@ export default {
       if (this.artwork.type == 'ugoira') {
         this.$emit('ugoira-download')
         return
+      }
+      if (window.APP_CONFIG.useLocalAppApi && !this.bookmarkId && isAutoBookmarkAfterDownload) {
+        this.favLoading = true
+        localApi.illustBookmarkAdd(
+          this.artwork.id,
+          isDefBookmarkPrivate ? 'private' : void 0,
+          isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0
+        )
+          .then(isOk => {
+            this.favLoading = false
+            if (isOk) {
+              this.bookmarkId = true
+              toggleBookmarkCache(this.artwork, true)
+            } else {
+              this.$toast(this.$t('artwork.fav_fail'))
+            }
+          })
       }
       const len = this.artwork.images.length
       window.umami?.track('download_artwork_btn', { len })
