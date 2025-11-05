@@ -218,6 +218,7 @@ export default {
       if (isLongpressPrivateBookmark) {
         this.bLoading = true
         await this.addBookmark('private', isDefBookmarkAddTags ? this.artwork.tags.map(e => e.name) : void 0)
+        this.$toast(this.$t('kL2NNZsLQT9TUgeEmMQk3'))
         this.bLoading = false
         return
       }

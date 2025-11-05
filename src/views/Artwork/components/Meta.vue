@@ -353,6 +353,7 @@ export default {
           toggleBookmarkCache(this.artwork, true)
           this.autoAddFollow()
           if (isAutoDownLoadAfterBookmark) this.downloadArtwork()
+          if (restrict == 'private') this.$toast(this.$t('kL2NNZsLQT9TUgeEmMQk3'))
         } else {
           this.$toast(this.$t('artwork.fav_fail'))
         }

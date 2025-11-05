@@ -403,6 +403,7 @@ export default {
         if (isOk) {
           this.userInfo.is_followed = true
           this.togggleFollowCache(true)
+          if (restrict == 'private') this.$toast(this.$t('QcXruM7VMaBz-9zcw5wtD'))
         } else {
           this.$toast(this.$t('user.follow_fail'))
         }

@@ -60,18 +60,29 @@
             {{ $t('user.view_comments') }}
           </van-button>
           <template v-if="showPntBtn">
-            <van-button v-if="isNovelDefTranslateSet" type="info" size="small" plain block @click="doDefPnt">翻译</van-button>
+            <van-button v-if="isTranslated" type="info" size="small" plain block @click="showOriginText">显示原文</van-button>
+            <van-button
+              v-else-if="isNovelDefTranslateSet"
+              type="info"
+              size="small"
+              plain
+              block
+              :loading="translateLoading"
+              @click="doDefPnt"
+            >
+              翻译
+            </van-button>
             <van-popover
               v-else
               v-model="showPntPopover"
-              :actions="pntActions"
+              :actions="translateLoading ? [] : pntActions"
               trigger="click"
               placement="top"
               style="width: 100%;"
               @select="onPntSelect"
             >
               <template #reference>
-                <van-button type="info" size="small" plain block>翻译</van-button>
+                <van-button type="info" size="small" plain block :loading="translateLoading">翻译</van-button>
               </template>
             </van-popover>
           </template>
@@ -187,6 +198,8 @@ export default {
       ].filter(Boolean),
       showBookmarkBtn: window.APP_CONFIG.useLocalAppApi,
       favLoading: false,
+      translateLoading: false,
+      isTranslated: false,
     }
   },
   head() {
@@ -351,6 +364,7 @@ export default {
           toggleBookmarkCache(this.artwork, true, true)
           this.autoAddFollow()
           if (isAutoDownLoadAfterBookmark) this.downloadNovel()
+          if (restrict == 'private') this.$toast(this.$t('kL2NNZsLQT9TUgeEmMQk3'))
         } else {
           this.$toast(this.$t('artwork.fav_fail'))
         }
@@ -480,13 +494,16 @@ export default {
           })
       }
     },
+    showOriginText() {
+      this.novelText.text = novelTextBak
+      this.isTranslated = false
+    },
     doDefPnt() {
       const key = store.state.appSetting.novelDefTranslate
-      const action = this.pntActions.find(e => e.key == key)
-      if (!action) return
-      this.onPntSelect(action)
+      this.onPntSelect({ key, text: key })
     },
     async onPntSelect(action) {
+      if (this.translateLoading) return
       window.umami?.track('translate_novel', { with: action.text })
       store.commit('setIsNovelViewShrink', false)
       const fns = {
@@ -512,6 +529,7 @@ export default {
           return
         }
 
+        this.translateLoading = true
         const loading = this.$toast.loading({
           duration: 0,
           forbidClick: true,
@@ -529,6 +547,8 @@ export default {
         }
         this.novelText.text = res
         loading.clear()
+        this.translateLoading = false
+        this.isTranslated = true
       } catch (err) {
         console.log('fanyi err: ', err)
       }
@@ -540,6 +560,7 @@ export default {
         this.novelText.text = cacheText
         return
       }
+      this.translateLoading = true
       const notsArr = nots ? nots.split(',') : []
       const novelElement = document.querySelector('.novel_text')
       let resText = ''
@@ -550,11 +571,13 @@ export default {
           this.novelText.text = resText
           setCache(cacheKey, resText)
           this.$toast('翻译完毕')
+          this.translateLoading = false
+          this.isTranslated = true
           return
         }
 
         if (chunk.reasoning) {
-          resText += `<span style="color:gray;font-size:0.8em">${chunk.content}</span>`
+          resText = `<span style="color:gray;font-size:0.8em">思考中：${chunk.content}</span>`
         } else {
           resText += chunk.content
         }

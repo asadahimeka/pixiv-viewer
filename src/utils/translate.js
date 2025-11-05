@@ -133,15 +133,15 @@ export function getNoTranslateWords(tags = []) {
 export const aiModelMap = {
   glm: 'THUDM/glm-4-9b-chat',
   qwen2_5: 'Qwen/Qwen2.5-7B-Instruct',
+  hy_mt: 'tencent/Hunyuan-MT-7B',
   qwen2: 'Qwen/Qwen2-7B-Instruct',
   qwen3: 'Qwen/Qwen3-8B',
-  glm_0414: 'THUDM/GLM-4-9B-0414',
-  glm_z1: 'THUDM/GLM-Z1-9B-0414',
-  glm_4_1: 'THUDM/GLM-4.1V-9B-Thinking',
-  ds_r1_qwen: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
-  ds_r1_qwen3: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
+  // glm_0414: 'THUDM/GLM-4-9B-0414',
+  // glm_z1: 'THUDM/GLM-Z1-9B-0414',
+  // glm_4_1: 'THUDM/GLM-4.1V-9B-Thinking',
+  // ds_r1_qwen: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
+  // ds_r1_qwen3: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
   // ds_r1_llama: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
-  hy_mt: 'tencent/Hunyuan-MT-7B',
 }
 export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd = 'glm', onRead = console.log) {
   try {

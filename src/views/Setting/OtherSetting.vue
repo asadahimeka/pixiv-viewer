@@ -222,7 +222,7 @@
     </van-cell-group>
 
     <van-cell-group :title="$t('6oe7JPS26HGAlcjQdmHZ4')">
-      <van-cell center :title="$t('Na5UTdncjCSNrFJGlrPoq')">
+      <van-cell v-if="!isDark" center :title="$t('Na5UTdncjCSNrFJGlrPoq')">
         <template #right-icon>
           <van-switch :value="appSetting.withBodyBg" size="24" @change="v => saveAppSetting('withBodyBg', v, true)" />
         </template>
