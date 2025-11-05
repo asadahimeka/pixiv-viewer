@@ -84,6 +84,7 @@
 - Season effect cover style
 - Member illust tags style
 - Search results jump page
+- Bug fixes
 
 ### 📚 Documentation
 
@@ -120,6 +121,7 @@
 - Release v1.29.5
 - Release v1.29.6
 - Release v1.29.7
+- Release v1.30.0
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
