@@ -66,7 +66,7 @@ import axios from 'axios'
 // import tsWhammy from 'ts-whammy'
 // import { encode as encodeMP4 } from 'modern-mp4'
 import api from '@/api'
-import { BASE_URL, ugoiraAvifSrc } from '@/consts'
+import { BASE_URL, COMMON_PROXY, ugoiraAvifSrc } from '@/consts'
 import { sleep, fancyboxShow, loadScript, downloadFile } from '@/utils'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
@@ -105,7 +105,7 @@ export default {
       return this.artwork.width / this.artwork.height
     },
     seasonEffectSrc() {
-      if (this.artwork.seasonal_effect) return this.artwork.seasonal_effect
+      if (this.artwork.seasonal_effect) return COMMON_PROXY + this.artwork.seasonal_effect
       const tagNames = this.artwork.tags?.map(t => t.name) || []
       const match = this.$store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
       return match?.src || ''

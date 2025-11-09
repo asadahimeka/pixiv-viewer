@@ -82,10 +82,11 @@
               @select="onPntSelect"
             >
               <template #reference>
-                <van-button type="info" size="small" plain block :loading="translateLoading">翻译</van-button>
+                <van-button type="info" size="small" plain block :loading="translateLoading" style="margin-bottom: 10px;">翻译</van-button>
               </template>
             </van-popover>
           </template>
+          <van-button type="info" size="small" plain block @click="toggleNovelConfigShow">{{ $t('novel.settings.title') }}</van-button>
         </div>
         <keep-alive>
           <AuthorNovelCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />

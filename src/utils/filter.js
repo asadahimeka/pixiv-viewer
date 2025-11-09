@@ -3,8 +3,8 @@ import store from '@/store'
 import { getCache, setCache } from './storage/siteCache'
 import { COMMON_PROXY } from '@/consts'
 
-const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵|雀魂|じゃんたま/i
-const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐|スカラマシュ|散兵|雀魂|じゃんたま/i
+const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵/i
+const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐|スカラマシュ|散兵/i
 
 const HOME_BLOCKED_USER_IDS = [24517, 14002767, 16776564, 33333, 423251, 27526, 13150573, 119489738]
 export function filterHomeIllust(e) {
@@ -112,7 +112,7 @@ export function isAiIllust(artwork) {
 
 /** @type {Mint} */
 let mint
-const presetWords = ['vpn', 'VPN', '推荐', '好用', '梯子', '机场', 'clash', 'Clash', '下载']
+const presetWords = ['vpn', '推荐', '好用', '梯子', '机场', 'clash', '下载']
 export async function mintVerify(word = '', forceCheck = false) {
   if (presetWords.some(e => word.toLowerCase().includes(e.toLowerCase()))) {
     return false
@@ -162,8 +162,8 @@ export function isBlockTagHit(blockTags, value) {
 }
 
 export const BLOCK_INPUT_WORDS = [/r-?18/i, /18-?r/i, /^黄?色情?图$/, /^ero$/i, /工口/, /エロ/]
-export const BLOCK_LAST_WORD_RE = /(^\d+$)|スカラ|散|雀魂|じゃんたま/i
-export const BLOCK_SEARCH_WORD_RE = /スカラマシュ|散兵|放浪者|流浪者|雀魂|じゃんたま|Snowbreak|尘白禁区|スノウブレイク/i
-export const BLOCK_RESULT_RE = /恋童|ペド|幼女|进群|加好友|度盘|低价|スカラマシュ|散兵|雀魂|じゃんたま|Snowbreak|尘白禁区|スノウブレイク/i
+export const BLOCK_LAST_WORD_RE = /(^\d+$)|スカラ|散/i
+export const BLOCK_SEARCH_WORD_RE = /スカラマシュ|散兵|放浪者|流浪者/i
+export const BLOCK_RESULT_RE = /恋童|ペド|进群|加好友|度盘|低价|スカラマシュ|散兵/i
 export const AUTHORS_NO_TYPE_MANGA = [19585163, 16776564, 1453344, 18923, 18688682, 16106315, 10760589, 18758563]
 export const AUTHORS_NO_TYPE_AI = [10758107, 88598928, 31909437, 21470736, 14225123, 60651589, 127064402, 87931615, 95485582, 101555203, 20557152, 91255148, 12812040, 104397113]

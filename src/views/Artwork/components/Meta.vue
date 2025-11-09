@@ -73,7 +73,7 @@
     </div>
     <template v-if="artwork.event_banners">
       <div v-for="banner in artwork.event_banners" :key="banner.tap_url" class="event_banner">
-        <img :src="banner.icon_url" alt="">
+        <img :src="commonProxy(banner.icon_url)" alt="">
         <a @click="$router.push(banner.tap_url.replace('pixiv:/', ''))">{{ banner.title }}</a>
       </div>
     </template>
@@ -176,6 +176,7 @@ import { isAiIllust } from '@/utils/filter'
 import CommentsArea from './Comment/CommentsArea.vue'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
+import { COMMON_PROXY } from '@/consts'
 
 const {
   isAutoLoadKissT,
@@ -251,6 +252,9 @@ export default {
     this.drawMask()
   },
   methods: {
+    commonProxy(src) {
+      return COMMON_PROXY + src
+    },
     convertToK(val) {
       if (!val) return '-'
       if (isCNLocale()) return val

@@ -29,7 +29,7 @@ export default new Vuex.Store({
     /** @type {object|null} */
     user: null,
     blockTags: getSettingDef('PXV_B_TAGS', '').split(',').filter(Boolean),
-    blockUids: getSettingDef('PXV_B_UIDS', '').split(',').filter(Boolean).concat(['119489738']),
+    blockUids: getSettingDef('PXV_B_UIDS', '').split(',').filter(Boolean).concat(['119489738', '121033682']),
     isNovelViewShrink: true,
     isMobile,
     /** @type {any[]|null} */
