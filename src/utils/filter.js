@@ -1,7 +1,6 @@
 import Mint from 'mint-filter'
 import store from '@/store'
 import { getCache, setCache } from './storage/siteCache'
-import { COMMON_PROXY } from '@/consts'
 
 const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵/i
 const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐|スカラマシュ|散兵/i
@@ -139,12 +138,12 @@ export async function mintFilter(word = '') {
 }
 async function ensureMint() {
   if (!mint) {
-    let filterWords = await getCache('s.filter.words')
+    let filterWords = await getCache('sensitive.filter.words')
     if (!filterWords) {
-      const resp = await fetch(`${COMMON_PROXY}https://unpkg.com/@dragon-fish/sensitive-words-filter@2.0.1/lib/words.txt`)
+      const resp = await fetch('https://hibiapi.cocomi.eu.org/sensitive-words-filter/words.txt')
       const reg = /^[A-Za-z\d\s~`!@#$%^&*()_+\-=[\]{};':"\\|,./<>?]+$/
       filterWords = (await resp.text()).split(/\s+/).filter(e => !reg.test(e)).concat(presetWords)
-      setCache('s.filter.words', filterWords, -1)
+      setCache('sensitive.filter.words', filterWords, -1)
     }
     mint = new Mint(filterWords)
   }
