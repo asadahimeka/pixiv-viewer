@@ -36,6 +36,7 @@
 - Illust/novel bookmark restrict filter
 - Follow user privately
 - Bookmark & follow settings
+- Pxcl bookmarks page
 
 ### 🐛 Bug Fixes
 
@@ -85,6 +86,9 @@
 - Member illust tags style
 - Search results jump page
 - Bug fixes
+- Bug fixes
+- Bug fix
+- Novel season effect
 
 ### 📚 Documentation
 
@@ -122,6 +126,7 @@
 - Release v1.29.6
 - Release v1.29.7
 - Release v1.30.0
+- Release v1.30.1
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
