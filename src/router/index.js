@@ -52,6 +52,7 @@ import NovelSeries from '@/views/Users/NovelSeries.vue'
 import Session from '@/views/Account/Session.vue'
 import Login from '@/views/Account/Login.vue'
 import OAuthCallback from '@/views/Account/OAuthCallback.vue'
+import IllustBookmarksAlt from '@/views/Account/IllustBookmarksAlt.vue'
 import NotFound from '@/views/NotFound.vue'
 
 Vue.use(VueRouter)
@@ -374,6 +375,12 @@ const routes = [
             path: '/live/:id',
             name: 'LiveDetail',
             component: LiveDetail,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/my-illust-bookmarks',
+            name: 'IllustBookmarksAlt',
+            component: IllustBookmarksAlt,
             meta: { __depth: 3 },
           },
         ],
