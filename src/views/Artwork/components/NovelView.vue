@@ -15,6 +15,7 @@
     @touchstart.passive="handleTouchstart"
     @touchend.passive="handleTouchend"
   >
+    <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
     <div class="image-box">
       <Pximg :src="getImgUrl" nobg :alt="artwork.title" class="image" />
     </div>
@@ -35,6 +36,7 @@ import { imgProxy } from '@/api'
 import store, { novelTextConfig } from '@/store'
 import _ from '@/lib/lodash'
 import { fontFallback } from '@/utils/font'
+import { COMMON_PROXY } from '@/consts'
 
 const fontMap = {
   'inherit': 'inherit',
@@ -84,7 +86,7 @@ export default {
         .replace(/\[newpage\]/g, '<hr style="margin: 1rem 0;font-weight: bold;font-size: 1.2em;">')
         .replace(/\[\[rb:([^>[\]]+) *> *([^>[\]]+)\]\]/g, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>')
         .replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>')
-        .replace(/\[pixivimage:([\d-]+)\]/g, '<img style="display:block;max-width:100%;margin:auto" src="https://pixiv.re/$1.png" alt>')
+        .replace(/\[pixivimage:([\d-]+)\]/g, '<img style="display:block;max-width:100%;margin:auto" src="https://pximg.cocomi.eu.org/-pid-/$1" alt>')
         .replace(/\[chapter: *([^[\]]+)\]/g, '<h2 style="margin: 1rem 0;font-weight:bold;font-size:1.5em">$1</h2>')
         .replace(/\[uploadedimage:(\d+)\]/g, (_, $1) => `<img style="display:block;max-width:100%;margin:auto" src="${this.getEmbedImg($1)}" alt>`)
         .replace(/若想浏览插图，还请使用网页版。/g, '-- 插图 --')
@@ -99,6 +101,12 @@ export default {
         color: this.textConfig.color,
         ...(this.textConfig.indent ? { textIndent: '2em' } : {}),
       }
+    },
+    seasonEffectSrc() {
+      if (this.artwork.seasonal_effect) return COMMON_PROXY + this.artwork.seasonal_effect
+      const tagNames = this.artwork.tags?.map(t => t.name) || []
+      const match = this.$store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
+      return match?.src || ''
     },
   },
   methods: {
@@ -150,6 +158,33 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
+.season-effect
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 99
+  width: 100%
+  height: 100%
+  max-height: 90vh
+  pointer-events: none
+  background: var(--bg) no-repeat center center / cover
+  animation: fadeAndShrink 1s ease forwards
+  animation-delay: 5s;
+
+@keyframes fadeAndShrink
+  0%
+    opacity: 1;
+    transform: scale(1);
+  100%
+    opacity: 0;
+    transform: scale(0.8);
+    height: 0;
+    margin: 0;
+    padding: 0;
+    visibility: hidden;
+    overflow: hidden;
+    pointer-events: none;
+
 .novel_text
   width 900px
   margin 40px auto

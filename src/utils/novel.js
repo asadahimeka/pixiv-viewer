@@ -232,7 +232,7 @@ export function convertNovelToMarkdown(textObj, artwork) {
     .replace(/\[newpage\]/g, '\n---\n')
     .replace(/\[\[rb:([^>[\]]+) *> *([^>[\]]+)\]\]/g, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>')
     .replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '[$1]($2)')
-    .replace(/\[pixivimage:([\d-]+)\]/g, '![$1](https://pixiv.re/$1.png)')
+    .replace(/\[pixivimage:([\d-]+)\]/g, '![$1](https://pximg.cocomi.eu.org/-pid-/$1)')
     .replace(/\[chapter: *([^[\]]+)\]/g, '## $1')
     .replace(/\[uploadedimage:(\d+)\]/g, (_, $1) => `![${$1}](${getEmbedImg($1)})`)
     .replace(/若想浏览插图，还请使用网页版。/g, '\n')

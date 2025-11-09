@@ -213,7 +213,7 @@ function replaceNovelMark(text) {
   return text.replace(/\[newpage\]/g, '\n\n————————\n\n')
     .replace(/\[\[rb:([^>[\]]+) *> *([^>[\]]+)\]\]/g, '$1($2)')
     .replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '$1')
-    .replace(/\[pixivimage:([\d-]+)\]/g, 'https://pixiv.re/$1.png')
+    .replace(/\[pixivimage:([\d-]+)\]/g, 'https://pximg.cocomi.eu.org/-pid-/$1')
     .replace(/\[chapter: *([^[\]]+)\]/g, '\n$1\n')
     .replace(/\[uploadedimage:(\d+)\]/g, '')
 }
