@@ -16,7 +16,7 @@
     <van-cell-group :title="$t('9X179hdP1zzapzk5Rvqx2')">
       <van-cell center :title="$t('setting.layout.title')" is-link :label="appSetting.wfType" @click="wfType.show = true" />
       <van-cell center :title="$t('setting.img_res.title')" is-link :label="appSetting.imgReso" @click="imgRes.show = true" />
-      <van-cell center :title="$t('ZO7u4XT4flW6_nmyvmXt7')" :label="$t('WdS4RTIeeWqdaqLtvk7ZO')">
+      <van-cell v-if="!$store.getters.isNoOuterMeta" center :title="$t('ZO7u4XT4flW6_nmyvmXt7')" :label="$t('WdS4RTIeeWqdaqLtvk7ZO')">
         <template #right-icon>
           <van-switch :value="appSetting.isImageCardOuterMeta" size="24" @change="v => saveAppSetting('isImageCardOuterMeta', v, true)" />
         </template>
@@ -32,7 +32,7 @@
         </template>
       </van-cell>
       <van-cell v-if="isPageTransitionSelShow" center :title="$t('Cy6qJLutMa5O3jJr8TawB')" :label="pageTransitionLabel" is-link @click="pageTransition.show = true" />
-      <van-cell center :title="$t('4DPjs7ecYtMrqrD1DNkAE')" :label="$t('setting.lab.title') +' - ' + $t('9nsjvMfdZrtrkkwjKuyAh')">
+      <van-cell v-if="appSetting.wfType != 'VirtualSlide'" center :title="$t('4DPjs7ecYtMrqrD1DNkAE')" :label="$t('setting.lab.title') +' - ' + $t('9nsjvMfdZrtrkkwjKuyAh')">
         <template #right-icon>
           <van-switch :value="appSetting.isVirtualList" size="24" @change="v => saveAppSetting('isVirtualList', v, true)" />
         </template>

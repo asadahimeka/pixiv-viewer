@@ -100,6 +100,9 @@ export default new Vuex.Store({
       return state.contentSetting.r18 || state.contentSetting.r18g
     },
     isCensored: state => artwork => !isArtworkNotCensored(artwork, state),
+    isNoOuterMeta(state) {
+      return state.appSetting.isVirtualList || ['VirtualSlide', 'Justified(Transform)'].includes(state.appSetting.wfType)
+    },
     wfProps: () => ({
       gutter: '8px',
       cols: {

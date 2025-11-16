@@ -84,6 +84,7 @@ const {
   isAutoDownLoadAfterBookmark,
   isAutoBookmarkAfterDownload,
 } = store.state.appSetting
+const isOuterMeta = store.getters.isNoOuterMeta ? false : isImageCardOuterMeta
 const isLargeWebp = imgReso == 'Large(WebP)'
 const getLargeWebpSrc = (src, fbk) => {
   return src?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') || fbk
@@ -117,7 +118,7 @@ export default {
       showBookmarkBtn: window.APP_CONFIG.useLocalAppApi,
       bLoading: false,
       isBookmarked: false,
-      isOuterMeta: isImageCardOuterMeta,
+      isOuterMeta,
       isTriggerLongpress: isLongpressDL || isLongpressBlock,
     }
   },

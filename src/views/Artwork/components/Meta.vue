@@ -227,7 +227,7 @@ export default {
       return isAiIllust(this.artwork)
     },
     isBtnsShow() {
-      return !this.artwork?.images.some(e => e.o.includes('common/images/limit_unknown_360.png'))
+      return !this.artwork?.images.some(e => e.o.includes('common/images/limit'))
     },
   },
   watch: {
