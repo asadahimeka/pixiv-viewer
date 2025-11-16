@@ -89,6 +89,8 @@
 - Bug fixes
 - Bug fix
 - Novel season effect
+- Drop mint-filter
+- Bug fixes
 
 ### 📚 Documentation
 
@@ -127,6 +129,7 @@
 - Release v1.29.7
 - Release v1.30.0
 - Release v1.30.1
+- Release v1.31.0
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
