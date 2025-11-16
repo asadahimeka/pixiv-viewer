@@ -1,6 +1,6 @@
-import Mint from 'mint-filter'
+import ACFilter from './ACFilter'
 import store from '@/store'
-import { getCache, setCache } from './storage/siteCache'
+import { getCache, setCache } from '../storage/siteCache'
 
 const re1 = /漫画|描き方|お絵かきTIPS|manga|BL|スカラマシュ|散兵/i
 const re2 = /R-?18|恋童|ペド|幼女|萝莉|loli|小学生|BL|腐|スカラマシュ|散兵/i
@@ -109,8 +109,8 @@ export function isAiIllust(artwork) {
   return artwork.illust_ai_type == 2 || !!artwork.tags?.some(e => aiTags.includes(e.name?.toLowerCase()))
 }
 
-/** @type {Mint} */
-let mint
+/** @type {ACFilter} */
+let acFilter
 const presetWords = ['vpn', '推荐', '好用', '梯子', '机场', 'clash', '下载']
 export async function mintVerify(word = '', forceCheck = false) {
   if (presetWords.some(e => word.toLowerCase().includes(e.toLowerCase()))) {
@@ -120,32 +120,31 @@ export async function mintVerify(word = '', forceCheck = false) {
     return true
   }
   try {
-    await ensureMint()
-    return mint.verify(word)
+    await ensureACFilter()
+    return acFilter.verify(word)
   } catch (error) {
     return true
   }
 }
 export async function mintFilter(word = '') {
   try {
-    await ensureMint()
-    const res = mint.filter(word)
+    await ensureACFilter()
+    const res = acFilter.filter(word)
     console.log('res: ', res)
-    return res.text
+    return res
   } catch (error) {
     return word
   }
 }
-async function ensureMint() {
-  if (!mint) {
-    let filterWords = await getCache('sensitive.filter.words')
+async function ensureACFilter() {
+  if (!acFilter) {
+    let filterWords = await getCache('sensitive_filter_words')
     if (!filterWords) {
       const resp = await fetch('https://hibiapi.cocomi.eu.org/sensitive-words-filter/words.txt')
-      const reg = /^[A-Za-z\d\s~`!@#$%^&*()_+\-=[\]{};':"\\|,./<>?]+$/
-      filterWords = (await resp.text()).split(/\s+/).filter(e => !reg.test(e)).concat(presetWords)
-      setCache('sensitive.filter.words', filterWords, -1)
+      filterWords = (await resp.text()).split('\n').concat(presetWords)
+      setCache('sensitive_filter_words', filterWords, -1)
     }
-    mint = new Mint(filterWords)
+    acFilter = new ACFilter(filterWords)
   }
 }
 
