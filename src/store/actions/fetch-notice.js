@@ -3,7 +3,7 @@ import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
 import store from '@/store'
 
-async function fetchAppNotice(notices) {
+async function setAppNotice(notices) {
   const today = dayjs().startOf('day')
   const notice = notices.filter(e => e.pnt.length == 0 || e.pnt.includes('web') || e.pnt.includes(location.hostname)).find(e =>
     today.isAfter(dayjs(e.start).startOf('day') - 1) &&
@@ -33,7 +33,7 @@ async function fetchAppNotice(notices) {
   }
 }
 
-async function fetchSeasonEffects(effects) {
+async function setSeasonEffects(effects) {
   const today = dayjs().startOf('day')
   const act = effects.filter(e =>
     today.isAfter(dayjs(e.start).startOf('day') - 1) &&
@@ -47,9 +47,10 @@ async function fetchSeasonEffects(effects) {
 export async function fetchNotices() {
   try {
     const res = await fetch(`https://pxve-notice.nanoka.top/anon.json?t=${dayjs().format('YYYYMMDD')}`)
-    const { notices = [], effects = [] } = await res.json()
-    fetchAppNotice(notices)
-    fetchSeasonEffects(effects)
+    const { notices = [], effects = [], buids = [] } = await res.json()
+    setAppNotice(notices)
+    setSeasonEffects(effects)
+    store.commit('addBlockUids', buids)
   } catch (err) {
     console.log('err: ', err)
   }
