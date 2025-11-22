@@ -109,8 +109,8 @@
       center
       title="Wotaku - The Otaku Index"
       is-link
-      label="https://wotaku.moe"
-      @click="openLink('https://wotaku.moe')"
+      label="https://wotaku.wiki"
+      @click="openLink('https://wotaku.wiki')"
     />
     <van-cell
       center

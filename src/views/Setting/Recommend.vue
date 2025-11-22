@@ -120,8 +120,8 @@
           center
           title="Wotaku - The Otaku Index"
           is-link
-          label="https://wotaku.moe"
-          @click="openLink('https://wotaku.moe/?ref=pixiv.pictures')"
+          label="https://wotaku.wiki"
+          @click="openLink('https://wotaku.wiki/?ref=pixiv.pictures')"
         />
         <van-cell
           center
