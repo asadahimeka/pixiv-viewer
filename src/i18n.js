@@ -27,6 +27,10 @@ export function getSelectedLang() {
     'ko': 'ko',
     'pt': 'pt',
     'ru': 'ru',
+    'th': 'th-TH',
+    'th-TH': 'th-TH',
+    'ms': 'ms-MY',
+    'ms-MY': 'ms-MY',
   }
 
   let language = localStorage.getItem('PXV_LANG') ||
@@ -103,11 +107,13 @@ export async function setVantLocale(selLang) {
     'ko': 'en-US',
     'pt': 'en-US',
     'ru': 'en-US',
+    'th-TH': 'th-TH',
+    'ms-MY': 'en-US',
   }
   const vantLang = map[selLang]
   const { default: locale } = await import(/* webpackChunkName: "vant-locale-[request]" */ `vant/es/locale/lang/${vantLang}`)
   Locale.use(vantLang, locale)
-  const unsuppLangs = ['el', 'it', 'ko', 'pt', 'ru']
+  const unsuppLangs = ['el', 'it', 'ko', 'pt', 'ru', 'ms_MY']
   if (!unsuppLangs.includes(selLang)) return
   const messages = {
     [vantLang]: {
