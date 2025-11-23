@@ -115,16 +115,19 @@
         </van-dropdown-menu>
       </div>
       <PopularPreview v-if="showPopPreview && keywords.trim()" ref="popPreview" :word="keywords" :params="searchParams" />
-      <ImageList
-        v-else-if="keywords.trim()"
-        :list-class="`result-list${isPagination ? ' is-pagination' : ''}`"
-        :list="artList"
-        :loading="loading"
-        :finished="finished"
-        :error="error"
-        :on-load-more="onLoadMore"
-      />
-      <van-loading v-if="isPagination && loading" size="50px" style="margin: 32vh;text-align: center;" />
+      <template v-else-if="keywords.trim()">
+        <TagStorySlides v-if="$route.query.tss" :tag="keywords.trim()" />
+        <div v-if="$route.query.tss" style="width: 200px;height: 1px;margin: 0.5rem auto;background: #ccc;"></div>
+        <ImageList
+          :list-class="`result-list${isPagination ? ' is-pagination' : ''}`"
+          :list="artList"
+          :loading="loading"
+          :finished="finished"
+          :error="error"
+          :on-load-more="onLoadMore"
+        />
+      </template>
+      <van-loading v-if="isPagination && loading" size="50px" style="position: absolute;top: 36vh;left: 50%;transform: translateX(-50%)" />
       <div v-if="isPagination && !showPopPreview" style="display: flex;justify-content: center;">
         <van-pagination
           :value="curPage"
@@ -166,6 +169,7 @@ import { i18n } from '@/i18n'
 import { sleep } from '@/utils'
 import ImageList from '@/components/ImageList.vue'
 import PopularPreview from './components/PopularPreview.vue'
+import TagStorySlides from './components/TagStorySlides.vue'
 
 const ARTWORK_LINK_RE = /https?:\/\/.+\/artworks\/(\d+)/i
 
@@ -174,6 +178,7 @@ export default {
   components: {
     ImageList,
     PopularPreview,
+    TagStorySlides,
   },
   data() {
     return {

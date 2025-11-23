@@ -5,7 +5,7 @@ import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit, mintFilter } from '@/utils/filter'
-import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL } from '@/consts'
+import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_PROXY } from '@/consts'
 
 const isSupportWebP = (() => {
   const elem = document.createElement('canvas')
@@ -1840,6 +1840,48 @@ const api = {
     }
 
     return { status: 0, data: res.lives }
+  },
+
+  async getTagStories(tag) {
+    const cacheKey = `tag_stories_${tag}`
+    const cache = await getCache(cacheKey)
+    if (cache) return cache
+    const res = await get(`${PIXIV_NOW_URL}/ajax/stories/tag_stories?tag=${tag}&lang=zh`)
+    const ids = res?.tagStoryIds
+    if (!Array.isArray(ids) || !ids.length) return []
+    await setCache(cacheKey, ids, 60 * 60 * 24 * 7)
+    return ids
+  },
+  async getTagStoryDetails(ids = []) {
+    const cacheKey = `tag_stories_details_${ids}`
+    const cache = await getCache(cacheKey)
+    if (cache) return cache
+    const params = new URLSearchParams()
+    params.append('lang', 'zh')
+    ids.forEach(e => params.append('storyIds[]', e))
+    const res = await get(`${PIXIV_NEXT_URL}/https://www.pixiv.net/ajax/stories/tag_stories/details/many?${params}`)
+    const details = res?.body?.storyDetails
+    if (!Array.isArray(details) || !details.length) return []
+    details.forEach(e => { e.coverImage = imgProxy(e.coverImage) })
+    await setCache(cacheKey, details, 60 * 60 * 24 * 7)
+    return details
+  },
+  async getTagStoryPage(tag, date) {
+    const cacheKey = `tag_story_page_${tag}_${date}`
+    const cache = await getCache(cacheKey)
+    if (cache) return cache
+    const resp = await fetch(`${COMMON_PROXY}https://www.pixiv.net/stories/tags/${tag}/artworks/${date}`)
+    if (!resp.ok) return ''
+    let html = await resp.text()
+    html = html
+      .replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
+      .replace(/https:\/\/i-mail\.pximg\.net/g, `${COMMON_PROXY}https://i-mail.pximg.net`)
+      .replace(/https:\/\/source\.pixiv\.net/g, `${COMMON_PROXY}https://source.pixiv.net`)
+      .replace(/<amp-analytics.+<\/amp-analytics>/g, '')
+    if (html) {
+      await setCache(cacheKey, html, 60 * 60 * 24 * 7)
+    }
+    return html
   },
 }
 export default api

@@ -67,7 +67,7 @@
       <div class="com_sel_tab" @click="$router.replace('/search_user')">{{ $t('common.user') }}</div>
     </div>
     <div class="list-wrap" :class="{ focus: focus }" :style="{ paddingTop: '2.6rem' }">
-      <Tags @search="searchTag" />
+      <Tags @search="tag => searchTag(tag, true)" />
       <div class="mask" @click="focus = false"></div>
     </div>
   </div>
@@ -161,12 +161,14 @@ export default {
         this.search(keywords)
       }
     },
-    async search(keywords) {
+    async search(keywords, isQueryTagStory = false) {
       this.reset()
       keywords = keywords.trim()
       console.log('search keywords: ', keywords)
-
-      this.$router.push(`/search/${encodeURIComponent(keywords)}`)
+      this.$router.push({
+        path: `/search/${encodeURIComponent(keywords)}`,
+        query: isQueryTagStory ? { tss: '1' } : {},
+      })
     },
     onSearchInput: _.debounce(async function () {
       if (notSelfHibiApi) return
@@ -204,9 +206,9 @@ export default {
       if (searchType == 'safe') words = words.trim() + ' -R-18'
       this.$router.push(`/search/${encodeURIComponent(words.trim())}`)
     },
-    searchTag(keywords) {
+    searchTag(keywords, isQueryTagStory = false) {
       console.log('------- searchTag: ', keywords)
-      this.search(keywords + ' ')
+      this.search(keywords + ' ', isQueryTagStory)
     },
     async searchUser() {
       this.$router.push(`/search_user/${encodeURIComponent(this.keywords.trim())}`)

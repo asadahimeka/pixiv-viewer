@@ -25,6 +25,7 @@ import SearchRes from '@/views/Search/SearchRes.vue'
 import SearchNovel from '@/views/Search/SearchNovel.vue'
 import SearchUser from '@/views/Search/SearchUser.vue'
 import SearchUserRes from '@/views/Search/SearchUserRes.vue'
+import TagStory from '@/views/Search/TagStory.vue'
 import Rank from '@/views/Rank/index.vue'
 import RankNovel from '@/views/Rank/RankNovel.vue'
 import Following from '@/views/Account/Following.vue'
@@ -225,6 +226,12 @@ const routes = [
             name: 'SearchUserRes',
             component: SearchUserRes,
             meta: { __depth: 2 },
+          },
+          {
+            path: '/stories/tags/:tag/artworks/:date',
+            name: 'TagStory',
+            component: TagStory,
+            meta: { __depth: 3 },
           },
           {
             path: '/setting/history',

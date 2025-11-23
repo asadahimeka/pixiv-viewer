@@ -1,5 +1,5 @@
 <template>
-  <div class="my-bookmark-illusts illusts">
+  <div class="my-bookmark-illusts">
     <iframe v-if="showIFrame && iframeSrc" :src="iframeSrc" style="width: 100%;height: 100%;border: 0;"></iframe>
   </div>
 </template>
@@ -60,15 +60,9 @@ export default {
 }
 </script>
 <style lang="stylus" scoped>
-.illusts
+.my-bookmark-illusts
   width 100%
   height 99vh
-
-  ::v-deep .top-bar-wrap
-    width 30%
-    padding-top 20px
-    background transparent
-
 </style>
 <style lang="stylus">
 .app-main:has(.my-bookmark-illusts)
