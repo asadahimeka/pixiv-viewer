@@ -37,6 +37,8 @@
 - Follow user privately
 - Bookmark & follow settings
 - Pxcl bookmarks page
+- Add th-TH/ms-MY locales
+- Search tag story
 
 ### 🐛 Bug Fixes
 
@@ -91,6 +93,8 @@
 - Novel season effect
 - Drop mint-filter
 - Bug fixes
+- Page screen fit defaults to false
+- Update links
 
 ### 📚 Documentation
 
@@ -130,6 +134,7 @@
 - Release v1.30.0
 - Release v1.30.1
 - Release v1.31.0
+- Release v1.31.1
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
