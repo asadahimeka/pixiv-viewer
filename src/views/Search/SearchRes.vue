@@ -127,7 +127,7 @@
           :on-load-more="onLoadMore"
         />
       </template>
-      <van-loading v-if="isPagination && loading" size="50px" style="position: absolute;top: 36vh;left: 50%;transform: translateX(-50%)" />
+      <van-loading v-if="isPagination && loading" size="50px" style="position: absolute;top: 48vh;left: 50%;transform: translateX(-50%)" />
       <div v-if="isPagination && !showPopPreview" style="display: flex;justify-content: center;">
         <van-pagination
           :value="curPage"

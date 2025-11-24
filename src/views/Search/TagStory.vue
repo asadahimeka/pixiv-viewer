@@ -46,6 +46,7 @@ export default {
 .search-tag-story
   width 100%
   height 100vh
+  height 100dvh
 </style>
 <style lang="stylus">
 html:has(.search-tag-story)

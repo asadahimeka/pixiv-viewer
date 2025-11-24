@@ -95,6 +95,8 @@ const aiTags = [
   'ai辅助',
   'aiアシスタンス',
   'ai_generated',
+  'ai+ps',
+  'aiart',
   'aiartwork',
   'aigirl',
   'ai作品',

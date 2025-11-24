@@ -32,9 +32,7 @@
 import api from '@/api'
 
 export default {
-  name: 'SpotlightsRecomCard',
-  components: {
-  },
+  name: 'TagStorySlides',
   props: {
     tag: {
       type: String,
@@ -178,14 +176,14 @@ export default {
   }
 
   .card-box {
-    height: 247px;
+    height: 216px;
 
     .swipe-wrap {
       height: 100%;
       overflow: hidden;
 
       .swipe-item {
-        width 320px;
+        width 280px;
         margin-right: 12px;
 
         &:last-child {
