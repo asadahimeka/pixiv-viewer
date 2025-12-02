@@ -11,9 +11,9 @@
         v-for="(f, i) in pageFont.actions"
         :key="i + f._value"
         class="font-sel-item"
-        :class="{ act: f._value == currentFont }"
+        :class="{ act: f._value == currentFont, fxxk_nosa: f._value == 'NanoOldSong-A' }"
         :title="f.name"
-        :style="`font-family: '${f._value}', sans-serif`"
+        :style="f.preview || !f._value ? '' : `font-family: '${f._value}', sans-serif`"
         @click="onChange(f._value)"
       >
         <img v-if="f.preview" class="font-sel-item-preview" :src="`/img/font_preview/${f.name}.svg`" :alt="f.name">
@@ -75,6 +75,19 @@ export default {
       border-color #ccc
     &.act
       border-color var(--accent-color, #ccc)
+    &.fxxk_nosa
+      &::before,
+      &::after
+        content ''
+        position absolute
+        top 50%
+        left 0
+        transform translateY(-50%) rotate(11deg)
+        width 100%
+        height 2PX
+        background red
+      &::after
+        transform translateY(-50%) rotate(-11deg)
     &-checked
       position absolute
       top -0.1rem
