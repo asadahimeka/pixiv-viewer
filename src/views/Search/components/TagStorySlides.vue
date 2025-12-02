@@ -43,7 +43,9 @@ export default {
     return {
       loading: false,
       isEnd: false,
+      /** @type {string[]} */
       listIds: [],
+      /** @type {Awaited<ReturnType<typeof api.getTagStoryDetails>>} */
       listDetails: [],
       swiperOption: {
         freeMode: true,

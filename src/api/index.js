@@ -860,7 +860,7 @@ const api = {
       }
       const res = await get(`${PIXIV_NEXT_URL}/api/pixivision/detail`, params)
 
-      if (res) {
+      if (res && !res.error) {
         res.related_latest?.items?.forEach(a => {
           a.thumbnail = imgProxy(a.thumbnail)
         })
@@ -895,7 +895,7 @@ const api = {
       }
       const res = await get(`${PIXIV_NEXT_URL}/api/pixivision/${id}`, params)
 
-      if (res) {
+      if (res && !res.error) {
         res.cover = imgProxy(res.cover?.replace('i-ogp.pximg.net', 'i.pximg.net') || '')
         res.items?.forEach(a => {
           a.illust_url = imgProxy(a.illust_url)
@@ -1842,6 +1842,10 @@ const api = {
     return { status: 0, data: res.lives }
   },
 
+  /**
+   * @param {string} tag
+   * @returns {Promise<string[]>}
+   */
   async getTagStories(tag) {
     const cacheKey = `tag_stories_${tag}`
     const cache = await getCache(cacheKey)
@@ -1849,9 +1853,13 @@ const api = {
     const res = await get(`${PIXIV_NOW_URL}/ajax/stories/tag_stories?tag=${tag}&lang=zh`)
     const ids = res?.tagStoryIds
     if (!Array.isArray(ids) || !ids.length) return []
-    await setCache(cacheKey, ids, 60 * 60 * 24 * 7)
+    await setCache(cacheKey, ids, 60 * 60 * 24 * 3)
     return ids
   },
+  /**
+   * @param {string[]} ids
+   * @returns {Promise<{id:string;label:string;coverImage:string}[]>}
+   */
   async getTagStoryDetails(ids = []) {
     const cacheKey = `tag_stories_details_${ids}`
     const cache = await getCache(cacheKey)
@@ -1863,9 +1871,14 @@ const api = {
     const details = res?.body?.storyDetails
     if (!Array.isArray(details) || !details.length) return []
     details.forEach(e => { e.coverImage = imgProxy(e.coverImage) })
-    await setCache(cacheKey, details, 60 * 60 * 24 * 7)
+    await setCache(cacheKey, details, 60 * 60 * 24 * 3)
     return details
   },
+  /**
+   * @param {string} tag
+   * @param {string} date
+   * @returns {Promise<string>}
+   */
   async getTagStoryPage(tag, date) {
     const cacheKey = `tag_story_page_${tag}_${date}`
     const cache = await getCache(cacheKey)
@@ -1879,11 +1892,88 @@ const api = {
       .replace(/https:\/\/source\.pixiv\.net/g, `${COMMON_PROXY}https://source.pixiv.net`)
       .replace(/<amp-analytics.+<\/amp-analytics>/g, '')
     if (html) {
-      await setCache(cacheKey, html, 60 * 60 * 24 * 7)
+      await setCache(cacheKey, html, -1)
     }
     return html
   },
+
+  /**
+   * @returns {Promise<[string, string|null][]>}
+   */
+  async getCollectionRecommendedTags() {
+    const cacheKey = 'collections.recommendedTags'
+    const cache = await getCache(cacheKey)
+    if (cache) return cache
+    const res = await get(`${PIXIV_NOW_URL}/ajax/collections/search/recommended_tags?lang=zh`)
+    let tags = res?.recommendedTags
+    if (!Array.isArray(tags) || !tags.length) return []
+    tags = tags.map(e => {
+      const t = res.tagTranslation?.[e]
+      if (!t) return [e, null]
+      return [e, t.zh || t.zh_tw || t.en]
+    })
+    await setCache(cacheKey, tags, 60 * 60 * 24 * 5)
+    return tags
+  },
+  /**
+   * @returns {Promise<{ recommend:any[]; everyone:any[]; tagRecommend:{tag:string;list:any[]}[] } | null>}
+   */
+  async getCollectionTop() {
+    try {
+      const cacheKey = 'collections.top'
+      const cache = await getCache(cacheKey)
+      if (cache) return cache
+      const data = await get(`${PIXIV_NOW_URL}/ajax/top/collection?lang=zh`)
+      const cols = data.thumbnails.collection
+      if (!Array.isArray(cols) || !cols.length) return null
+      const map = cols.reduce((acc, cur) => {
+        acc[cur.id] = cur
+        return acc
+      }, {})
+      const result = {}
+      result.recommend = data.page.recommendCollectionIds.map(e => map[e])
+      result.everyone = data.page.everyoneCollectionIds.map(e => map[e])
+      result.tagRecommend = data.page.tagRecommendCollectionIds.map(e => ({
+        tag: e.tag,
+        list: e.ids.map(f => map[f]),
+      }))
+      await setCache(cacheKey, result, 60 * 60 * 3)
+      return result
+    } catch (err) {
+      console.log('err: ', err)
+      return null
+    }
+  },
+  async getCollectionDetail(id) {
+    try {
+      const cacheKey = `collections.detail.${id}`
+      const cache = await getCache(cacheKey)
+      if (cache) return cache
+      const resp = await fetch(`${COMMON_PROXY}https://www.pixiv.net/collections/${id}`)
+      if (!resp.ok) return ''
+      let html = await resp.text()
+      html = html.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
+      const doc = new DOMParser().parseFromString(html, 'text/html')
+      const lang = doc.documentElement.getAttribute('lang')
+      const tiles = doc.querySelector('[data-ga4-label="collection_tiles"]').outerHTML
+      const styles = [...doc.querySelectorAll('style')].map(e => e.outerHTML).join('')
+      const links = [...doc.querySelectorAll('link')]
+        .filter(e => e.rel == 'stylesheet' && e.href.endsWith('.css'))
+        .map(e => `<link rel="stylesheet" type="text/css" href="${COMMON_PROXY + e.href}">`)
+        .join('')
+      const data = JSON.parse(doc.querySelector('#__NEXT_DATA__').innerHTML).props.pageProps.collection
+      // <script>window.onclick
+      html = `<html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1">${styles}${links}</head><body>${tiles}</body></html>`
+      const result = { html, data }
+      await setCache(cacheKey, result, -1)
+      return html
+    } catch (err) {
+      return null
+    }
+  },
+
 }
+
 export default api
 
 function reqGet(path, params) {

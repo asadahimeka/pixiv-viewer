@@ -1,7 +1,12 @@
 <template>
   <div class="search-tag-story">
     <TopBar style="background: none;" />
-    <iframe v-if="showIFrame && iframeDoc" :srcdoc="iframeDoc" style="width: 100%;height: 100%;border: 0;"></iframe>
+    <iframe
+      v-if="showIFrame && iframeDoc"
+      :srcdoc="iframeDoc"
+      sandbox="allow-scripts allow-top-navigation-by-user-activation"
+      style="width: 100%;height: 100%;border: 0;"
+    ></iframe>
     <van-loading v-else :size="'50px'" style="padding: 200px 0;text-align: center" />
   </div>
 </template>

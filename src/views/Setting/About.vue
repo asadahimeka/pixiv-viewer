@@ -83,7 +83,7 @@
         title="ZeoSeven Fonts (ZSFT)"
         is-link
         label="释放字体自由！"
-        @click="openLink('https://fonts.zeoseven.com/?ref=pixiv.pictures')"
+        @click="openLink('https://fonts.zeoseven.com')"
       />
     </van-cell-group>
     <van-cell-group :title="$t('about.feedback')">
