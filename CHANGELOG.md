@@ -95,6 +95,9 @@
 - Bug fixes
 - Page screen fit defaults to false
 - Update links
+- Style fix
+- Font css link
+- Spotlight ugoira play
 
 ### 📚 Documentation
 
@@ -135,6 +138,7 @@
 - Release v1.30.1
 - Release v1.31.0
 - Release v1.31.1
+- Release v1.31.2
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
