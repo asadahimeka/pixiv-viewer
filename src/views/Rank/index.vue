@@ -76,7 +76,7 @@ import Nav from './components/Nav'
 import _ from '@/lib/lodash'
 import api from '@/api'
 import { i18n } from '@/i18n'
-import { AUTHORS_NO_TYPE_AI, AUTHORS_NO_TYPE_MANGA, isAiIllust } from '@/utils/filter'
+import { HiddenAuthors, isAiIllust } from '@/utils/filter'
 import { getCache } from '@/utils/storage/siteCache'
 import store from '@/store'
 
@@ -253,7 +253,7 @@ export default {
             artList = artList.filter(e => {
               if (e.type == 'manga') return false
               if (/漫画|描き方|お絵かきTIPS|manga/.test(JSON.stringify(e.tags))) return false
-              if (AUTHORS_NO_TYPE_MANGA.includes(+e.author.id)) return false
+              if (HiddenAuthors.NO_TYPE_MANGA.includes(+e.author.id)) return false
               return true
             })
           }
@@ -263,7 +263,7 @@ export default {
           if (!this.menu[this.curType]?.ai) {
             artList = artList.filter(e => {
               if (isAiIllust(e)) return false
-              if (AUTHORS_NO_TYPE_AI.includes(+e.author.id)) return false
+              if (HiddenAuthors.NO_TYPE_AI.includes(+e.author.id)) return false
               return true
             })
           }
