@@ -403,11 +403,6 @@ export default {
         if (res.data.length) {
           let artList = res.data
 
-          if (!artList.length) {
-            this.finished = true
-            return
-          }
-
           if (this.usersIriTag) {
             const match = this.usersIriTag.match(/(\d+)/)
             artList = artList.filter(e => e.like > Number(match && match[0]))
@@ -434,13 +429,13 @@ export default {
             ...this.artList,
             ...artList,
           ], 'id')
-
-          this.curPage++
-          // if (this.curPage > 9) this.finished = true
-        } else {
-          this.finished = true
         }
         this.loading = false
+        if (res.hasNext === false) {
+          this.finished = true
+        } else {
+          this.curPage++
+        }
       } else {
         this.$toast({
           message: res.msg,
