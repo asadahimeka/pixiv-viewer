@@ -1162,6 +1162,7 @@ const api = {
   async searchNovel(word, page = 1, params = {}) {
     const cacheKey = `searchList_novel_${word}_${page}_${JSON.stringify(params)}`
     let searchList = SessionStorage.get(cacheKey)
+    let hasNext
 
     if (!searchList) {
       const res = await get('/search_novel', {
@@ -1173,6 +1174,7 @@ const api = {
       if (res.novels) {
         searchList = res.novels.map(art => parseNovel(art))
         SessionStorage.set(cacheKey, searchList, 60 * 60 * 1)
+        hasNext = Boolean(res.next_url)
       } else if (res.error) {
         return {
           status: -1,
@@ -1186,7 +1188,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: filterCensoredNovels(searchList) }
+    return { status: 0, data: filterCensoredNovels(searchList), hasNext }
   },
 
   async getNovelDetail(id) {
@@ -1865,8 +1867,8 @@ const api = {
     const cache = await getCache(cacheKey)
     if (cache) return cache
     const params = new URLSearchParams()
-    params.append('lang', 'zh')
     ids.forEach(e => params.append('storyIds[]', e))
+    params.append('lang', 'zh')
     const res = await get(`${PIXIV_NEXT_URL}/https://www.pixiv.net/ajax/stories/tag_stories/details/many?${params}`)
     const details = res?.body?.storyDetails
     if (!Array.isArray(details) || !details.length) return []
@@ -1912,7 +1914,7 @@ const api = {
       if (!t) return [e, null]
       return [e, t.zh || t.zh_tw || t.en]
     })
-    await setCache(cacheKey, tags, 60 * 60 * 24 * 5)
+    await setCache(cacheKey, tags, 60 * 60 * 24)
     return tags
   },
   /**
@@ -1944,6 +1946,81 @@ const api = {
       return null
     }
   },
+  async getCollectionRelated(id, page = 1) {
+    try {
+      const cacheKey = `collections.recomm.${id}.${page}`
+      const nextIdsKey = `collections.recomm.${id}.nextIds`
+      const cache = await getCache(cacheKey)
+      if (cache) return cache
+      if (page == 1) {
+        const { collections, nextIds } = await get(`${PIXIV_NOW_URL}/ajax/collection/${id}/recommend/init?lang=zh`)
+        if (!Array.isArray(collections) || !collections.length) return []
+        await setCache(cacheKey, collections, 60 * 60 * 24)
+        if (Array.isArray(nextIds) && nextIds.length) {
+          await setCache(nextIdsKey, nextIds, 60 * 60 * 24)
+        }
+        return collections
+      }
+      const nextIds = await getCache(nextIdsKey)
+      if (!Array.isArray(nextIds) || !nextIds.length) return []
+      const cur = (page - 1) * 10
+      const ids = nextIds.slice(cur, cur + 10)
+      if (!ids.length) return []
+      const params = new URLSearchParams()
+      ids.forEach(e => params.append('ids[]', e))
+      params.append('lang', 'zh')
+      const res = await get(`${PIXIV_NEXT_URL}/https://www.pixiv.net/ajax/collection/recommend/collections?${params}`)
+      const data = res?.body?.collections
+      if (!Array.isArray(data) || !data.length) return []
+      await setCache(cacheKey, data, 60 * 60 * 24)
+      return data
+    } catch (err) {
+      console.log('err: ', err)
+      return []
+    }
+  },
+  async searchCollections(tag, page = 1, mode = 'safe') {
+    try {
+      const cacheKey = `collections.search.${tag}.${page}.${mode}`
+      const cache = await getCache(cacheKey)
+      if (cache) return cache
+      const params = new URLSearchParams()
+      if (tag) params.append('tags[]', tag)
+      params.append('mode', mode)
+      params.append('limit', 20)
+      params.append('offset', (page - 1) * 20)
+      params.append('lang', 'zh')
+      const res = await get(`${PIXIV_NOW_URL}/ajax/collections/search?${params}`)
+      const data = res?.thumbnails?.collection
+      if (!Array.isArray(data) || !data.length) return []
+      await setCache(cacheKey, data, 60 * 30)
+      return data
+    } catch (err) {
+      console.log('err: ', err)
+      return []
+    }
+  },
+  async getUserCollections(id) {
+    try {
+      const cacheKey = `collections.user.${id}`
+      const cache = await getCache(cacheKey)
+      if (cache) return cache
+      const res1 = await get(`${PIXIV_NOW_URL}/ajax/user/${id}/profile/all?sensitiveFilterMode=userSetting&lang=zh`)
+      const ids = res1?.collectionIds
+      if (!Array.isArray(ids) || !ids.length) return []
+      const params = new URLSearchParams()
+      ids.forEach(e => params.append('ids[]', e))
+      params.append('lang', 'zh')
+      const res2 = await get(`${PIXIV_NEXT_URL}https://www.pixiv.net/ajax/user/${id}/profile/collections?${params}`)
+      const data = res2?.body?.works
+      if (!Array.isArray(data) || !data.length) return []
+      await setCache(cacheKey, data, 60 * 60 * 24)
+      return data
+    } catch (err) {
+      console.log('err: ', err)
+      return []
+    }
+  },
   async getCollectionDetail(id) {
     try {
       const cacheKey = `collections.detail.${id}`
@@ -1961,10 +2038,15 @@ const api = {
         .filter(e => e.rel == 'stylesheet' && e.href.endsWith('.css'))
         .map(e => `<link rel="stylesheet" type="text/css" href="${COMMON_PROXY + e.href}">`)
         .join('')
-      const data = JSON.parse(doc.querySelector('#__NEXT_DATA__').innerHTML).props.pageProps.collection
-      // <script>window.onclick
+        // <script>window.onclick
       html = `<html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1">${styles}${links}</head><body>${tiles}</body></html>`
-      const result = { html, data }
+      const data = JSON.parse(doc.querySelector('#__NEXT_DATA__').innerHTML).props.pageProps
+      const ucMap = JSON.parse(data.serverSerializedPreloadedState).thumbnail.collection
+      const result = {
+        html,
+        detail: data.collection,
+        userCols: data.userCollectionIds.map(e => ucMap[e]),
+      }
       await setCache(cacheKey, result, -1)
       return html
     } catch (err) {
@@ -1996,6 +2078,9 @@ function reqPost(path, data) {
 }
 
 export const localApi = {
+  isLoggedIn() {
+    return Boolean(window.APP_CONFIG.useLocalAppApi)
+  },
   async me() {
     const res = await get('/me', { _t: Date.now() })
     if (res?.id) {

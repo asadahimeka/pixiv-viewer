@@ -79,6 +79,11 @@ function callApi(url, options) {
 
   return resp.then(res => {
     console.log('callApi res: ', res)
+    // if (window.__httpRequest__)
+    // app version no need
+    if (typeof res.data == 'string' && res.data.startsWith('{')) {
+      return JSON.parse(res.data)
+    }
     return res.data
   }).catch(async err => {
     console.log('callApi err: ', err)
