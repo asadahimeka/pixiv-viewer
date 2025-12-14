@@ -83,6 +83,12 @@ export default {
       .van-search__content {
         background #f5f5f5
       }
+
+      .van-search__action {
+        margin-left 5PX
+        border-radius 10PX
+      }
+
     }
 
     .search-bar {

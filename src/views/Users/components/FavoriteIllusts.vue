@@ -11,8 +11,8 @@
       </van-cell>
       <h3 v-else class="af_title">
         <div class="discovery-tabs">
+          <div v-if="showPxcl" class="com_sel_tab" @click="$router.push('/my-illust-bookmarks')">插画收藏(本地缓存)</div>
           <div class="com_sel_tab cur">{{ $t('user.fav_title') }}</div>
-          <div class="com_sel_tab" @click="$router.push('/my-illust-bookmarks')">插画收藏(新)</div>
           <div class="com_sel_tab" @click="$router.replace($route.fullPath.replace('favorites', 'favorite_novels'))">{{ $t('user.fav_novel_title') }}</div>
         </div>
       </h3>
@@ -75,6 +75,7 @@ export default {
       finished: false,
       restrict: 'public',
       bookmarkTag: '',
+      showPxcl: window.APP_CONFIG.useLocalAppApi,
     }
   },
   mounted() {
