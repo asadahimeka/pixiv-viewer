@@ -606,6 +606,7 @@ export default {
           { name: 'APNG', subname: i18n.t('artwork.download.webm') },
           { name: 'MP4(Browser)', subname: i18n.t('pIghtXdU8socMNNRUn5UR') },
           { name: 'MP4(Server)', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
+          { name: 'AVIF', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
           { name: 'Other', subname: i18n.t('artwork.download.mp4') },
         ],
       },

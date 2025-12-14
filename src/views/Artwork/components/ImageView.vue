@@ -451,7 +451,7 @@ export default {
       if (isUgoiraAvifSrc) {
         await this.playUgoira('dontPlay')
       }
-      const needPlay = !['MP4(Server)', 'Other'].includes(type)
+      const needPlay = !['MP4(Server)', 'AVIF', 'Other'].includes(type)
       if (!this.ugoira && needPlay) {
         this.$toast(this.$t('artwork.download.ugoira.tip'))
         return
@@ -464,6 +464,7 @@ export default {
         'APNG': () => this.downloadAPNG(),
         'MP4(Browser)': () => this.downloadMP4(),
         'MP4(Server)': () => window.open(`https://ugoira-mp4-dl.cocomi.eu.org/${this.artwork.id}`, '_blank', 'noopener'),
+        'AVIF': () => window.open(ugoiraAvifSrc(this.artwork.id), '_blank', 'noopener'),
         'Other': () => window.open(`https://ugoira.cocomi.eu.org/?id=${this.artwork.id}`, '_blank', 'noopener'),
       }
       try {
