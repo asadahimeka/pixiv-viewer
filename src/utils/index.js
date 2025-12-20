@@ -373,3 +373,28 @@ export async function retry(fn, retries = 3, delay = 800) {
   }
   throw lastError
 }
+
+export function setProperFontSize(elements) {
+  const MAX_FONT_SIZE = 330
+  const MIN_FONT_SIZE = 164
+  const BUCKET_SIZE = 10
+  let maxCharCount = 0
+  const charCounts = []
+  elements.forEach(el => {
+    const count = el.textContent.length
+    charCounts.push(count)
+    if (count > maxCharCount) maxCharCount = count
+  })
+  if (maxCharCount === 0) maxCharCount = 1
+  elements.forEach((el, index) => {
+    const charCount = charCounts[index]
+    // const fontSize = MAX_FONT_SIZE - (charCount / maxCharCount) * (MAX_FONT_SIZE - MIN_FONT_SIZE)
+    const bucket = Math.ceil(charCount / BUCKET_SIZE)
+    const maxBucket = Math.ceil(maxCharCount / BUCKET_SIZE)
+    const fontSize = Math.max(
+      MIN_FONT_SIZE,
+      MAX_FONT_SIZE - (bucket - 1) * ((MAX_FONT_SIZE - MIN_FONT_SIZE) / (maxBucket - 1 || 1))
+    )
+    el.style.fontSize = `${fontSize / 100}vw`
+  })
+}

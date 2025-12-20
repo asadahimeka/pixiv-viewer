@@ -410,16 +410,15 @@ export default {
     handleClick(e) {
       if (e.target.tagName === 'A') {
         let url = e.target.href
-        if (url.startsWith('pixiv://users')) {
+        if (url.startsWith('pixiv://')) {
           url = url.replace('pixiv:/', '')
         }
-        if (url.startsWith('pixiv://illusts')) {
-          url = url.replace('pixiv://illusts', '/artworks')
+        const to = this.$router.resolve(url)
+        if (to.route.name == 'NotFound') {
+          window.open(url, '_blank', 'noreferrer')
+        } else {
+          this.$router.push(to.href)
         }
-        if (url.startsWith('pixiv://novels')) {
-          url = url.replace('pixiv://novels', '/novel')
-        }
-        window.open(url, '_blank', 'noreferrer')
       }
     },
     toAuthor(id) {

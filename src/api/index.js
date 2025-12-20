@@ -6,6 +6,7 @@ import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit, mintFilter } from '@/utils/filter'
 import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_PROXY } from '@/consts'
+import { setProperFontSize } from '@/utils'
 
 const isSupportWebP = (() => {
   const elem = document.createElement('canvas')
@@ -2023,9 +2024,10 @@ const api = {
   },
   async getCollectionDetail(id) {
     try {
+      sessionStorage.removeItem('__PXV_CL_SCROLL_TOP_' + id)
       const cacheKey = `collections.detail.${id}`
       const cache = await getCache(cacheKey)
-      // if (cache) return cache
+      if (cache) return cache
       const resp = await fetch(`${PIXIV_NEXT_URL}/https://www.pixiv.net/collections/${id}`)
       if (!resp.ok) return ''
       let html = await resp.text()
@@ -2033,16 +2035,48 @@ const api = {
       const doc = new DOMParser().parseFromString(html, 'text/html')
       const data = JSON.parse(doc.querySelector('#__NEXT_DATA__').innerHTML).props.pageProps
       const thumbnail = JSON.parse(data.serverSerializedPreloadedState).thumbnail
-      const ucMap = thumbnail.collection
-      const illusts = Object.values(thumbnail.illust)
-      ;[...doc.querySelectorAll('a[data-ga4-label="user_icon_link"]')].forEach(a => {
+      const illusts = Object.values(thumbnail.illust).concat(Object.values(thumbnail.novel))
+      doc.querySelectorAll('a[data-ga4-label="user_icon_link"]').forEach(a => {
         const uid = a.getAttribute('data-gtm-value')
         const act = illusts.find(e => e.userId == uid)
         if (!act) return
         a.querySelector('div').innerHTML = `<img alt="${act.userName}" width="16" height="16" src="${act.profileImageUrl}" style="object-fit: cover; object-position: center top;">`
       })
-      ;[...doc.querySelectorAll('a')].forEach(a => {
+      doc.querySelectorAll('a[data-ga4-label="thumbnail_link"]').forEach(a => {
+        if (a.innerHTML.trim()) return
+        const id = a.getAttribute('href')?.split('/')?.pop()
+        const act = illusts.find(e => e.id == id)
+        if (!act) return
+        a.innerHTML = `<img alt="${act.alt}" class="block size-full object-cover object-top" loading="lazy" src="${act.url}">`
+      })
+      doc.querySelectorAll('a[href^="/novel/show.php?id="]:has(figure)').forEach(a => {
+        const nid = a.getAttribute('data-gtm-value')
+        const act = thumbnail.novel[nid]
+        if (!act) return
+        const figure = a.querySelector('figure')
+        figure.setAttribute('src', act.url)
+        figure.setAttribute('alt', act.title)
+        figure.setAttribute('style', 'object-fit: cover; object-position: center center;')
+        figure.outerHTML = figure.outerHTML.replace(/figure/g, 'img')
+      })
+      doc.querySelectorAll('[data-ga4-label="thumbnail"]:has(a[href^="/novel/show.php"])').forEach(el => {
+        const a = el.querySelector('a[href^="/novel/show.php"]')
+        if (!a) return
+        let nid = a.getAttribute('data-ga4-entity-id')?.split('/')?.pop()
+        if (!nid) nid = a.getAttribute('data-gtm-value')
+        const act = thumbnail.novel[nid]
+        if (!act) return
+        const caption = el.querySelector('.break-all.w-full > [class*="line-clamp-1"] + [title=""][class*="line-clamp-2"]')
+        if (!caption.innerHTML.trim()) caption.innerHTML = act.description
+      })
+      setProperFontSize(
+        doc.querySelectorAll('[data-ga4-label="thumbnail"]:not(:has(a[href^="/novel/show.php"])) div[lang][style*="font-family"]')
+      )
+      doc.querySelectorAll('a').forEach(a => {
         a.setAttribute('target', '')
+      })
+      doc.querySelectorAll('script').forEach(el => {
+        el.remove()
       })
       const lang = doc.documentElement.getAttribute('lang')
       const styles = [...doc.querySelectorAll('style')].map(e => e.outerHTML).join('')
@@ -2053,7 +2087,8 @@ const api = {
       )
       const tiles = doc.querySelector('[data-ga4-label="collection_tiles"]').outerHTML
       const token = Math.random().toString(32).slice(2)
-      html = `<html lang="${lang}">
+      const theme = localStorage.PXV_DARK ? 'data-theme="dark"' : 'data-theme="light"'
+      html = `<html lang="${lang}" ${theme}>
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1">
@@ -2062,18 +2097,46 @@ const api = {
           <style>
             html{min-width: unset !important}
             body{width: 97vw;margin: 1vw auto;box-sizing: border-box;}
+            [data-theme="dark"] .backdrop-blur-md,
+            [data-theme="dark"] .backdrop-blur-sm {
+              border-color: rgba(0, 0, 0, 0.08) !important;
+              background-color: rgba(0, 0, 0, 0.8) !important;
+            }
             [data-ga4-label="collection_tiles"]{overflow: auto;aspect-ratio: unset}
             [data-ga4-label="collection_tiles"] > .absolute{display: none}
-            a[href*="/jump.php?url="] > div{width: auto !important}
-            ::-webkit-scrollbar{width: 12px;height: 12px;}
-            ::-webkit-scrollbar-track{background: #e6e6e6;border-left: 1px solid #dadada;}
-            ::-webkit-scrollbar-thumb{background: #b0b0b0;border: solid 3px #e6e6e6;border-radius: 7px;}
+            a[href^="https://www.pixiv.net/"] [style*="width:0px"]:not(:has(img)){flex: 1;width: auto !important}
+            a[href^="https://www.pixiv.net/"] [style*="width:0px"]:has(img){width: 40% !important}
+            a[href*="/jump.php?url="] > div[style*="width:0px"]:has(img,pixiv-icon){width:30% !important}
+            a[href*="/jump.php?url="] > div[style*="width:0px"]:has(img,pixiv-icon) + div{width:70% !important}
+            /*div[data-ga4-label="thumbnail"] div[lang]:not([style*="font-size"]):not([class*="px "]):not([class*="px] "]){font-size:3.6vw}*/
+            [class*="line-clamp"][style*="line-clamp:0"]{line-clamp:none!important;-webkit-line-clamp:none!important}
+            pixiv-icon[name="24/Link"]{
+              background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQuMDMxIDMuMzY3YTQuNjY2IDQuNjY2IDAgMTE2LjYgNi41OThsLTQuMjQzIDQuMjQzYTQuNjY1IDQuNjY1IDAgMDEtMi4xNjMgMS4yMjZoLS4wMzdsLS4xOTMuMDQtLjEwNy4wMi0uMjMuMDM0aC0uMTEzYy0uMDUgMC0uMDk3LjAwNS0uMTQyLjAxYTEuMjk2IDEuMjk2IDAgMDEtLjA5NS4wMWwtLjIuMDIzaC0uMjUzYTQuNjE2IDQuNjE2IDAgMDEtLjQ5Ny0uMDQ3IDUuMzU2IDUuMzU2IDAgMDEtLjQwMy0uMDgzbC0uMTk3LS4wNTNhMi42NCAyLjY0IDAgMDEtLjIxMy0uMDdsLS4wNzgtLjAyOWMtLjA0NS0uMDE2LS4wOS0uMDMyLS4xMzUtLjA1MWE0LjcxIDQuNzEgMCAwMC0uMDctLjAzIDQuNjI3IDQuNjI3IDAgMDEtMS40NzMtLjk5NCAxLjMzMyAxLjMzMyAwIDAxMC0xLjg3OSAxLjM2NiAxLjM2NiAwIDAxMS44NzMgMCAyIDIgMCAwMDIuODI2IDBsMS4wOTMtMS4wODYuMDI3LS4wMyAzLjEyNi0zLjEyM2EyIDIgMCAwMC0yLjgzLTIuODNsLTIuNTEgMi41MDdhLjMzMy4zMzMgMCAwMS0uMzYyLjA3MyA1LjYgNS42IDAgMDAtMi4xMy0uNDE3aC0uMTIzYS4zMzMuMzMzIDAgMDEtLjI0My0uNTdsMy40OTUtMy40OTJ6IiBmaWxsPSJjdXJyZW50Q29sb3IiPjwvcGF0aD48cGF0aCBkPSJNMTMuNDE4IDkuMTY2Yy4yODQuMTguNTQ3LjM5MS43ODQuNjMuMjcuMjcuNDEuNjQ0LjM4NiAxLjAyNi0uMDIzLjMyLS4xNi42Mi0uMzg2Ljg0N2ExLjM2NiAxLjM2NiAwIDAxLTEuODczIDAgMiAyIDAgMDAtMi44MjcgMEw1LjI0NiAxNS45MmEyIDIgMCAwMDIuODMgMi44M2wyLjUxNi0yLjUyYS4zMzMuMzMzIDAgMDEuMzYzLS4wNzMgNS42MTIgNS42MTIgMCAwMDIuMTMzLjQxM2guMTM0YS4zMzMuMzMzIDAgMDEuMjM2LjU3bC0zLjUgMy41QTQuNjM2IDQuNjM2IDAgMDE2LjY2NCAyMmE0LjY2NiA0LjY2NiAwIDAxLTMuMy03Ljk2Mmw0LjI0LTQuMjQyYTQuNjY2IDQuNjY2IDAgMDE1LjgxNi0uNjN6IiBmaWxsPSJjdXJyZW50Q29sb3IiPjwvcGF0aD48L3N2Zz4=) no-repeat center / contain;
+            }
+            ::-webkit-scrollbar{width: 5px;height: 5px;}
+            ::-webkit-scrollbar-track{background: transparent;}
+            ::-webkit-scrollbar-thumb{background: #b0b0b0;border-radius: 7px;}
             ::-webkit-scrollbar-thumb:hover{background: #666;}
+            @media screen and (max-width: 600px) {
+              body{width:100%;margin:0}
+              [data-ga4-label="collection_tiles"] .grid[style*="gap:16px"]{gap:8px !important}
+              [data-ga4-label="thumbnail"] a[href*="/jump.php?url="]{justify-content: flex-start;align-items: flex-start;}
+              [data-ga4-label="thumbnail"] a[href*="/jump.php?url="] > div:has(img,pixiv-icon){display:none}
+              [data-ga4-label="thumbnail"] a[href*="/jump.php?url="] > div:has(img,pixiv-icon) + div{width: 100% !important;padding: 2px 8px;}
+              ::-webkit-scrollbar{width: 0 !important}
+            }
           </style>
           </head>
           <body>
             ${tiles}
             <script>
+              window.onpagehide = () => {
+                sessionStorage.setItem('__PXV_CL_SCROLL_TOP_' + '${id}', document.documentElement.scrollTop)
+              }
+              window.onpageshow = () => {
+                const scrollTop = sessionStorage.getItem('__PXV_CL_SCROLL_TOP_' + '${id}')
+                if (scrollTop) document.documentElement.scrollTop = scrollTop
+              }
               document.body.onclick = ev => {
                 ev.stopPropagation()
                 ev.preventDefault()
@@ -2092,6 +2155,7 @@ const api = {
             </script>
           </body>
       </html>`
+      const ucMap = thumbnail.collection
       const result = {
         ...data.collection,
         html,

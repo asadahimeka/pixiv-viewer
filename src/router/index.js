@@ -60,6 +60,7 @@ import NotFound from '@/views/NotFound.vue'
 
 Vue.use(VueRouter)
 
+/** @type {import('vue-router').RouteConfig[]} */
 const routes = [
   {
     path: '/',
@@ -176,6 +177,10 @@ const routes = [
             name: 'Artwork',
             component: Artwork,
             meta: { __depth: 10 },
+          },
+          {
+            path: '/novel/show.php',
+            redirect: to => `/novel/${to.query.id}`,
           },
           {
             path: '/novel/:id',

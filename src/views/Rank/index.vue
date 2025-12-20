@@ -257,10 +257,10 @@ export default {
               return true
             })
           }
-          if (!this.menu[this.curType]?.x) {
-            artList = artList.filter(e => !/R-?18|18\+/i.test(JSON.stringify(e.tags)))
+          if (!this.menu[this.curType].x && !store.getters.isR18On) {
+            artList = artList.filter(e => e.x_restrict == 0 && !/R-?18|18\+/i.test(JSON.stringify(e.tags)))
           }
-          if (!this.menu[this.curType]?.ai) {
+          if (!this.menu[this.curType].ai) {
             artList = artList.filter(e => {
               if (isAiIllust(e)) return false
               if (HiddenAuthors.NO_TYPE_AI.includes(+e.author.id)) return false

@@ -13,7 +13,7 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="(it, i) in list" :key="i" class="swipe-item">
           <div class="spec_wp" @click="$router.push(`/collections/${it.id}`)">
             <img
@@ -49,6 +49,7 @@ export default {
     link: { type: String, default: '' },
     list: { type: Array, default: () => [] },
     showAuthor: { type: Boolean, default: true },
+    current: { type: String, default: '' },
   },
   data() {
     return {
@@ -63,6 +64,9 @@ export default {
       },
     }
   },
+  mounted() {
+    this.slidesToCurrent()
+  },
   methods: {
     randomBg,
     coverProxy(src) {
@@ -70,6 +74,17 @@ export default {
     },
     avatarProxy(src) {
       return imgProxy(src)
+    },
+    slidesToCurrent() {
+      if (!this.current) return
+      const index = this.list.findIndex(e => e.id == this.current)
+      index && this.$nextTick(() => {
+        try {
+          this.$refs.mySwiper?.$swiper?.slideTo(index)
+        } catch (err) {
+          console.log('err: ', err)
+        }
+      })
     },
   },
 }

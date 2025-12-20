@@ -7,7 +7,7 @@
       </template>
     </van-cell>
     <div class="artwork-list-wrap">
-      <CollectionSlide :show-author="false" :list="artwork.userCols" />
+      <CollectionSlide :show-author="false" :current="artwork.id" :list="artwork.userCols" />
     </div>
   </div>
 </template>
@@ -48,5 +48,8 @@ export default {
       vertical-align: middle
     .title
       font-size: 28px
+    @media screen and (min-width: 1200px)
+      ::v-deep .van-cell__value
+        display none
 
 </style>

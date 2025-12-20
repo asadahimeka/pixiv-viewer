@@ -1,11 +1,6 @@
 <template>
   <div class="image-view">
-    <iframe
-      v-if="artwork && artwork.html"
-      :srcdoc="artwork.html"
-      sandbox="allow-scripts"
-      style="width: 100%;height: 100%;border: 0;"
-    ></iframe>
+    <iframe v-if="artwork && artwork.html" :srcdoc="artwork.html"></iframe>
   </div>
 </template>
 
@@ -26,27 +21,25 @@ export default {
   },
   methods: {
     onMsg(e) {
-      if (e.origin !== 'null') return
+      if (e.origin !== location.origin) return
       const data = e.data
       if (data?.token !== this.artwork._token) return
+      console.log('data: ', data)
       if (data.action === 'push') {
         const url = data.payload
-        console.log('url: ', url)
         if (typeof url != 'string') return
         if (url.includes('/jump.php?url=')) {
-          const jumpLink = new URL(url).searchParams.get('url')
-          window.open(jumpLink, '_blank', 'noreferrer')
+          const jump = new URL(url).searchParams.get('url')
+          window.open(jump, '_blank', 'noreferrer')
           return
         }
-        if (url.includes(location.origin)) {
-          this.$router.push(url.replace(location.origin, ''))
-          return
+        const to = this.$router.resolve(url.replace(location.origin, '').replace('https://www.pixiv.net', ''))
+        console.log('to: ', to)
+        if (to.route.name == 'NotFound') {
+          window.open(url, '_blank', 'noreferrer')
+        } else {
+          this.$router.push(to.href)
         }
-        if (url.includes('https://www.pixiv.net/users/') || url.includes('https://www.pixiv.net/artworks/')) {
-          this.$router.push(url.replace('https://www.pixiv.net', ''))
-          return
-        }
-        window.open(url, '_blank', 'noreferrer')
       }
     },
   },
@@ -56,9 +49,14 @@ export default {
 <style lang="stylus" scoped>
 .image-view
   width 100%
+  max-width 1000PX
   height 99vh
   height 99dvh
   @media screen and (max-width: 600px)
     height 91vh
     height 91dvh
+  iframe
+    width: 100%
+    height: 100%
+    border: 0
 </style>

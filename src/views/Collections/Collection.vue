@@ -11,7 +11,7 @@
           <CollectionMeta :artwork="artwork" />
         </van-skeleton>
         <keep-alive>
-          <CollectionAuthorCard v-if="artwork" :key="artwork.id" :artwork="artwork" />
+          <CollectionAuthorCard v-if="artwork.id" :key="artwork.id" :artwork="artwork" />
         </keep-alive>
       </div>
     </div>
@@ -48,7 +48,7 @@ export default {
   head() {
     return this.artwork.title
       ? {
-          title: this.artwork.title + ' - ' + this.artwork.author?.name + '的珍藏册',
+          title: this.artwork.title + ' - ' + this.artwork.userName + '的珍藏册',
         }
       : {}
   },
