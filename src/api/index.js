@@ -2011,7 +2011,7 @@ const api = {
       const params = new URLSearchParams()
       ids.forEach(e => params.append('ids[]', e))
       params.append('lang', 'zh')
-      const res2 = await get(`${PIXIV_NEXT_URL}https://www.pixiv.net/ajax/user/${id}/profile/collections?${params}`)
+      const res2 = await get(`${PIXIV_NEXT_URL}/https://www.pixiv.net/ajax/user/${id}/profile/collections?${params}`)
       const data = res2?.body?.works
       if (!Array.isArray(data) || !data.length) return []
       await setCache(cacheKey, data, 60 * 60 * 24)
@@ -2025,31 +2025,83 @@ const api = {
     try {
       const cacheKey = `collections.detail.${id}`
       const cache = await getCache(cacheKey)
-      if (cache) return cache
-      const resp = await fetch(`${COMMON_PROXY}https://www.pixiv.net/collections/${id}`)
+      // if (cache) return cache
+      const resp = await fetch(`${PIXIV_NEXT_URL}/https://www.pixiv.net/collections/${id}`)
       if (!resp.ok) return ''
       let html = await resp.text()
       html = html.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
       const doc = new DOMParser().parseFromString(html, 'text/html')
-      const lang = doc.documentElement.getAttribute('lang')
-      const tiles = doc.querySelector('[data-ga4-label="collection_tiles"]').outerHTML
-      const styles = [...doc.querySelectorAll('style')].map(e => e.outerHTML).join('')
-      const links = [...doc.querySelectorAll('link')]
-        .filter(e => e.rel == 'stylesheet' && e.href.endsWith('.css'))
-        .map(e => `<link rel="stylesheet" type="text/css" href="${COMMON_PROXY + e.href}">`)
-        .join('')
-        // <script>window.onclick
-      html = `<html lang="${lang}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1">${styles}${links}</head><body>${tiles}</body></html>`
       const data = JSON.parse(doc.querySelector('#__NEXT_DATA__').innerHTML).props.pageProps
-      const ucMap = JSON.parse(data.serverSerializedPreloadedState).thumbnail.collection
+      const thumbnail = JSON.parse(data.serverSerializedPreloadedState).thumbnail
+      const ucMap = thumbnail.collection
+      const illusts = Object.values(thumbnail.illust)
+      ;[...doc.querySelectorAll('a[data-ga4-label="user_icon_link"]')].forEach(a => {
+        const uid = a.getAttribute('data-gtm-value')
+        const act = illusts.find(e => e.userId == uid)
+        if (!act) return
+        a.querySelector('div').innerHTML = `<img alt="${act.userName}" width="16" height="16" src="${act.profileImageUrl}" style="object-fit: cover; object-position: center top;">`
+      })
+      ;[...doc.querySelectorAll('a')].forEach(a => {
+        a.setAttribute('target', '')
+      })
+      const lang = doc.documentElement.getAttribute('lang')
+      const styles = [...doc.querySelectorAll('style')].map(e => e.outerHTML).join('')
+      const linkStyleTexts = await Promise.all(
+        [...doc.querySelectorAll('link')]
+          .filter(e => e.rel == 'stylesheet' && e.href.endsWith('.css'))
+          .map(e => fetch(PIXIV_NEXT_URL + '/' + e.href).then(r => r.text()))
+      )
+      const tiles = doc.querySelector('[data-ga4-label="collection_tiles"]').outerHTML
+      const token = Math.random().toString(32).slice(2)
+      html = `<html lang="${lang}">
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=1">
+          <style>${linkStyleTexts.join('\n')}</style>
+          ${styles}
+          <style>
+            html{min-width: unset !important}
+            body{width: 97vw;margin: 1vw auto;box-sizing: border-box;}
+            [data-ga4-label="collection_tiles"]{overflow: auto;aspect-ratio: unset}
+            [data-ga4-label="collection_tiles"] > .absolute{display: none}
+            a[href*="/jump.php?url="] > div{width: auto !important}
+            ::-webkit-scrollbar{width: 12px;height: 12px;}
+            ::-webkit-scrollbar-track{background: #e6e6e6;border-left: 1px solid #dadada;}
+            ::-webkit-scrollbar-thumb{background: #b0b0b0;border: solid 3px #e6e6e6;border-radius: 7px;}
+            ::-webkit-scrollbar-thumb:hover{background: #666;}
+          </style>
+          </head>
+          <body>
+            ${tiles}
+            <script>
+              document.body.onclick = ev => {
+                ev.stopPropagation()
+                ev.preventDefault()
+                let el = ev.target
+                while (el && el.tagName != 'A') {
+                  el = el.parentElement
+                }
+                if (!el) return
+                const url = el.href
+                window.parent.postMessage({
+                  token: '${token}',
+                  action: 'push',
+                  payload: url
+                }, '*')
+              }
+            </script>
+          </body>
+      </html>`
       const result = {
+        ...data.collection,
         html,
-        detail: data.collection,
+        _token: token,
         userCols: data.userCollectionIds.map(e => ucMap[e]),
       }
       await setCache(cacheKey, result, -1)
-      return html
+      return result
     } catch (err) {
+      console.log('err: ', err)
       return null
     }
   },

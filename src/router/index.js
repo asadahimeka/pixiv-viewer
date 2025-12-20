@@ -26,6 +26,7 @@ import SearchNovel from '@/views/Search/SearchNovel.vue'
 import SearchUser from '@/views/Search/SearchUser.vue'
 import SearchUserRes from '@/views/Search/SearchUserRes.vue'
 import SearchCollection from '@/views/Collections/SearchCollection.vue'
+import Collection from '@/views/Collections/Collection.vue'
 import TagStory from '@/views/Search/TagStory.vue'
 import Rank from '@/views/Rank/index.vue'
 import RankNovel from '@/views/Rank/RankNovel.vue'
@@ -122,7 +123,6 @@ const routes = [
           },
           {
             path: '/search_collection',
-            alias: ['/collection'],
             name: 'SearchCollection',
             component: SearchCollection,
             meta: { __depth: 1 },
@@ -241,6 +241,12 @@ const routes = [
             name: 'TagStory',
             component: TagStory,
             meta: { __depth: 3 },
+          },
+          {
+            path: '/collections/:id',
+            name: 'Collection',
+            component: Collection,
+            meta: { __depth: 10 },
           },
           {
             path: '/setting/history',

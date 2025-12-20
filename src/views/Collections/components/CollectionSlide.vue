@@ -1,6 +1,13 @@
 <template>
   <div class="rank-card">
-    <van-cell class="cell" :border="false" :value="link ? $t('Iv_AtBrZSiXtLxkAr8Kas') : undefined" :is-link="!!link" :to="link || undefined">
+    <van-cell
+      v-if="title"
+      class="cell"
+      :border="false"
+      :value="link ? $t('Iv_AtBrZSiXtLxkAr8Kas') : undefined"
+      :is-link="!!link"
+      :to="link || undefined"
+    >
       <template #title>
         <span class="title">{{ title }}</span>
       </template>
@@ -17,7 +24,7 @@
               onload="this.style.background='none'"
             >
             <h2 class="sp_title" :title="it.title + '\n' + it.caption">{{ it.title }}</h2>
-            <div class="sp_author" @click.stop="$router.push(`/users/${it.userId}`)">
+            <div v-if="showAuthor" class="sp_author" @click.stop="$router.push(`/users/${it.userId}`)">
               <img :src="avatarProxy(it.profileImageUrl)" alt="">
               <span>{{ it.userName }}</span>
             </div>
@@ -41,6 +48,7 @@ export default {
     title: { type: String, default: '' },
     link: { type: String, default: '' },
     list: { type: Array, default: () => [] },
+    showAuthor: { type: Boolean, default: true },
   },
   data() {
     return {
@@ -84,10 +92,12 @@ export default {
       margin-right: 12px
     ::v-deep
       .swiper-button-prev
+        height 100%
         border-top-left-radius: 10PX
         border-bottom-left-radius: 10PX
         background-image: linear-gradient(90deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 100%);
       .swiper-button-next
+        height 100%
         border-top-right-radius: 10PX
         border-bottom-right-radius: 10PX
         background-image: linear-gradient(270deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0) 100%);
