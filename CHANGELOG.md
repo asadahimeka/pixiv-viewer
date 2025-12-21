@@ -39,6 +39,12 @@
 - Pxcl bookmarks page
 - Add th-TH/ms-MY locales
 - Search tag story
+- Ugoira avif download
+- Add collections top
+- Collection detail
+- Collection related
+- Collection search
+- User collections
 
 ### 🐛 Bug Fixes
 
@@ -98,6 +104,12 @@
 - Style fix
 - Font css link
 - Spotlight ugoira play
+- Pxcl fix
+- Filter fix
+- Style fix
+- Novel filter fix
+- Collection detail
+- Collection detail
 
 ### 📚 Documentation
 
@@ -139,6 +151,8 @@
 - Release v1.31.0
 - Release v1.31.1
 - Release v1.31.2
+- Release v1.31.3
+- Fxck nosa
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
