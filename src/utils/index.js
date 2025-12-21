@@ -375,6 +375,8 @@ export async function retry(fn, retries = 3, delay = 800) {
 }
 
 export function setProperFontSize(elements) {
+  elements = Array.from(elements)
+  if (!elements.length) return
   const MAX_FONT_SIZE = 330
   const MIN_FONT_SIZE = 164
   const BUCKET_SIZE = 10
@@ -386,8 +388,17 @@ export function setProperFontSize(elements) {
     if (count > maxCharCount) maxCharCount = count
   })
   if (maxCharCount === 0) maxCharCount = 1
+  const minSize = navigator.userAgent.includes('Mobile') ? 12 : 16
+  if (elements.length == 1) {
+    elements[0].style.fontSize = charCounts[0] > 40 ? `${minSize}px` : `max(${minSize}px, 3.2vw)`
+    return
+  }
   elements.forEach((el, index) => {
     const charCount = charCounts[index]
+    if (charCount > 80) {
+      el.style.fontSize = `${minSize}px`
+      return
+    }
     // const fontSize = MAX_FONT_SIZE - (charCount / maxCharCount) * (MAX_FONT_SIZE - MIN_FONT_SIZE)
     const bucket = Math.ceil(charCount / BUCKET_SIZE)
     const maxBucket = Math.ceil(maxCharCount / BUCKET_SIZE)
@@ -395,6 +406,6 @@ export function setProperFontSize(elements) {
       MIN_FONT_SIZE,
       MAX_FONT_SIZE - (bucket - 1) * ((MAX_FONT_SIZE - MIN_FONT_SIZE) / (maxBucket - 1 || 1))
     )
-    el.style.fontSize = `${fontSize / 100}vw`
+    el.style.fontSize = `max(${minSize}px, ${fontSize / 100}vw)`
   })
 }

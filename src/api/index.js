@@ -2075,6 +2075,10 @@ const api = {
       doc.querySelectorAll('a').forEach(a => {
         a.setAttribute('target', '')
       })
+      doc.querySelectorAll('link[href*="fonts.googleapis.com"]').forEach(el => {
+        const href = el.getAttribute('href').replace('fonts.googleapis.com', 'fonts.loli.net')
+        el.outerHTML = `<link href="${href}" onload="this.rel='stylesheet'" rel="preload" as="style" crossorigin />`
+      })
       doc.querySelectorAll('script').forEach(el => {
         el.remove()
       })
@@ -2104,11 +2108,10 @@ const api = {
             }
             [data-ga4-label="collection_tiles"]{overflow: auto;aspect-ratio: unset}
             [data-ga4-label="collection_tiles"] > .absolute{display: none}
-            a[href^="https://www.pixiv.net/"] [style*="width:0px"]:not(:has(img)){flex: 1;width: auto !important}
-            a[href^="https://www.pixiv.net/"] [style*="width:0px"]:has(img){width: 40% !important}
+            a [style*="width:0px"]:not(:has(img)){flex: 1;width: auto !important}
+            a [style*="width:0px"]:has(img){width: 40% !important}
             a[href*="/jump.php?url="] > div[style*="width:0px"]:has(img,pixiv-icon){width:30% !important}
             a[href*="/jump.php?url="] > div[style*="width:0px"]:has(img,pixiv-icon) + div{width:70% !important}
-            /*div[data-ga4-label="thumbnail"] div[lang]:not([style*="font-size"]):not([class*="px "]):not([class*="px] "]){font-size:3.6vw}*/
             [class*="line-clamp"][style*="line-clamp:0"]{line-clamp:none!important;-webkit-line-clamp:none!important}
             pixiv-icon[name="24/Link"]{
               background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQuMDMxIDMuMzY3YTQuNjY2IDQuNjY2IDAgMTE2LjYgNi41OThsLTQuMjQzIDQuMjQzYTQuNjY1IDQuNjY1IDAgMDEtMi4xNjMgMS4yMjZoLS4wMzdsLS4xOTMuMDQtLjEwNy4wMi0uMjMuMDM0aC0uMTEzYy0uMDUgMC0uMDk3LjAwNS0uMTQyLjAxYTEuMjk2IDEuMjk2IDAgMDEtLjA5NS4wMWwtLjIuMDIzaC0uMjUzYTQuNjE2IDQuNjE2IDAgMDEtLjQ5Ny0uMDQ3IDUuMzU2IDUuMzU2IDAgMDEtLjQwMy0uMDgzbC0uMTk3LS4wNTNhMi42NCAyLjY0IDAgMDEtLjIxMy0uMDdsLS4wNzgtLjAyOWMtLjA0NS0uMDE2LS4wOS0uMDMyLS4xMzUtLjA1MWE0LjcxIDQuNzEgMCAwMC0uMDctLjAzIDQuNjI3IDQuNjI3IDAgMDEtMS40NzMtLjk5NCAxLjMzMyAxLjMzMyAwIDAxMC0xLjg3OSAxLjM2NiAxLjM2NiAwIDAxMS44NzMgMCAyIDIgMCAwMDIuODI2IDBsMS4wOTMtMS4wODYuMDI3LS4wMyAzLjEyNi0zLjEyM2EyIDIgMCAwMC0yLjgzLTIuODNsLTIuNTEgMi41MDdhLjMzMy4zMzMgMCAwMS0uMzYyLjA3MyA1LjYgNS42IDAgMDAtMi4xMy0uNDE3aC0uMTIzYS4zMzMuMzMzIDAgMDEtLjI0My0uNTdsMy40OTUtMy40OTJ6IiBmaWxsPSJjdXJyZW50Q29sb3IiPjwvcGF0aD48cGF0aCBkPSJNMTMuNDE4IDkuMTY2Yy4yODQuMTguNTQ3LjM5MS43ODQuNjMuMjcuMjcuNDEuNjQ0LjM4NiAxLjAyNi0uMDIzLjMyLS4xNi42Mi0uMzg2Ljg0N2ExLjM2NiAxLjM2NiAwIDAxLTEuODczIDAgMiAyIDAgMDAtMi44MjcgMEw1LjI0NiAxNS45MmEyIDIgMCAwMDIuODMgMi44M2wyLjUxNi0yLjUyYS4zMzMuMzMzIDAgMDEuMzYzLS4wNzMgNS42MTIgNS42MTIgMCAwMDIuMTMzLjQxM2guMTM0YS4zMzMuMzMzIDAgMDEuMjM2LjU3bC0zLjUgMy41QTQuNjM2IDQuNjM2IDAgMDE2LjY2NCAyMmE0LjY2NiA0LjY2NiAwIDAxLTMuMy03Ljk2Mmw0LjI0LTQuMjQyYTQuNjY2IDQuNjY2IDAgMDE1LjgxNi0uNjN6IiBmaWxsPSJjdXJyZW50Q29sb3IiPjwvcGF0aD48L3N2Zz4=) no-repeat center / contain;

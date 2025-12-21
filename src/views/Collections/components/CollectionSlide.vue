@@ -93,6 +93,9 @@ export default {
 <style lang="stylus" scoped>
 .cell
   background none
+  ::v-deep .van-cell__value
+    flex none
+    margin-left: 0.5rem
 
 .rank-card
   padding: 0;

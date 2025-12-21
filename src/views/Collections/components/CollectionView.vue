@@ -51,10 +51,8 @@ export default {
   width 100%
   max-width 1000PX
   height 99vh
-  height 99dvh
   @media screen and (max-width: 600px)
     height 91vh
-    height 91dvh
   iframe
     width: 100%
     height: 100%
