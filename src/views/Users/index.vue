@@ -237,14 +237,13 @@
               @onCilck="showSub('fav_novel')"
             />
           </van-tab>
+          <van-tab :title="$t('dZ93cWZJ03hu5emsVwgjA')" name="collections">
+            <AuthorCollections v-if="activeTab == 'collections'" :id="userInfo.id" />
+          </van-tab>
           <van-tab :title="$t('user.related')" name="related">
             <RecommUser v-if="activeTab == 'related'" :related-id="userInfo.id" />
           </van-tab>
         </van-tabs>
-
-        <!-- <div v-show="activeTab != 'related' && !loading" style="margin-top: 10px;text-align: center;">
-          <van-button size="small" @click="showSub(activeTab)">{{ $t('common.view_more') }}</van-button>
-        </div> -->
 
         <van-loading v-show="loading" class="loading" size="60px" />
       </div>
@@ -261,6 +260,7 @@ import FavoriteIllusts from './components/FavoriteIllusts'
 import RecommUser from '../Search/components/RecommUser.vue'
 import AuthorNovels from './components/AuthorNovels.vue'
 import FavoriteNovels from './components/FavoriteNovels.vue'
+import AuthorCollections from './components/AuthorCollections.vue'
 import _ from '@/lib/lodash'
 import { Dialog } from 'vant'
 import api, { localApi } from '@/api'
@@ -288,6 +288,7 @@ export default {
     RecommUser,
     AuthorIllustSeries,
     AuthorNovelSeries,
+    AuthorCollections,
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -346,7 +347,7 @@ export default {
       this.loading = true
       const id = +this.$route.params.id
       this.userInfo = {}
-      this.activeTab = 'illusts'
+      this.activeTab = this.$route.params.tab || 'illusts'
       if (this.$store.state.blockUids.includes(`${id}`)) {
         this.$toast(this.$t('common.content.hide'))
         return

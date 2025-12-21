@@ -30,8 +30,7 @@ export default {
     toAuthor(id) {
       this.$router.push({
         name: 'Users',
-        params: { id },
-        query: { tab: 'collections' },
+        params: { id, tab: 'collections' },
       })
     },
   },

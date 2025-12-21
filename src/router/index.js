@@ -231,6 +231,14 @@ const routes = [
             meta: { __depth: 25 },
           },
           {
+            path: '/users/:id/manga',
+            redirect: to => ({ name: 'Users', params: { id: to.params.id, tab: 'manga' } }),
+          },
+          {
+            path: '/users/:id/collections',
+            redirect: to => ({ name: 'Users', params: { id: to.params.id, tab: 'collections' } }),
+          },
+          {
             path: '/user/:uid/series/:sid',
             name: 'IllustSeries',
             component: IllustSeries,

@@ -24,7 +24,7 @@
           onload="this.className+=' bg-none'"
         >
         <h2 class="sp_title" :title="it.title + '\n' + it.caption">{{ it.title }}</h2>
-        <div class="sp_author" @click.stop="$router.push(`/users/${it.userId}`)">
+        <div v-if="showAuthor" class="sp_author" @click.stop="$router.push(`/users/${it.userId}`)">
           <img :src="avatarProxy(it.profileImageUrl)" alt="">
           <span>{{ it.userName }}</span>
         </div>
@@ -47,6 +47,7 @@ export default {
     fetchList: { type: Function, default: async () => [] },
     pagination: { type: Boolean, default: true },
     autoLoad: { type: Boolean, default: true },
+    showAuthor: { type: Boolean, default: true },
   },
   data() {
     return {
