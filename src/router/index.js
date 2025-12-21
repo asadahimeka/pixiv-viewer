@@ -25,7 +25,8 @@ import SearchRes from '@/views/Search/SearchRes.vue'
 import SearchNovel from '@/views/Search/SearchNovel.vue'
 import SearchUser from '@/views/Search/SearchUser.vue'
 import SearchUserRes from '@/views/Search/SearchUserRes.vue'
-import SearchCollection from '@/views/Collections/SearchCollection.vue'
+import CollectionTop from '@/views/Collections/CollectionTop.vue'
+import Collections from '@/views/Collections/Collections.vue'
 import Collection from '@/views/Collections/Collection.vue'
 import TagStory from '@/views/Search/TagStory.vue'
 import Rank from '@/views/Rank/index.vue'
@@ -123,9 +124,15 @@ const routes = [
             meta: { __depth: 1 },
           },
           {
-            path: '/search_collection',
-            name: 'SearchCollection',
-            component: SearchCollection,
+            path: '/collection',
+            name: 'CollectionTop',
+            component: CollectionTop,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/collections',
+            name: 'Collections',
+            component: Collections,
             meta: { __depth: 1 },
           },
           {

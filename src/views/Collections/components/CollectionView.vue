@@ -23,7 +23,7 @@ export default {
     onMsg(e) {
       if (e.origin !== location.origin) return
       const data = e.data
-      if (data?.token !== this.artwork._token) return
+      if (!data?.token || data.token !== this.artwork._token) return
       console.log('data: ', data)
       if (data.action === 'push') {
         const url = data.payload

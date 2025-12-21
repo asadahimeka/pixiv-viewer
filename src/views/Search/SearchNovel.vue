@@ -63,6 +63,7 @@
       <div class="com_sel_tab" @click="$router.replace('/search')">{{ $t('common.illust_manga') }}</div>
       <div class="com_sel_tab cur">{{ $t('common.novel') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_user')">{{ $t('common.user') }}</div>
+      <div class="com_sel_tab" @click="$router.replace('/collection')">{{ $t('dZ93cWZJ03hu5emsVwgjA') }}</div>
     </div>
     <div class="list-wrap" :class="{ focus: focus }" :style="{ paddingTop: keywords.trim() ? '1.6rem' : '2.6rem' }">
       <div v-show="keywords.trim()" class="search_params">

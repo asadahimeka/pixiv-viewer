@@ -34,8 +34,8 @@
           <div v-if="t.translation">{{ t.translation }}</div>
         </div>
       </div>
-      <CollectionSlide :title="$t('UloXxmkw8Hfy3fU3AwYoJ')" :list="topCol.recommend" />
-      <CollectionSlide :title="$t('TqlK8T5LCQZrufKKCrmcU')" link="/collections" :list="topCol.everyone" />
+      <CollectionSlide v-if="topCol.recommend" :title="$t('UloXxmkw8Hfy3fU3AwYoJ')" :list="topCol.recommend" />
+      <CollectionSlide v-if="topCol.everyone" :title="$t('TqlK8T5LCQZrufKKCrmcU')" link="/collections" :list="topCol.everyone" />
       <CollectionSlide
         v-for="(it, i) in topCol.tagRecommend"
         :key="i"
@@ -54,14 +54,14 @@ import { mintVerify, BLOCK_SEARCH_WORD_RE } from '@/utils/filter'
 import CollectionSlide from './components/CollectionSlide.vue'
 
 export default {
-  name: 'SearchCollection',
+  name: 'CollectionTop',
   components: {
     CollectionSlide,
   },
   data() {
     return {
       keywords: '',
-      loading: false,
+      loading: true,
       tags: [],
       topCol: {},
     }
@@ -71,8 +71,12 @@ export default {
       title: this.$t('dZ93cWZJ03hu5emsVwgjA'),
     }
   },
-  created() {
-    this.init()
+  mounted() {
+    this.$nextTick(() => {
+      requestAnimationFrame(() => {
+        this.init()
+      })
+    })
   },
   methods: {
     async init() {

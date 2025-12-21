@@ -10,15 +10,11 @@
         <van-skeleton class="skeleton" title avatar :row="5" row-width="200px" avatar-size="42px" :loading="loading">
           <CollectionMeta :artwork="artwork" />
         </van-skeleton>
-        <keep-alive>
-          <CollectionAuthorCard v-if="artwork.id" :key="artwork.id" :artwork="artwork" />
-        </keep-alive>
+        <CollectionAuthorCard v-if="artwork.id" :artwork="artwork" />
       </div>
     </div>
     <van-divider style="margin: 0.7rem 0;" />
-    <keep-alive>
-      <!-- <CollectionRelated v-show="artwork.id" :key="artwork.id" :artwork="artwork" /> -->
-    </keep-alive>
+    <CollectionRelated v-if="artwork.id" :artwork="artwork" />
   </div>
 </template>
 
@@ -28,7 +24,7 @@ import TopBar from '@/components/TopBar.vue'
 import CollectionView from './components/CollectionView.vue'
 import CollectionMeta from './components/CollectionMeta.vue'
 import CollectionAuthorCard from './components/CollectionAuthorCard.vue'
-// import CollectionRelated from './components/CollectionRelated.vue'
+import CollectionRelated from './components/CollectionRelated.vue'
 
 export default {
   name: 'Collection',
@@ -37,7 +33,7 @@ export default {
     CollectionView,
     CollectionMeta,
     CollectionAuthorCard,
-    // CollectionRelated,
+    CollectionRelated,
   },
   data() {
     return {
@@ -48,7 +44,7 @@ export default {
   head() {
     return this.artwork.title
       ? {
-          title: this.artwork.title + ' - ' + this.artwork.userName + '的珍藏册',
+          title: this.artwork.title + ' - ' + this.$t('4--dCKaKniIMUQ7l_mKpg', [this.artwork.userName]),
         }
       : {}
   },

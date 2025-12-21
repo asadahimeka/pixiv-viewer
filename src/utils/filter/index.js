@@ -88,6 +88,25 @@ export function filterCensoredNovels(list = []) {
   return list.filter(filterCensoredNovel)
 }
 
+export function filterCensoredCollections(list = []) {
+  const state = store.state
+  return list.filter(artwork => {
+    if (state.blockUids.length && state.blockUids.includes(`${artwork.userId}`)) {
+      return false
+    }
+    if (isBlockTagHit(state.blockTags, artwork.tags)) {
+      return false
+    }
+    if (artwork.xRestrict == 1) {
+      return state.contentSetting.r18
+    }
+    if (artwork.xRestrict == 2) {
+      return state.contentSetting.r18g
+    }
+    return true
+  })
+}
+
 const aiTags = [
   'ai',
   'ai生成',

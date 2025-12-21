@@ -206,6 +206,13 @@ code
 @media screen and (max-width: 600px)
   .swiper-button-prev, .swiper-button-next, .swiper-scrollbar
     display none
+  .search .com_sel_tabs
+    justify-content: flex-start !important
+    max-width: 92vw !important
+    overflow-x: auto
+    &::-webkit-scrollbar
+      width: 0
+      height 0
 
 @font-face
   font-family: 'Dosis';
@@ -708,7 +715,8 @@ html:has(.dark)
   .artwork .related > .cell,
   .search .search_params + .rank-card > .cell,
   .search .TagStorySlides,
-  .search-user .list-wrap
+  .search-user .list-wrap,
+  .collections_restrict
     max-width 1200PX
     margin-left auto !important
     margin-right auto !important
@@ -824,6 +832,13 @@ html:has(.novel_text) #immersive-translate-popup
   @media screen and (max-width: 999px)
     .Home .com_sel_tabs .home-title
       display none !important
+    .Home .com_sel_tabs .sel-tabs
+      max-width: 92vw
+      overflow-x: auto
+      justify-content: flex-start
+      &::-webkit-scrollbar
+        width: 0
+        height 0
 
 #app .users .info-container .info .detail.ex
   max-height: 5.33333rem

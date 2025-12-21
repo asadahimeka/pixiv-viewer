@@ -9,6 +9,7 @@
         <div v-t="'common.illust'" class="com_sel_tab cur"></div>
         <div v-t="'common.manga'" class="com_sel_tab" @click="$router.replace('/home_manga')"></div>
         <div v-t="'common.novel'" class="com_sel_tab" @click="$router.replace('/home_novel')"></div>
+        <div v-t="'dZ93cWZJ03hu5emsVwgjA'" class="com_sel_tab" @click="$router.push('/collection')"></div>
         <!-- <div v-t="'g4JWYmBbfeweCBkRSgGNw'" class="com_sel_tab" @click="$router.push('/lives')"></div> -->
       </div>
       <div class="home-search">

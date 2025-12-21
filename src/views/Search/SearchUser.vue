@@ -20,6 +20,7 @@
       <div class="com_sel_tab" @click="$router.replace('/search')">{{ $t('common.illust_manga') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_novel')">{{ $t('common.novel') }}</div>
       <div class="com_sel_tab cur">{{ $t('common.user') }}</div>
+      <div class="com_sel_tab" @click="$router.replace('/collection')">{{ $t('dZ93cWZJ03hu5emsVwgjA') }}</div>
     </div>
     <div class="list-wrap">
       <RecommUser />

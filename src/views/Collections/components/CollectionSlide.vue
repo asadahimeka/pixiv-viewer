@@ -14,13 +14,13 @@
     </van-cell>
     <div class="card-box">
       <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
-        <swiper-slide v-for="(it, i) in list" :key="i" class="swipe-item">
+        <swiper-slide v-for="(it, i) in displayList" :key="i" class="swipe-item">
           <div class="spec_wp" @click="$router.push(`/collections/${it.id}`)">
             <img
               :src="coverProxy(it.thumbnailImageUrl)"
               loading="lazy"
               :alt="it.title"
-              :style="{ background: randomBg() }"
+              :style="it.style"
               onload="this.style.background='none'"
             >
             <h2 class="sp_title" :title="it.title + '\n' + it.caption">{{ it.title }}</h2>
@@ -41,6 +41,7 @@
 import { imgProxy } from '@/api'
 import { COMMON_PROXY } from '@/consts'
 import { randomBg } from '@/utils'
+import { filterCensoredCollections } from '@/utils/filter'
 
 export default {
   name: 'CollectionSlide',
@@ -64,11 +65,17 @@ export default {
       },
     }
   },
+  computed: {
+    displayList() {
+      return filterCensoredCollections(
+        this.list.map(e => ({ ...e, style: `background: ${randomBg()}` }))
+      )
+    },
+  },
   mounted() {
     this.slidesToCurrent()
   },
   methods: {
-    randomBg,
     coverProxy(src) {
       return COMMON_PROXY + src + '?format=png'
     },

@@ -1,6 +1,6 @@
 <template>
   <div v-if="artwork && artwork.userId" class="author-card">
-    <van-cell class="cell" :border="false" value="查看珍藏册一览" is-link @click="toAuthor(artwork.userId)">
+    <van-cell class="cell" :border="false" :value="$t('TBjERNyUzTvXHFSY65teN')" is-link @click="toAuthor(artwork.userId)">
       <template #title>
         <Pximg v-if="artwork.profileImageUrl" nobg class="icon" :src="artwork.profileImageUrl" alt="" />
         <span class="title">{{ artwork.userName }}</span>

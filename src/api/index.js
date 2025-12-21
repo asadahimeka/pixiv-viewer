@@ -1964,7 +1964,7 @@ const api = {
       }
       const nextIds = await getCache(nextIdsKey)
       if (!Array.isArray(nextIds) || !nextIds.length) return []
-      const cur = (page - 1) * 10
+      const cur = (page - 2) * 10
       const ids = nextIds.slice(cur, cur + 10)
       if (!ids.length) return []
       const params = new URLSearchParams()
@@ -1980,13 +1980,15 @@ const api = {
       return []
     }
   },
-  async searchCollections(tag, page = 1, mode = 'safe') {
+  async searchCollections(tags = [], page = 1, mode = 'safe') {
     try {
-      const cacheKey = `collections.search.${tag}.${page}.${mode}`
+      const cacheKey = `collections.search.${tags.join('_')}.${page}.${mode}`
       const cache = await getCache(cacheKey)
       if (cache) return cache
       const params = new URLSearchParams()
-      if (tag) params.append('tags[]', tag)
+      if (tags.length) {
+        tags.forEach(e => params.append('tags[]', e))
+      }
       params.append('mode', mode)
       params.append('limit', 20)
       params.append('offset', (page - 1) * 20)
