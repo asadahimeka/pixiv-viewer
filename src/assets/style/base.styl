@@ -1,16 +1,13 @@
 html
   --font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  overflow-x hidden
+  overflow-x clip
 
 html, body
   font-family: var(--font-family);
   color: #333;
   overscroll-behavior: none;
   user-select: none;
-
-// html[lang^="zh"],
-// html[lang="ja"]
-//   &, & body
-//     font-family: "LXGW WenKai Screen", -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Source Han Sans SC, Source Han Sans CN, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
 
 code
   font-family Consolas, "Roboto Mono", "Courier New", Courier, monospace
@@ -169,6 +166,7 @@ code
   overflow initial !important
 html:has(.van-tabs__content--animated)
   overflow-x hidden
+  overflow-x clip
 
 .fancybox__toolbar__column.is-right
   .f-button:first-child

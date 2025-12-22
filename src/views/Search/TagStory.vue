@@ -56,6 +56,7 @@ export default {
 <style lang="stylus">
 html:has(.search-tag-story)
   overflow hidden
+  overflow clip
 .app-main:has(.search-tag-story)
   padding 0
 </style>

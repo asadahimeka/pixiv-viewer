@@ -55,7 +55,11 @@ export default {
     return { title: this.$t('common.recomm_art') }
   },
   activated() {
-    this.init()
+    this.$nextTick(() => {
+      requestAnimationFrame(() => {
+        this.init()
+      })
+    })
   },
   methods: {
     toggleSlide() {
@@ -115,10 +119,9 @@ export default {
       }
       this.loading = false
     },
-    async init() {
+    init() {
       if (this.isFromDetail && this.artList.length) return
       this.artList = []
-      await this.$nextTick()
       const list = SessionStorage.get('recommended.illust')
       console.log('list: ', list)
       if (list) {

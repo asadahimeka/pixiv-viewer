@@ -202,7 +202,12 @@ export default {
       await downloadFile(src, fileName, { subDir: store.state.appSetting.dlSubDirByAuthor ? this.artwork.author.name : undefined })
     },
     showFull() {
-      if (this.isShrink) this.isShrink = false
+      if (this.isShrink) {
+        this.isShrink = false
+        this.$nextTick(() => {
+          this.$refs.view?.scrollTo({ top: 0 })
+        })
+      }
     },
     // async checkAI(url) {
     //   const loading = this.$toast.loading({
@@ -494,15 +499,14 @@ export default {
       this.progressShow = false
     },
     init() {
+      if (this.artwork.images && this.artwork.images.length >= 3) {
+        this.isShrink = true
+      } else {
+        this.isShrink = false
+      }
       this.resetUgoira()
       this.$nextTick(() => {
         setTimeout(() => {
-          if (this.artwork.images && this.artwork.images.length >= 3) {
-            this.isShrink = true
-          } else {
-            this.isShrink = false
-          }
-
           if (this.artwork.type == 'ugoira' && autoPlayUgoira && !isUgoiraAvifSrc) {
             this.playUgoira()
           }
@@ -531,6 +535,7 @@ export default {
   &.shrink {
     max-height: 1000px;
     overflow: hidden;
+    overflow: clip;
 
     &::after {
       content: '';
@@ -664,7 +669,7 @@ export default {
   left: 50%;
   z-index: 99;
   transform: translate(-50%, -50%);
-  /* width: 100%; */
+  width: 100%;
   height: 100%;
   aspect-ratio: var(--ratio);
   pointer-events: none;
@@ -672,7 +677,8 @@ export default {
 }
 @media screen and (max-width: 600px) {
   .ia-cont .ia-left .image-view.loaded.overlong:not(.shrink) {
-    height: calc(100vh - 2.4rem);
+    height: 80vh;
+    max-height: 80vh;
     overflow-y: auto;
   }
   .ia-cont .ia-left .image-box {

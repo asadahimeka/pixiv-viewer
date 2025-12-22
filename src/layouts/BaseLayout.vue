@@ -61,5 +61,6 @@ export default {
 html:has(div[class*="slide-left"]),
 html:has(div[class*="slide-right"]) {
   overflow-x: hidden;
+  overflow-x: clip;
 }
 </style>

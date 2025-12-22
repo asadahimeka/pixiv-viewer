@@ -40,7 +40,9 @@ export default {
   methods: {
     init() {
       this.$nextTick(() => {
-        this.getHistory()
+        requestAnimationFrame(() => {
+          this.getHistory()
+        })
       })
     },
     toArtwork(id) {

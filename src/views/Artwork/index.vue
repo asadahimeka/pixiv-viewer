@@ -12,7 +12,7 @@
       </template>
       <div class="ia-cont" :class="{ 'landscape-1-art': isLandscape1Art }">
         <div class="ia-left">
-          <van-loading v-if="loading" size="50px" />
+          <van-loading v-if="loading" class="i-loading" size="50px" />
           <ImageView ref="imgView" :artwork="artwork" @open-download="ugoiraDownloadPanelShow = true" />
         </div>
         <div class="ia-right">
@@ -419,6 +419,12 @@ img[src*="https://api.moedog.org/qr/?url="]
   width 0.7rem
   height 100%
 
+.i-loading
+  position: absolute;
+  top: 4rem;
+  width: 100%;
+  text-align: center;
+
 .ia-cont
   display flex
   align-items flex-start
@@ -471,7 +477,10 @@ img[src*="https://api.moedog.org/qr/?url="]
     display block !important
 
   .ia-left
+    display block !important
+    align-items unset !important
     width 100% !important
+    max-height max-content !important
     margin 0 auto !important
     padding 0 !important
 
@@ -482,7 +491,8 @@ img[src*="https://api.moedog.org/qr/?url="]
       box-shadow none !important
 
   .ia-right
-    max-width unset !important
+    position relative !important
+    max-width 100% !important
     padding-right 0 !important
     .artwork-meta
       margin-top 10px !important
@@ -491,7 +501,9 @@ img[src*="https://api.moedog.org/qr/?url="]
     display: flex !important
     flex-direction: column
     .ia-left
-      // flex 1
+      display flex !important
+      justify-content center !important
+      align-items center !important
       min-height 55vh
     .ia-right
       position: relative

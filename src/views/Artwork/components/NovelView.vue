@@ -295,6 +295,7 @@ export default {
 <style lang="stylus">
 html:has(.isCollapseMeta .horizon-cols)
   overflow hidden
+  overflow clip
 .artwork.novel .ia-cont
   height max-content
   .ia-right

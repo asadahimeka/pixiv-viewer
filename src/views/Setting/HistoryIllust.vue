@@ -32,9 +32,9 @@ export default {
   methods: {
     init() {
       this.$nextTick(() => {
-        setTimeout(() => {
+        requestAnimationFrame(() => {
           this.getHistory()
-        }, 200)
+        })
       })
     },
     toArtwork(art) {
