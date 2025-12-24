@@ -11,7 +11,9 @@ export async function setCache(key, val, expires) {
   await localDb.set(key, val, expires)
 }
 
+const waitFrame = () => new Promise(resolve => requestAnimationFrame(resolve))
 export async function getCache(key, def) {
+  await waitFrame()
   let val = _siteCacheData.get(key)
   if (val == null) {
     val = await localDb.get(key, def)

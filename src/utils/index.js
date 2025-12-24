@@ -359,7 +359,7 @@ export function formatIntlDate(date) {
   }
 }
 
-export async function retry(fn, retries = 3, delay = 800) {
+export async function retry(fn, retries = 2, delay = 1000) {
   let lastError
   for (let i = 0; i < retries; i++) {
     try {

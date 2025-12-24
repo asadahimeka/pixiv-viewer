@@ -12,11 +12,11 @@ import '@/lib/registerServiceWorker'
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMeta from 'vue-meta'
-import { Dialog, Lazyload, Notify, Toast } from 'vant'
+import { Dialog/* , Lazyload */, Notify, Toast } from 'vant'
 import { vOnLongPress } from '@vueuse/components'
 
 import setupVant from '@/lib/vant'
-import SvgIcon, { loadingSvg } from '@/icons'
+import SvgIcon/* , { loadingSvg } */ from '@/icons'
 import VueMasonry from '@/components/VueMasonryCss'
 import ImageLayout from '@/components/ImageLayout.vue'
 import TopBar from '@/components/TopBar.vue'
@@ -40,15 +40,15 @@ async function setupApp() {
   await initLocalApi()
 
   Vue.use(Toast)
-  if (store.state.appSetting.isImgLazy) {
-    Vue.use(Lazyload, {
-      observer: store.state.appSetting.isImgLazyOb,
-      observerOptions: { rootMargin: '0px 50px 50px 0px', threshold: [0] },
-      lazyComponent: false,
-      loading: loadingSvg(localStorage.PXV_ACT_COLOR || '#38a9f5'),
-      preload: 1.3,
-    })
-  }
+  // if (store.state.appSetting.isImgLazy) {
+  //   Vue.use(Lazyload, {
+  //     observer: store.state.appSetting.isImgLazyOb,
+  //     observerOptions: { rootMargin: '0px 50px 50px 0px', threshold: [0] },
+  //     lazyComponent: false,
+  //     loading: loadingSvg(localStorage.PXV_ACT_COLOR || '#38a9f5'),
+  //     preload: 1.3,
+  //   })
+  // }
   setupVant()
   Vue.use(VueAwesomeSwiper)
   Vue.use(VueMeta, { keyName: 'head' })

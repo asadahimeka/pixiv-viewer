@@ -1,6 +1,20 @@
 <template>
-  <img v-if="direct" :class="{'fadeIn':!loading}" :src="directSrc" :style="bgStyle" :lazy="lazy" :alt="alt" @load="revokeURL">
-  <img v-else-if="isVLazy" v-lazy="src" :alt="alt">
+  <img
+    v-if="isDirectPximg"
+    :class="{'fadeIn':!loading}"
+    :src="directSrc"
+    :style="bgStyle"
+    :lazy="lazy"
+    :alt="alt"
+    @load="revokeURL"
+  >
+  <img
+    v-else-if="isImgLazy"
+    :src="lazySrc"
+    :style="bgStyle"
+    :lazy="lazy"
+    :alt="alt"
+  >
   <img
     v-else
     class="img3"
@@ -43,8 +57,9 @@ export default {
     return {
       loading: true,
       localSrc: '',
-      isVLazy: isImgLazy,
-      direct: isDirectPximg,
+      lazySrc: defSrc,
+      isImgLazy,
+      isDirectPximg,
     }
   },
   computed: {
@@ -62,14 +77,20 @@ export default {
   },
   watch: {
     src() {
-      if (!this.isVLazy && this.$parent.playUgoira) {
+      if (this.$parent.playUgoira) {
         this.loading = true
       }
-      if (isDirectPximg) this.setImgSrc()
+      if (this.isDirectPximg || this.isImgLazy) this.setImgSrc()
     },
   },
   mounted() {
-    if (this.direct) this.setObserver()
+    if (this.isDirectPximg || this.isImgLazy) {
+      this.$nextTick(() => {
+        requestAnimationFrame(() => {
+          this.setObserver()
+        })
+      })
+    }
   },
   methods: {
     revokeURL() {
@@ -92,6 +113,11 @@ export default {
     },
     async setImgSrc() {
       try {
+        if (this.isImgLazy && !this.isDirectPximg) {
+          this.lazySrc = this.src
+          this.loading = false
+          return
+        }
         const url = new URL(this.src)
         if (!window.__httpRequest__ || url.host == 's.pximg.net') {
           this.localSrc = this.src

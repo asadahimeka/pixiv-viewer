@@ -52,7 +52,7 @@ export default new Vuex.Store({
       preferDownloadByTm: false,
       dlSubDirByAuthor: false,
       dlFileNameTpl: '{author}_{title}_{pid}_p{index}',
-      isImgLazy: true,
+      isImgLazy: false,
       isImgLazyOb: true,
       searchListMinFavNum: '5',
       isImageCardBorderRadius: true,

@@ -5,17 +5,27 @@
       <canvas ref="mask" class="mask-text"></canvas>
     </div>
     <div class="author-info" :class="{ is_novel: isNovel, isAutoLoadKissT }">
-      <Pximg v-if="!isNovel" class="avatar" nobg :src="artwork.author.avatar" :alt="artwork.author.name"
-        @click.native="toAuthor(artwork.author.id)" />
+      <Pximg
+        v-if="!isNovel"
+        class="avatar"
+        nobg
+        :src="artwork.author.avatar"
+        :alt="artwork.author.name"
+        @click.native="toAuthor(artwork.author.id)"
+      />
       <div class="name-box">
         <div v-if="isNovel && artwork.series && artwork.series.id" class="series">
           <router-link :to="`/novel/series/${artwork.series.id}`">{{ artwork.series.title }}</router-link>
         </div>
         <h2 class="title">{{ artwork.title }}</h2>
-        <div v-if="!isNovel && artwork.series && artwork.series.id" class="series is_illust"
-          :title="artwork.series.title">
-          <router-link :to="`/user/${artwork.author.id}/series/${artwork.series.id}`">{{ artwork.series.title
-            }}</router-link>
+        <div
+          v-if="!isNovel && artwork.series && artwork.series.id"
+          class="series is_illust"
+          :title="artwork.series.title"
+        >
+          <router-link :to="`/user/${artwork.author.id}/series/${artwork.series.id}`">
+            {{ artwork.series.title }}
+          </router-link>
         </div>
         <div class="author" :class="{ is_followed: artwork.author.is_followed }" @click="toAuthor(artwork.author.id)">
           {{ artwork.author.name }}
@@ -41,8 +51,12 @@
       <span class="created" :class="{ is_novel: isNovel }">{{ formatDate(artwork.created) }}</span>
     </div>
     <div class="pid_link">
-      <a v-if="isNovel" target="_blank" rel="noreferrer"
-        :href="'https://www.pixiv.net/novel/show.php?id=' + artwork.id">
+      <a
+        v-if="isNovel"
+        target="_blank"
+        rel="noreferrer"
+        :href="'https://www.pixiv.net/novel/show.php?id=' + artwork.id"
+      >
         https://pixiv.net/n/{{ artwork.id }}
       </a>
       <a v-else target="_blank" rel="noreferrer" :href="'https://www.pixiv.net/artworks/' + artwork.id">
@@ -54,8 +68,12 @@
       <span @click="copyId(artwork.id)">{{ isNovel ? '' : 'P' }}ID:{{ artwork.id }}
         <Icon name="copy" style="margin-left: 1px;" />
       </span>
-      <span v-longpress="() => onUidLongpress(artwork.author)" @click="copyId(artwork.author.id)"
-        @contextmenu="preventContext">UID:{{ artwork.author.id }}
+      <span
+        v-longpress="() => onUidLongpress(artwork.author)"
+        @click="copyId(artwork.author.id)"
+        @contextmenu="preventContext"
+      >
+        UID:{{ artwork.author.id }}
         <Icon name="copy" style="margin-left: 1px;" />
       </span>
     </div>
@@ -76,12 +94,21 @@
         <van-tag class="x_tag" size="large" type="danger">NSFW</van-tag>
       </li>
       <template v-for="(tag, ti) in artwork.tags">
-        <li :key="ti + tag.name + '_1'" v-longpress="() => onTagLongpress(tag.name)" class="tag name"
-          @click="toSearch(tag.name)" @contextmenu="preventContext">
+        <li
+          :key="ti + tag.name + '_1'"
+          v-longpress="() => onTagLongpress(tag.name)"
+          class="tag name"
+          @click="toSearch(tag.name)"
+          @contextmenu="preventContext"
+        >
           #{{ tag.name }}
         </li>
-        <li v-if="showTranslatedTags && tag.translated_name" :key="ti + tag.translated_name + '_2'"
-          class="tag translated" @click="toSearch(tag.translated_name)">
+        <li
+          v-if="showTranslatedTags && tag.translated_name"
+          :key="ti + tag.translated_name + '_2'"
+          class="tag translated"
+          @click="toSearch(tag.translated_name)"
+        >
           {{ tag.translated_name }}
         </li>
       </template>
@@ -93,13 +120,28 @@
     </div>
     <template v-if="!isNovel">
       <div v-show="isBtnsShow" class="meta_btns" :class="{ censored }">
-        <van-button v-if="isLoggedIn" v-longpress="showBookmarkDialog" size="small" :loading="favLoading"
-          :icon="bookmarkId ? 'like' : 'like-o'" plain color="#E87A90" style="margin-right: 0.15rem;"
-          @click="toggleBookmark">
+        <van-button
+          v-if="isLoggedIn"
+          v-longpress="showBookmarkDialog"
+          size="small"
+          :loading="favLoading"
+          :icon="bookmarkId ? 'like' : 'like-o'"
+          plain
+          color="#E87A90"
+          style="margin-right: 0.15rem;"
+          @click="toggleBookmark"
+        >
           {{ bookmarkId ? $t('user.faved') : $t('user.fav') }}
         </van-button>
-        <van-button type="info" icon="down" size="small" plain color="#5DAC81" style="margin-right: 0.15rem;"
-          @click="downloadArtwork()">
+        <van-button
+          type="info"
+          icon="down"
+          size="small"
+          plain
+          color="#5DAC81"
+          style="margin-right: 0.15rem;"
+          @click="downloadArtwork()"
+        >
           {{ $t('common.download') }}
         </van-button>
         <van-button type="info" icon="comment-o" size="small" plain color="#005CAF" @click="showComments = true">

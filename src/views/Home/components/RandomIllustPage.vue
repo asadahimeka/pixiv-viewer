@@ -58,7 +58,11 @@ export default {
     return { title: this.$t('common.random_view') }
   },
   activated() {
-    this.init()
+    this.$nextTick(() => {
+      requestAnimationFrame(() => {
+        this.init()
+      })
+    })
   },
   methods: {
     toggleSlide() {

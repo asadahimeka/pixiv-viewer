@@ -31,9 +31,6 @@ export default {
       artList: [],
     }
   },
-  activated() {
-    this.init()
-  },
   mounted() {
     this.init()
   },

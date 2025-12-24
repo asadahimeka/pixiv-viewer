@@ -346,7 +346,11 @@ export default {
       this.showPopPreview = false
       this.keywords = keyword + ' '
       this.reset()
-      this.doSearch(this.keywords)
+      this.$nextTick(() => {
+        requestAnimationFrame(() => {
+          this.doSearch(this.keywords)
+        })
+      })
     },
   },
   mounted() {
@@ -356,7 +360,11 @@ export default {
     this.showPopPreview = false
     this.keywords = keyword + ' '
     this.reset()
-    this.doSearch(this.keywords)
+    this.$nextTick(() => {
+      requestAnimationFrame(() => {
+        this.doSearch(this.keywords)
+      })
+    })
   },
   // activated() {
   //   console.log('-------------activated: SearchKeyword')
