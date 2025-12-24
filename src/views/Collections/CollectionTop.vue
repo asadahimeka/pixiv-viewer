@@ -5,10 +5,11 @@
         v-model="keywords"
         class="search-bar"
         shape="round"
-        :placeholder="$t('search.placeholder')"
         maxlength="50"
         show-action
+        :placeholder="$t('search.placeholder')"
         :clearable="false"
+        :disabled="isSearchDisabled"
         @search="onSearch"
       >
         <template #action>
@@ -64,6 +65,7 @@ export default {
       loading: true,
       tags: [],
       topCol: {},
+      isSearchDisabled: !window.APP_CONFIG.useLocalAppApi,
     }
   },
   head() {
@@ -94,6 +96,7 @@ export default {
       this.loading = false
     },
     async onSearch() {
+      if (this.isSearchDisabled) return
       const word = this.keywords.trim()
       if (!word || BLOCK_SEARCH_WORD_RE.test(word) || !(await mintVerify(word))) {
         return

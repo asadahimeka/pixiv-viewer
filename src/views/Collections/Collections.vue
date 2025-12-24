@@ -24,15 +24,10 @@ export default {
     TopBar,
     CollectionList,
   },
-  beforeRouteEnter(_to, from, next) {
-    next(vm => {
-      vm.notFromDetail = !['Collection', 'Users'].includes(from.name)
-    })
-  },
   data() {
     return {
-      notFromDetail: true,
       restrict: 'safe',
+      searchTags: [],
     }
   },
   head() {
@@ -45,11 +40,6 @@ export default {
     title() {
       return this.searchTagsStr ? this.$t('_mXHPuQteMFhoe5D48nmE', [this.searchTagsStr]) : this.$t('TqlK8T5LCQZrufKKCrmcU')
     },
-    searchTags() {
-      const tags = this.$route.query['tags[]']
-      if (!tags) return []
-      return Array.isArray(tags) ? tags : [tags]
-    },
     searchTagsStr() {
       return this.searchTags.map(e => `#${e}`).join(' ')
     },
@@ -60,14 +50,19 @@ export default {
     },
   },
   activated() {
-    this.init()
+    const tags = this.getSearchTags()
+    if (tags.join() == this.searchTags.join()) {
+      return
+    }
+    this.searchTags = tags
+    this.restrict = 'safe'
+    this.$refs.list?.reset()
   },
   methods: {
-    init() {
-      if (this.notFromDetail) {
-        this.restrict = 'safe'
-        this.$refs.list?.reset()
-      }
+    getSearchTags() {
+      const tags = this.$route.query['tags[]']
+      if (!tags) return []
+      return Array.isArray(tags) ? tags : [tags]
     },
     getList: async function (page) {
       const res = await api.searchCollections(this.searchTags, page, this.restrict)
