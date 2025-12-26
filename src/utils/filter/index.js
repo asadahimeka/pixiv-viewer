@@ -13,7 +13,7 @@ export const HiddenAuthors = {
 
 export function filterHomeIllust(e) {
   if (e.type == 'manga') return false
-  if (e.images.length != 1) return false
+  // if (e.images.length != 1) return false
   if (isAiIllust(e)) return false
   if (HiddenAuthors.HOME_BLOCKED.includes(+e.author.id)) return false
   return !re1.test(JSON.stringify(e.tags))

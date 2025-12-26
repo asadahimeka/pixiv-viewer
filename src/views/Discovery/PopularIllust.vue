@@ -4,8 +4,8 @@
     <div class="af_title">
       <div class="discovery-tabs">
         <div class="com_sel_tab cur">{{ $t('Oz0zZHqnxZoCjYysARbO1') }}</div>
-        <div class="com_sel_tab" @click="$router.push('/discovery/anonymous')">{{ $t('common.discovery') }}</div>
         <div class="com_sel_tab" @click="$router.push('/discovery/pollution')">{{ $t('qLlCQvCG0kXud25b-hKEv') }}</div>
+        <div class="com_sel_tab" @click="$router.push('/discovery/anonymous')">{{ $t('common.discovery') }}</div>
       </div>
       <div class="clear-ih" @click="toggleSlide">
         <Icon name="swiper-symbol" scale="1.5" />

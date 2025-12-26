@@ -125,6 +125,7 @@ const routes = [
           },
           {
             path: '/search_user',
+            alias: ['/discovery/users'],
             name: 'SearchUser',
             component: SearchUser,
             meta: { __depth: 1 },

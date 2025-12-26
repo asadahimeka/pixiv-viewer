@@ -12,6 +12,13 @@
         </span>
       </div>
     </h3>
+    <div v-if="isR18On" class="discovery_restrict">
+      <van-radio-group v-model="restrict" direction="horizontal">
+        <van-radio name="all">{{ $t('dR97TVmXFMlpOBpKF2bRL') }}</van-radio>
+        <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
+        <van-radio name="r18">R18</van-radio>
+      </van-radio-group>
+    </div>
     <ImageList
       v-if="showImageList"
       list-class="artwork-list"
@@ -31,6 +38,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import api from '@/api'
 import TopBar from '@/components/TopBar'
 import ImageList from '@/components/ImageList.vue'
@@ -47,10 +55,19 @@ export default {
       artList: [],
       showImageList: true,
       forceSlideLayout: false,
+      restrict: 'safe',
     }
   },
   head() {
     return { title: this.$t('common.discovery') }
+  },
+  computed: {
+    ...mapGetters(['isR18On']),
+  },
+  watch: {
+    restrict() {
+      this.getArtList()
+    },
   },
   mounted() {
     this.getArtList()
@@ -66,7 +83,7 @@ export default {
     async getArtList() {
       this.loading = true
       this.artList = []
-      const res = await api.getDiscoveryArtworks('safe')
+      const res = await api.getDiscoveryArtworks(this.restrict)
       if (res.status === 0) {
         this.artList = res.data
       } else {
@@ -96,6 +113,11 @@ export default {
 
     ::v-deep .svg-icon
       font-size 0.6rem !important
+
+.discovery_restrict
+  display flex
+  justify-content: flex-end
+  margin: 0.2rem 0 0.4rem
 
 .illusts
   position relative

@@ -7,6 +7,12 @@
         <Icon name="swiper-symbol" scale="1.5" />
       </div>
     </h3>
+    <div v-if="isR18On" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
+      <van-radio-group v-model="restrict" direction="horizontal">
+        <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
+        <van-radio name="r18">R18</van-radio>
+      </van-radio-group>
+    </div>
     <ImageList
       v-if="showImageList"
       list-class="artwork-list"
@@ -23,6 +29,7 @@
 
 <script>
 import dayjs from 'dayjs'
+import { mapGetters } from 'vuex'
 import _ from '@/lib/lodash'
 import api from '@/api'
 import { filterHomeIllust } from '@/utils/filter'
@@ -48,14 +55,31 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      rankModes: ['day', 'week', 'month', 'week_original', 'day_male'],
       isFromDetail: false,
       showImageList: true,
       forceSlideLayout: false,
+      restrict: 'safe',
     }
   },
   head() {
     return { title: this.$t('common.random_view') }
+  },
+  computed: {
+    ...mapGetters(['isR18On']),
+    rankModes() {
+      return this.restrict == 'r18'
+        ? ['day_r18', 'day_male_r18', 'week_r18']
+        : ['day', 'week', 'month', 'week_original', 'day_male']
+    },
+  },
+  watch: {
+    restrict() {
+      this.curPage = 1
+      this.artList = []
+      this.finished = false
+      this.loading = false
+      this.getRankList()
+    },
   },
   activated() {
     this.init()
