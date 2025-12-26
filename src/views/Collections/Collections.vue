@@ -26,7 +26,7 @@ export default {
   },
   data() {
     return {
-      restrict: 'safe',
+      restrict: '',
       searchTags: [],
     }
   },
@@ -51,12 +51,14 @@ export default {
   },
   activated() {
     const tags = this.getSearchTags()
-    if (tags.join() == this.searchTags.join()) {
+    if (this.restrict && tags.join() == this.searchTags.join()) {
       return
     }
     this.searchTags = tags
     this.restrict = 'safe'
-    this.$refs.list?.reset()
+    this.$nextTick(() => {
+      this.$refs.list?.reset()
+    })
   },
   methods: {
     getSearchTags() {

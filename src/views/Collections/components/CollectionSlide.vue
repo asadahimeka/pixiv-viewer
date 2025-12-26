@@ -39,7 +39,7 @@
 
 <script>
 import { imgProxy } from '@/api'
-import { COMMON_PROXY } from '@/consts'
+import { COMMON_IMAGE_PROXY } from '@/consts'
 import { randomBg } from '@/utils'
 import { filterCensoredCollections } from '@/utils/filter'
 
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     coverProxy(src) {
-      return COMMON_PROXY + src + '?format=png'
+      return COMMON_IMAGE_PROXY + src + '?format=png'
     },
     avatarProxy(src) {
       return imgProxy(src)

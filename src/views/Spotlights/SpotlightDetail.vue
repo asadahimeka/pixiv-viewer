@@ -42,7 +42,7 @@ import _ from '@/lib/lodash'
 import TopBar from '@/components/TopBar'
 import api from '@/api'
 import SpotlightsRecom from './SpotlightsRecom.vue'
-import { COMMON_PROXY, PXIMG_PROXY_BASE, ugoiraAvifSrc } from '@/consts'
+import { COMMON_IMAGE_PROXY, PXIMG_PROXY_BASE, ugoiraAvifSrc } from '@/consts'
 
 export default {
   name: 'Spotlight',
@@ -105,7 +105,8 @@ export default {
       if (res.status === 0) {
         res.data.content = res.data.content
           ?.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
-          ?.replace(/src="https:\/\/embed\.pixiv\.net\/(.*)"/g, `src="${COMMON_PROXY}https://embed.pixiv.net/$1"`)
+          ?.replace(/src="https:\/\/embed\.pixiv\.net\/(.*)"/g, `src="${COMMON_IMAGE_PROXY}https://embed.pixiv.net/$1"`)
+          ?.replace(/src="https:\/\/source\.pixiv\.net\/(.*)"/g, `src="${COMMON_IMAGE_PROXY}https://source.pixiv.net/$1"`)
         this.spotlight = res.data
         this.$nextTick(() => {
           document.querySelectorAll('.Spotlight .sp_desc img.ugoira-poster').forEach(el => {

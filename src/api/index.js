@@ -5,7 +5,7 @@ import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit, mintFilter } from '@/utils/filter'
-import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_PROXY } from '@/consts'
+import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_IMAGE_PROXY } from '@/consts'
 import { setProperFontSize } from '@/utils'
 
 const isSupportWebP = (() => {
@@ -1886,13 +1886,13 @@ const api = {
     const cacheKey = `tag_story_page_${tag}_${date}`
     const cache = await getCache(cacheKey)
     if (cache) return cache
-    const resp = await fetch(`${COMMON_PROXY}https://www.pixiv.net/stories/tags/${tag}/artworks/${date}`)
+    const resp = await fetch(`${PIXIV_NEXT_URL}/https://www.pixiv.net/stories/tags/${tag}/artworks/${date}`)
     if (!resp.ok) return ''
     let html = await resp.text()
     html = html
       .replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
-      .replace(/https:\/\/i-mail\.pximg\.net/g, `${COMMON_PROXY}https://i-mail.pximg.net`)
-      .replace(/https:\/\/source\.pixiv\.net/g, `${COMMON_PROXY}https://source.pixiv.net`)
+      .replace(/https:\/\/i-mail\.pximg\.net/g, `${COMMON_IMAGE_PROXY}https://i-mail.pximg.net`)
+      .replace(/https:\/\/source\.pixiv\.net/g, `${COMMON_IMAGE_PROXY}https://source.pixiv.net`)
       .replace(/<amp-analytics.+<\/amp-analytics>/g, '')
     if (html) {
       await setCache(cacheKey, html, -1)
@@ -1993,9 +1993,11 @@ const api = {
       params.append('limit', 20)
       params.append('offset', (page - 1) * 20)
       params.append('lang', 'zh')
-      const res = await get(`${PIXIV_NOW_URL}/ajax/collections/search?${params}`)
-      const data = res?.thumbnails?.collection
+      const res = await get(`${PIXIV_NEXT_URL}/https://www.pixiv.net/ajax/collections/search?${params}`)
+      const data = res?.body?.thumbnails?.collection
       if (!Array.isArray(data) || !data.length) return []
+      const total = res?.body?.data?.total
+      if (total) data._total = total
       await setCache(cacheKey, data, 60 * 30)
       return data
     } catch (err) {
@@ -2075,7 +2077,10 @@ const api = {
         doc.querySelectorAll('[data-ga4-label="thumbnail"]:not(:has(a[href^="/novel/show.php"])) div[lang][style*="font-family"]')
       )
       doc.querySelectorAll('a').forEach(a => {
-        a.setAttribute('target', '')
+        if (a.getAttribute('target')) a.setAttribute('target', '')
+        if (a.href.includes('/cdn-cgi/l/email-protection') || a.className.includes('__cf_email__')) {
+          a.innerHTML = decodeCFEmail(a.getAttribute('data-cfemail'))
+        }
       })
       doc.querySelectorAll('link[href*="fonts.googleapis.com"]').forEach(el => {
         const href = el.getAttribute('href').replace('fonts.googleapis.com', 'fonts.loli.net')
@@ -2178,6 +2183,16 @@ const api = {
 }
 
 export default api
+
+function decodeCFEmail(encodedString) {
+  let email = ''
+  const r = parseInt(encodedString.substr(0, 2), 16)
+  for (let n = 2; n < encodedString.length; n += 2) {
+    const letter = parseInt(encodedString.substr(n, 2), 16) ^ r
+    email += String.fromCharCode(letter)
+  }
+  return email
+}
 
 function reqGet(path, params) {
   return get('/req_get', {

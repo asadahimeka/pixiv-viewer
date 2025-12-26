@@ -37,7 +37,7 @@
 <script>
 import _ from '@/lib/lodash'
 import { imgProxy } from '@/api'
-import { COMMON_PROXY } from '@/consts'
+import { COMMON_IMAGE_PROXY } from '@/consts'
 import { randomBg } from '@/utils'
 import { filterCensoredCollections } from '@/utils/filter'
 
@@ -77,7 +77,7 @@ export default {
         ], 'id')
 
         this.loading = false
-        if (!this.pagination) {
+        if (!this.pagination || res._total === this.artList.length) {
           this.finished = true
         } else {
           this.curPage++
@@ -88,7 +88,7 @@ export default {
       }
     }, 1000),
     coverProxy(src) {
-      return COMMON_PROXY + src + '?format=png'
+      return COMMON_IMAGE_PROXY + src + '?format=png'
     },
     avatarProxy(src) {
       return imgProxy(src)

@@ -11,7 +11,9 @@
       </van-cell>
       <h3 v-else class="af_title">
         <div class="discovery-tabs">
-          <div class="com_sel_tab" @click="$router.replace($route.fullPath.replace('favorite_novels', 'favorites'))">{{ $t('user.fav_title') }}</div>
+          <div class="com_sel_tab" @click="$router.replace($route.fullPath.replace('favorite_novels', 'favorites').replace('novels', 'artworks'))">
+            {{ $t('user.fav_title') }}
+          </div>
           <div class="com_sel_tab cur">{{ $t('user.fav_novel_title') }}</div>
         </div>
       </h3>

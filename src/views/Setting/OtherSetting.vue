@@ -681,6 +681,7 @@ export default {
                 { name: i18n.t('nav.follow') + ' - ' + i18n.t('follow.latest'), _value: '/following/4' },
               ]
             : []),
+          { name: i18n.t('dZ93cWZJ03hu5emsVwgjA'), _value: '/collection' },
           { name: i18n.t('nav.setting'), _value: '/setting' },
         ],
       },

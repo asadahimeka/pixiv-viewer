@@ -77,16 +77,18 @@ const routes = [
             name: 'Home',
             component: Home,
             meta: { __depth: 1 },
-            alias: ['/home', '/index', '/index.html'],
+            alias: ['/home', '/index', '/index.html', '/illustration'],
           },
           {
             path: '/home_manga',
+            alias: ['/manga'],
             name: 'HomeManga',
             component: HomeManga,
             meta: { __depth: 1 },
           },
           {
             path: '/home_novel',
+            alias: ['/novel'],
             name: 'HomeNovel',
             component: HomeNovel,
             meta: { __depth: 1 },
@@ -98,8 +100,12 @@ const routes = [
             meta: { __depth: 1 },
           },
           {
+            path: '/search/users',
+            redirect: to => to.query.nick ? `/search_user/${to.query.nick}` : '/search_user',
+          },
+          {
             path: '/search/:keyword',
-            alias: ['/s/:keyword', '/tag/:keyword', '/tags/:keyword/illustrations'],
+            alias: ['/s/:keyword', '/tag/:keyword', '/tags/:keyword/artworks', '/tags/:keyword/illustrations', '/tags/:keyword/manga'],
             name: 'SearchKeyword',
             component: SearchRes,
             meta: { __depth: 1 },
@@ -130,12 +136,6 @@ const routes = [
             meta: { __depth: 1 },
           },
           {
-            path: '/collections',
-            name: 'Collections',
-            component: Collections,
-            meta: { __depth: 1 },
-          },
-          {
             path: '/rank',
             alias: ['/ranking', '/ranking.php'],
             redirect: '/rank/daily',
@@ -155,6 +155,7 @@ const routes = [
           },
           {
             path: '/following',
+            alias: ['/bookmark_new_illust.php'],
             name: 'Following',
             component: Following,
             meta: { __depth: 1 },
@@ -164,6 +165,10 @@ const routes = [
             name: 'FollowingWithTab',
             component: Following,
             meta: { __depth: 1 },
+          },
+          {
+            path: '/new_illust.php',
+            redirect: '/following/4',
           },
           {
             path: '/setting',
@@ -263,10 +268,16 @@ const routes = [
             meta: { __depth: 3 },
           },
           {
+            path: '/collections',
+            name: 'Collections',
+            component: Collections,
+            meta: { __depth: 2 },
+          },
+          {
             path: '/collections/:id',
             name: 'Collection',
             component: Collection,
-            meta: { __depth: 10 },
+            meta: { __depth: 3 },
           },
           {
             path: '/setting/history',

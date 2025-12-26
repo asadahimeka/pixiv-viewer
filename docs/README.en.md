@@ -30,7 +30,7 @@
 
 ## Features
 - [x] Home
-  - [x] Illustrations/Mangas/Novels/Live Streams
+  - [x] Illustrations/Mangas/Novels/Collections
   - [x] Rankings/Spotlights/Recommended/Discover/New Artworks
   - [x] Random Artworks
 - [x] Search (Illustrations·Mangas/Novels/Users)

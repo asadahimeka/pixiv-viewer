@@ -170,7 +170,7 @@ import { isAiIllust } from '@/utils/filter'
 import CommentsArea from './Comment/CommentsArea.vue'
 import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
-import { COMMON_PROXY } from '@/consts'
+import { COMMON_IMAGE_PROXY } from '@/consts'
 
 const {
   isAutoLoadKissT,
@@ -247,7 +247,7 @@ export default {
   },
   methods: {
     commonProxy(src) {
-      return COMMON_PROXY + src
+      return COMMON_IMAGE_PROXY + src
     },
     convertToK(val) {
       if (!val) return '-'

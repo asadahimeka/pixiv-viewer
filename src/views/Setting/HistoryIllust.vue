@@ -34,7 +34,7 @@ export default {
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
-        params: { id: art.id, art },
+        params: { id: art.id },
       })
     },
     async getHistory() {

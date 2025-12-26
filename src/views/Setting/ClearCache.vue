@@ -113,17 +113,15 @@ export default {
         window.umami?.track('clear_cache', { type })
         if (type === 'db') {
           await localDb.clear()
-          const keyList = await caches.keys()
-          await Promise.all(keyList.map(async key => {
-            await caches.delete(key)
-          }))
+          const cacheKeys = await caches.keys()
+          await Promise.all(cacheKeys.map(key => caches.delete(key)))
         }
         if (type === 'local') LocalStorage.clear()
         if (type === 'session') SessionStorage.clear()
 
         this.calcCacheSize()
         this.$toast.success(this.$t('cache.success_tip'))
-      })
+      }).catch(() => {})
     },
   },
 }

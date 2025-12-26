@@ -48,7 +48,7 @@ import TopBar from '@/components/TopBar'
 import ImageCard from '@/components/ImageCard'
 import api from '@/api'
 import SpotlightsRecom from './SpotlightsRecom.vue'
-import { COMMON_PROXY, ugoiraAvifSrc } from '@/consts'
+import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 
 export default {
   name: 'Spotlight',
@@ -122,7 +122,7 @@ export default {
         this.checkRes(res.data)
         const isUgoira = res.data.tags.some(e => e.id == '9')
         const imgSrc = e => isUgoira ? ugoiraAvifSrc(e.illust_id) : e.illust_url
-        res.data.cover = COMMON_PROXY + res.data.cover
+        res.data.cover = COMMON_IMAGE_PROXY + res.data.cover
         res.data.items = res.data.items.map(e => ({
           id: e.illust_id,
           title: e.title,

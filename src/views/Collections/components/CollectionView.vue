@@ -50,9 +50,9 @@ export default {
 .image-view
   width 100%
   max-width 1000PX
-  height 99vh
+  height 97vh
   @media screen and (max-width: 600px)
-    height 91vh
+    height 88vh
   iframe
     width: 100%
     height: 100%

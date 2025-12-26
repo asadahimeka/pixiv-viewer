@@ -36,7 +36,7 @@ import { imgProxy } from '@/api'
 import store, { novelTextConfig } from '@/store'
 import _ from '@/lib/lodash'
 import { fontFallback } from '@/utils/font'
-import { COMMON_PROXY } from '@/consts'
+import { COMMON_IMAGE_PROXY } from '@/consts'
 
 const fontMap = {
   'inherit': 'inherit',
@@ -103,7 +103,7 @@ export default {
       }
     },
     seasonEffectSrc() {
-      if (this.artwork.seasonal_effect) return COMMON_PROXY + this.artwork.seasonal_effect
+      if (this.artwork.seasonal_effect) return COMMON_IMAGE_PROXY + this.artwork.seasonal_effect
       const tagNames = this.artwork.tags?.map(t => t.name) || []
       const match = this.$store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
       return match?.src || ''

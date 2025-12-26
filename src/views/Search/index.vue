@@ -518,5 +518,15 @@ export default {
       float none !important
       width fit-content
       margin: 0px 12px 12px 0
+      font-size: 0.36rem
+      @media screen and (max-width: 600px)
+        display: flex
+        justify-content: center
+        align-items: center
+        width: 100%;
+        max-width: 100%;
+        height: 0.65rem;
+        margin-right: 0;
+        font-size: 0.4rem
 
 </style>
