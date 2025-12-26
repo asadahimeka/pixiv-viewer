@@ -77,8 +77,8 @@ export default {
   },
   methods: {
     async calcCacheSize() {
-      this.size.local = [LocalStorage.size, localStorage.length]
-      this.size.session = [SessionStorage.size, sessionStorage.length]
+      this.size.local = [LocalStorage.size(), localStorage.length]
+      this.size.session = [SessionStorage.size(), sessionStorage.length]
       this.size.db = [
         (await navigator.storage.estimate()).usage,
         await localDb.length(),

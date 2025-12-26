@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { Toast } from 'vant'
@@ -7,8 +6,6 @@ import { isFsaSupported, saveFile } from './fsa'
 import { i18n, isCNLocale } from '@/i18n'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { BASE_URL } from '@/consts'
-
-export const eventBus = new Vue()
 
 export function throttleScroll(el, downFn, upFn) {
   let position = el.scrollTop

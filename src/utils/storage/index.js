@@ -13,14 +13,21 @@ function deserialize(val) {
   }
 }
 
-class Storage {
+class MyStorage {
+  /** @type {Storage} */
+  _drive
+
+  constructor(drive) {
+    this._drive = drive
+  }
+
   get(key, def) {
     console.log('%c - storage get: ' + key, 'color:blueviolet')
-    const result = this.drive.getItem(key)
+    const result = this._drive.getItem(key)
     if (result) {
       const data = deserialize(result)
 
-      if (Math.floor(+new Date() / 1000) >= data.expires && data.expires !== -1) {
+      if (data.expires !== -1 && Math.floor(Date.now() / 1000) >= data.expires) {
         data.data = def
         this.remove(key)
       }
@@ -39,7 +46,7 @@ class Storage {
       }
 
       if (typeof expires === 'number' && expires >= 0) {
-        expires = Math.floor(+new Date() / 1000) + expires
+        expires = Math.floor(Date.now() / 1000) + expires
       } else {
         expires = -1
       }
@@ -49,7 +56,7 @@ class Storage {
         expires,
       }
 
-      this.drive.setItem(key, serialize(data))
+      this._drive.setItem(key, serialize(data))
     } catch (e) {
       console.log('Local Storage is full, Please empty data')
     }
@@ -61,42 +68,27 @@ class Storage {
   }
 
   remove(key) {
-    this.drive.removeItem(key)
+    this._drive.removeItem(key)
   }
 
   clear() {
-    this.drive.clear()
+    this._drive.clear()
   }
 
-  get size() {
-    let total = 0
-    for (const x in this.drive) {
-      // Value is multiplied by 2 due to data being stored in `utf-16` format, which requires twice the space.
-      const amount = (this.drive[x].length * 2)
-      if (!isNaN(amount) && Object.prototype.hasOwnProperty.call(this.drive, x)) {
-        total += amount
-      }
+  size() {
+    const encoder = new TextEncoder()
+    let totalSize = 0
+    for (let i = 0; i < this._drive.length; i++) {
+      const key = this._drive.key(i)
+      const value = this._drive.getItem(key)
+      totalSize += encoder.encode(key).length + encoder.encode(value).length
     }
-    return total.toFixed(2)
+    return totalSize
   }
 }
 
-class Local extends Storage {
-  constructor() {
-    super()
-    this.drive = window.localStorage
-  }
-}
-
-class Session extends Storage {
-  constructor() {
-    super()
-    this.drive = window.sessionStorage
-  }
-}
-
-export const LocalStorage = new Local()
-export const SessionStorage = new Session()
+export const LocalStorage = new MyStorage(localStorage)
+export const SessionStorage = new MyStorage(sessionStorage)
 
 /**
  * @template T

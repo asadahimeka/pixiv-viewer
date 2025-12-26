@@ -3,11 +3,22 @@ import localforage from 'localforage'
 class LocalDB {
   _drive = localforage
 
+  constructor() {
+    const idleCallback = window.requestIdleCallback || (cb => setTimeout(cb, 1))
+    setTimeout(() => {
+      idleCallback(() => {
+        this.clearExpired().catch(err => {
+          console.warn('Clear expired failed:', err)
+        })
+      })
+    }, 5000)
+  }
+
   async get(key, def) {
     console.log('%c - db get: ' + key, 'color:blueviolet')
     const result = await this._drive.getItem(key)
     if (result) {
-      if (Math.floor(+new Date() / 1000) >= result.expires && result.expires !== -1) {
+      if (result.expires !== -1 && Math.floor(Date.now() / 1000) >= result.expires) {
         result.data = def
         this.remove(key)
       }
@@ -27,7 +38,7 @@ class LocalDB {
       }
 
       if (typeof expires === 'number' && expires >= 0) {
-        expires = Math.floor(+new Date() / 1000) + expires
+        expires = Math.floor(Date.now() / 1000) + expires
       } else {
         expires = -1
       }
@@ -53,6 +64,18 @@ class LocalDB {
 
   async length() {
     return this._drive.length()
+  }
+
+  async clearExpired() {
+    const keys = await this._drive.keys()
+    const now = Math.floor(Date.now() / 1000)
+
+    for (const key of keys) {
+      const value = await this._drive.getItem(key)
+      if (value && value.expires !== -1 && now >= value.expires) {
+        await this._drive.removeItem(key)
+      }
+    }
   }
 }
 
