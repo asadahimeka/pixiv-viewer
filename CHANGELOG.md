@@ -110,6 +110,13 @@
 - Novel filter fix
 - Collection detail
 - Collection detail
+- Style fix
+- Collection search
+- Drop fucking v-lazy
+- Img lazy load
+- Localforage auto clean
+- Collections fix
+- Discovery restrict
 
 ### 📚 Documentation
 
@@ -153,6 +160,7 @@
 - Release v1.31.2
 - Release v1.31.3
 - Fxck nosa
+- Release v1.31.4
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
