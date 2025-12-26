@@ -10,10 +10,12 @@
   >
   <img
     v-else-if="isImgLazy"
-    :src="lazySrc"
+    class="img3"
+    loading="lazy"
     :style="bgStyle"
     :lazy="lazy"
-    :alt="alt"
+    :alt="loading?'':alt"
+    @load="loading=false"
   >
   <img
     v-else
@@ -57,7 +59,6 @@ export default {
     return {
       loading: true,
       localSrc: '',
-      lazySrc: defSrc,
       isImgLazy,
       isDirectPximg,
     }
@@ -93,11 +94,6 @@ export default {
     }
   },
   methods: {
-    revokeURL() {
-      if (this.localSrc?.startsWith('blob:')) {
-        URL.revokeObjectURL(this.localSrc)
-      }
-    },
     setObserver() {
       const options = {
         rootMargin: '0px 50px 50px 0px',
@@ -114,8 +110,7 @@ export default {
     async setImgSrc() {
       try {
         if (this.isImgLazy && !this.isDirectPximg) {
-          this.lazySrc = this.src
-          this.loading = false
+          this.$el.src = this.src
           return
         }
         const url = new URL(this.src)
@@ -136,6 +131,11 @@ export default {
         console.log('error: ', error)
       }
     },
+  },
+  revokeURL() {
+    if (this.localSrc?.startsWith('blob:')) {
+      URL.revokeObjectURL(this.localSrc)
+    }
   },
 }
 </script>

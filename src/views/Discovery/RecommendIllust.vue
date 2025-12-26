@@ -55,11 +55,7 @@ export default {
     return { title: this.$t('common.recomm_art') }
   },
   activated() {
-    this.$nextTick(() => {
-      requestAnimationFrame(() => {
-        this.init()
-      })
-    })
+    this.init()
   },
   methods: {
     toggleSlide() {

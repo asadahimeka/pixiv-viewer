@@ -74,11 +74,7 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      requestAnimationFrame(() => {
-        this.init()
-      })
-    })
+    this.init()
   },
   methods: {
     async init() {

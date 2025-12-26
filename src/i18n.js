@@ -60,8 +60,8 @@ function setI18nLanguage(lang) {
   i18n.locale = lang
   const doc = document.querySelector('html')
   doc.setAttribute('lang', lang)
-  if (!['zh-CN', 'zh-TW', 'en', 'ja', 'ko'].includes(lang)) {
-    doc.classList.add('non-cjk-lang')
+  if (!['zh-CN', 'zh-TW', 'ko'].includes(lang)) {
+    doc.classList.add('hide-home-search')
   }
   return lang
 }

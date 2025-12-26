@@ -28,11 +28,7 @@ export default {
   },
   methods: {
     init() {
-      this.$nextTick(() => {
-        requestAnimationFrame(() => {
-          this.getHistory()
-        })
-      })
+      this.getHistory()
     },
     toArtwork(art) {
       this.$store.dispatch('setGalleryList', this.artList)

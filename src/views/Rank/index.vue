@@ -188,11 +188,7 @@ export default {
     },
   },
   mounted() {
-    this.$nextTick(() => {
-      requestAnimationFrame(() => {
-        this.init()
-      })
-    })
+    this.init()
   },
   activated() {
     this.showRankCat = false

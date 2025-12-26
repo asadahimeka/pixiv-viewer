@@ -35,11 +35,7 @@ export default {
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      requestAnimationFrame(() => {
-        this.getTags()
-      })
-    })
+    this.getTags()
   },
   methods: {
     search(keywords) {

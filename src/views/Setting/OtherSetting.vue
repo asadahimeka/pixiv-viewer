@@ -262,11 +262,6 @@
           <van-switch :value="appSetting.isImgLazy" size="24" @change="v => saveAppSetting('isImgLazy', v, true)" />
         </template>
       </van-cell>
-      <!-- <van-cell center :title="$t('2CmJxHkq8O-uA68cU90Lx')">
-        <template #right-icon>
-          <van-switch :value="appSetting.isImgLazyOb" size="24" @change="v => saveAppSetting('isImgLazyOb', v, true)" />
-        </template>
-      </van-cell> -->
       <van-cell center :title="$t('_E9iTJP6wHVE-Qxau80YA')">
         <template #right-icon>
           <van-switch :value="appSetting.isImageCardBorderRadius" size="24" @change="v => saveAppSetting('isImageCardBorderRadius', v, true)" />

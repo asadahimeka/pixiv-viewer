@@ -36,11 +36,7 @@ export default {
   },
   methods: {
     init() {
-      this.$nextTick(() => {
-        requestAnimationFrame(() => {
-          this.getHistory()
-        })
-      })
+      this.getHistory()
     },
     toArtwork(id) {
       this.$router.push({

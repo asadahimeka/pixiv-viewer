@@ -1,4 +1,5 @@
 import 'vant/lib/button/style'
+import 'vant/lib/toast/style'
 import 'vant/lib/search/style'
 import 'vant/lib/tabs/style'
 import 'vant/lib/tab/style'

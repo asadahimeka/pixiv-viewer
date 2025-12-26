@@ -63,11 +63,7 @@ export default {
       this.artList = []
       this.curPage = 1
       this.finished = false
-      this.$nextTick(() => {
-        requestAnimationFrame(() => {
-          this.getList()
-        })
-      })
+      this.getList()
     },
     getList: _.throttle(async function () {
       this.loading = true
