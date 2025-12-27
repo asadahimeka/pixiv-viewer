@@ -73,7 +73,11 @@ export default {
     },
   },
   created() {
-    this.getRankList()
+    this.$nextTick(() => {
+      requestAnimationFrame(() => {
+        this.getRankList()
+      })
+    })
   },
   methods: {
     async getRankList() {

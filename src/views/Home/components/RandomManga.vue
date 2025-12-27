@@ -6,6 +6,12 @@
         <span class="title">{{ $t('common.random_view') }}</span>
       </template>
     </van-cell>
+    <div v-if="isR18On" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
+      <van-radio-group v-model="restrict" direction="horizontal">
+        <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
+        <van-radio name="r18">R18</van-radio>
+      </van-radio-group>
+    </div>
     <ImageList
       list-class="artwork-list"
       vwtf-no-top
@@ -20,6 +26,7 @@
 
 <script>
 import dayjs from 'dayjs'
+import { mapGetters } from 'vuex'
 import _ from '@/lib/lodash'
 import api from '@/api'
 import ImageList from '@/components/ImageList.vue'
@@ -36,8 +43,26 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      rankModes: ['day_manga', 'week_manga', 'month_manga', 'week_rookie_manga'],
+      restrict: 'safe',
     }
+  },
+  computed: {
+    ...mapGetters(['isR18On']),
+    rankModes() {
+      return this.restrict == 'r18'
+        ? ['day_r18_manga', 'week_r18_manga']
+        : ['day_manga', 'week_manga', 'month_manga', 'week_rookie_manga']
+    },
+  },
+  watch: {
+    restrict(val) {
+      window.umami?.track('random_manga_restrict', { val })
+      this.curPage = 1
+      this.artList = []
+      this.finished = false
+      this.loading = false
+      this.getRankList()
+    },
   },
   created() {
     this.getRankList()

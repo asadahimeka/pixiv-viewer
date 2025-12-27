@@ -24,7 +24,11 @@ export default {
     }
   },
   mounted() {
-    this.init()
+    this.$nextTick(() => {
+      requestAnimationFrame(() => {
+        this.init()
+      })
+    })
   },
   methods: {
     init() {

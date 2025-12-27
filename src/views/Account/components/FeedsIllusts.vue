@@ -62,7 +62,8 @@ export default {
     isLastSeen(id) {
       return id != this.artList[0]?.id && id == this.lastId
     },
-    onRestrictChange() {
+    onRestrictChange(val) {
+      window.umami?.track('feed_illust_restrict', { val })
       this.curPage = 1
       this.artList = []
       this.loading = false

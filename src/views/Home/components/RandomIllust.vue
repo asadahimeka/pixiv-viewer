@@ -61,11 +61,12 @@ export default {
     rankModes() {
       return this.restrict == 'r18'
         ? ['day_r18', 'day_male_r18', 'week_r18']
-        : ['day', 'week', 'month', 'week_original', 'day_male']
+        : ['day', 'week', 'month', 'week_rookie', 'week_original', 'day_male']
     },
   },
   watch: {
-    restrict() {
+    restrict(val) {
+      window.umami?.track('random_illust_restrict', { val })
       this.curPage = 1
       this.artList = []
       this.finished = false

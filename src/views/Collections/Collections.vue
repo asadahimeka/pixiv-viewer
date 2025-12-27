@@ -45,7 +45,8 @@ export default {
     },
   },
   watch: {
-    restrict() {
+    restrict(val) {
+      window.umami?.track('collections_restrict', { val })
       this.$refs.list?.reset()
     },
   },

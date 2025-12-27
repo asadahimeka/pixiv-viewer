@@ -65,7 +65,8 @@ export default {
     ...mapGetters(['isR18On']),
   },
   watch: {
-    restrict() {
+    restrict(val) {
+      window.umami?.track('discovery_restrict', { val })
       this.getArtList()
     },
   },

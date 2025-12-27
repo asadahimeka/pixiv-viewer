@@ -6,6 +6,12 @@
         <span class="title">{{ $t('common.random_view') }}</span>
       </template>
     </van-cell>
+    <div v-if="isR18On" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
+      <van-radio-group v-model="restrict" direction="horizontal">
+        <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
+        <van-radio name="r18">R18</van-radio>
+      </van-radio-group>
+    </div>
     <van-list
       v-model="loading"
       class="artwork-list"
@@ -26,10 +32,12 @@
 
 <script>
 import api from '@/api'
+import { mapGetters } from 'vuex'
 import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
-import NovelCard from '@/components/NovelCard.vue'
 import { filterHomeNovel } from '@/utils/filter'
+import NovelCard from '@/components/NovelCard.vue'
+
 export default {
   name: 'RandomNovel',
   components: {
@@ -42,7 +50,7 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      rankModes: ['day', 'week', 'day_male', 'week_rookie'],
+      restrict: 'safe',
       masonryProps: {
         gutter: '8px',
         cols: {
@@ -54,20 +62,37 @@ export default {
       },
     }
   },
-  methods: {
-    url(id, index) {
-      return api.url(id, index)
+  computed: {
+    ...mapGetters(['isR18On']),
+    rankModes() {
+      return this.restrict == 'r18'
+        ? ['day_r18', 'day_male_r18', 'week_r18']
+        : ['day', 'week', 'day_male', 'week_rookie']
     },
+  },
+  watch: {
+    restrict(val) {
+      window.umami?.track('random_novel_restrict', { val })
+      this.curPage = 1
+      this.artList = []
+      this.finished = false
+      this.loading = false
+      this.getRankList()
+    },
+  },
+  methods: {
     getRankList: _.throttle(async function () {
       this.loading = true
       const mode = _.sample(this.rankModes)
       const date = dayjs().subtract(_.random(2, 14), 'days').format('YYYY-MM-DD')
       const res = await api.getNovelRankList(mode, this.curPage, date)
       if (res.status === 0) {
-        this.artList = _.uniqBy([
+        let artList = _.uniqBy([
           ...this.artList,
           ..._.shuffle(res.data),
-        ], 'id').filter(filterHomeNovel)
+        ], 'id')
+        if (this.restrict == 'safe') artList = artList.filter(filterHomeNovel)
+        this.artList = artList
 
         this.loading = false
         this.curPage++

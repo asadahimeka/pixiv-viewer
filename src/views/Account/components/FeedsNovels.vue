@@ -54,7 +54,8 @@ export default {
     }
   },
   methods: {
-    onRestrictChange() {
+    onRestrictChange(val) {
+      window.umami?.track('feed_novel_restrict', { val })
       this.curPage = 1
       this.artList = []
       this.loading = false

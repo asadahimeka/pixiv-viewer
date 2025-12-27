@@ -73,7 +73,8 @@ export default {
     },
   },
   watch: {
-    restrict() {
+    restrict(val) {
+      window.umami?.track('random_illust_restrict', { val })
       this.curPage = 1
       this.artList = []
       this.finished = false

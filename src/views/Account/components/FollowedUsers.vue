@@ -70,7 +70,8 @@ export default {
     this.init()
   },
   methods: {
-    onRestrictChange() {
+    onRestrictChange(val) {
+      window.umami?.track('followed_user_restrict', { val })
       this.curPage = 1
       this.userList = []
       this.loading = false

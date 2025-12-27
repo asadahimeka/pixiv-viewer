@@ -128,6 +128,7 @@ export default {
       this.finished = false
     },
     setRestrict(val) {
+      window.umami?.track('bookmark_tags_restrict', { val })
       this.reset()
       this.restrict = val
       this.getList()
