@@ -54,5 +54,12 @@
     "stylus": "0.64.0",
     "stylus-loader": "7.1.3",
     "xml-loader": "1.2.1"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "core-js",
+      "swiper",
+      "vue-demi"
+    ]
   }
 }
