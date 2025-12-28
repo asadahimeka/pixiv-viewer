@@ -45,6 +45,7 @@
 - Collection related
 - Collection search
 - User collections
+- Pixivision stories
 
 ### 🐛 Bug Fixes
 
@@ -117,6 +118,9 @@
 - Localforage auto clean
 - Collections fix
 - Discovery restrict
+- Home manga/novel restrict
+- Auto refresh access token
+- Spotlights all
 
 ### 📚 Documentation
 
@@ -161,6 +165,8 @@
 - Release v1.31.3
 - Fxck nosa
 - Release v1.31.4
+- Release v1.31.5
+- Add pnpm onlyBuiltDependencies
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
