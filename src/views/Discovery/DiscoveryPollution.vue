@@ -75,6 +75,7 @@ export default {
   },
   methods: {
     toggleSlide() {
+      window.umami?.track('img_list_toggle_slide')
       this.showImageList = false
       this.forceSlideLayout = !this.forceSlideLayout
       this.$nextTick(() => {

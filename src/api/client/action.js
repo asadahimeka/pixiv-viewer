@@ -61,7 +61,10 @@ const app = {
  * @param {import('./pixiv-api').default} pixiv
  */
 function initApp(pixiv) {
-  app.get('/me', async () => pixiv.authInfo().user)
+  app.get('/me', async () => {
+    const auth = await pixiv.authInfo()
+    return auth.user
+  })
   app.get('/illust', async req => {
     return pixiv.illustDetail(req.query.id)
   })

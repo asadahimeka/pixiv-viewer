@@ -29,6 +29,7 @@ import qs from 'qs'
 import axios from 'axios'
 import dayjs from 'dayjs'
 import { LocalStorage } from '@/utils/storage'
+import { AwaitLock } from '@/utils/lock'
 
 const md5 = s => CryptoJS.MD5(s).toString()
 
@@ -46,7 +47,7 @@ const DEFAULT_HEADERS = {
   'User-Agent': 'PixivAndroidApp/6.124.0 (Android 14.0; Pixel 8)',
 }
 
-function callApi(url, options) {
+async function callApi(url, options) {
   let finalUrl = /^https?:\/\//i.test(url) ? url : BASE_URL + url
   const fUrl = new URL(finalUrl)
   if (window.p_api_proxy) {
@@ -70,14 +71,11 @@ function callApi(url, options) {
   console.log('callApi Url: ', finalUrl)
   console.log('callApi options: ', options)
 
-  let resp
-  if (window.__httpRequest__) {
-    resp = window.__httpRequest__(finalUrl, JSON.stringify(options))
-  } else {
-    resp = axios(finalUrl, options)
-  }
+  try {
+    const res = window.__httpRequest__
+      ? await window.__httpRequest__(finalUrl, JSON.stringify(options))
+      : await axios(finalUrl, options)
 
-  return resp.then(res => {
     console.log('callApi res: ', res)
     // if (window.__httpRequest__)
     // app version no need
@@ -85,22 +83,47 @@ function callApi(url, options) {
       return JSON.parse(res.data)
     }
     return res.data
-  }).catch(async err => {
+  } catch (err) {
     console.log('callApi err: ', err)
     if (err.response) {
       throw err.response.data
     } else {
       throw err.message
     }
-  })
+  }
 }
 
+const loginLock = new AwaitLock()
+
 class PixivApi {
+  /** @type {object|null} */
+  auth = null
+  _expireTime = 0
+
   constructor() {
     this.headers = { ...DEFAULT_HEADERS }
     if (!window.__httpRequest__) delete this.headers['User-Agent']
     const auth = LocalStorage.get('PXV_CLIENT_AUTH')
     if (auth) this.auth = auth
+  }
+
+  get _loginExpired() {
+    return Date.now() / 1000 > this._expireTime - 60
+  }
+
+  async _login() {
+    if (!this._loginExpired) return
+    await loginLock.acquireAsync()
+    if (!this._loginExpired) {
+      loginLock.release()
+      return
+    }
+
+    try {
+      await this.refreshAccessToken()
+    } finally {
+      loginLock.release()
+    }
   }
 
   getDefaultHeaders() {
@@ -111,7 +134,7 @@ class PixivApi {
     })
   }
 
-  tokenRequest(code, code_verifier) {
+  async tokenRequest(code, code_verifier) {
     const data = qs.stringify({
       client_id: CLIENT_ID,
       client_secret: CLIENT_SECRET,
@@ -128,35 +151,37 @@ class PixivApi {
       }),
       data,
     }
-    return callApi(`${OAUTH_URL}/auth/token`, options)
-      .then(data => {
-        console.log('tokenRequest data: ', data)
-        this.auth = data.response
-        return data.response
-      })
-      .catch(err => {
-        console.log('tokenRequest err: ', err)
-        if (err.response) {
-          throw err.response.data
-        } else {
-          throw err.message
-        }
-      })
+    try {
+      const res = await callApi(`${OAUTH_URL}/auth/token`, options)
+      console.log('tokenRequest data: ', data)
+      const auth = res.response
+      this.auth = auth
+      this._expireTime = Date.now() / 1000 + auth.expires_in
+      return auth
+    } catch (err) {
+      console.log('tokenRequest err: ', err)
+      if (err.response) {
+        throw err.response.data
+      } else {
+        throw err.message
+      }
+    }
   }
 
   logout() {
     this.auth = null
-    this.username = null
-    this.password = null
+    // this.username = null
+    // this.password = null
     delete this.headers.Authorization
     return Promise.resolve()
   }
 
-  authInfo() {
+  async authInfo() {
+    await this._login()
     return this.auth
   }
 
-  refreshAccessToken(refreshToken) {
+  async refreshAccessToken(refreshToken) {
     if (LocalStorage.get('PXV_CLIENT_AUTH')) return
     if ((!this.auth || !this.auth.refresh_token) && !refreshToken) {
       return Promise.reject(new Error('refresh_token required'))
@@ -176,31 +201,29 @@ class PixivApi {
       }),
       data,
     }
-    return callApi(`${OAUTH_URL}/auth/token`, options).then(data => {
-      this.auth = data.response
-      LocalStorage.set('PXV_CLIENT_AUTH', data.response, 1800)
-      return data.response
-    })
+    const res = await callApi(`${OAUTH_URL}/auth/token`, options)
+    const auth = res.response
+    this.auth = auth
+    this._expireTime = Date.now() / 1000 + auth.expires_in
+    LocalStorage.set('PXV_CLIENT_AUTH', auth, auth.expires_in - 60)
+    return auth
   }
 
   setLanguage(lang) {
     this.headers['Accept-Language'] = lang
   }
 
-  requestUrl(url, options) {
+  async requestUrl(url, options) {
     if (!url) {
       return Promise.reject(new Error('Url cannot be empty'))
     }
+    await this._login()
     options = options || {}
     options.headers = Object.assign(this.getDefaultHeaders(), options.headers || {})
     if (this.auth && this.auth.access_token) {
       options.headers.Authorization = `Bearer ${this.auth.access_token}`
     }
     return callApi(url, options)
-      .then(json => json)
-      .catch(err => {
-        throw err
-      })
   }
 
   // require auth

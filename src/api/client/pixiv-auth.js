@@ -62,7 +62,7 @@ class PixivAuth {
     const pixiv = new PixivApi()
     await pixiv.tokenRequest(code, code_verifier)
     // 获取 refresh_token
-    const { refresh_token } = pixiv.authInfo()
+    const { refresh_token } = await pixiv.authInfo()
     // 更新配置
     const conf = PixivAuth.readConfig()
     conf.refreshToken = refresh_token
@@ -103,20 +103,20 @@ class PixivAuth {
     this.pixiv = new PixivApi()
     await this.pixiv.refreshAccessToken(refreshToken)
     // 定时刷新 token
-    this.reloginInterval = setInterval(() => {
-      this.pixiv.refreshAccessToken(refreshToken)
-    }, 30 * 60 * 1000)
+    // this.reloginInterval = setInterval(() => {
+    //   this.pixiv.refreshAccessToken(refreshToken)
+    // }, 30 * 60 * 1000)
     return true
   }
 
-  /**
-   * 清除定时重登陆
-   *
-   * @memberof PixivAuth
-   */
-  clearReloginInterval() {
-    clearInterval(this.reloginInterval)
-  }
+  // /**
+  //  * 清除定时重登陆
+  //  *
+  //  * @memberof PixivAuth
+  //  */
+  // clearReloginInterval() {
+  //   clearInterval(this.reloginInterval)
+  // }
 
   /**
    * 登出
