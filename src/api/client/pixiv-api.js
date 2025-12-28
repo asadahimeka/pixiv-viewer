@@ -1134,6 +1134,19 @@ class PixivApi {
     )
     return this.requestUrl(`/v1/live/list?${queryString}`)
   }
+
+  spotlights(options) {
+    const queryString = qs.stringify(
+      Object.assign(
+        {
+          filter: 'for_android',
+          category: 'all',
+        },
+        options
+      )
+    )
+    return this.requestUrl(`/v1/spotlight/articles?${queryString}`)
+  }
 }
 
 export default PixivApi

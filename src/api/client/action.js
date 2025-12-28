@@ -301,6 +301,13 @@ function initApp(pixiv) {
     if (page > 1) params.offset = (page - 1) * size
     return pixiv.liveList(params)
   })
+  app.get('/spotlights', async req => {
+    const { page = 1, size = 10, ...opts } = req.query
+    return pixiv.spotlights({
+      offset: (page - 1) * size,
+      ...opts,
+    })
+  })
   app.get('/req_get', async req => {
     const { path, params } = req.query
     console.log('path: ', path)

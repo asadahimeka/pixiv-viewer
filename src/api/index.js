@@ -812,7 +812,36 @@ const api = {
     return { status: 0, data: spotlights }
   },
 
+  async getAllSpotlights(page = 1) {
+    const cacheKey = `spotlights.all.${page}`
+    let spotlights = await getCache(cacheKey)
+
+    if (!spotlights) {
+      const res = await get('/spotlights', { page })
+
+      if (res.spotlight_articles) {
+        spotlights = {
+          articles: res.spotlight_articles.map(a => ({
+            ...a,
+            thumbnail: imgProxy(a.thumbnail),
+          })),
+        }
+        setCache(cacheKey, spotlights, 60 * 60 * 12)
+      } else {
+        return {
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
+        }
+      }
+    }
+
+    console.log('spotlights: ', spotlights)
+
+    return { status: 0, data: spotlights }
+  },
+
   async getSpotlightTypeList(type, page) {
+    if (type == 'all') return api.getAllSpotlights(page)
     const lang = i18n.locale
     const cacheKey = `spotlights.${type}.${lang}.${page}`
     let spotlights = await getCache(cacheKey)

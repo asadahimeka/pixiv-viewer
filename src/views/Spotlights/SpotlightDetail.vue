@@ -9,7 +9,7 @@
         <p class="sp_date" :class="{hide_date:!showDate}">{{ spotlight.date }}</p>
         <h1 class="title">{{ spotlight.title }}</h1>
         <router-link
-          v-if="spid"
+          v-if="spotlight.content"
           :to="`/pixivision/stories/${spid}`"
           style="display: inline-block;width: 100%;text-align: center;margin-top: 0.2rem;font-size: 0.3rem;"
         >
@@ -23,7 +23,7 @@
       v-html="spotlight.content"
     ></div>
     <router-link
-      v-if="spid"
+      v-if="spotlight.content"
       :to="`/pixivision/stories/${spid}`"
       style="display: inline-block;width: 100%;text-align: center;margin-bottom: 0.6rem;font-size: 0.3rem;transform: translateY(-0.6rem)"
     >

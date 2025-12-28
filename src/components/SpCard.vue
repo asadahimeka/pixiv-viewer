@@ -6,30 +6,33 @@
         <h2 class="title" :title="artwork.title">{{ artwork.title }}</h2>
       </div>
     </div>
+    <div v-if="artwork.subcategory_label" class="subcat">
+      <van-tag size="large">{{ artwork.subcategory_label }}</van-tag>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  components: {
-
-  },
+  name: 'SpCard',
   props: {
     artwork: {
       type: Object,
       required: true,
     },
   },
-  data() {
-    return {}
-  },
-  methods: {
-
-  },
 }
 </script>
 
 <style lang="stylus" scoped>
+.subcat {
+  position absolute
+  top .2rem
+  left .2rem
+  ::v-deep .van-tag {
+    background var(--accent-color, orange)
+  }
+}
 .image-card {
   position: relative;
   display: flex;

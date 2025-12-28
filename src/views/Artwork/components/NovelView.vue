@@ -5,7 +5,7 @@
     :class="{
       censored,
       shrink: isShrink,
-      loaded: artwork.images,
+      loaded: artwork.images && novelText,
       vertical: textConfig.direction == 'v',
       'horizon-cols': textConfig.direction == 'hc'
     }"
@@ -158,7 +158,7 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-.season-effect
+.novel-view.loaded .season-effect
   position: absolute
   top: 0
   left: 0
@@ -169,7 +169,7 @@ export default {
   pointer-events: none
   background: var(--bg) no-repeat center center / cover
   animation: fadeAndShrink 1s ease forwards
-  animation-delay: 5s;
+  animation-delay: 8s;
 
 @keyframes fadeAndShrink
   0%

@@ -15,6 +15,7 @@
       </template>
     </van-cell>
     <van-tabs v-model="activeTab" class="type_tabs" color="#F2C358">
+      <van-tab :title="$t('dR97TVmXFMlpOBpKF2bRL')" name="all" />
       <van-tab :title="$t('common.illust')" name="illustration" />
       <van-tab :title="$t('sp.column')" name="column" />
       <van-tab :title="$t('sp.interview')" name="interview" />
