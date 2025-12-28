@@ -8,6 +8,13 @@
       <div class="title_cnt">
         <p class="sp_date" :class="{hide_date:!showDate}">{{ spotlight.date }}</p>
         <h1 class="title">{{ spotlight.title }}</h1>
+        <router-link
+          v-if="spid"
+          :to="`/pixivision/stories/${spid}`"
+          style="display: inline-block;width: 100%;text-align: center;margin-top: 0.2rem;font-size: 0.3rem;"
+        >
+          {{ $t('MMvrKgvtY_JmiidXJ-ead') }}
+        </router-link>
       </div>
     </div>
     <div
@@ -15,6 +22,13 @@
       @click.stop="handleClick($event)"
       v-html="spotlight.content"
     ></div>
+    <router-link
+      v-if="spid"
+      :to="`/pixivision/stories/${spid}`"
+      style="display: inline-block;width: 100%;text-align: center;margin-bottom: 0.6rem;font-size: 0.3rem;transform: translateY(-0.6rem)"
+    >
+      {{ $t('MMvrKgvtY_JmiidXJ-ead') }}
+    </router-link>
     <van-loading v-show="loading" class="loading" :size="'50px'" />
     <masonry v-bind="recomMasonryProps">
       <SpotlightsRecom

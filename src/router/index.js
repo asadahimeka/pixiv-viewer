@@ -20,6 +20,7 @@ import RandomIllustPage from '@/views/Home/components/RandomIllustPage.vue'
 import Spotlights from '@/views/Spotlights/Spotlights.vue'
 import Spotlight from '@/views/Spotlights/Spotlight.vue'
 import SpotlightDetail from '@/views/Spotlights/SpotlightDetail.vue'
+import PixivisionStory from '@/views/Spotlights/PixivisionStory.vue'
 import Search from '@/views/Search/index.vue'
 import SearchRes from '@/views/Search/SearchRes.vue'
 import SearchNovel from '@/views/Search/SearchNovel.vue'
@@ -266,6 +267,13 @@ const routes = [
             path: '/stories/tags/:tag/artworks/:date',
             name: 'TagStory',
             component: TagStory,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/stories/pixivision/:id',
+            alias: ['/pixivision/stories/:id'],
+            name: 'PixivisionStory',
+            component: PixivisionStory,
             meta: { __depth: 3 },
           },
           {

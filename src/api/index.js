@@ -1899,6 +1899,24 @@ const api = {
     }
     return html
   },
+  async getPixivisionStoryPage(id) {
+    const cacheKey = `pixivision_story_page_${id}`
+    const cache = await getCache(cacheKey)
+    if (cache) return cache
+    const resp = await fetch(`${PIXIV_NEXT_URL}/https://www.pixivision.net/stories/${id}`)
+    if (!resp.ok) return ''
+    let html = await resp.text()
+    html = html
+      .replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
+      .replace(/https:\/\/i-mail\.pximg\.net/g, `${COMMON_IMAGE_PROXY}https://i-mail.pximg.net`)
+      .replace(/https:\/\/source\.pixiv\.net/g, `${COMMON_IMAGE_PROXY}https://source.pixiv.net`)
+      .replace(/href="https:\/\/www\.pixivision\.net\/\w+\/a\/\d+#illust-(\d+)"/g, 'href="/artworks/$1"')
+      .replace(/<amp-analytics.+<\/amp-analytics>/g, '')
+    if (html) {
+      await setCache(cacheKey, html, -1)
+    }
+    return html
+  },
 
   /**
    * @returns {Promise<[string, string|null][]>}

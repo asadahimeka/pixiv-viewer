@@ -12,7 +12,10 @@
         </div>
       </div>
     </div>
-    <div class="sp_desc">{{ spotlight.desc }}</div>
+    <div class="sp_desc">
+      {{ spotlight.desc }}
+      <router-link v-if="spid" :to="`/pixivision/stories/${spid}`">{{ $t('MMvrKgvtY_JmiidXJ-ead') }}</router-link>
+    </div>
     <van-loading v-show="loading" class="loading" :size="'50px'" />
     <div v-if="spotlight.items" class="flexbin">
       <ImageCard
