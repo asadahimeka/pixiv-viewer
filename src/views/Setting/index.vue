@@ -41,6 +41,7 @@
     <div v-if="isLoggedIn" style="width: 60%;margin: 1rem auto 0;">
       <van-button round plain block type="danger" size="small" @click="logoutApp">{{ $t('user.sess.out') }}</van-button>
     </div>
+    <div class="kawaii-logo"></div>
   </div>
 </template>
 
@@ -98,6 +99,15 @@ export default {
     margin-right 0.4rem
     font-size 24px
     transform: translateY(1px);
+
+.kawaii-logo
+  position fixed
+  bottom: 2rem
+  right: 0.4rem
+  width: 4rem
+  height 1.97rem
+  aspect-ratio 392/193
+  background url('@/assets/images/kawaii-logo.png') no-repeat center / contain
 
 .app-title
   display flex

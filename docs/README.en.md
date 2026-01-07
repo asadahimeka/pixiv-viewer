@@ -116,7 +116,7 @@ https://github.com/asadahimeka/pixiv-viewer/discussions
 - [PixivMoe](https://pixivmoe.cocomi.eu.org/)
 - [PixivLxns](https://pixivlxns.cocomi.eu.org/)
 - [MixPiv](https://mixpiv.cocomi.eu.org/)
-- [PixiviFE](https://pixivfe.cocomi.eu.org/)
+- [PixiviFE](https://pixiv.perennialte.ch/)
 - [pixivic](https://pixivic.com)
 - [vilipix](https://www.vilipix.com/ranking)
 - [moeview](https://moeview.cocomi.eu.org/)

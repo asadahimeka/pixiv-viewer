@@ -5,7 +5,7 @@ import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit, mintFilter } from '@/utils/filter'
-import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_IMAGE_PROXY } from '@/consts'
+import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_IMAGE_PROXY, PXIMG_PID_BASE } from '@/consts'
 import { setProperFontSize } from '@/utils'
 
 const isSupportWebP = (() => {
@@ -151,53 +151,13 @@ const parseNovel = data => {
   return artwork
 }
 
-const parseAiIllust = (d, r18) => {
-  const url = 'https://i.pximg.net' + d.url.replace('/-/', '/')
-  const images = [{
-    s: imgProxy(url.replace('_master1200', '_square1200')),
-    m: imgProxy(url),
-    l: imgProxy(url.replace(/\/c\/\d+x\d+\//i, '/')),
-    o: 'https://i.loli.best/' + d.illust_id,
-  }]
-
-  let avatar = d.profile_img
-  if (!avatar.includes('s.pximg.net')) {
-    avatar = imgProxy(avatar)
-  }
-
-  const artwork = {
-    id: d.illust_id,
-    title: d.title,
-    caption: '',
-    author: {
-      id: d.user_id,
-      name: d.user_name,
-      avatar,
-    },
-    created: d.date,
-    images,
-    tags: d.tags.map(e => ({ name: e })),
-    tools: [],
-    width: d.width,
-    height: d.height,
-    count: d.illust_page_count,
-    view: d.view_count,
-    like: d.rating_count,
-    x_restrict: r18 ? 1 : 0,
-    illust_ai_type: 2,
-    type: 'illust',
-  }
-
-  return artwork
-}
-
 const parseWebRankIllust = (d, mode, content) => {
   const url = 'https://i.pximg.net' + d.url.replace('/-/', '/')
   const images = [{
     s: imgProxy(url.replace('_master1200', '_square1200')),
     m: imgProxy(url),
     l: imgProxy(url.replace(/\/c\/\d+x\d+\//i, '/')),
-    o: 'https://i.loli.best/' + d.illust_id,
+    o: PXIMG_PID_BASE + d.illust_id,
   }]
 
   let avatar = d.profile_img || ''
@@ -237,7 +197,7 @@ export const parseWebApiIllust = d => {
     s: imgProxy(url.replace('_master1200', '_square1200')),
     m: imgProxy(url),
     l: imgProxy(url.replace(/\/c\/\d+x\d+\//i, '/')),
-    o: 'https://i.loli.best/' + d.id,
+    o: PXIMG_PID_BASE + d.id,
   }]
 
   let avatar = d.profileImageUrl || ''
@@ -277,7 +237,7 @@ export const parseWebPopularIllust = d => {
     s: imgProxy(url),
     m: imgProxy(url),
     l: imgProxy(url.replace(/\/c\/\d+x\d+\w*\//i, '/')),
-    o: 'https://i.loli.best/' + d.illust_id,
+    o: PXIMG_PID_BASE + d.illust_id,
   }]
 
   const artwork = {
@@ -953,39 +913,6 @@ const api = {
     return { status: 0, data: spotlight }
   },
 
-  /**
-   *
-   * @param {String} mode 排行榜类型  ['daily_ai', 'daily_r18_ai']
-   * @param {Number} page 页数
-   * @param {String} date YYYYMMDD 默认为「前天」
-   */
-  async getAiRankList(mode = 'daily_ai', page = 1, date = dayjs().subtract(2, 'days').format('YYYYMMDD')) {
-    date = dayjs(date).format('YYYYMMDD')
-    const cacheKey = `rankList_${mode}_${date}_${page}`
-    let rankList = await getCache(cacheKey)
-
-    if (!rankList) {
-      const res = await get(`${PIXIV_NOW_URL}/ranking`.replace('/http', ''), {
-        format: 'json',
-        p: page,
-        mode,
-        date,
-      })
-
-      if (res && res.contents) {
-        rankList = res.contents.map(e => ({ ...parseAiIllust(e, mode.includes('r18')), _index: e.rank }))
-        rankList.length && setCache(cacheKey, rankList, 60 * 60 * 24 * 14)
-      } else {
-        return {
-          status: 0,
-          data: [],
-        }
-      }
-    }
-
-    return { status: 0, data: filterCensoredIllusts(rankList) }
-  },
-
   async getWebRankList(mode = 'daily', page = 1, date = dayjs().subtract(2, 'days').format('YYYYMMDD'), content) {
     date = dayjs(date).format('YYYYMMDD')
     const cacheKey = `rankList_${mode}_${content}_${date}_${page}`
@@ -1064,14 +991,20 @@ const api = {
     return { status: 0, data: filterCensoredIllusts(list) }
   },
 
-  async getPopularIllusts(page = 1) {
+  async getPopularIllusts(page = 1, mode = 'safe', type = '') {
     let artList
 
-    const res = await get(`${PIXIV_NOW_URL}/touch/ajax_api/ajax_api.php`, {
+    const params = {
       p: page,
       mode: 'popular_illust',
-      _anon: 1,
-    })
+      type,
+    }
+    if (mode == 'r18') {
+      params.mode = 'popular_illust_r18'
+    } else {
+      params._anon = 1
+    }
+    const res = await get(`${PIXIV_NOW_URL}/touch/ajax_api/ajax_api.php`, params)
 
     console.log('getPopularIllusts: ', res)
     if (Array.isArray(res)) {

@@ -177,8 +177,10 @@ html,body
 
   #app
     .nav-container
-      left unset
-      right 0
+      // left unset
+      // right 0
+      left 0
+      right unset
       bottom 50%
       width 1.2rem
       height auto
@@ -191,9 +193,13 @@ html,body
       justify-content: center
       align-items: center
       padding-top 15px
-      border-top-left-radius: 0.21333rem;
-      border-top-right-radius: 0;
-      border-bottom-left-radius: 0.21333rem;
+      // border-top-left-radius: 0.21333rem;
+      // border-top-right-radius: 0;
+      // border-bottom-left-radius: 0.21333rem;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0.21333rem;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0.21333rem;
       li
         width 100%
         margin-bottom 25px

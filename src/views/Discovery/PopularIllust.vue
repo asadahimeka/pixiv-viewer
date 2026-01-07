@@ -11,6 +11,17 @@
         <Icon name="swiper-symbol" scale="1.5" />
       </div>
     </div>
+    <div class="discovery_restrict">
+      <van-radio-group v-model="illustType" direction="horizontal">
+        <van-radio name="">{{ $t('common.illust') }}</van-radio>
+        <van-radio name="manga">{{ $t('common.manga') }}</van-radio>
+        <van-radio name="ugoira">{{ $t('common.ugoira') }}</van-radio>
+      </van-radio-group>
+      <van-radio-group v-if="isR18On" v-model="restrict" direction="horizontal">
+        <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
+        <van-radio name="r18">R18</van-radio>
+      </van-radio-group>
+    </div>
     <ImageList
       v-if="showImageList"
       list-class="artwork-list"
@@ -26,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import _ from '@/lib/lodash'
 import api from '@/api'
 import TopBar from '@/components/TopBar'
@@ -46,10 +58,33 @@ export default {
       finished: false,
       showImageList: true,
       forceSlideLayout: false,
+      restrict: 'safe',
+      illustType: '',
     }
   },
   head() {
     return { title: this.$t('Oz0zZHqnxZoCjYysARbO1') }
+  },
+  computed: {
+    ...mapGetters(['isR18On']),
+  },
+  watch: {
+    restrict(val) {
+      window.umami?.track('popular_illust_restrict', { val })
+      this.curPage = 1
+      this.artList = []
+      this.finished = false
+      this.loading = false
+      this.getRankList()
+    },
+    illustType(val) {
+      window.umami?.track('popular_illust_type', { val })
+      this.curPage = 1
+      this.artList = []
+      this.finished = false
+      this.loading = false
+      this.getRankList()
+    },
   },
   created() {
     this.getRankList()
@@ -65,7 +100,7 @@ export default {
     },
     getRankList: _.throttle(async function () {
       this.loading = true
-      const res = await api.getPopularIllusts(this.curPage)
+      const res = await api.getPopularIllusts(this.curPage, this.restrict, this.illustType)
       if (res.status === 0) {
         if (res.data.length) {
           this.artList = _.uniqBy([
@@ -104,6 +139,12 @@ export default {
     right 20px
     transform translateY(-50%)
     cursor pointer
+
+.discovery_restrict
+  display flex
+  justify-content: space-between
+  margin: 0.2rem 0 0.4rem
+  padding 0 0.5rem
 
 .discovery-tabs
   display flex

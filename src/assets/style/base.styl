@@ -716,6 +716,7 @@ html:has(.dark)
   .search .search_params + .rank-card > .cell,
   .search .TagStorySlides,
   .search-user .list-wrap,
+  .discovery_restrict,
   .collections_restrict
     max-width 1200PX
     margin-left auto !important
@@ -781,7 +782,8 @@ html:has(.dark)
       border-radius: 1rem
       background: linear-gradient(rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.9)), var(--accent-color, #f2c358)
   @media screen and (min-width: 1280px)
-    transform: translateX(-0.2rem);
+    // transform: translateX(-0.2rem);
+    transform: translateX(0.1rem);
     li:has(.active)
       &::before
         display none

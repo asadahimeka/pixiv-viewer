@@ -144,6 +144,34 @@
           label="https://nekon.app"
           @click="openLink('https://nekon.app/?ref=pixiv.pictures')"
         />
+        <van-cell
+          center
+          title="SomeACG - 做最棒的ACG插画作品分享平台"
+          is-link
+          label="https://www.someacg.top"
+          @click="openLink('https://www.someacg.top/?ref=pixiv.pictures')"
+        />
+        <van-cell
+          center
+          title="ManyACG - 二次元美图精选收集"
+          is-link
+          label="https://manyacg.top"
+          @click="openLink('https://manyacg.top/?ref=pixiv.pictures')"
+        />
+        <van-cell
+          center
+          title="Cosine 🎨 Gallery | 精选 ACG 好图壁纸集"
+          is-link
+          label="https://pic.cosine.ren"
+          @click="openLink('https://pic.cosine.ren/?ref=pixiv.pictures')"
+        />
+        <van-cell
+          center
+          title="萌哩 - 萌萌的二次元美图"
+          is-link
+          label="https://www.moely.link"
+          @click="openLink('https://www.moely.link/?ref=pixiv.pictures')"
+        />
       </div>
     </div>
   </div>

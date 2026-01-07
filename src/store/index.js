@@ -38,7 +38,7 @@ export default new Vuex.Store({
     seasonEffects: null,
     routeHistory: SessionStorage.get('PXV_ROUTE_HISTORY', []),
     appSetting: {
-      wfType: getSettingDef('PXV_WF_TYPE', 'Masonry'),
+      wfType: getSettingDef('PXV_WF_TYPE', isMobile ? 'Masonry(CSSGrid)' : 'Masonry'),
       imgReso: getSettingDef('PXV_DTL_IMG_RES', isMobile ? 'Medium' : 'Large'),
       isLongpressBlock: getSettingDef('PXV_LONGPRESS_BLOCK', false),
       isLongpressDL: getSettingDef('PXV_LONGPRESS_DL', false),
@@ -52,7 +52,7 @@ export default new Vuex.Store({
       preferDownloadByTm: false,
       dlSubDirByAuthor: false,
       dlFileNameTpl: '{author}_{title}_{pid}_p{index}',
-      isImgLazy: false,
+      isImgLazy: isMobile,
       searchListMinFavNum: '5',
       isImageCardBorderRadius: true,
       isImageCardBoxShadow: true,

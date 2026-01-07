@@ -63,7 +63,7 @@ import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { copyText, isSafari } from '@/utils'
-import { PIXIV_NEXT_URL, COMMON_PROXY } from '@/consts'
+import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE } from '@/consts'
 import TopBar from '@/components/TopBar'
 import ImageView from './components/ImageView'
 import Meta from './components/Meta'
@@ -181,7 +181,7 @@ export default {
       let art = SessionStorage.get(`param_art_detail_${id}`)
       if (!art) art = this.$route.params.art
       console.log('artwork detail: ', id, art)
-      if (art && art.type != 'ugoira' && !art.images[0].o.includes('i.loli.best')) {
+      if (art && art.type != 'ugoira' && !art.images[0].o.includes(PXIMG_PID_BASE)) {
         // art.caption = await mintFilter(art.caption)
         this.artwork = art
         this.loading = false
