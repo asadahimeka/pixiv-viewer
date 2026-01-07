@@ -46,6 +46,7 @@
 - Collection search
 - User collections
 - Pixivision stories
+- Popular illust restrict and type
 
 ### 🐛 Bug Fixes
 
@@ -167,6 +168,7 @@
 - Release v1.31.4
 - Release v1.31.5
 - Add pnpm onlyBuiltDependencies
+- Release v1.31.6
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
