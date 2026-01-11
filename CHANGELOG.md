@@ -47,6 +47,7 @@
 - User collections
 - Pixivision stories
 - Popular illust restrict and type
+- User x(twitter) media list
 
 ### 🐛 Bug Fixes
 
@@ -169,6 +170,7 @@
 - Release v1.31.5
 - Add pnpm onlyBuiltDependencies
 - Release v1.31.6
+- Release v1.31.7
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
