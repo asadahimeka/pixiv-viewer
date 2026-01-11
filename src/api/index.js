@@ -5,7 +5,7 @@ import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit, mintFilter } from '@/utils/filter'
-import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_IMAGE_PROXY, PXIMG_PID_BASE } from '@/consts'
+import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_PROXY, COMMON_IMAGE_PROXY, PXIMG_PID_BASE } from '@/consts'
 import { setProperFontSize } from '@/utils'
 
 const isSupportWebP = (() => {
@@ -264,8 +264,9 @@ export const parseWebPopularIllust = d => {
 
 const dealErrMsg = res => {
   const err = res.error?.response?.data?.error || res.error?.error || res.error
+  const isRateLimitCode = res.error?.response?.status == 429
   let msg = err?.message || err?.user_message || err
-  if (msg == 'Rate Limit') msg = i18n.t('tip.rate_limit')
+  if (msg == 'Rate Limit' || isRateLimitCode) msg = i18n.t('tip.rate_limit')
   return msg
 }
 
@@ -2154,6 +2155,57 @@ const api = {
       }
       await setCache(cacheKey, result, -1)
       return result
+    } catch (err) {
+      console.log('err: ', err)
+      return null
+    }
+  },
+
+  async getTwitterMedias(userName, userId, nextCursor) {
+    try {
+      const cacheKey = `twitter.media.${userName}.${userId}.${nextCursor}`
+      const cache = await getCache(cacheKey)
+      if (cache) return cache
+
+      const params = new URLSearchParams()
+      if (userName) params.append('userName', userName)
+      if (userId) params.append('userId', userId)
+      if (nextCursor) params.append('nextCursor', nextCursor)
+
+      const res = await get(`${PIXIV_NEXT_URL}/api/x/media?${params}`)
+      if (!Array.isArray(res.results) || !res.results.length) {
+        return null
+      }
+      res.results = res.results.map(e => ({
+        id: e.id,
+        userName,
+        title: e.text,
+        caption: e.full_text,
+        width: e.media?.[0]?.width || 0,
+        height: e.media?.[0]?.height || 0,
+        count: e.media?.length || 0,
+        type: [...new Set(e.media?.map(m => m.type) || [])].join(' ').toUpperCase(),
+        images: e.media?.map(item => {
+          const src = item.media_url
+          if (item.type != 'photo') {
+            const o = COMMON_PROXY + item.stream_url
+            return { m: COMMON_PROXY + src, l: o, o }
+          }
+          const m = src.match(/^(https?:\/\/\w+\.twimg\.com\/media\/[^/:]+)\.(jpg|jpeg|gif|png|bmp|webp)(:\w+)?$/i)
+          if (!m) return { m: src, l: src, o: src }
+          const base = m[1]
+          let format = m[2]
+          if (format == 'jpeg') format = 'jpg'
+          return {
+            m: `${COMMON_PROXY}${base}?format=${format}&name=small`,
+            l: `${COMMON_PROXY}${base}?format=${format}&name=large`,
+            o: `${COMMON_PROXY}${base}?format=${format}&name=orig`,
+          }
+        }) || [],
+      }))
+      await setCache(cacheKey, res, 60 * 60 * 24)
+
+      return res
     } catch (err) {
       console.log('err: ', err)
       return null

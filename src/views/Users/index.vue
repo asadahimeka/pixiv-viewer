@@ -56,12 +56,8 @@
                   <span class="user_id">ID:{{ userInfo.id }}</span>
                   <Icon name="copy" />
                 </li>
-                <!-- <li v-if="userInfo.region" class="site">
-                  <Icon class="icon loc" name="loc" />
-                  <span>{{ userInfo.region }}</span>
-                </li> -->
               </ul>
-              <ul class="site-list" :class="{ multi: userInfo.webpage && userInfo.twitter_url }">
+              <ul class="site-list social-links" :class="{ multi: userInfo.webpage && userInfo.twitter_url }">
                 <li v-if="userInfo.webpage" class="site">
                   <Icon class="icon home" name="home-s" />
                   <a :href="userInfo.webpage" target="_blank">{{ userInfo.webpage | hostname }}</a>
@@ -243,6 +239,9 @@
           <van-tab :title="$t('user.related')" name="related">
             <RecommUser v-if="activeTab == 'related'" :related-id="userInfo.id" />
           </van-tab>
+          <van-tab v-if="isLoggedIn && isR18On && userInfo.twitter_account" title="X(Twitter) Media" name="x-media">
+            <AuthorTwitterMedia v-if="activeTab == 'x-media'" :user-name="userInfo.twitter_account" />
+          </van-tab>
         </van-tabs>
 
         <van-loading v-show="loading" class="loading" size="60px" />
@@ -252,6 +251,13 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import { Dialog } from 'vant'
+import _ from '@/lib/lodash'
+import api, { localApi } from '@/api'
+import { getCache, setCache } from '@/utils/storage/siteCache'
+import { copyText } from '@/utils'
+import store from '@/store'
 import TopBar from '@/components/TopBar'
 import AuthorIllusts from './components/AuthorIllusts'
 import AuthorIllustSeries from './components/AuthorIllustSeries'
@@ -261,12 +267,7 @@ import RecommUser from '../Search/components/RecommUser.vue'
 import AuthorNovels from './components/AuthorNovels.vue'
 import FavoriteNovels from './components/FavoriteNovels.vue'
 import AuthorCollections from './components/AuthorCollections.vue'
-import _ from '@/lib/lodash'
-import { Dialog } from 'vant'
-import api, { localApi } from '@/api'
-import { getCache, setCache } from '@/utils/storage/siteCache'
-import { copyText } from '@/utils'
-import store from '@/store'
+import AuthorTwitterMedia from './components/AuthorTwitterMedia.vue'
 
 const { isDefFollowPrivate, isLongpressPrivateFollow } = store.state.appSetting
 
@@ -289,6 +290,7 @@ export default {
     AuthorIllustSeries,
     AuthorNovelSeries,
     AuthorCollections,
+    AuthorTwitterMedia,
   },
   beforeRouteEnter(to, from, next) {
     next(vm => {
@@ -316,6 +318,7 @@ export default {
     return { title: this.userInfo.name }
   },
   computed: {
+    ...mapGetters(['isLoggedIn', 'isR18On']),
     showFollowBtn() {
       if (!window.APP_CONFIG.useLocalAppApi) return false
       const id = this.$store.state?.user?.id
@@ -644,6 +647,15 @@ export default {
       .site-list {
         display: flex;
         justify-content: center;
+
+        &.social-links {
+          transform: translateY(2PX) !important
+        }
+        @media screen and (max-width: 1280px) {
+          &.social-links {
+            transform: translateY(-2PX) !important
+          }
+        }
 
         &.multi {
           .site {

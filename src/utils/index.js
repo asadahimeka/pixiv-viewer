@@ -356,7 +356,7 @@ export function formatIntlDate(date) {
   }
 }
 
-export async function retry(fn, retries = 2, delay = 1000) {
+export async function retry(fn, retries = 2, delay = 1500) {
   let lastError
   for (let i = 0; i < retries; i++) {
     try {
@@ -404,5 +404,60 @@ export function setProperFontSize(elements) {
       MAX_FONT_SIZE - (bucket - 1) * ((MAX_FONT_SIZE - MIN_FONT_SIZE) / (maxBucket - 1 || 1))
     )
     el.style.fontSize = `max(${minSize}px, ${fontSize / 100}vw)`
+  })
+}
+
+export async function previewXMedia(item) {
+  if (!window.Fancybox) {
+    document.head.insertAdjacentHTML('beforeend', `<link href="${BASE_URL}static/css/fancybox.min.css" rel="stylesheet">`)
+    await loadScript(`${BASE_URL}static/js/fancybox.umd.min.js`)
+  }
+  window.Fancybox.show(item.images.map(e => ({
+    src: e.l,
+    thumbSrc: e.l,
+    downloadSrc: e.o,
+    caption: item.title,
+    twitterStatusId: item.id,
+    twitterName: item.userName,
+  })), {
+    compact: store.state.isMobile,
+    backdropClick: 'close',
+    contentClick: store.state.isMobile ? 'close' : 'toggleZoom',
+    startIndex: 0,
+    hideScrollbar: false,
+    placeFocusBack: false,
+    trapFocus: false,
+    Hash: false,
+    Thumbs: { showOnStart: false },
+    Carousel: { infinite: false },
+    Toolbar: {
+      display: {
+        left: ['infobar'],
+        middle: [],
+        right: ['myDetail', 'myDownload', 'toggleZoom', 'thumbs', 'rotateCW', 'flipX', 'flipY', 'close'],
+      },
+      items: {
+        myDetail: {
+          tpl: '<button class="f-button" title="Detail"><svg viewBox="0 0 1024 1024" style="transform:scale(0.8)"><path d="M593.94368 715.648a10.688 10.688 0 0 0-14.976 0L424.21568 870.4c-71.68 71.68-192.576 79.232-271.68 0-79.232-79.232-71.616-200 0-271.616l154.752-154.752a10.688 10.688 0 0 0 0-15.04l-52.992-52.992a10.688 10.688 0 0 0-15.04 0L84.50368 530.688a287.872 287.872 0 0 0 0 407.488 288 288 0 0 0 407.488 0l154.752-154.752a10.688 10.688 0 0 0 0-15.04l-52.736-52.736z m344.384-631.168a288.256 288.256 0 0 1 0 407.616l-154.752 154.752a10.688 10.688 0 0 1-15.04 0l-52.992-52.992a10.688 10.688 0 0 1 0-15.104l154.752-154.688c71.68-71.68 79.232-192.448 0-271.68-79.104-79.232-200-71.68-271.68 0L443.92768 307.2a10.688 10.688 0 0 1-15.04 0l-52.864-52.864a10.688 10.688 0 0 1 0-15.04l154.88-154.752a287.872 287.872 0 0 1 407.424 0z m-296.32 240.896l52.672 52.736a10.688 10.688 0 0 1 0 15.04l-301.504 301.44a10.688 10.688 0 0 1-15.04 0l-52.736-52.672a10.688 10.688 0 0 1 0-15.04l301.632-301.504a10.688 10.688 0 0 1 15.04 0z" fill="#fff"></path></svg></button>',
+          click: async ev => {
+            console.log('ev: ', ev)
+            const { page } = ev.instance.carousel
+            const item = ev.instance.userSlides[page]
+            window.open(`https://x.com/${item.twitterName}/status/${item.twitterStatusId}`, '_blank', 'noreferrer')
+          },
+        },
+        myDownload: {
+          tpl: '<button class="f-button" title="Download"><svg><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"></path></svg></button>',
+          click: async ev => {
+            console.log('ev: ', ev)
+            const { page } = ev.instance.carousel
+            const item = ev.instance.userSlides[page]
+            const format = item.downloadSrc.match(/\?format=(\w+)&/)?.[1] || 'jpg'
+            const fileName = `${item.twitterName}_${item.twitterStatusId}_${page}.${format}`
+            await downloadFile(item.downloadSrc, fileName)
+          },
+        },
+      },
+    },
   })
 }

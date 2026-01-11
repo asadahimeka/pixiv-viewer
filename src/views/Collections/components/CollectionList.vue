@@ -97,10 +97,6 @@ export default {
 }
 </script>
 
-<style lang="stylus">
-.bg-none
-  background none !important
-</style>
 <style lang="stylus" scoped>
 .collection-list
   margin-bottom: 1rem;
