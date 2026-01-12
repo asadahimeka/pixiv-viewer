@@ -164,6 +164,7 @@ html,body
     .Home,
     .search .tags,
     .search .result-list,
+    .search-user .list-wrap,
     .rank-list,
     .users .user-tabs .van-tab__pane,
     .user-illusts,

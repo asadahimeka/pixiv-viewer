@@ -64,7 +64,7 @@ export default new Vuex.Store({
       novelDefTranslate: '',
       pageFont: /zh-|ja/.test(getSelectedLang()) ? 'LXGW WenKai Screen' : '',
       hideNavBarOnScroll: true,
-      manualLoadRelated: false,
+      manualLoadRelated: true,
       autoPlayUgoira: false,
       ugoiraMp4Bitrate: '4 Mbps',
       showFpsDemo: false,

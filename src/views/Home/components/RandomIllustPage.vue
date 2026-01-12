@@ -7,7 +7,7 @@
         <Icon name="swiper-symbol" scale="1.5" />
       </div>
     </h3>
-    <div v-if="isR18On" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
+    <div v-if="isR18On && isLoggedIn" class="nifs-list-cont" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
       <van-radio-group v-model="restrict" direction="horizontal">
         <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
         <van-radio name="r18">R18</van-radio>
@@ -65,7 +65,7 @@ export default {
     return { title: this.$t('common.random_view') }
   },
   computed: {
-    ...mapGetters(['isR18On']),
+    ...mapGetters(['isR18On', 'isLoggedIn']),
     rankModes() {
       return this.restrict == 'r18'
         ? ['day_r18', 'day_male_r18', 'week_r18']

@@ -2,7 +2,7 @@
   <div class="illusts">
     <top-bar />
     <h3 class="af_title">{{ title }}</h3>
-    <div class="collections_restrict">
+    <div class="collections_restrict nifs-list-cont">
       <van-radio-group v-if="isR18On" v-model="restrict" direction="horizontal">
         <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
         <van-radio name="r18">R18</van-radio>

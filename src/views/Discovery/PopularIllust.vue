@@ -11,7 +11,7 @@
         <Icon name="swiper-symbol" scale="1.5" />
       </div>
     </div>
-    <div class="discovery_restrict">
+    <div class="discovery_restrict nifs-list-cont">
       <van-radio-group v-model="illustType" direction="horizontal">
         <van-radio name="">{{ $t('common.illust') }}</van-radio>
         <van-radio name="manga">{{ $t('common.manga') }}</van-radio>

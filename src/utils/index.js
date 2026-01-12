@@ -295,10 +295,12 @@ export async function fancyboxShow(artwork, index = 0, getSrc = e => e.o) {
     document.head.insertAdjacentHTML('beforeend', `<link href="${BASE_URL}static/css/fancybox.min.css" rel="stylesheet">`)
     await loadScript(`${BASE_URL}static/js/fancybox.umd.min.js`)
   }
-  // eslint-disable-next-line no-new
-  new window.Fancybox(artwork.images.map(e => ({
+  window.Fancybox.show(artwork.images.map(e => ({
     src: getSrc(e),
     thumb: e.m,
+    thumbSrc: e.m,
+    caption: `${artwork.title} by ${artwork.author.name}`,
+    _artwork: artwork,
   })), {
     compact: store.state.isMobile,
     backdropClick: 'close',
@@ -322,9 +324,10 @@ export async function fancyboxShow(artwork, index = 0, getSrc = e => e.o) {
           click: async ev => {
             console.log('ev: ', ev)
             const { page } = ev.instance.carousel
-            const item = artwork.images[page]
-            const fileName = `${getArtworkFileName(artwork, page)}.${item.o.split('.').pop()}`
-            await downloadFile(item.o, fileName, { subDir: store.state.appSetting.dlSubDirByAuthor ? artwork.author.name : undefined })
+            const art = ev.instance.userSlides[page]._artwork
+            const item = art.images[page]
+            const fileName = `${getArtworkFileName(art, page)}.${item.o.split('.').pop()}`
+            await downloadFile(item.o, fileName, { subDir: store.state.appSetting.dlSubDirByAuthor ? art.author.name : undefined })
           },
         },
       },
@@ -414,6 +417,7 @@ export async function previewXMedia(item) {
   }
   window.Fancybox.show(item.images.map(e => ({
     src: e.l,
+    thumb: e.l,
     thumbSrc: e.l,
     downloadSrc: e.o,
     caption: item.title,

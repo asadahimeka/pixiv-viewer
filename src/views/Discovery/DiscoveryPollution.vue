@@ -12,7 +12,7 @@
         </span>
       </div>
     </h3>
-    <div v-if="isR18On" class="discovery_restrict">
+    <div v-if="isR18On" class="discovery_restrict nifs-list-cont">
       <van-radio-group v-model="restrict" direction="horizontal">
         <van-radio name="all">{{ $t('dR97TVmXFMlpOBpKF2bRL') }}</van-radio>
         <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>

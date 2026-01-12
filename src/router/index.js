@@ -365,6 +365,7 @@ const routes = [
           },
           {
             path: '/discovery/pollution',
+            alias: ['/discover'],
             name: 'DiscoveryPollution',
             component: DiscoveryPollution,
             meta: { __depth: 2 },

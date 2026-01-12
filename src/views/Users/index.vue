@@ -239,8 +239,8 @@
           <van-tab :title="$t('user.related')" name="related">
             <RecommUser v-if="activeTab == 'related'" :related-id="userInfo.id" />
           </van-tab>
-          <van-tab v-if="isLoggedIn && isR18On && userInfo.twitter_account" title="X(Twitter) Media" name="x-media">
-            <AuthorTwitterMedia v-if="activeTab == 'x-media'" :user-name="userInfo.twitter_account" />
+          <van-tab v-if="showTwitterMedia" title="X(Twitter) Media" name="x-media">
+            <AuthorTwitterMedia v-if="activeTab == 'x-media'" :user-name="twitterName" />
           </van-tab>
         </van-tabs>
 
@@ -319,6 +319,17 @@ export default {
   },
   computed: {
     ...mapGetters(['isLoggedIn', 'isR18On']),
+    showTwitterMedia() {
+      return this.isLoggedIn && this.isR18On && this.twitterName
+    },
+    twitterName() {
+      if (this.userInfo.twitter_account) return this.userInfo.twitter_account
+      const url = this.userInfo.webpage
+      if (/x\.com|twitter\.com/i.test(url)) {
+        return url.replace('https://x.com/', '').replace('https://twitter.com/', '')
+      }
+      return null
+    },
     showFollowBtn() {
       if (!window.APP_CONFIG.useLocalAppApi) return false
       const id = this.$store.state?.user?.id

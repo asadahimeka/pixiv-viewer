@@ -1,5 +1,5 @@
 <template>
-  <div class="series">
+  <div class="series nifs-list-cont">
     <van-list
       v-model="loading"
       class="collection-list"
