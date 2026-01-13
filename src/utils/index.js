@@ -420,7 +420,7 @@ export async function previewXMedia(item) {
     thumb: e.l,
     thumbSrc: e.l,
     downloadSrc: e.o,
-    caption: item.title,
+    caption: item.createdDate + ' ' + item.title,
     twitterStatusId: item.id,
     twitterName: item.userName,
   })), {
@@ -464,4 +464,16 @@ export async function previewXMedia(item) {
       },
     },
   })
+}
+
+/**
+ * @param {File} file
+ * @param {string} algorithm
+ */
+export async function calculateFileHash(file, algorithm = 'SHA-256') {
+  const buffer = await file.arrayBuffer();
+  const hashBuffer = await crypto.subtle.digest(algorithm, buffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
 }

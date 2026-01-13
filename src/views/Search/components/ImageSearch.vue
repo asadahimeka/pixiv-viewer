@@ -13,16 +13,16 @@
       </div>
       <div v-if="resultList" class="result-list">
         <masonry v-bind="wfProps">
-          <div v-for="result in resultList" :key="result.id" class="result" @click="toArtwork(result)">
+          <div v-for="(result, i) in resultList" :key="i" class="result" @click="toArtwork(result)">
             <img class="thumb" :src="result.thumb" :alt="result.title">
             <div class="meta">
-              <h2 class="title" v-html="result.title"></h2>
               <div v-if="result.id" class="info pid">ID: {{ result.id }}</div>
-              <div v-else class="info pid">{{ result.url | hostname }}</div>
-              <div class="info author" v-html="result.author"></div>
+              <h2 v-if="result.title" class="title">{{ result.title }}</h2>
+              <div v-if="result.url" class="info pid">{{ result.url | hostname }}</div>
+              <div v-if="result.author" class="info author">{{ result.author }}</div>
             </div>
             <div class="similarity">{{ result.similarity }}%</div>
-            <div v-if="+result.similarity < 80" class="low" :style="{ opacity: (100 - result.similarity) / 100 }"></div>
+            <div v-if="result.similarity < 80" class="low"></div>
           </div>
           <div v-if="!resultList.length" class="result">
             <div class="meta">
@@ -38,14 +38,18 @@
 <script>
 import _ from '@/lib/lodash'
 import { Dialog } from 'vant'
-import { PIXIV_NEXT_URL } from '@/consts'
+import { COMMON_PROXY, PIXIV_NEXT_URL } from '@/consts'
+import { calculateFileHash } from '@/utils'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 
 export default {
   filters: {
     hostname(val) {
       try {
         const u = new URL(val)
-        return u.hostname.replace('www.', '')
+        const res = u.hostname.replace('www.', '')
+        if (res == 'pixiv.net') return ''
+        return res
       } catch (error) {
         return ''
       }
@@ -57,7 +61,7 @@ export default {
     return {
       file: null,
       loading: false,
-      res: null,
+      resultList: null,
       wfProps: {
         gutter: '8px',
         cols: {
@@ -68,42 +72,35 @@ export default {
       },
     }
   },
-  computed: {
-    resultList() {
-      if (!this.res) return null
-
-      let list = this.res.results.map(result => {
-        return {
-          id: result.data.pixiv_id,
-          url: result.data.ext_urls && result.data.ext_urls[0],
-          title: result.data.title,
-          author: result.data.member_name,
-          thumb: result.header.thumbnail,
-          similarity: result.header.similarity,
-        }
-      })
-
-      list = list.filter(e => (e.id || e.url) && e.similarity > 50)
-      return _.orderBy(list, 'similarity', 'desc')
-    },
-  },
   methods: {
     reset() {
       this.file = null
+      this.resultList = null
     },
     beforeRead(file) {
-      // console.log(file);
       if (!file.type.startsWith('image/')) {
         this.$toast(this.$t('search.img.placeholder'))
         return false
       }
       return true
     },
-    afterRead(file) {
-      this.loading = true
-      // 此时可以自行将文件上传至服务器
+    async afterRead(file) {
+      window.umami?.track('image-search')
+
+      console.log('file: ', file)
+      const hash = await calculateFileHash(file.file)
+      console.log('hash: ', hash)
+
+      const cacheKey = `image.search.${hash}`
+      const cache = await getCache(cacheKey)
+      if (cache) {
+        this.file = file
+        this.resultList = cache
+        return
+      }
 
       const showErr = () => {
+        this.reset()
         Dialog.alert({
           title: this.$t('tips.tip'),
           message: `<p>${this.$t('search.img.err')}<br>${this.$t('lJtMtr2rgYCSg-osHykE9')}<p>`,
@@ -111,27 +108,54 @@ export default {
         })
       }
 
-      const formData = new FormData()
-      formData.append('file', file.file, file.file.name)
-      fetch(`${PIXIV_NEXT_URL}/api/saucenao`, {
-        method: 'POST',
-        body: formData,
-      }).then(res => {
-        if (!res.ok) throw new Error('Resp not ok.')
-        return res.json()
-      }).then(res => {
+      try {
+        this.loading = true
+        const formData = new FormData()
+        formData.append('file', file.file, file.file.name)
+        const response = await fetch(`${PIXIV_NEXT_URL}/api/sauce`, {
+          method: 'POST',
+          body: formData,
+        })
+
         this.loading = false
+        if (!response.ok) {
+          showErr()
+          return
+        }
+        const res = await response.json()
         if (!Array.isArray(res.results)) {
           showErr()
           return
         }
+
         this.file = file
-        this.res = res
-        this.$emit('show')
-      }).catch(() => {
+        let list = res.results.map(result => {
+          const h = result.header
+          const d = result.data
+          let pid = d.pixiv_id
+          if (!pid) {
+            pid = d.source?.match(/https:\/\/i\.pximg\.net\/img-original\/img\/\d{4}\/\d{2}\/\d{2}\/\d{2}\/\d{2}\/\d{2}\/(\d+)(\.\w+)?/i)?.[1]
+          }
+          return {
+            id: pid,
+            url: d.ext_urls?.[0],
+            title: d.title,
+            author: d.member_name || d.creator || d.author_name || d.author || d.artist,
+            thumb: COMMON_PROXY + h.thumbnail,
+            similarity: +h.similarity,
+          }
+        })
+        list = list.filter(e => (e.id || e.url) && e.similarity > 50)
+        list = _.orderBy(list, 'similarity', 'desc')
+        this.resultList = list
+
+        setCache(cacheKey, list, -1)
+        window.umami?.track('image-search-success')
+      } catch (err) {
+        console.log('err: ', err)
         this.loading = false
         showErr()
-      })
+      }
     },
     toArtwork({ id, url }) {
       if (id) {
@@ -256,19 +280,19 @@ export default {
           padding: 20px 0;
 
           .title {
-            font-size: 30px;
-            margin-bottom: 10px;
+            font-size: 26px;
+            margin-bottom: 2PX;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            width: 470px;
+            width: 4.2rem;
           }
 
           .info {
             font-size: 24px;
             line-height: 36px;
             color: #888;
-            max-width: 300px;
+            max-width: 4.2rem;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -277,16 +301,14 @@ export default {
 
         .similarity {
           position: absolute;
-          right: 20px;
-          height: 155px;
-          margin-top: 5px;
+          bottom: 0.2rem;
+          right: 0.2rem;
           font-family: 'Dosis';
           font-size: 60px;
           font-weight: 600;
-          line-height: 160px;
           text-align: right;
           color: #555;
-          letter-spacing: 2px;
+          letter-spacing: 2PX;
         }
 
         .low {
