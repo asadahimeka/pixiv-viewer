@@ -15,11 +15,11 @@
           <div class="spec_wp" :style="item.style" @click="showImage(item)">
             <img :src="item.images[0].m" loading="lazy" :alt="item.title">
             <div class="sp_meta">
-              <h2 class="sp_title" :title="item.caption" @click.stop="toDetail(item.id)">
-                {{ item.title }}
+              <h2 class="sp_title" :title="item.createdDate + ' ' + item.caption" @click.stop="toDetail(item.id)">
+                {{ item.title }} {{ item.createdDate }}
               </h2>
             </div>
-            <div v-if="item.type != 'PHOTO'" class="layer-num layer-type">
+            <div v-if="item.type && item.type != 'PHOTO'" class="layer-num layer-type">
               {{ item.type }}
             </div>
             <div v-if="item.count > 1" class="layer-num">
@@ -70,6 +70,7 @@ export default {
   },
   methods: {
     init() {
+      window.umami?.track('get_twitter_media', { user: this.userName })
       this.loading = true
       this.artList = []
       this.finished = false

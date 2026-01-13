@@ -2179,12 +2179,13 @@ const api = {
       res.results = res.results.map(e => ({
         id: e.id,
         userName,
-        title: e.text,
+        title: e.text?.replace(/https:\/\/t\.co\/\w+$/i, '').trim(),
         caption: e.full_text,
+        createdDate: dayjs(e.created_at).format('YYYY-MM-DD HH:mm'),
         width: e.media?.[0]?.width || 0,
         height: e.media?.[0]?.height || 0,
         count: e.media?.length || 0,
-        type: [...new Set(e.media?.map(m => m.type) || [])].join(' ').toUpperCase(),
+        type: (e.media?.[0]?.type || '').toUpperCase(),
         images: e.media?.map(item => {
           const src = item.media_url
           if (item.type != 'photo') {

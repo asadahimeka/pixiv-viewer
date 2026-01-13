@@ -259,6 +259,9 @@ export default {
   },
   computed: {
     ...mapState(['searchHistory']),
+    isLoggedIn() {
+      return store.getters.isLoggedIn
+    },
     isR18On() {
       return store.getters.isR18On
     },
@@ -563,6 +566,7 @@ export default {
               ...artList,
             ], 'id')
             this.curPage++
+            if (!this.isLoggedIn && this.curPage > 5) this.finished = true
           }
         } else {
           this.finished = true

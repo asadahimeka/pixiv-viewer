@@ -93,7 +93,7 @@ export default new Vuex.Store({
   },
   getters: {
     isLoggedIn(state) {
-      return !!state.user
+      return Boolean(state.user)
     },
     isR18On(state) {
       return state.contentSetting.r18 || state.contentSetting.r18g

@@ -1,21 +1,37 @@
 <template>
   <div class="illusts">
-    <wf-cont layout="Grid">
-      <ImageCard v-for="art in artList" :key="art.id" mode="all" :artwork="art" @click-card="toArtwork(art)" />
-    </wf-cont>
+    <VirtualWaterfall
+      wrapper-height="95vh"
+      :gap="10"
+      :items="artList"
+      :min-column-count="2"
+      :item-min-width="280"
+      :preload-screen-count="[1, 1]"
+      :calc-item-height="(_, w) => w"
+    >
+      <template #default="{ item }">
+        <ImageCard
+          mode="all"
+          :artwork="item"
+          @click-card="toArtwork(item)"
+        />
+      </template>
+    </VirtualWaterfall>
     <van-empty v-if="!artList.length" :description="$t('tips.no_data')" />
   </div>
 </template>
 
 <script>
 import { Dialog } from 'vant'
-import ImageCard from '@/components/ImageCard'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { filterCensoredIllusts } from '@/utils/filter'
+import VirtualWaterfall from '@/components/VirtualWaterfall.vue'
+import ImageCard from '@/components/ImageCard'
 
 export default {
   name: 'SettingHistoryIllust',
   components: {
+    VirtualWaterfall,
     ImageCard,
   },
   data() {

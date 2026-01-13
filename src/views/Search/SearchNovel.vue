@@ -169,7 +169,6 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      maskShow: false,
       autoCompleteTagList: [],
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
@@ -222,6 +221,9 @@ export default {
   },
   computed: {
     ...mapState(['searchHistory']),
+    isLoggedIn() {
+      return store.getters.isLoggedIn
+    },
     pidOrUidList() {
       return this.keywords.match(/(\d+)/g) || []
     },
@@ -436,6 +438,7 @@ export default {
           this.finished = true
         } else {
           this.curPage++
+          if (!this.isLoggedIn && this.curPage > 5) this.finished = true
         }
       } else {
         this.$toast({
@@ -490,10 +493,6 @@ export default {
     },
     clearHistory() {
       this.setSearchHistory(null)
-    },
-    switchImageSearchShow(flag) {
-      if (!flag) this.$refs.imageSearch.reset()
-      this.maskShow = flag
     },
     ...mapActions(['setSearchHistory']),
   },

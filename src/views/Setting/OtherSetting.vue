@@ -37,7 +37,7 @@
           <van-switch :value="appSetting.isVirtualList" size="24" @change="v => saveAppSetting('isVirtualList', v, true)" />
         </template>
       </van-cell>
-      <van-cell v-if="!appSetting.isVirtualList" center :title="$t('h_6GIulP5_rWoGwBbyuMf')" :label="$t('XmZ5gQefKGSI43SZ5Kb--')">
+      <van-cell v-if="clientConfig.useLocalAppApi && !appSetting.isVirtualList" center :title="$t('h_6GIulP5_rWoGwBbyuMf')" :label="$t('XmZ5gQefKGSI43SZ5Kb--')">
         <template #right-icon>
           <van-switch :value="appSetting.searchListPagination" size="24" @change="v => saveAppSetting('searchListPagination', v, true)" />
         </template>
@@ -257,7 +257,7 @@
           <van-switch :value="appSetting.hideNavBarOnScroll" size="24" @change="v => saveAppSetting('hideNavBarOnScroll', v, true)" />
         </template>
       </van-cell>
-      <van-cell center :title="$t('GnyWarxXoDw49xCft4IlS')">
+      <van-cell v-if="!appSetting.isDirectPximg" center :title="$t('GnyWarxXoDw49xCft4IlS')">
         <template #right-icon>
           <van-switch :value="appSetting.isImgLazy" size="24" @change="v => saveAppSetting('isImgLazy', v, true)" />
         </template>

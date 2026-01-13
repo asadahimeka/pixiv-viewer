@@ -60,7 +60,9 @@
         </div>
       </div>
     </div>
-    <ImageSearch v-show="!focus && !keywords.trim()" ref="imageSearch" key="container" />
+    <template v-if="isLoggedIn">
+      <ImageSearch v-show="!focus && !keywords.trim()" />
+    </template>
     <div class="com_sel_tabs" :style="focus?'opacity:0;pointer-events:none':''">
       <div class="com_sel_tab cur">{{ $t('common.illust_manga') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_novel')">{{ $t('common.novel') }}</div>
@@ -96,7 +98,6 @@ export default {
       keywordsList: [], // 关键词搜索框分词列表（空格分割）
       lastWord: '', // 正在输入的关键词
       focus: false, // 编辑框是否获取焦点
-      imageSearchShow: true,
       autoCompleteTagList: [],
       isSelfHibi: !notSelfHibiApi,
     }
@@ -110,6 +111,9 @@ export default {
     ...mapState(['searchHistory']),
     pidOrUidList() {
       return this.keywords.match(/(\d+)/g) || []
+    },
+    isLoggedIn() {
+      return store.getters.isLoggedIn
     },
     isR18On() {
       return store.getters.isR18On
