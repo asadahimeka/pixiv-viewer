@@ -102,12 +102,14 @@ export default {
 
 .kawaii-logo
   position fixed
+  z-index -1
   bottom: 2rem
   right: 0.4rem
   width: 4rem
   height 1.97rem
   aspect-ratio 392/193
   background url('@/assets/images/kawaii-logo.png') no-repeat center / contain
+  pointer-events none
 
 .app-title
   display flex

@@ -11,7 +11,7 @@
         </span>
       </template>
     </van-cell>
-    <div v-if="isR18On && isLoggedIn" class="nifs-list-cont" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
+    <div v-if="isR18On" class="nifs-list-cont" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
       <van-radio-group v-model="restrict" direction="horizontal">
         <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
         <van-radio name="r18">R18</van-radio>
@@ -63,6 +63,9 @@ export default {
         ? ['day_r18', 'day_male_r18', 'week_r18']
         : ['day', 'week', 'month', 'week_rookie', 'week_original', 'day_male']
     },
+    pageLimit() {
+      return this.isLoggedIn ? 10 : 5
+    },
   },
   watch: {
     restrict(val) {
@@ -100,7 +103,7 @@ export default {
 
         this.loading = false
         this.curPage++
-        if (this.curPage > 9) this.finished = true
+        if (this.curPage > this.pageLimit) this.finished = true
       } else {
         this.$toast({
           message: res.msg,

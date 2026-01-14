@@ -6,7 +6,7 @@
         <span class="title">{{ $t('common.random_view') }}</span>
       </template>
     </van-cell>
-    <div v-if="isR18On && isLoggedIn" class="nifs-list-cont" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
+    <div v-if="isR18On" class="nifs-list-cont" style="display:flex;justify-content:flex-end;margin:0.2rem 0 0.4rem">
       <van-radio-group v-model="restrict" direction="horizontal">
         <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
         <van-radio name="r18">R18</van-radio>
@@ -63,7 +63,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['isR18On', 'isLoggedIn']),
+    ...mapGetters(['isR18On']),
     rankModes() {
       return this.restrict == 'r18'
         ? ['day_r18', 'day_male_r18', 'week_r18']
@@ -96,7 +96,7 @@ export default {
 
         this.loading = false
         this.curPage++
-        if (this.curPage > 4) this.finished = true
+        if (this.curPage > 5) this.finished = true
       } else {
         this.$toast({
           message: res.msg,
