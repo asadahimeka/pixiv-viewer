@@ -308,8 +308,8 @@ export async function getFollowingIllusts(page = 1, mode = 'all') {
   return { status: 0, data: list }
 }
 
-export async function getNewIllusts(page = 1, lastId = 0) {
-  const cacheKey = `new.illusts.${page}`
+export async function getNewIllusts(page = 1, lastId = 0, restrict = 'safe') {
+  const cacheKey = `new.illusts.${page}.${restrict}`
   let list = await getCache(cacheKey)
 
   if (!list) {
@@ -317,7 +317,7 @@ export async function getNewIllusts(page = 1, lastId = 0) {
       lastId,
       limit: 20,
       type: 'illust',
-      r18: false,
+      r18: restrict == 'r18',
       lang: 'zh',
       _vercel_no_cache: 1,
       _t: Date.now(),

@@ -1,5 +1,14 @@
 <template>
   <div>
+    <van-radio-group
+      v-model="restrict"
+      direction="horizontal"
+      style="margin: 0.2rem 0 0.4rem;justify-content: center;"
+      @change="onRestrictChange"
+    >
+      <van-radio name="safe">{{ $t('q3dZB--IevljTdxWdrQMC') }}</van-radio>
+      <van-radio name="r18">R18</van-radio>
+    </van-radio-group>
     <ImageList
       list-class="artwork-list"
       :list="artList"
@@ -30,16 +39,26 @@ export default {
       loading: false,
       finished: false,
       lastId: 0,
+      restrict: 'safe',
     }
   },
   created() {
     this.getRankList()
   },
   methods: {
+    onRestrictChange(val) {
+      window.umami?.track('new_illust_restrict', { val })
+      this.curPage = 1
+      this.lastId = 0
+      this.artList = []
+      this.loading = false
+      this.finished = false
+      this.getRankList()
+    },
     getRankList: _.throttle(async function () {
       if (this.loading || this.finished) return
       this.loading = true
-      const res = await getNewIllusts(this.curPage, this.lastId)
+      const res = await getNewIllusts(this.curPage, this.lastId, this.restrict)
       if (res.status === 0) {
         this.artList = _.uniqBy([
           ...this.artList,
