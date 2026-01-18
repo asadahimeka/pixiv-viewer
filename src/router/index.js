@@ -496,13 +496,13 @@ function handlePageTransition(to, from) {
 }
 
 document.addEventListener('keydown', (event) => {
-  if (event.key === 'Meta' || event.key === 'Control') {
+  if (event.metaKey || event.ctrlKey) {
     document.documentElement.classList.add('pressing-meta-key')
   }
 })
 
 document.addEventListener('keyup', (event) => {
-  if (event.key === 'Meta' || event.key === 'Control') {
+  if (!event.metaKey && !event.ctrlKey) {
     document.documentElement.classList.remove('pressing-meta-key')
   }
 })
