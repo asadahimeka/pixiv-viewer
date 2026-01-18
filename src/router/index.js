@@ -495,7 +495,24 @@ function handlePageTransition(to, from) {
   }
 }
 
+document.addEventListener('keydown', (event) => {
+  if (event.key === 'Meta' || event.key === 'Control') {
+    document.documentElement.classList.add('pressing-meta-key')
+  }
+})
+
+document.addEventListener('keyup', (event) => {
+  if (event.key === 'Meta' || event.key === 'Control') {
+    document.documentElement.classList.remove('pressing-meta-key')
+  }
+})
+
 router.beforeEach((to, from, next) => {
+  if (document.documentElement.classList.contains('pressing-meta-key')) {
+    window.open(to.fullPath)
+    return
+  }
+
   if (pageTransition) {
     handlePageTransition(to, from)
     document.startViewTransition(() => next())
