@@ -495,20 +495,22 @@ function handlePageTransition(to, from) {
   }
 }
 
+let isPressingMetaKey = false
+
 document.addEventListener('keydown', (event) => {
   if (event.metaKey || event.ctrlKey) {
-    document.documentElement.classList.add('pressing-meta-key')
+    isPressingMetaKey = true
   }
 })
 
 document.addEventListener('keyup', (event) => {
   if (!event.metaKey && !event.ctrlKey) {
-    document.documentElement.classList.remove('pressing-meta-key')
+    isPressingMetaKey = false
   }
 })
 
 router.beforeEach((to, from, next) => {
-  if (document.documentElement.classList.contains('pressing-meta-key')) {
+  if (isPressingMetaKey) {
     window.open(to.fullPath)
     return
   }
