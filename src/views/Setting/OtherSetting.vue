@@ -37,7 +37,7 @@
           <van-switch :value="appSetting.isVirtualList" size="24" @change="v => saveAppSetting('isVirtualList', v, true)" />
         </template>
       </van-cell>
-      <van-cell v-if="clientConfig.useLocalAppApi && !appSetting.isVirtualList" center :title="$t('h_6GIulP5_rWoGwBbyuMf')" :label="$t('XmZ5gQefKGSI43SZ5Kb--')">
+      <van-cell v-if="!appSetting.isVirtualList" center :title="$t('h_6GIulP5_rWoGwBbyuMf')" :label="$t('XmZ5gQefKGSI43SZ5Kb--')">
         <template #right-icon>
           <van-switch :value="appSetting.searchListPagination" size="24" @change="v => saveAppSetting('searchListPagination', v, true)" />
         </template>

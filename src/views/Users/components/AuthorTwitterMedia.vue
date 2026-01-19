@@ -84,7 +84,9 @@ export default {
       if (res?.results) {
         this.artList = _.uniqBy([
           ...this.artList,
-          ...res.results.map(e => ({ ...e, style: `background: ${randomBg()}` })),
+          ...res.results
+            .filter(e => e.images.length && e.width && e.height)
+            .map(e => ({ ...e, style: `background: ${randomBg()}` })),
         ], 'id')
 
         this.nextCursor = res.next_cursor
