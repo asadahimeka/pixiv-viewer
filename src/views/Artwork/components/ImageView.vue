@@ -2,8 +2,15 @@
   <div
     ref="view"
     class="image-view"
-    :class="{ shrink: isShrink, loaded: !!artwork.images, censored, overlong }"
+    :class="{
+      shrink: isShrink,
+      loaded: !!artwork.images,
+      overlong,
+      censored,
+      'horizon-scroll': isHorizonScroll,
+    }"
     @click="showFull"
+    @wheel="handleWheel"
   >
     <div
       v-for="(url, index) in artwork.images"
@@ -106,7 +113,7 @@ export default {
     },
     seasonEffectSrc() {
       const tagNames = this.artwork.tags?.map(t => t.name) || []
-      const match = this.$store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
+      const match = store.state.seasonEffects?.find(e => tagNames.includes(e.tag))
       if (match?.src) return match.src
       if (this.artwork.seasonal_effect) return COMMON_IMAGE_PROXY + this.artwork.seasonal_effect
       return ''
@@ -115,7 +122,10 @@ export default {
       return this.artwork.type === 'ugoira' && !isUgoiraAvifSrc
     },
     overlong() {
-      return this.artwork?.images?.length > 2
+      return !this.isHorizonScroll && this.artwork?.images?.length > 2
+    },
+    isHorizonScroll() {
+      return this.artwork?.images?.length > 1 && store.state.appSetting.imgViewHorizonScroll
     },
   },
   watch: {
@@ -498,8 +508,14 @@ export default {
       this.progress = 0
       this.progressShow = false
     },
+    handleWheel(e) {
+      if (store.state.isMobile) return
+      e.preventDefault()
+      e.stopPropagation()
+      this.$refs.view.scrollLeft += e.deltaY * 2
+    },
     init() {
-      if (this.artwork.images && this.artwork.images.length >= 3) {
+      if (this.artwork.images && this.artwork.images.length >= 3 && !this.isHorizonScroll) {
         this.isShrink = true
       } else {
         this.isShrink = false

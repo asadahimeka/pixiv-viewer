@@ -518,6 +518,36 @@ img[src*="https://api.moedog.org/qr/?url="]
       &::-webkit-scrollbar
         display none
 
+.ia-cont .ia-left
+  ::v-deep .image-view.horizon-scroll
+    display flex
+    align-items center
+    gap 0.1rem
+    height 96vh
+    max-height 96vh
+    padding-left 2rem
+    overflow-x auto
+    .image-box
+      width max-content !important
+      min-width max-content !important
+      margin-bottom 0.1rem !important
+      &:nth-child(n+3):has(.image[lazy="loading"])
+        width 50vw !important
+        min-width 50vw !important
+    .image
+      max-width unset !important
+      max-height 94vh !important
+      margin 0 !important
+    @media screen and (max-width: 600px)
+      height 80vh
+      max-height 80vh
+      padding-left 0
+      .image-box
+        aspect-ratio auto !important
+      .image
+        max-width 95vw !important
+        max-height 79vh !important
+
 .artwork
   ::v-deep .top-bar-wrap
     width 2rem

@@ -16,6 +16,11 @@
     <van-cell-group :title="$t('9X179hdP1zzapzk5Rvqx2')">
       <van-cell center :title="$t('setting.layout.title')" is-link :label="appSetting.wfType" @click="wfType.show = true" />
       <van-cell center :title="$t('setting.img_res.title')" is-link :label="appSetting.imgReso" @click="imgRes.show = true" />
+      <van-cell v-if="!appSetting.isEnableSwipe" center :title="$t('GVpGJVKGl9ZCmIecor4fa')" :label="$t('Pb7RAgYfySagsZJPhO2kC')">
+        <template #right-icon>
+          <van-switch :value="appSetting.imgViewHorizonScroll" size="24" @change="v => saveAppSetting('imgViewHorizonScroll', v)" />
+        </template>
+      </van-cell>
       <van-cell v-if="!$store.getters.isNoOuterMeta" center :title="$t('ZO7u4XT4flW6_nmyvmXt7')" :label="$t('WdS4RTIeeWqdaqLtvk7ZO')">
         <template #right-icon>
           <van-switch :value="appSetting.isImageCardOuterMeta" size="24" @change="v => saveAppSetting('isImageCardOuterMeta', v, true)" />
@@ -232,7 +237,7 @@
           <van-switch :value="appSetting.isUseFancybox" size="24" @change="v => saveAppSetting('isUseFancybox', v)" />
         </template>
       </van-cell>
-      <van-cell center :title="$t('setting.other.swipe_toggle')">
+      <van-cell v-if="!appSetting.imgViewHorizonScroll" center :title="$t('setting.other.swipe_toggle')">
         <template #right-icon>
           <van-switch :value="appSetting.isEnableSwipe" size="24" @change="v => saveAppSetting('isEnableSwipe', v, true)" />
         </template>
@@ -474,13 +479,21 @@
           <van-tag round plain type="primary" size="large">createDate</van-tag>
           <span>{{ $t('JHBWOqLzMQN-kgmyDVSzN') }}</span>
         </div>
+        <div class="dl-tpl-tag" @click="dlFileNameTpl+='{xRestrict}'">
+          <van-tag round plain type="primary" size="large">xRestrict</van-tag>
+          <span>{{ $t('bWxoo0Ax8c19Asx33W8tC') }}</span>
+        </div>
+        <div class="dl-tpl-tag" @click="dlFileNameTpl+='{aiType}'">
+          <van-tag round plain type="primary" size="large">aiType</van-tag>
+          <span>{{ $t('BQErokL17-JKhKeCf21yI') }}</span>
+        </div>
         <div class="dl-tpl-tag" @click="dlFileNameTpl+='_'">
           <van-tag plain type="primary" size="large">_</van-tag>
           <span>{{ $t('P2gkznjKnjtHZDGXgzYfg') }}</span>
         </div>
       </div>
-      <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="3.5em" />
-      <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}: {{ sampleArtFileName }}</van-cell>
+      <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="2.5em" />
+      <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}:&nbsp;&nbsp;&nbsp;&nbsp;{{ sampleArtFileName }}</van-cell>
     </van-dialog>
   </div>
 </template>

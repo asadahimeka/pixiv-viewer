@@ -88,6 +88,7 @@ export default new Vuex.Store({
       isAutoBookmarkAfterDownload: false,
       isLongpressPrivateBookmark: false,
       isLongpressPrivateFollow: false,
+      imgViewHorizonScroll: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },
