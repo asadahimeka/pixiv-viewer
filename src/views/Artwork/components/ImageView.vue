@@ -12,42 +12,58 @@
     @click="showFull"
     @wheel="handleWheel"
   >
-    <div
-      v-for="(url, index) in artwork.images"
-      :key="index"
-      class="image-box"
-      :style="index == 0 && artworkRatio > 0.6 ? `--ratio:${artworkRatio}` : ''"
-    >
-      <!-- <van-button
-        v-if="artwork.illust_ai_type != 2 && maybeAiAuthor"
-        class="check-ai-btn"
-        color="linear-gradient(to right, #ff758c 0%, #ff7eb3 100%)"
-        size="mini"
-        @click="checkAI(url.l)"
+    <swiper v-if="isImgViewSwiper" :options="swiperOption">
+      <swiper-slide v-for="(url, index) in artwork.images" :key="index" class="image-box">
+        <Pximg
+          :src="getImgUrl(url)"
+          :alt="`${artwork.title} - Page ${index + 1}`"
+          :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
+          class="image"
+          @click.native.stop="view(index)"
+        />
+      </swiper-slide>
+      <div slot="pagination" class="swiper-pagination"></div>
+      <div slot="button-prev" class="swiper-button-prev"></div>
+      <div slot="button-next" class="swiper-button-next"></div>
+    </swiper>
+    <template v-else>
+      <div
+        v-for="(url, index) in artwork.images"
+        :key="index"
+        class="image-box"
+        :style="index == 0 && artworkRatio > 0.6 ? `--ratio:${artworkRatio}` : ''"
       >
-        AI Check
-      </van-button> -->
-      <Pximg
-        v-longpress="isLongpressDL ? e => downloadArtwork(e, index) : () => {}"
-        :src="getImgUrl(url)"
-        :alt="`${artwork.title} - Page ${index + 1}`"
-        :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
-        class="image"
-        nobg
-        @click.native.stop="view(index)"
-        @contextmenu.native="preventContext"
-      />
-      <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
-      <canvas
-        v-if="showUgoiraControl"
-        id="ugoira"
-        ref="ugoira"
-        class="ugoira"
-        :width="artwork.width"
-        :height="artwork.height"
-        @click="openDownloadPanel()"
-      ></canvas>
-    </div>
+        <!-- <van-button
+          v-if="artwork.illust_ai_type != 2 && maybeAiAuthor"
+          class="check-ai-btn"
+          color="linear-gradient(to right, #ff758c 0%, #ff7eb3 100%)"
+          size="mini"
+          @click="checkAI(url.l)"
+        >
+          AI Check
+        </van-button> -->
+        <Pximg
+          v-longpress="isLongpressDL ? e => downloadArtwork(e, index) : () => {}"
+          :src="getImgUrl(url)"
+          :alt="`${artwork.title} - Page ${index + 1}`"
+          :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
+          class="image"
+          nobg
+          @click.native.stop="view(index)"
+          @contextmenu.native="preventContext"
+        />
+        <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
+        <canvas
+          v-if="showUgoiraControl"
+          id="ugoira"
+          ref="ugoira"
+          class="ugoira"
+          :width="artwork.width"
+          :height="artwork.height"
+          @click="openDownloadPanel()"
+        ></canvas>
+      </div>
+    </template>
     <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
     <div v-if="showUgoiraControl" class="ugoira-controls">
       <div v-if="ugoiraPlaying" class="btn-pause" @click="drawCanvas('pause')">
@@ -73,9 +89,9 @@ import axios from 'axios'
 // import tsWhammy from 'ts-whammy'
 // import { encode as encodeMP4 } from 'modern-mp4'
 import api from '@/api'
+import store from '@/store'
 import { BASE_URL, COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 import { sleep, fancyboxShow, loadScript, downloadFile } from '@/utils'
-import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
@@ -98,6 +114,20 @@ export default {
       isLongpressDL,
       isLargeWebp: imgReso == 'Large(WebP)',
       isUgoiraAvifSrc,
+      swiperOption: {
+        mousewheel: true,
+        keyboard: true,
+        touchMoveStopPropagation: true,
+        pagination: {
+          el: '.image-view .swiper-pagination',
+          dynamicBullets: true,
+          clickable: true,
+        },
+        navigation: {
+          nextEl: '.image-view .swiper-button-next',
+          prevEl: '.image-view .swiper-button-prev',
+        },
+      },
     }
   },
   computed: {
@@ -122,10 +152,19 @@ export default {
       return this.artwork.type === 'ugoira' && !isUgoiraAvifSrc
     },
     overlong() {
-      return !this.isHorizonScroll && this.artwork?.images?.length > 2
+      return this.artwork?.images?.length > 2 && !this.isHorizonScroll && !this.isImgViewSwiper
     },
     isHorizonScroll() {
-      return this.artwork?.images?.length > 1 && store.state.appSetting.imgViewHorizonScroll
+      return this.artwork?.images?.length > 1 &&
+        !this.showUgoiraControl &&
+        store.state.appSetting.imgViewHorizonScroll &&
+        !store.state.appSetting.imgViewHorizonSwiper
+    },
+    isImgViewSwiper() {
+      return this.artwork?.images?.length > 1 &&
+        !this.showUgoiraControl &&
+        store.state.appSetting.imgViewHorizonSwiper &&
+        !store.state.appSetting.imgViewHorizonScroll
     },
   },
   watch: {
@@ -509,13 +548,13 @@ export default {
       this.progressShow = false
     },
     handleWheel(e) {
-      if (store.state.isMobile) return
+      if (!this.isHorizonScroll || store.state.isMobile) return
       e.preventDefault()
       e.stopPropagation()
       this.$refs.view.scrollLeft += e.deltaY * 2
     },
     init() {
-      if (this.artwork.images && this.artwork.images.length >= 3 && !this.isHorizonScroll) {
+      if (this.artwork.images && this.artwork.images.length >= 3 && !this.isHorizonScroll && !this.isImgViewSwiper) {
         this.isShrink = true
       } else {
         this.isShrink = false
@@ -538,6 +577,16 @@ export default {
   position: relative;
   min-height: 600px;
   // background-color: #fafafa;
+
+  ::v-deep .swiper-container {
+    padding-bottom 0.2rem
+    .swiper-button-prev, .swiper-button-next {
+      background none
+    }
+    .swiper-pagination-bullets {
+      bottom 0
+    }
+  }
 
   &.censored {
     pointer-events: none;

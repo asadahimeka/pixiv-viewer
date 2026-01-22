@@ -16,9 +16,14 @@
     <van-cell-group :title="$t('9X179hdP1zzapzk5Rvqx2')">
       <van-cell center :title="$t('setting.layout.title')" is-link :label="appSetting.wfType" @click="wfType.show = true" />
       <van-cell center :title="$t('setting.img_res.title')" is-link :label="appSetting.imgReso" @click="imgRes.show = true" />
-      <van-cell v-if="!appSetting.isEnableSwipe" center :title="$t('GVpGJVKGl9ZCmIecor4fa')" :label="$t('Pb7RAgYfySagsZJPhO2kC')">
+      <van-cell v-if="!appSetting.isEnableSwipe && !appSetting.imgViewHorizonSwiper" center :title="$t('GVpGJVKGl9ZCmIecor4fa')" :label="$t('Pb7RAgYfySagsZJPhO2kC')">
         <template #right-icon>
           <van-switch :value="appSetting.imgViewHorizonScroll" size="24" @change="v => saveAppSetting('imgViewHorizonScroll', v)" />
+        </template>
+      </van-cell>
+      <van-cell v-if="!appSetting.isEnableSwipe && !appSetting.imgViewHorizonScroll" center :title="$t('glzJ0Q3_3X3q0v9KbqaB_')" :label="$t('Pb7RAgYfySagsZJPhO2kC')">
+        <template #right-icon>
+          <van-switch :value="appSetting.imgViewHorizonSwiper" size="24" @change="v => saveAppSetting('imgViewHorizonSwiper', v)" />
         </template>
       </van-cell>
       <van-cell v-if="!$store.getters.isNoOuterMeta" center :title="$t('ZO7u4XT4flW6_nmyvmXt7')" :label="$t('WdS4RTIeeWqdaqLtvk7ZO')">
@@ -237,7 +242,7 @@
           <van-switch :value="appSetting.isUseFancybox" size="24" @change="v => saveAppSetting('isUseFancybox', v)" />
         </template>
       </van-cell>
-      <van-cell v-if="!appSetting.imgViewHorizonScroll" center :title="$t('setting.other.swipe_toggle')">
+      <van-cell v-if="!appSetting.imgViewHorizonScroll && !appSetting.imgViewHorizonSwiper" center :title="$t('setting.other.swipe_toggle')">
         <template #right-icon>
           <van-switch :value="appSetting.isEnableSwipe" size="24" @change="v => saveAppSetting('isEnableSwipe', v, true)" />
         </template>
