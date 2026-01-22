@@ -495,7 +495,26 @@ function handlePageTransition(to, from) {
   }
 }
 
+let isPressingMetaKey = false
+
+document.addEventListener('keydown', (event) => {
+  if (event.metaKey || event.ctrlKey) {
+    isPressingMetaKey = true
+  }
+})
+
+document.addEventListener('keyup', (event) => {
+  if (!event.metaKey && !event.ctrlKey) {
+    isPressingMetaKey = false
+  }
+})
+
 router.beforeEach((to, from, next) => {
+  if (isPressingMetaKey) {
+    window.open(to.fullPath)
+    return
+  }
+
   if (pageTransition) {
     handlePageTransition(to, from)
     document.startViewTransition(() => next())
