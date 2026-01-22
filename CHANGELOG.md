@@ -48,6 +48,9 @@
 - Pixivision stories
 - Popular illust restrict and type
 - User x(twitter) media list
+- Add filename template var
+- Image detail view horizon scroll
+- Open link in new page with meta/ctrl pressed (#77)
 
 ### 🐛 Bug Fixes
 
@@ -123,6 +126,12 @@
 - Home manga/novel restrict
 - Auto refresh access token
 - Spotlights all
+- Style fixes
+- Fix some glitches
+- Image search
+- Some glitches
+- New illust restrict
+- Some glitches
 
 ### 📚 Documentation
 
@@ -171,6 +180,7 @@
 - Add pnpm onlyBuiltDependencies
 - Release v1.31.6
 - Release v1.31.7
+- Release v1.31.8
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
