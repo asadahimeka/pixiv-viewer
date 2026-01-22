@@ -1,5 +1,7 @@
+import dayjs from 'dayjs'
 import store from '@/store'
 import { replaceValidFileName } from '@/utils'
+import { isAiIllust } from '@/utils/filter'
 
 export function getArtworkFileName(artwork, index, tpl) {
   return (tpl || store.state.appSetting.dlFileNameTpl)
@@ -11,17 +13,21 @@ export function getArtworkFileName(artwork, index, tpl) {
     .replaceAll('{width}', artwork.width || '')
     .replaceAll('{height}', artwork.height || '')
     .replaceAll('{tags}', artwork.tags.map(e => e.name).join('_'))
-    .replaceAll('{createDate}', artwork.created)
+    .replaceAll('{createDate}', dayjs(artwork.created).format('YYYYMMDD_HHmmss'))
+    .replaceAll('{xRestrict}', ['SFW', 'R18', 'R18G'][artwork.x_restrict])
+    .replaceAll('{aiType}', isAiIllust(artwork) ? 'AI' : '')
 }
 
 const sampleArtwork = {
-  id: 135826089,
-  title: 'HAPPY END??',
-  author: { id: 10308922, name: 'アマネレイ' },
-  created: '2025-10-03T18:41:26+09:00',
-  width: 1637,
-  height: 1157,
-  tags: [{ name: 'いますぐ輪廻' }, { name: '初音ミク' }],
+  id: 134903417,
+  title: '边城',
+  author: { id: 6049901, name: '鬼针草' },
+  created: '2025-09-09T20:10:21+09:00',
+  width: 2150,
+  height: 3035,
+  tags: [{ name: '風景' }, { name: '少女' }, { name: '背景' }, { name: '三つ編み' }, { name: 'オリジナル5000users入り' }],
+  x_restrict: 0,
+  illust_ai_type: 1,
 }
 
 export function getSampleFileName(tpl) {
