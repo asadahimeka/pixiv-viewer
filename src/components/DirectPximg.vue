@@ -107,6 +107,11 @@ export default {
       }, options)
       ob.observe(this.$el)
     },
+    revokeURL() {
+      if (this.localSrc?.startsWith('blob:')) {
+        URL.revokeObjectURL(this.localSrc)
+      }
+    },
     async setImgSrc() {
       try {
         if (this.isImgLazy && !this.isDirectPximg) {
@@ -114,28 +119,23 @@ export default {
           return
         }
         const url = new URL(this.src)
-        if (!window.__httpRequest__ || url.host == 's.pximg.net') {
+        if (url.host == 's.pximg.net') {
           this.localSrc = this.src
           this.loading = false
           return
         }
         url.protocol = 'http:'
-        url.host = '210.140.139.130'
+        url.host = 'i1.pximg.net'
         const { data } = await window.__httpRequest__(url.href, JSON.stringify({
-          responseType: 'blob',
+          responseType: 'blobUrl',
           headers: { Host: 'i.pximg.net', Referer: 'https://www.pixiv.net/' },
         }))
-        this.localSrc = URL.createObjectURL(data)
+        this.localSrc = data
         this.loading = false
       } catch (error) {
         console.log('error: ', error)
       }
     },
-  },
-  revokeURL() {
-    if (this.localSrc?.startsWith('blob:')) {
-      URL.revokeObjectURL(this.localSrc)
-    }
   },
 }
 </script>

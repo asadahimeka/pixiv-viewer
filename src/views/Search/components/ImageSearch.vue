@@ -112,7 +112,7 @@ export default {
         this.loading = true
         const formData = new FormData()
         formData.append('file', file.file, file.file.name)
-        const response = await fetch(`${PIXIV_NEXT_URL}/api/sauce`, {
+        const response = await fetch(`${PIXIV_NEXT_URL}/api/sauce/`, {
           method: 'POST',
           body: formData,
         })

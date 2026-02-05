@@ -201,7 +201,7 @@
     </van-cell-group>
 
     <van-cell-group :title="$t('7-drBPGRIz_BsYuc9ybCm')">
-      <van-cell center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
+      <van-cell v-if="!clientConfig.useLocalAppApi && !appSetting.isDirectPximg" center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
         <template #right-icon>
           <van-switch v-model="hideApSelect" size="24" />
         </template>
@@ -216,11 +216,11 @@
         </template>
       </van-cell>
       <template v-if="clientConfig.useLocalAppApi">
-        <van-cell v-if="isHelperInst" center :title="$t('setting.other.direct_mode.title')" :label="$t('setting.other.direct_mode.label')">
+        <!-- <van-cell v-if="isHelperInst" center :title="$t('setting.other.direct_mode.title')" :label="$t('setting.other.direct_mode.label')">
           <template #right-icon>
             <van-switch :value="clientConfig.directMode" :disabled="clientConfig.useApiProxy" size="24" @change="setDirectMode" />
           </template>
-        </van-cell>
+        </van-cell> -->
         <van-cell center :title="$t('setting.other.direct_mode.proxy.title')" :label="$t('setting.other.direct_mode.proxy.label')">
           <template #right-icon>
             <van-switch :value="clientConfig.useApiProxy" :disabled="clientConfig.directMode" size="24" @change="setUseApiProxy" />

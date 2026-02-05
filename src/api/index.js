@@ -262,9 +262,9 @@ export const parseWebPopularIllust = d => {
   return artwork
 }
 
-const dealErrMsg = res => {
-  const err = res.error?.response?.data?.error || res.error?.error || res.error
+const handleErrMsg = res => {
   const isRateLimitCode = res.error?.response?.status == 429
+  const err = res.error?.response?.data?.error || res.error?.error || res.error
   let msg = err?.message || err?.user_message || err
   if (msg == 'Rate Limit' || isRateLimitCode) msg = i18n.t('tip.rate_limit')
   return msg
@@ -297,7 +297,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -325,7 +325,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -353,7 +353,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -391,7 +391,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -422,7 +422,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -456,7 +456,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -484,7 +484,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -512,7 +512,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -540,7 +540,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -566,7 +566,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -609,7 +609,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -651,7 +651,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -693,7 +693,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -719,7 +719,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1044,7 +1044,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1075,7 +1075,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1110,7 +1110,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1142,7 +1142,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1170,7 +1170,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1211,7 +1211,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1318,7 +1318,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1347,7 +1347,7 @@ const api = {
       if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         ugoira = {
@@ -1377,7 +1377,7 @@ const api = {
       if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         memberInfo = parseUser(res)
@@ -1416,7 +1416,7 @@ const api = {
       if (!Array.isArray(res)) {
         return {
           status: -1,
-          msg: dealErrMsg(res.error ? res : { error: res }),
+          msg: handleErrMsg(res.error ? res : { error: res }),
         }
       } else {
         memberInfo = res.sort((a, b) => b.cnt - a.cnt)
@@ -1449,7 +1449,7 @@ const api = {
       if (!Array.isArray(res.works)) {
         return {
           status: -1,
-          msg: dealErrMsg(res.error ? res : { error: res }),
+          msg: handleErrMsg(res.error ? res : { error: res }),
         }
       } else {
         memberInfo = {
@@ -1488,7 +1488,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1516,7 +1516,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1545,7 +1545,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1572,7 +1572,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1600,7 +1600,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1629,7 +1629,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1671,7 +1671,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1709,7 +1709,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1743,7 +1743,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1777,7 +1777,7 @@ const api = {
       } else if (res.error) {
         return {
           status: -1,
-          msg: dealErrMsg(res),
+          msg: handleErrMsg(res),
         }
       } else {
         return {
@@ -1795,7 +1795,7 @@ const api = {
     if (res.error) {
       return {
         status: -1,
-        msg: dealErrMsg(res),
+        msg: handleErrMsg(res),
       }
     }
     if (!res.lives) {
@@ -2296,7 +2296,7 @@ export const localApi = {
     } else if (res.error) {
       return {
         status: -1,
-        msg: dealErrMsg(res),
+        msg: handleErrMsg(res),
       }
     } else {
       return {
@@ -2319,7 +2319,7 @@ export const localApi = {
     } else if (res.error) {
       return {
         status: -1,
-        msg: dealErrMsg(res),
+        msg: handleErrMsg(res),
       }
     } else {
       return {
@@ -2342,7 +2342,7 @@ export const localApi = {
     } else if (res.error) {
       return {
         status: -1,
-        msg: dealErrMsg(res),
+        msg: handleErrMsg(res),
       }
     } else {
       return {
@@ -2435,7 +2435,7 @@ export const localApi = {
     } else if (res.error) {
       return {
         status: -1,
-        msg: dealErrMsg(res),
+        msg: handleErrMsg(res),
       }
     } else {
       return {
