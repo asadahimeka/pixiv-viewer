@@ -132,6 +132,9 @@
 - Some glitches
 - New illust restrict
 - Some glitches
+- Image detail view horizon swiper
+- Direct pximg load error
+- Some glitches
 
 ### 📚 Documentation
 
@@ -181,6 +184,7 @@
 - Release v1.31.6
 - Release v1.31.7
 - Release v1.31.8
+- Release v1.31.9
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
