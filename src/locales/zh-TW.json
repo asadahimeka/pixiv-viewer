@@ -183,16 +183,16 @@
   "setting": {
     "about": "關於",
     "api": {
-      "desc": "在下方輸入 HibiAPI 實例地址，需要加 https://，路徑需填寫到 `/api/pixiv` 部分",
+      "desc": "在下方輸入 HibiAPI/PxveAPI 實例地址，需要加 https://，路徑需填寫到 `/api/pixiv` 部分",
       "desc2": "例如：https://hibiapi.getloli.com/api/pixiv，儲存後會清空本地快取",
       "desc3": "API 實例可前往 Github 查找或自行搭建",
       "desc4": "查找或自行搭建",
       "desc5": "API 實例地址需要支援跨域（CORS）前往",
       "ph": "請選擇 HibiAPI 實例（切換後會清空本地快取）",
-      "title": "HibiAPI 實例設定",
+      "title": "PxveAPI 實例設定",
       "title2": "HibiAPI 實例選擇",
-      "title3": "HibiAPI 實例地址",
-      "title4": "HibiAPI 實例"
+      "title3": "HibiAPI/PxveAPI 實例地址",
+      "title4": "PxveAPI 實例"
     },
     "dark": {
       "title": "深色模式"
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "請確保 HTTP Helper 腳本已安裝。\n可下載非CORS圖片。",
   "m9rhO-859d7Br05Hm5b54": "下載檔案名稱格式",
   "QJJd8OqGWs3rIHxMwYma9": "請設定下載檔案名稱的格式模板",
-  "bmqXgC68c1dDsgtYwO1Sv": "建議下載格式中至少包含:",
+  "bmqXgC68c1dDsgtYwO1Sv": "建議下載格式中至少包含以下變量，否則文件可能會被覆蓋:",
   "Zt3czgV8wrvas-it5b9Z0": "模板中可用變數如下，可點選標籤快速設定",
   "VJLRKYZZDrAv5NKTHcisN": "作者名字",
   "hVJXyeDWfpiwbIS7CpgEX": "作者 ID",

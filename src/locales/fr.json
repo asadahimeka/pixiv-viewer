@@ -183,16 +183,16 @@
   "setting": {
     "about": "À propos",
     "api": {
-      "desc": "Entrez l'adresse de l'instance HibiAPI ci-dessous, vous devez ajouter https://, et le chemin doit être renseigné dans la partie `/api/pixiv`",
-      "desc2": "Par exemple : https://hibiapi.getloli.com/api/pixiv, le cache local sera vidé après l'enregistrement",
+      "desc": "Entrez l'adresse de l'instance HibiAPI/PxveAPI ci-dessous, vous devez ajouter https://, et le chemin doit être renseigné dans la partie `/api/pixiv`",
+      "desc2": "Par exemple : {0}, le cache local sera vidé après l'enregistrement",
       "desc3": "Les instances de l'API peuvent être trouvées ou construites par vous-même chez GitHub",
       "desc4": "trouver ou créer le vôtre",
       "desc5": "L'adresse de l'instance d'API doit prendre en charge l'accès cross-origin (CORS)",
       "ph": "Veuillez sélectionner une instance HibiAPI (le cache local sera vidé après le changement)",
-      "title": "Paramètre d'instance HibiAPI",
+      "title": "Paramètre d'instance PxveAPI",
       "title2": "Sélection d'instance HibiAPI",
-      "title3": "Lien d'instance HibiAPI",
-      "title4": "Instance HibiAPI"
+      "title3": "Lien d'instance HibiAPI/PxveAPI",
+      "title4": "Instance PxveAPI"
     },
     "dark": {
       "title": "Mode sombre"
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "Veuillez vous assurer que le script HTTP Helper est installé. \nLes images non CORS peuvent être téléchargées.",
   "m9rhO-859d7Br05Hm5b54": "Format du nom de fichier",
   "QJJd8OqGWs3rIHxMwYma9": "Veuillez définir le modèle de format du nom du fichier téléchargé",
-  "bmqXgC68c1dDsgtYwO1Sv": "Il est recommandé que le format de téléchargement contienne au moins :",
+  "bmqXgC68c1dDsgtYwO1Sv": "Il est recommandé que le format de téléchargement contienne au moins les variables suivantes, sinon le fichier risque d'être écrasé :",
   "Zt3czgV8wrvas-it5b9Z0": "Les variables disponibles dans le modèle sont les suivantes. Vous pouvez cliquer sur l'étiquette pour la définir rapidement.",
   "VJLRKYZZDrAv5NKTHcisN": "Nom de l'auteur",
   "hVJXyeDWfpiwbIS7CpgEX": "Identifiant de l'auteur",

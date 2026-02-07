@@ -109,28 +109,17 @@
         @click="openLink('https://www.nanoka.top/say/pxve_comments.html')"
       /> -->
     </van-cell-group>
-    <!-- <van-cell-group v-if="backSites" :title="$t('1V8tlBs--oNk_UbzsItA-')">
-      <van-cell
-        v-for="s in backSites"
-        :key="s"
-        center
-        :title="`https://${s}`"
-        is-link
-        @click="openLink(`https://${s}`)"
-      />
-    </van-cell-group> -->
   </div>
 </template>
 
 <script>
-import { /* BACKUP_DOMAINS, */ CURRENT_APP_VERSION } from '@/consts'
+import { CURRENT_APP_VERSION } from '@/consts'
 
 export default {
   name: 'SettingAbout',
   data() {
     return {
       ver: CURRENT_APP_VERSION,
-      // backSites: BACKUP_DOMAINS.split(',').filter(Boolean),
     }
   },
   head() {

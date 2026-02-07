@@ -244,16 +244,16 @@
   "setting": {
     "about": "Sobre",
     "api": {
-      "desc": "Insira o endereço da instância HibiAPI abaixo, você precisa adicionar https://, e o caminho precisa ser preenchido na parte `/api/pixiv`",
-      "desc2": "Por exemplo: https://hibiapi.getloli.com/api/pixiv, o cache local será limpo após salvar",
+      "desc": "Insira o endereço da instância HibiAPI/PxveAPI abaixo, você precisa adicionar https://, e o caminho precisa ser preenchido na parte `/api/pixiv`",
+      "desc2": "Por exemplo: {0}, o cache local será limpo após salvar",
       "desc3": "Instâncias de API podem ser encontradas ou construídas por você mesmo no GitHub",
       "desc4": "encontrar ou construir o seu próprio",
       "desc5": "O endereço da instância da API precisa oferecer suporte ao acesso de origem cruzada (CORS)",
       "ph": "Selecione uma instância HibiAPI (o cache local será limpo após a troca)",
-      "title": "Configuração de instância HibiAPI",
+      "title": "Configuração de instância PxveAPI",
       "title2": "Seleção de instância HibiAPI",
-      "title3": "Link da instância HibiAPI",
-      "title4": "Instância HibiAPI"
+      "title3": "Link da instância HibiAPI/PxveAPI",
+      "title4": "Instância PxveAPI"
     },
     "app_desc": "Outra ferramenta de ilustração/navegador de romance Pixiv",
     "dark": {
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "Certifique-se de que o script HTTP Helper esteja instalado. \nImagens não CORS podem ser baixadas.",
   "m9rhO-859d7Br05Hm5b54": "Formato de nome de arquivo",
   "QJJd8OqGWs3rIHxMwYma9": "Por favor, defina o modelo de formato do nome do arquivo de download",
-  "bmqXgC68c1dDsgtYwO1Sv": "Recomenda-se que o formato de download contenha pelo menos:",
+  "bmqXgC68c1dDsgtYwO1Sv": "Recomenda-se que o formato de download contenha pelo menos as seguintes variáveis, caso contrário o arquivo poderá ser sobrescrito:",
   "Zt3czgV8wrvas-it5b9Z0": "As variáveis ​​disponíveis no modelo são as seguintes. Você pode clicar no rótulo para defini-lo rapidamente.",
   "VJLRKYZZDrAv5NKTHcisN": "Nome do autor",
   "hVJXyeDWfpiwbIS7CpgEX": "ID do autor",

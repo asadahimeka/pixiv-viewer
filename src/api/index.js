@@ -1866,7 +1866,7 @@ const api = {
     const cacheKey = `pixivision_story_page_${id}`
     const cache = await getCache(cacheKey)
     if (cache) return cache
-    const resp = await fetch(`${PIXIV_NEXT_URL}/https://www.pixivision.net/stories/${id}`)
+    const resp = await fetch(`${PIXIV_NEXT_URL}/https://www.pixivision.net/zh/stories/${id}`)
     if (!resp.ok) return ''
     let html = await resp.text()
     html = html

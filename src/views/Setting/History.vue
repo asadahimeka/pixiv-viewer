@@ -43,6 +43,11 @@ export default {
   head() {
     return { title: this.$t('common.history') }
   },
+  activated() {
+    if (this.$route.params.refresh == 1) {
+      this.$refs[`h${this.activeTab}`]?.init()
+    }
+  },
   methods: {
     clearHistory() {
       this.$refs[`h${this.activeTab}`]?.clearHistory()

@@ -33,6 +33,7 @@ import { initBookmarkCache } from '@/utils/storage/siteCache'
 setupApp()
 
 async function setupApp() {
+  initPxveccTheme()
   await checkWechat()
   await checkBrowser()
   await initSetting()
@@ -125,4 +126,12 @@ async function checkBrowser() {
     })
   }
   return true
+}
+
+function initPxveccTheme() {
+  if (location.hostname != 'pxve.cc' || localStorage.PXV_THEME) return
+  localStorage.PXV_THEME = 'Anon'
+  localStorage.PXV_ACT_COLOR = '#ff8899'
+  document.documentElement.classList.add('custom_theme', 't_' + localStorage.PXV_THEME)
+  document.documentElement.style.setProperty('--accent-color', localStorage.PXV_ACT_COLOR)
 }

@@ -183,16 +183,16 @@
   "setting": {
     "about": "Um",
     "api": {
-      "desc": "Geben Sie unten die Adresse der HibiAPI-Instanz ein, Sie müssen https:// hinzufügen, und der Pfad muss in den Teil „/api/pixiv“ eingetragen werden",
-      "desc2": "Zum Beispiel: https://hibiapi.getloli.com/api/pixiv, der lokale Cache wird nach dem Speichern gelöscht",
+      "desc": "Geben Sie unten die Adresse der HibiAPI/PxveAPI-Instanz ein, Sie müssen https:// hinzufügen, und der Pfad muss in den Teil „/api/pixiv“ eingetragen werden",
+      "desc2": "Zum Beispiel: {0}, der lokale Cache wird nach dem Speichern gelöscht",
       "desc3": "API -Instanzen können von Ihnen in Github gefunden oder gebaut werden",
       "desc4": "selber suchen oder bauen",
       "desc5": "Die API-Instanzadresse muss ursprungsübergreifenden Zugriff (CORS) unterstützen",
       "ph": "Bitte wählen Sie eine HibiAPI-Instanz aus (der lokale Cache wird nach dem Wechsel gelöscht)",
-      "title": "HibiAPI-Instanzeinstellung",
+      "title": "PxveAPI-Instanzeinstellung",
       "title2": "HibiAPI-Instanz auswählen",
-      "title3": "HibiAPI-Instanzlink",
-      "title4": "HibiAPI-Instanz"
+      "title3": "HibiAPI/PxveAPI-Instanzlink",
+      "title4": "PxveAPI-Instanz"
     },
     "dark": {
       "title": "Dunkler Modus"
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "Bitte stellen Sie sicher, dass das HTTP-Hilfsskript installiert ist. \nNicht-CORS-Bilder können heruntergeladen werden.",
   "m9rhO-859d7Br05Hm5b54": "Dateinamenformat",
   "QJJd8OqGWs3rIHxMwYma9": "Bitte legen Sie die Formatvorlage des Download-Dateinamens fest",
-  "bmqXgC68c1dDsgtYwO1Sv": "Es wird empfohlen, dass das Downloadformat mindestens Folgendes enthält:",
+  "bmqXgC68c1dDsgtYwO1Sv": "Es wird empfohlen, dass das Download-Format mindestens die folgenden Variablen enthält, da die Datei sonst möglicherweise überschrieben wird:",
   "Zt3czgV8wrvas-it5b9Z0": "Die in der Vorlage verfügbaren Variablen sind wie folgt. Sie können auf die Beschriftung klicken, um sie schnell festzulegen.",
   "VJLRKYZZDrAv5NKTHcisN": "Name des Autors",
   "hVJXyeDWfpiwbIS7CpgEX": "Autoren-ID",

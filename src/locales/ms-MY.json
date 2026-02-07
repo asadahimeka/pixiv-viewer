@@ -174,7 +174,7 @@
     "unfav_fail": "Keluarkan penanda buku gagal"
   },
   "bJ1fo_0HLdA1bWDIic_CT": "Untuk maklumat anda",
-  "bmqXgC68c1dDsgtYwO1Sv": "Adalah disyorkan bahawa format muat turun mengandungi sekurang -kurangnya:",
+  "bmqXgC68c1dDsgtYwO1Sv": "Adalah disyorkan bahawa format muat turun mengandungi sekurang-kurangnya pembolehubah berikut, jika tidak, fail mungkin ditimpa:",
   "cIyLKP7_S_Wo0Y0908dnm": "Perbincangan GitHub",
   "cache": {
     "clear": "Bersihkan",
@@ -445,16 +445,16 @@
   "setting": {
     "about": "Mengenai",
     "api": {
-      "desc": "Masukkan alamat contoh Hibiapi di bawah, anda perlu menambah https: //, dan jalan perlu diisi dalam bahagian `/API/pixiv`",
-      "desc2": "Contohnya: https://hibiapi.getloli.com/api/pixiv, cache tempatan akan dibersihkan selepas menyimpan",
+      "desc": "Masukkan alamat contoh Hibiapi/PxveAPI di bawah, anda perlu menambah https: //, dan jalan perlu diisi dalam bahagian `/API/pixiv`",
+      "desc2": "Contohnya: {0}, cache tempatan akan dibersihkan selepas menyimpan",
       "desc3": "Contoh API boleh didapati atau dibina sendiri di GitHub",
       "desc4": "atau membina sendiri",
       "desc5": "Alamat Contoh API perlu menyokong akses silang asal (CORS)",
       "ph": "Sila pilih contoh Hibiapi (cache tempatan akan dibersihkan selepas bertukar)",
-      "title": "Tetapan contoh Hibiapi",
+      "title": "Tetapan contoh PxveAPI",
       "title2": "Contoh Hibiapi Pilih",
-      "title3": "Pautan contoh Hibiapi",
-      "title4": "Contoh Hibiapi"
+      "title3": "Pautan contoh Hibiapi/PxveAPI",
+      "title4": "Contoh PxveAPI"
     },
     "app_desc": "Satu lagi ilustrasi pixiv",
     "dark": {

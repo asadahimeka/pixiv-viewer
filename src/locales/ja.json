@@ -183,16 +183,16 @@
   "setting": {
     "about": "アバウト",
     "api": {
-      "desc": "以下に HibiAPI インスタンスのアドレスを入力し、https:// を追加する必要があり、「/api/pixiv」の部分にパスを入力する必要があります",
-      "desc2": "例: https://hibiapi.getloli.com/api/pixiv、保存後にローカルキャッシュがクリアされます",
+      "desc": "以下に HibiAPI/PxveAPI インスタンスのアドレスを入力し、https:// を追加する必要があり、「/api/pixiv」の部分にパスを入力する必要があります",
+      "desc2": "例: {0}、保存後にローカルキャッシュがクリアされます",
       "desc3": "APIインスタンスは、GitHubで自分で見つけるか構築できます",
       "desc4": "独自の検索または構築",
       "desc5": "API インスタンス アドレスは、クロスオリジン (CORS) アクセスをサポートする必要があります",
       "ph": "HibiAPI インスタンスを選択してください (ローカル キャッシュは切り替え後にクリアされます)",
-      "title": "HibiAPI インスタンスの設定",
+      "title": "PxveAPI インスタンスの設定",
       "title2": "HibiAPI インスタンスの選択",
-      "title3": "HibiAPI インスタンス リンク",
-      "title4": "HibiAPI インスタンス"
+      "title3": "HibiAPI/PxveAPI インスタンス リンク",
+      "title4": "PxveAPI インスタンス"
     },
     "dark": {
       "title": "ダークモード"
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "HTTP ヘルパー スクリプトがインストールされていることを確認してください。\n非 CORS イメージをダウンロードできます。",
   "m9rhO-859d7Br05Hm5b54": "ファイル名の形式",
   "QJJd8OqGWs3rIHxMwYma9": "ダウンロードファイル名の書式テンプレートを設定してください",
-  "bmqXgC68c1dDsgtYwO1Sv": "ダウンロード形式には少なくとも以下が含まれることをお勧めします。",
+  "bmqXgC68c1dDsgtYwO1Sv": "ダウンロード形式には少なくとも次の変数を含めることをお勧めします。そうでないとファイルが上書きされる可能性があります。",
   "Zt3czgV8wrvas-it5b9Z0": "テンプレートで使用できる変数は次のとおりです。ラベルをクリックするとすぐに設定できます。",
   "VJLRKYZZDrAv5NKTHcisN": "作者名",
   "hVJXyeDWfpiwbIS7CpgEX": "作者ID",

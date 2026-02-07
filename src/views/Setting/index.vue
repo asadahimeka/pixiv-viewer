@@ -30,7 +30,7 @@
       </van-cell>
       <van-cell v-if="isLoggedIn" size="large" center :title="$t('user.sess.my_fav')" icon="star-o" is-link :to="`/users/${user.id}/favorites?isCurrentUser=1`" />
       <van-cell v-else size="large" center :title="$t('user.sess.login')" icon="user-circle-o" is-link to="/account/login" />
-      <van-cell size="large" center :title="$t('common.history')" icon="underway-o" is-link to="/setting/history" />
+      <van-cell size="large" center :title="$t('common.history')" icon="underway-o" is-link :to="{name:'History',params:{refresh:1}}" />
       <van-cell size="large" center :title="$t('display.title')" icon="eye-o" is-link to="/setting/contents_display" />
       <van-cell size="large" center :title="$t('cache.title')" icon="delete-o" is-link to="/setting/clearcache" />
       <van-cell size="large" center :title="$t('setting.other.title')" icon="setting-o" is-link to="/setting/preference" />

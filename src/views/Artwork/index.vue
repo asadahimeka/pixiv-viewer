@@ -79,6 +79,7 @@ import IconWeibo from '@/assets/images/share-sheet-weibo.png'
 import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
+import { ugoiraDownloadActions } from '@/utils/ugoira'
 // import { mintFilter } from '@/utils/filter'
 
 const { isAutoLoadKissT, isEnableSwipe } = store.state.appSetting
@@ -115,16 +116,7 @@ export default {
       loading: true,
       artwork: {},
       ugoiraDownloadPanelShow: false,
-      ugoiraDownloadPanelActions: [
-        { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
-        { name: 'GIF', subname: i18n.t('artwork.download.gif') },
-        { name: 'WebM', subname: i18n.t('artwork.download.webm') }, // chrome only
-        { name: 'APNG', subname: i18n.t('artwork.download.webm') },
-        { name: 'MP4(Browser)', subname: i18n.t('pIghtXdU8socMNNRUn5UR') },
-        { name: 'MP4(Server)', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
-        { name: 'AVIF', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
-        { name: 'Other', subname: i18n.t('artwork.download.mp4') },
-      ],
+      ugoiraDownloadPanelActions: ugoiraDownloadActions,
       showShare: false,
       shareOptions: [
         { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
@@ -243,13 +235,13 @@ export default {
     showUgPanelFromDlBtn() {
       const { ugoiraDefDLFormat } = store.state.appSetting
       if (ugoiraDefDLFormat) {
-        this.$refs.imgView.download(ugoiraDefDLFormat)
+        this.$refs.imgView.downloadUgoira(ugoiraDefDLFormat)
         return
       }
       this.ugoiraDownloadPanelShow = true
     },
     onUgoiraDownloadPanelSelect(item) {
-      this.$refs.imgView.download(item.name)
+      this.$refs.imgView.downloadUgoira(item.name)
     },
     onSwipeOpen({ position }) {
       this.$refs.swipeCell?.close()
@@ -444,6 +436,10 @@ img[src*="https://api.moedog.org/qr/?url="]
       height: auto !important
       min-width 300px
       min-height 300px
+      &:has(.season-effect)
+        width: fit-content !important
+        margin-left auto
+        margin-right auto
       &:not(:last-child)
         margin-bottom 10px
 

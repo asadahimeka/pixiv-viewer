@@ -281,16 +281,16 @@
       "ph": "请选择 pixiv 图片代理 (切换后会清空本地缓存)"
     },
     "api": {
-      "title": "HibiAPI 实例设置",
+      "title": "PxveAPI 实例设置",
       "title2": "HibiAPI 实例选择",
-      "title3": "HibiAPI 实例地址",
-      "desc": "在下方输入 HibiAPI 实例地址，需要加 https://，路径需填写到 `/api/pixiv` 部分",
-      "desc2": "例如：https://hibiapi.getloli.com/api/pixiv，保存后会清空本地缓存",
+      "title3": "HibiAPI/PxveAPI 实例地址",
+      "desc": "在下方输入 HibiAPI/PxveAPI 实例地址，需要加 https://，路径需填写到 `/api/pixiv` 部分",
+      "desc2": "例如：{0}，保存后会清空本地缓存",
       "desc3": "API 实例可前往 Github 查找或自行搭建",
       "desc4": "查找或自行搭建",
       "desc5": "API 实例地址需要支持跨域（CORS）访问",
       "ph": "请选择 HibiAPI 实例 (切换后会清空本地缓存)",
-      "title4": "HibiAPI 实例"
+      "title4": "PxveAPI 实例"
     },
     "input": "输入：",
     "down_app": "客户端下载",
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "请确保 HTTP Helper 脚本已安装，可下载非跨域(CORS)图片。",
   "m9rhO-859d7Br05Hm5b54": "下载文件名格式",
   "QJJd8OqGWs3rIHxMwYma9": "请设置下载文件名的格式模板",
-  "bmqXgC68c1dDsgtYwO1Sv": "建议下载格式中至少包含:",
+  "bmqXgC68c1dDsgtYwO1Sv": "建议下载格式中至少包含以下变量，否则文件可能会被覆盖:",
   "Zt3czgV8wrvas-it5b9Z0": "模板中可用变量如下，可点击标签快速设置",
   "VJLRKYZZDrAv5NKTHcisN": "作者名字",
   "hVJXyeDWfpiwbIS7CpgEX": "作者 ID",

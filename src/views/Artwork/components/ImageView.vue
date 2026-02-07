@@ -12,7 +12,7 @@
     @click="showFull"
     @wheel="handleWheel"
   >
-    <swiper v-if="isImgViewSwiper" :options="swiperOption">
+    <swiper v-if="isImgViewSwiper" ref="mySwiper" :options="swiperOption">
       <swiper-slide v-for="(url, index) in artwork.images" :key="index" class="image-box">
         <Pximg
           :src="getImgUrl(url)"
@@ -83,16 +83,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import { Dialog, ImagePreview } from 'vant'
-import axios from 'axios'
-// import JSZip from 'jszip'
-// import GIF from 'gif.js'
-// import tsWhammy from 'ts-whammy'
-// import { encode as encodeMP4 } from 'modern-mp4'
-import api from '@/api'
 import store from '@/store'
-import { BASE_URL, COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
-import { sleep, fancyboxShow, loadScript, downloadFile } from '@/utils'
+import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
+import { fancyboxShow, downloadFile } from '@/utils'
 import { getArtworkFileName } from '@/store/actions/filename'
+import { downloadUgoira, loadUgoira } from '@/utils/ugoira'
 
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
 
@@ -277,16 +272,6 @@ export default {
     //     this.$toast('Error: ' + err.message)
     //   }
     // },
-    async ugoiraMetadata() {
-      const res = await api.ugoiraMetadata(this.artwork.id)
-      if (res.status === 0) {
-        return Object.freeze(res.data)
-      } else {
-        this.$toast({
-          message: res.msg,
-        })
-      }
-    },
     async playUgoira(action) {
       const dontPlay = action == 'dontPlay'
       if (this.progressShow) return
@@ -303,37 +288,15 @@ export default {
       }
 
       try {
-        const ugoira = await this.ugoiraMetadata()
-        this.ugoira = {
-          zip: ugoira.zip,
-          frames: ugoira.frames.reduce((res, frame) => {
-            res[frame.file] = frame
-            return res
-          }, {}),
-        }
         this.progressShow = true
-        const resp = await axios.get(ugoira.zip, {
-          responseType: 'blob',
-          timeout: 1000 * 60,
-          onDownloadProgress: progress => {
-            this.progress = progress.loaded / progress.total
-          },
+        const meta = await loadUgoira(this.artwork.id, progress => {
+          this.progress = progress.loaded / progress.total
         })
-        const { default: JSZip } = await import('jszip')
-        const jszip = new JSZip()
-        const zip = await jszip.loadAsync(resp.data)
-        const files = Object.keys(zip.files)
-        await Promise.all(files.map(async name => {
-          const blob = await zip.file(name).async('blob')
-          const bmp = await createImageBitmap(blob)
-          this.ugoira.frames[name].blob = blob
-          this.ugoira.frames[name].bmp = bmp
-        }))
-        console.info('Frames loaded:', `frames ${files.length}`, `size ${resp.data.size}`)
-        console.log('this.ugoira: ', this.ugoira)
+        this.ugoira = meta
         this.progressShow = false
         dontPlay ? this.$toast.clear(true) : this.drawCanvas('play')
       } catch (err) {
+        this.progressShow = false
         this.resetUgoira()
         this.$toast({
           message: err.message,
@@ -364,141 +327,7 @@ export default {
         this.ugoiraPlaying = false
       }
     },
-    async downloadZIP() {
-      await downloadFile(this.ugoira.zip, `${getArtworkFileName(this.artwork)}.zip`, { subDir: 'ugoira' })
-    },
-    // ref: https://github.com/xuejianxianzun/PixivBatchDownloader/blob/master/src/ts/ConvertUgoira/ToAPNG.ts
-    async downloadAPNG() {
-      this.$toast(this.$t('tip.down_wait'))
-
-      if (!window.UPNG) {
-        await loadScript(`${BASE_URL}static/js/pako_deflate.min.js`)
-        await loadScript(`${BASE_URL}static/js/UPNG.min.js`)
-      }
-
-      await sleep(200)
-
-      const { width, height } = this.artwork
-      let canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
-      let ctx = canvas.getContext('2d', { willReadFrequently: true })
-
-      let images = []
-      const delays = []
-      Object.values(this.ugoira.frames).forEach(frame => {
-        ctx.drawImage(frame.bmp, 0, 0)
-        images.push(ctx.getImageData(0, 0, width, height).data.buffer)
-        delays.push(frame.delay)
-      })
-
-      const pngFile = window.UPNG.encode(images, width, height, 0, delays)
-      const blob = new Blob([pngFile], { type: 'image/vnd.mozilla.apng' })
-
-      images = null
-      ctx = null
-      canvas = null
-
-      const { isUgoiraApngSaveAsPng } = store.state.appSetting
-      const suffix = isUgoiraApngSaveAsPng ? 'png' : 'apng'
-      await downloadFile(blob, `${getArtworkFileName(this.artwork)}.${suffix}`, { subDir: 'ugoira' })
-    },
-    async downloadWebM() {
-      this.$toast(this.$t('tip.down_wait'))
-      await sleep(200)
-
-      const { width, height } = this.artwork
-
-      let cacheCanvas = document.createElement('canvas')
-      cacheCanvas.width = width
-      cacheCanvas.height = height
-      let ctx = cacheCanvas.getContext('2d')
-
-      // const encoder = new global.Whammy.Video()
-      // Object.values(this.ugoira.frames).forEach(frame => {
-      //   ctx.clearRect(0, 0, width, height)
-      //   ctx.drawImage(frame.bmp, 0, 0, width, height)
-      //   encoder.add(ctx, frame.delay)
-      // })
-      // const webm = encoder.compile()
-
-      let images = []
-      let duration = 0
-      Object.values(this.ugoira.frames).forEach(frame => {
-        ctx.clearRect(0, 0, width, height)
-        ctx.drawImage(frame.bmp, 0, 0, width, height)
-        images.push(ctx.canvas.toDataURL('image/webp'))
-        duration += frame.delay
-      })
-
-      const { default: tsWhammy } = await import('ts-whammy')
-      const webm = tsWhammy.fromImageArrayWithOptions(images, { duration: duration / 1000 })
-
-      images = null
-      ctx = null
-      cacheCanvas = null
-
-      await downloadFile(webm, `${getArtworkFileName(this.artwork)}.webm`, { subDir: 'ugoira' })
-    },
-    async downloadGIF() {
-      this.$toast(this.$t('tip.down_wait'))
-
-      let images = Object.values(this.ugoira.frames)
-      let offset = 1
-      if (images.length >= 100) {
-        // 抽帧间隔
-        offset = 2
-        images = images.filter((_, idx) => idx % offset === 0) // 抽帧
-        // .map(frame => URL.createObjectURL(frame.blob));
-      }
-
-      const { width, height } = this.artwork
-
-      const cacheCanvas = document.createElement('canvas')
-      cacheCanvas.width = width
-      cacheCanvas.height = height
-      const ctx = cacheCanvas.getContext('2d')
-
-      const { default: GIF } = await import('gif.js')
-      const gif = new GIF({
-        workers: 10,
-        quality: 10,
-        width,
-        height,
-        workerScript: `${BASE_URL}static/js/gif.worker.js`,
-      })
-      Object.values(images).forEach(frame => {
-        ctx.clearRect(0, 0, width, height)
-        ctx.drawImage(frame.bmp, 0, 0, width, height)
-        gif.addFrame(ctx, { copy: true, delay: frame.delay * offset })
-      })
-      gif.on('progress', percent => {
-        this.$toast(this.$t('tip.down_wait') + ': ' + (percent * 100).toFixed(2) + '%')
-      })
-      gif.on('finished', async blob => {
-        this.$toast.clear(true)
-        await downloadFile(blob, `${getArtworkFileName(this.artwork)}.gif`, { subDir: 'ugoira' })
-      })
-      gif.render()
-    },
-    // ref: https://github.com/FreeNowOrg/PixivNow/blob/master/src/utils/UgoiraPlayer.ts#L195
-    async downloadMP4() {
-      this.$toast(this.$t('tip.down_wait'))
-
-      const { width, height } = this.artwork
-      let frames = Object.values(this.ugoira.frames).map(frame => ({
-        data: frame.bmp,
-        duration: frame.delay,
-      }))
-      this.resetUgoira()
-      const { encode } = await import('modern-mp4')
-      const videoBitrate = parseInt(store.state.appSetting.ugoiraMp4Bitrate) * 1e6
-      const mp4File = await encode({ frames, width, height, audio: false, videoBitrate })
-      const blob = new Blob([mp4File], { type: 'video/mp4' })
-      frames = null
-      await downloadFile(blob, `${getArtworkFileName(this.artwork)}.mp4`, { subDir: 'ugoira' })
-    },
-    async download(type) {
+    async downloadUgoira(type) {
       if (this.progressShow) {
         this.$toast(this.$t('tips.loading'))
         return
@@ -511,29 +340,10 @@ export default {
         this.$toast(this.$t('artwork.download.ugoira.tip'))
         return
       }
-      window.umami?.track('download_ugoira', { dl_type: type })
-      const actions = {
-        'ZIP': () => this.downloadZIP(),
-        'GIF': () => this.downloadGIF(),
-        'WebM': () => this.downloadWebM(),
-        'APNG': () => this.downloadAPNG(),
-        'MP4(Browser)': () => this.downloadMP4(),
-        'MP4(Server)': () => window.open(`https://ugoira-mp4-dl.cocomi.eu.org/${this.artwork.id}`, '_blank', 'noopener'),
-        'AVIF': () => window.open(ugoiraAvifSrc(this.artwork.id), '_blank', 'noopener'),
-        'Other': () => window.open(`https://ugoira.cocomi.eu.org/?id=${this.artwork.id}`, '_blank', 'noopener'),
-      }
-      try {
-        actions[type]?.()
-      } catch (err) {
-        window.umami?.track('download_ugoira_err', { error: err.message })
-        this.$toast({
-          message: this.$t('H_rYWoPA0uI7TU4YCbIz0'),
-        })
-      }
+      await downloadUgoira(type, this.ugoira, this.artwork, () => this.resetUgoira())
     },
     openDownloadPanel() {
       if (this.progressShow) return
-
       if (this.ugoira) {
         this.$emit('open-download')
       } else {
@@ -558,6 +368,12 @@ export default {
         this.isShrink = true
       } else {
         this.isShrink = false
+      }
+      if (this.isHorizonScroll && this.$refs.view) {
+        this.$refs.view.scrollLeft = 0
+      }
+      if (this.isImgViewSwiper) {
+        this.$refs.mySwiper?.$swiper?.slideTo(0)
       }
       this.resetUgoira()
       this.$nextTick(() => {
@@ -745,7 +561,7 @@ export default {
     max-height: 80vh;
     overflow-y: auto;
   }
-  .ia-cont .ia-left .image-box {
+  .ia-cont .ia-left .image-box:first-child {
     aspect-ratio: var(--ratio);
   }
 }

@@ -183,16 +183,16 @@
   "setting": {
     "about": "About",
     "api": {
-      "desc": "Enter the HibiAPI instance address below, you need to add https://, and the path needs to be filled in the `/api/pixiv` part",
-      "desc2": "For example: https://hibiapi.getloli.com/api/pixiv, the local cache will be cleared after saving",
+      "desc": "Enter the HibiAPI/PxveAPI instance address below, you need to add https://, and the path needs to be filled in the `/api/pixiv` part",
+      "desc2": "For example: {0}, the local cache will be cleared after saving",
       "desc3": "API instances can be found or built by yourself at Github",
       "desc4": "or built your own",
       "desc5": "The API instance address needs to support cross-origin (CORS) access",
       "ph": "Please select a HibiAPI instance (the local cache will be cleared after switching)",
-      "title": "HibiAPI Instance Setting",
+      "title": "PxveAPI Instance Setting",
       "title2": "HibiAPI instance select",
-      "title3": "HibiAPI instance link",
-      "title4": "HibiAPI instance"
+      "title3": "HibiAPI/PxveAPI instance link",
+      "title4": "PxveAPI instance"
     },
     "dark": {
       "title": "Dark Mode"
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "Please make sure the HTTP Helper script is installed. \nNon-CORS images can be downloaded.",
   "m9rhO-859d7Br05Hm5b54": "Download file name format",
   "QJJd8OqGWs3rIHxMwYma9": "Please set the format template of the download file name",
-  "bmqXgC68c1dDsgtYwO1Sv": "It is recommended that the download format contains at least:",
+  "bmqXgC68c1dDsgtYwO1Sv": "It is recommended that the download format contain at least the following variables, otherwise the file may be overwritten:",
   "Zt3czgV8wrvas-it5b9Z0": "The variables available in the template are as follows. You can click the label to quickly set it.",
   "VJLRKYZZDrAv5NKTHcisN": "Author name",
   "hVJXyeDWfpiwbIS7CpgEX": "Author ID",

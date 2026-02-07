@@ -223,16 +223,16 @@
   "setting": {
     "about": "Di",
     "api": {
-      "desc": "Immettere l'indirizzo dell'istanza HibiAPI di seguito, è necessario aggiungere https:// e il percorso deve essere compilato nella parte `/api/pixiv`",
-      "desc2": "Ad esempio: https://hibiapi.getloli.com/api/pixiv, la cache locale verrà cancellata dopo il salvataggio",
+      "desc": "Immettere l'indirizzo dell'istanza HibiAPI/PxveAPI di seguito, è necessario aggiungere https:// e il percorso deve essere compilato nella parte `/api/pixiv`",
+      "desc2": "Ad esempio: {0}, la cache locale verrà cancellata dopo il salvataggio",
       "desc3": "Le istanze API possono essere trovate o costruite da solo a GitHub",
       "desc4": "trovare o costruire il tuo",
       "desc5": "L'indirizzo dell'istanza API deve supportare l'accesso cross-origin (CORS).",
       "ph": "Seleziona un'istanza HibiAPI (la cache locale verrà cancellata dopo il passaggio)",
-      "title": "Impostazione dell'istanza HibiAPI",
+      "title": "Impostazione dell'istanza PxveAPI",
       "title2": "Selezione istanza HibiAPI",
-      "title3": "Collegamento all'istanza HibiAPI",
-      "title4": "Istanza HibiAPI"
+      "title3": "Collegamento all'istanza HibiAPI/PxveAPI",
+      "title4": "Istanza PxveAPI"
     },
     "dark": {
       "title": "Modalità scura"
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "Assicurati che lo script HTTP Helper sia installato. \nÈ possibile scaricare immagini non CORS.",
   "m9rhO-859d7Br05Hm5b54": "Formato del nome del file",
   "QJJd8OqGWs3rIHxMwYma9": "Imposta il modello di formato del nome del file di download",
-  "bmqXgC68c1dDsgtYwO1Sv": "Si consiglia che il formato di download contenga almeno:",
+  "bmqXgC68c1dDsgtYwO1Sv": "Si consiglia che il formato di download contenga almeno le seguenti variabili, altrimenti il ​​file potrebbe essere sovrascritto:",
   "Zt3czgV8wrvas-it5b9Z0": "Le variabili disponibili nel modello sono le seguenti. È possibile fare clic sull'etichetta per impostarla rapidamente.",
   "VJLRKYZZDrAv5NKTHcisN": "Nome dell'autore",
   "hVJXyeDWfpiwbIS7CpgEX": "Identificativo dell'autore",

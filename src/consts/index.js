@@ -13,9 +13,8 @@ export const COMMON_PROXY = process.env.VUE_APP_COMMON_PROXY || ''
 export const COMMON_IMAGE_PROXY = process.env.VUE_APP_COMMON_IMAGE_PROXY || COMMON_PROXY
 export const PXIMG_PROXY_BASE = LocalStorage.get('PXIMG_PROXY', DEF_PXIMG_MAIN)
 export const BASE_API_URL = LocalStorage.get('HIBIAPI_BASE', DEF_HIBIAPI_MAIN)
-export const BACKUP_DOMAINS = process.env.VUE_APP_BACKUP_DOMAINS || ''
-export const notSelfHibiApi = !/cocomi\.eu\.org|pixiv\.pictures|169889\.xyz|pxve\.cc|hibiapi\.getloli\.com|api\.obfs\.dev/.test(BASE_API_URL)
-export const PIXIV_NEXT_URL = 'https://api.cocomi.eu.org'
+export const notSelfHibiApi = `${BASE_API_URL}`.includes(process.env.VUE_APP_PXVEAPI_MAIN) || !/cocomi\.eu\.org|pixiv\.pictures|169889\.xyz|pxve\.cc|hibiapi\.getloli\.com|api\.obfs\.dev/.test(BASE_API_URL)
+export const PIXIV_NEXT_URL = process.env.VUE_APP_PXVEAPI_MAIN || 'https://api.cocomi.eu.org'
 export const PIXIV_NOW_URL = `${PIXIV_NEXT_URL}/api/pixiv-now/http`
 export const SILICON_CLOUD_API_KEY = process.env.VUE_APP_SILICON_CLOUD_API_KEY
 export const ugoiraAvifSrc = id => `https://ugoira.perennialte.ch/ugoira/${id}`

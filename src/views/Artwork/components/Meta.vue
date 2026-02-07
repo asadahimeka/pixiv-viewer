@@ -64,6 +64,7 @@
       </a>
     </div>
     <div class="whid">
+      <span v-if="artwork.images && artwork.images.length > 1">{{ artwork.images.length }}P</span>
       <span v-if="!isNovel">{{ artwork.width }}×{{ artwork.height }}</span>
       <span @click="copyId(artwork.id)">{{ isNovel ? '' : 'P' }}ID:{{ artwork.id }}
         <Icon name="copy" style="margin-left: 1px;" />

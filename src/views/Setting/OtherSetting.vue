@@ -201,15 +201,15 @@
     </van-cell-group>
 
     <van-cell-group :title="$t('7-drBPGRIz_BsYuc9ybCm')">
-      <van-cell v-if="!clientConfig.useLocalAppApi && !appSetting.isDirectPximg" center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
+      <van-cell v-if="(pximgBed_.actions.length || hibiapi_.actions.length) && (!clientConfig.useLocalAppApi || !appSetting.isDirectPximg)" center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
         <template #right-icon>
           <van-switch v-model="hideApSelect" size="24" />
         </template>
       </van-cell>
       <van-cell v-if="hideApSelect && !appSetting.isDirectPximg" center :title="$t('setting.img_proxy.title')" is-link :label="pximgBed.value" @click="pximgBed.show = true" />
       <van-cell v-if="!clientConfig.useLocalAppApi && hideApSelect" center :title="$t('setting.api.title')" is-link :label="hibiapi.value" @click="hibiapi.show = true" />
-      <van-cell v-if="!hideApSelect && !appSetting.isDirectPximg" center :title="$t('setting.img_proxy.title2')" is-link :label="pximgBedLabel" @click="pximgBed_.show = true" />
-      <van-cell v-if="!clientConfig.useLocalAppApi && !hideApSelect" center :title="$t('setting.api.title2')" is-link :label="hibiapiLabel" @click="hibiapi_.show = true" />
+      <van-cell v-if="!hideApSelect && !appSetting.isDirectPximg && pximgBed_.actions.length" center :title="$t('setting.img_proxy.title2')" is-link :label="pximgBedLabel" @click="pximgBed_.show = true" />
+      <van-cell v-if="!clientConfig.useLocalAppApi && !hideApSelect && hibiapi_.actions.length" center :title="$t('setting.api.title2')" is-link :label="hibiapiLabel" @click="hibiapi_.show = true" />
       <van-cell center :title="$t('lGZGzwfWz9tW_KQey3AmQ')" :label="$t('OA8ygupG-4FcNWHtwEUG-')">
         <template #right-icon>
           <van-switch :value="appSetting.isDirectPximg" size="24" @change="setDirectPximg" />
@@ -330,8 +330,8 @@
       @confirm="changeHibiapi"
     >
       <van-cell>{{ $t('setting.api.desc') }}</van-cell>
-      <van-cell>{{ $t('setting.api.desc2') }}</van-cell>
-      <van-cell>{{ $t('setting.api.desc3') }}: <a href="https://github.com/mixmoe/HibiAPI">🔗Github</a></van-cell>
+      <van-cell>{{ $t('setting.api.desc2', ['https://api.pxve.cc/api/pixiv']) }}</van-cell>
+      <van-cell>{{ $t('setting.api.desc3') }}: <a href="https://github.com/asadahimeka/pxve-api" target="_blank">🔗PxveAPI</a>&nbsp;<a href="https://github.com/mixmoe/HibiAPI" target="_blank">🔗HibiAPI</a></van-cell>
       <van-cell>{{ $t('setting.api.desc5') }}</van-cell>
       <van-field v-model="hibiapi.value" :label="$t('setting.input')" label-width="3.5em" :placeholder="$t('setting.api.title3')" />
     </van-dialog>
@@ -445,7 +445,7 @@
       @cancel="dlFileNameTpl=appSetting.dlFileNameTpl"
     >
       <van-cell>{{ $t('QJJd8OqGWs3rIHxMwYma9') }}</van-cell>
-      <van-cell class="tips">{{ $t('bmqXgC68c1dDsgtYwO1Sv') }} <code>{pid}</code> <code>{index}</code></van-cell>
+      <van-cell class="tips">{{ $t('bmqXgC68c1dDsgtYwO1Sv') }} <br><code>{pid}</code> <code>{index}</code></van-cell>
       <van-cell>{{ $t('Zt3czgV8wrvas-it5b9Z0') }}</van-cell>
       <div class="dl-tpl-tags">
         <div class="dl-tpl-tag" @click="dlFileNameTpl+='{author}'">
@@ -517,6 +517,7 @@ import { LocalStorage, SessionStorage } from '@/utils/storage'
 import { isFsaSupported, getMainDirHandle, setMainDirHandle } from '@/utils/fsa'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { aiModelMap } from '@/utils/translate'
+import { ugoiraDownloadActions } from '@/utils/ugoira'
 import NovelTextConfig from '../Artwork/components/NovelTextConfig.vue'
 import PageFontSelect from '../Artwork/components/PageFontSelect.vue'
 
@@ -613,14 +614,7 @@ export default {
         show: false,
         actions: [
           { name: '', subname: i18n.t('ks96nwuAms0B8wSWBWhil') },
-          { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
-          { name: 'GIF', subname: i18n.t('artwork.download.gif') },
-          { name: 'WebM', subname: i18n.t('artwork.download.webm') },
-          { name: 'APNG', subname: i18n.t('artwork.download.webm') },
-          { name: 'MP4(Browser)', subname: i18n.t('pIghtXdU8socMNNRUn5UR') },
-          { name: 'MP4(Server)', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
-          { name: 'AVIF', subname: i18n.t('zuVom-C8Ss8JTEDZIhzBj') },
-          { name: 'Other', subname: i18n.t('artwork.download.mp4') },
+          ...ugoiraDownloadActions,
         ],
       },
       ugoiraBitrates: {
@@ -703,7 +697,7 @@ export default {
           { name: i18n.t('nav.setting'), _value: '/setting' },
         ],
       },
-      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', false),
+      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
       isDark: !!localStorage.getItem('PXV_DARK'),
       showAutoLoadImtSwitch: i18n.locale.includes('zh'),
       actTheme: localStorage.PXV_THEME || '',

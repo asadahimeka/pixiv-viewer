@@ -37,6 +37,7 @@ export default {
   data() {
     return {
       artList: [],
+      loading: false,
     }
   },
   mounted() {
@@ -58,8 +59,11 @@ export default {
       })
     },
     async getHistory() {
+      if (this.loading) return
+      this.loading = true
       const list = await getCache('illusts.history')
       this.artList = list ? filterCensoredIllusts(list) : []
+      this.loading = false
     },
     clearHistory() {
       Dialog.confirm({

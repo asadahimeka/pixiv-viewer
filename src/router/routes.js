@@ -1,0 +1,450 @@
+import BaseLayout from '@/layouts/BaseLayout.vue'
+import MainLayout from '@/layouts/MainLayout.vue'
+
+import Home from '@/views/Home/index.vue'
+import HomeManga from '@/views/Home/HomeManga.vue'
+import HomeNovel from '@/views/Home/HomeNovel.vue'
+import Lives from '@/views/Lives/index.vue'
+import LiveDetail from '@/views/Lives/LiveDetail.vue'
+import Discovery from '@/views/Discovery/Discovery.vue'
+import DiscoveryPollution from '@/views/Discovery/DiscoveryPollution.vue'
+import PopularIllust from '@/views/Discovery/PopularIllust.vue'
+import RecommendIllust from '@/views/Discovery/RecommendIllust.vue'
+import RandomIllustPage from '@/views/Home/components/RandomIllustPage.vue'
+import Spotlights from '@/views/Spotlights/Spotlights.vue'
+import Spotlight from '@/views/Spotlights/Spotlight.vue'
+import SpotlightDetail from '@/views/Spotlights/SpotlightDetail.vue'
+import PixivisionStory from '@/views/Spotlights/PixivisionStory.vue'
+import Search from '@/views/Search/index.vue'
+import SearchRes from '@/views/Search/SearchRes.vue'
+import SearchNovel from '@/views/Search/SearchNovel.vue'
+import SearchUser from '@/views/Search/SearchUser.vue'
+import SearchUserRes from '@/views/Search/SearchUserRes.vue'
+import CollectionTop from '@/views/Collections/CollectionTop.vue'
+import Collections from '@/views/Collections/Collections.vue'
+import Collection from '@/views/Collections/Collection.vue'
+import TagStory from '@/views/Search/TagStory.vue'
+import Rank from '@/views/Rank/index.vue'
+import RankNovel from '@/views/Rank/RankNovel.vue'
+import Following from '@/views/Account/Following.vue'
+import Setting from '@/views/Setting/index.vue'
+import History from '@/views/Setting/History.vue'
+import ClearCache from '@/views/Setting/ClearCache.vue'
+import ContentsDisplay from '@/views/Setting/ContentsDisplay.vue'
+import SettingOthers from '@/views/Setting/OtherSetting.vue'
+import SettingAbout from '@/views/Setting/About.vue'
+import SettingFAQ from '@/views/Setting/FAQ.vue'
+import SettingDisclaimer from '@/views/Setting/Disclaimer.vue'
+import SettingDownApp from '@/views/Setting/DownloadApp.vue'
+import SettingAccentColor from '@/views/Setting/AccentColor.vue'
+import Recommend from '@/views/Setting/Recommend.vue'
+import RecommendAll from '@/views/Setting/Recommend_.vue'
+import Artwork from '@/views/Artwork/index.vue'
+import Novel from '@/views/Artwork/Novel.vue'
+import Users from '@/views/Users/index.vue'
+import UserIllusts from '@/views/Users/AuthorIllustsFull.vue'
+import UserNovels from '@/views/Users/AuthorNovelsFull.vue'
+import UserFavorites from '@/views/Users/FavoriteIllustsFull.vue'
+import UserFavoriteNovels from '@/views/Users/FavoriteNovelsFull.vue'
+import IllustSeries from '@/views/Users/IllustSeries.vue'
+import NovelSeries from '@/views/Users/NovelSeries.vue'
+import Session from '@/views/Account/Session.vue'
+import Login from '@/views/Account/Login.vue'
+import OAuthCallback from '@/views/Account/OAuthCallback.vue'
+import IllustBookmarksAlt from '@/views/Account/IllustBookmarksAlt.vue'
+import NotFound from '@/views/NotFound.vue'
+
+/** @type {import('vue-router').RouteConfig[]} */
+export const routes = [
+  {
+    path: '/',
+    component: BaseLayout,
+    children: [
+      {
+        path: '/',
+        component: MainLayout,
+        props: { safeArea: true },
+        children: [
+          {
+            path: '/',
+            name: 'Home',
+            component: Home,
+            meta: { __depth: 1 },
+            alias: ['/home', '/index', '/index.html', '/illustration'],
+          },
+          {
+            path: '/home_manga',
+            alias: ['/manga'],
+            name: 'HomeManga',
+            component: HomeManga,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/home_novel',
+            alias: ['/novel'],
+            name: 'HomeNovel',
+            component: HomeNovel,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/search',
+            name: 'Search',
+            component: Search,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/search/users',
+            redirect: to => to.query.nick ? `/search_user/${to.query.nick}` : '/search_user',
+          },
+          {
+            path: '/search/:keyword',
+            alias: ['/s/:keyword', '/tag/:keyword', '/tags/:keyword/artworks', '/tags/:keyword/illustrations', '/tags/:keyword/manga'],
+            name: 'SearchKeyword',
+            component: SearchRes,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/search_novel',
+            name: 'SearchNovel',
+            component: SearchNovel,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/search_novel/:keyword',
+            alias: ['/tags/:keyword/novels'],
+            name: 'SearchNovelKeyword',
+            component: SearchNovel,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/search_user',
+            alias: ['/discovery/users'],
+            name: 'SearchUser',
+            component: SearchUser,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/collection',
+            name: 'CollectionTop',
+            component: CollectionTop,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/rank',
+            alias: ['/ranking', '/ranking.php'],
+            redirect: '/rank/daily',
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/rank/:type',
+            name: 'Rank',
+            component: Rank,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/rank_novel/:type',
+            name: 'RankNovel',
+            component: RankNovel,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/following',
+            alias: ['/bookmark_new_illust.php'],
+            name: 'Following',
+            component: Following,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/following/:tab',
+            name: 'FollowingWithTab',
+            component: Following,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/new_illust.php',
+            redirect: '/following/4',
+          },
+          {
+            path: '/setting',
+            name: 'Setting',
+            component: Setting,
+            meta: { __depth: 1 },
+          },
+        ],
+      },
+      {
+        path: '/',
+        component: MainLayout,
+        props: { showNav: false },
+        children: [
+          {
+            path: '/artworks/:id',
+            alias: ['/illusts/:id', '/illust/:id', '/i/:id'],
+            name: 'Artwork',
+            component: Artwork,
+            meta: { __depth: 10 },
+          },
+          {
+            path: '/novel/show.php',
+            redirect: to => `/novel/${to.query.id}`,
+          },
+          {
+            path: '/novel/:id',
+            alias: ['/novels/:id', '/n/:id'],
+            name: 'NovelDetail',
+            component: Novel,
+            meta: { __depth: 10 },
+          },
+          {
+            path: '/users/:id',
+            alias: ['/u/:id'],
+            name: 'Users',
+            component: Users,
+            meta: { __depth: 20 },
+          },
+          {
+            path: '/users/:id/artworks',
+            alias: ['/users/:id/illustrations'],
+            name: 'AuthorIllusts',
+            component: UserIllusts,
+            meta: { __depth: 25 },
+          },
+          {
+            path: '/users/:id/novels',
+            name: 'AuthorNovels',
+            component: UserNovels,
+            meta: { __depth: 25 },
+          },
+          {
+            path: '/users/:id/favorites',
+            alias: ['/users/:id/bookmarks/artworks'],
+            name: 'AuthorFavorites',
+            component: UserFavorites,
+            meta: { __depth: 25 },
+          },
+          {
+            path: '/users/:id/favorite_novels',
+            alias: ['/users/:id/bookmarks/novels'],
+            name: 'AuthorFavoriteNovels',
+            component: UserFavoriteNovels,
+            meta: { __depth: 25 },
+          },
+          {
+            path: '/users/:id/manga',
+            redirect: to => ({ name: 'Users', params: { id: to.params.id, tab: 'manga' } }),
+          },
+          {
+            path: '/users/:id/collections',
+            redirect: to => ({ name: 'Users', params: { id: to.params.id, tab: 'collections' } }),
+          },
+          {
+            path: '/user/:uid/series/:sid',
+            name: 'IllustSeries',
+            component: IllustSeries,
+            meta: { __depth: 25 },
+          },
+          {
+            path: '/novel/series/:id',
+            name: 'NovelSeries',
+            component: NovelSeries,
+            meta: { __depth: 25 },
+          },
+          {
+            path: '/search_user/:word',
+            name: 'SearchUserRes',
+            component: SearchUserRes,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/stories/tags/:tag/artworks/:date',
+            name: 'TagStory',
+            component: TagStory,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/stories/pixivision/:id',
+            alias: ['/pixivision/stories/:id'],
+            name: 'PixivisionStory',
+            component: PixivisionStory,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/collections',
+            name: 'Collections',
+            component: Collections,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/collections/:id',
+            name: 'Collection',
+            component: Collection,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/setting/history',
+            name: 'History',
+            component: History,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/clearcache',
+            name: 'ClearCache',
+            component: ClearCache,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/contents_display',
+            name: 'ContentsDisplay',
+            component: ContentsDisplay,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/preference',
+            alias: ['/setting/others'],
+            name: 'SettingOthers',
+            component: SettingOthers,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/about',
+            name: 'SettingAbout',
+            component: SettingAbout,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/about/faq',
+            name: 'SettingAboutFaq',
+            component: SettingFAQ,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/setting/about/disclaimer',
+            name: 'SettingDisclaimer',
+            component: SettingDisclaimer,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/setting/down_app',
+            name: 'SettingDownApp',
+            component: SettingDownApp,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/osusume',
+            name: 'SettingRecommend',
+            component: Recommend,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/recommend',
+            alias: ['/recommend_links', 'links'],
+            name: 'SettingRecommendAll',
+            component: RecommendAll,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/setting/accent_color',
+            name: 'SettingAccentColor',
+            component: SettingAccentColor,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/discovery/anonymous',
+            alias: ['/discovery'],
+            name: 'Discovery',
+            component: Discovery,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/discovery/pollution',
+            alias: ['/discover'],
+            name: 'DiscoveryPollution',
+            component: DiscoveryPollution,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/popular_illust',
+            name: 'PopularIllust',
+            component: PopularIllust,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/osusume_illust',
+            alias: ['/recom_illust'],
+            name: 'RecommendIllust',
+            component: RecommendIllust,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/random_illust',
+            name: 'RandomIllustPage',
+            component: RandomIllustPage,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/spotlights',
+            alias: ['/pixivision'],
+            name: 'Spotlights',
+            component: Spotlights,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/spotlight/:id',
+            alias: ['/sp/:id'],
+            name: 'Spotlight',
+            component: Spotlight,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/pixivision/:id',
+            name: 'SpotlightDetail',
+            alias: ['/a/:id'],
+            component: SpotlightDetail,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/account/session',
+            name: 'Session',
+            component: Session,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/account/login',
+            name: 'Login',
+            component: Login,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/account/oauth',
+            name: 'OAuthCallback',
+            component: OAuthCallback,
+            meta: { __depth: 1 },
+          },
+          {
+            path: '/lives',
+            name: 'Lives',
+            component: Lives,
+            meta: { __depth: 2 },
+          },
+          {
+            path: '/live/:id',
+            name: 'LiveDetail',
+            component: LiveDetail,
+            meta: { __depth: 3 },
+          },
+          {
+            path: '/my-illust-bookmarks',
+            name: 'IllustBookmarksAlt',
+            component: IllustBookmarksAlt,
+            meta: { __depth: 3 },
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: '*',
+    name: 'NotFound',
+    component: NotFound,
+  },
+]

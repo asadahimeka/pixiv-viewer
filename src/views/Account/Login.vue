@@ -19,7 +19,7 @@
       <van-cell>{{ $t('login.o.desc1') }}</van-cell>
       <van-cell>{{ $t('login.o.desc2') }}</van-cell>
       <van-cell>{{ $t('login.o.desc3') }} <a href="https://einaregilsson.com/redirector/" target="_blank">🔗einaregilsson.com/redirector/</a></van-cell>
-      <van-cell><a href="/helper/Redirector.json" target="_blank" download>{{ $t('login.o.desc4') }}</a></van-cell>
+      <van-cell><a :href="redirectorRuleSrc" target="_blank" download>{{ $t('login.o.desc4') }}</a></van-cell>
       <van-cell>{{ $t('login.o.desc5') }}</van-cell>
       <van-cell>{{ $t('login.o.desc6') }} <a href="https://www.tampermonkey.net/index.php" target="_blank">🔗www.tampermonkey.net</a></van-cell>
       <van-cell><a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank">{{ $t('login.o.desc7') }}</a></van-cell>
@@ -64,6 +64,7 @@ export default {
       appConfig: { ...window.APP_CONFIG },
       showConfirmDialog: false,
       showTokenDialog: false,
+      redirectorRuleSrc: location.hostname == 'pxve.cc' ? '/helper/Redirector-pxve-cc.json' : '/helper/Redirector.json',
     }
   },
   head() {
@@ -71,7 +72,7 @@ export default {
   },
   methods: {
     async openConfirmDialog(showKey) {
-      if (showKey == 'showConfirmDialog' && location.host != 'pixiv.pictures') {
+      if (showKey == 'showConfirmDialog' && !['pixiv.pictures', 'pxve.cc'].includes(location.hostname)) {
         Dialog.alert({
           title: this.$t('tips.tip'),
           message: '<p>当前站点无法进行登录，请前往 <a href="https://pixiv.pictures" target="_blank">https://pixiv.pictures</a> 进行操作。<p>',

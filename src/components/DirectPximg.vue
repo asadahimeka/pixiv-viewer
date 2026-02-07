@@ -127,10 +127,10 @@ export default {
         url.protocol = 'http:'
         url.host = 'i1.pximg.net'
         const { data } = await window.__httpRequest__(url.href, JSON.stringify({
-          responseType: 'blobUrl',
+          responseType: 'blob',
           headers: { Host: 'i.pximg.net', Referer: 'https://www.pixiv.net/' },
         }))
-        this.localSrc = data
+        this.localSrc = URL.createObjectURL(data)
         this.loading = false
       } catch (error) {
         console.log('error: ', error)

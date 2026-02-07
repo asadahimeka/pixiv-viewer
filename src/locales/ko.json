@@ -183,16 +183,16 @@
   "setting": {
     "about": "아바웃",
     "api": {
-      "desc": "아래에 HibiAPI 인스턴스의 주소를 입력하고 https:// 를 추가해야 하며 /api/pixiv 부분에 경로를 입력해야 합니다.",
-      "desc2": "예 : https://hibiapi.getloli.com/api/pixiv, 저장 후 로컬 캐시가 지워집니다.",
+      "desc": "아래에 HibiAPI/PxveAPI 인스턴스의 주소를 입력하고 https:// 를 추가해야 하며 /api/pixiv 부분에 경로를 입력해야 합니다.",
+      "desc2": "예 : {0}, 저장 후 로컬 캐시가 지워집니다.",
       "desc3": "API 인스턴스는 Github에서 직접 찾거나 구축 할 수 있습니다.",
       "desc4": "나만의 검색 또는 구축",
       "desc5": "API 인스턴스 주소는 교차 출처(CORS) 액세스를 지원해야 합니다.",
       "ph": "HibiAPI 인스턴스를 선택하십시오 (로컬 캐시는 전환 후 지워집니다)",
-      "title": "HibiAPI 인스턴스 설정",
+      "title": "PxveAPI 인스턴스 설정",
       "title2": "HibiAPI 인스턴스 선택",
-      "title3": "HibiAPI 인스턴스 링크",
-      "title4": "HibiAPI 인스턴스"
+      "title3": "HibiAPI/PxveAPI 인스턴스 링크",
+      "title4": "PxveAPI 인스턴스"
     },
     "dark": {
       "title": "다크 모드"
@@ -456,7 +456,7 @@
   "SAs_Y4hKK7myneH47ZQKG": "HTTP Helper 스크립트가 설치되어 있는지 확인하세요. \nCORS가 아닌 이미지를 다운로드할 수 있습니다.",
   "m9rhO-859d7Br05Hm5b54": "파일 이름 형식",
   "QJJd8OqGWs3rIHxMwYma9": "다운로드 파일 이름의 형식 템플릿을 설정하십시오.",
-  "bmqXgC68c1dDsgtYwO1Sv": "다운로드 형식에는 최소한 다음이 포함되는 것이 좋습니다.",
+  "bmqXgC68c1dDsgtYwO1Sv": "다운로드 형식에는 최소한 다음 변수가 포함되는 것이 좋습니다. 그렇지 않으면 파일을 덮어쓸 수 있습니다.",
   "Zt3czgV8wrvas-it5b9Z0": "템플릿에서 사용할 수 있는 변수는 다음과 같습니다. 라벨을 클릭하면 빠르게 설정할 수 있습니다.",
   "VJLRKYZZDrAv5NKTHcisN": "저자 이름",
   "hVJXyeDWfpiwbIS7CpgEX": "작성자 ID",
