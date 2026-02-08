@@ -1,234 +1,506 @@
 <p align="center"><img src="https://api.moedog.org/count/@himeka-pxve-github-en" alt="pixiv-viewer"></p>
 
 <h1 align="center">Pixiv Viewer <sup><small>Kai</small></sup></h1>
-<p align="center">Yet Another Pixiv Illustration & Novel Viewer.</p>
+<p align="center">Yet Another Pixiv Illust & Novel Viewer.</p>
 <p align="center">Port of <a href="https://github.com/journey-ad/pixiv-viewer">journey-ad/pixiv-viewer</a></p>
 
 <p align="center">
-<img src="https://img.shields.io/badge/JavaScript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E" alt >
-<img src="https://img.shields.io/badge/Vue.js-%2335495e.svg?style=flat&logo=vuedotjs&logoColor=%234FC08D" alt >
-<img src="https://kwc.cocomi.eu.org/https://img.shields.io/badge/Stylus-6da13f.svg?style=flat&logo=Stylus&logoColor=white" alt >
-<img src="https://img.shields.io/badge/PWA-5A0FC8.svg?style=flat&logo=PWA&logoColor=white" alt >
-<img src="https://img.shields.io/badge/Cloudflare-F38020?style=flat&logo=Cloudflare&logoColor=white" alt >
-<img src="https://img.shields.io/badge/Netlify-%2300C7B7.svg?style=flat&logo=Netlify&logoColor=white" alt >
+<img src="https://img.shields.io/badge/JavaScript-%23323330.svg?style=flat&logo=javascript&logoColor=%23F7DF1E" alt="JavaScript" >
+<img src="https://img.shields.io/badge/Vue.js-%2335495e.svg?style=flat&logo=vuedotjs&logoColor=%234FC08D" alt="Vue.js" >
+<img src="https://img.shields.io/badge/Stylus-6da13f.svg?style=flat&logo=Stylus&logoColor=white" alt="Stylus" >
+<img src="https://img.shields.io/badge/PWA-Ready-5A0FC8.svg" alt="PWA" >
+<img src="https://img.shields.io/badge/Cloudflare-F38020?style=flat&logo=Cloudflare&logoColor=white" alt="Cloudflare" >
 </p>
 
 <p align="center">
-<img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer" >
-<img src="https://img.shields.io/badge/license-MIT-green" >
-<img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages">
-<!-- <img src="https://api.netlify.com/api/v1/badges/84d224a8-1630-4f47-94c2-ffb0e6da920a/deploy-status" > -->
-<img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer-app/total?logo=github" alt >
-<img src="https://img.shields.io/github/package-json/dependency-version/asadahimeka/pixiv-viewer/vue" >
-<img src="https://img.shields.io/github/package-json/dependency-version/asadahimeka/pixiv-viewer/dev/@vue/cli-service" >
-<img src="https://img.shields.io/github/package-json/dependency-version/asadahimeka/pixiv-viewer/vant" >
+<img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer"  alt="Version">
+<img src="https://img.shields.io/badge/license-MIT-green"  alt="License" >
+<img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages" alt="Pages" >
+<img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer/total?logo=github" alt="Downloads" >
 </p>
 
-**Demo:** 🔗 [pixiv.pictures](https://pixiv.pictures)
+English | [中文](../README.md)
 
-**Download:** ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
+Yet another Pixiv viewer that does not require login, providing online browsing of Pixiv illustrations, animations, manga, and novels. It supports multi-platform layouts, offers multiple browsing layout options, supports PWA installation, allows custom APIs and image hosting services, and supports login via RefreshToken, OAuth, or Cookie.
 
-## Features
-- [x] Home
-  - [x] Illustrations/Mangas/Novels/Collections
-  - [x] Rankings/Spotlights/Recommended/Discover/New Artworks
-  - [x] Random Artworks
-- [x] Search (Illustrations·Mangas/Novels/Users)
-  - [x] Search Trends (Long-press to view tag covers)
-  - [x] Search Auto-complete
-  - [x] Preview of Popular Artworks
-  - [x] Search Params Support
-  - [x] Image Search
-- [x] Rankings
-  - [x] Overall/Illustration/Manga/Ugoira/Novel Rankings
-  - [x] R18/AI Rankings
-  - [x] View Rankings by Date Range
-- [x] Feeds
-  - [x] Latest Artworks from Followed Users
-  - [x] My Bookmarks
-  - [x] Followed Users
-  - [x] Latest from the Entire Site
-- [x] Settings
-  - [x] Login (RefreshToken/OAuth/Cookie)
-  - [x] View History
-  - [x] R18/G and AI Artwork Display Toggle
-  - [x] Local Blacklist
-  - [x] Clear Cache
-  - [x] Multi-language Support
-  - [x] Image Waterfall Layout Selection
-  - [x] Image Detail Quality Selection
-  - [x] Dark Mode
-  - [x] App Theme Color
-  - [x] Swipe Left/Right to Browse Artworks
-  - [x] Multiple Image Proxy Options
-  - [x] Multiple API Instance Options
-  - [x] Export RefreshToken
-  - [x] Proxy Service for AppAPI
-  - [x] Long-press to Download Images from Lists
-  - [x] Long-press to Block Images from Lists
-  - [x] Download via File System Access API
-  - [x] Download via Tampermonkey Userscript
-  - [x] Customizable Download Filename Format
-- [x] Artwork Detail Page
-  - [x] Bookmark/Download/View Comments/Share
-  - [x] Source Site Link
-  - [x] Copy PID/UID
-  - [x] Play Ugoira
-  - [x] Download Ugoira (ZIP/GIF/WebM/APNG/MP4)
-  - [x] Download Novels
-  - [x] Novel Reading Settings (Font, Colors, Direction, etc.)
-- [x] Author Detail Page
-  - [x] Follow/Unfollow
-  - [x] View Author's Illustrations/Mangas/Bookmarks/Novels
-  - [x] View Manga/Novel Series
-  - [x] Author's Illustration Tags
-  - [x] Related Users
+Preview: 🔗 [pixiv.pictures](https://pixiv.pictures)
 
-- [x] Local IndexedDB Cache Storage
-- [x] Multi-platform Style Adaptation
-- [x] PWA Support
-- [x] Android/Windows Version
-- [x] iOS/macOS Version
+Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
 
-## Feedback
+---
 
-https://github.com/asadahimeka/pixiv-viewer/discussions
+## 📖 Table of Contents
 
-## Preview
+* [Features](#-features)
+* [Screenshots](#-screenshots)
+* [Technical Details](#-technical-details)
+* [Development Guide](#-development-guide)
+* [Deployment](#deployment)
+* [Sponsorship](#-sponsorship)
+* [FAQ](#-faq)
+* [Contribution Guide](#-contribution-guide)
+* [Acknowledgements](#-acknowledgements)
+* [Related Sites](#-related-sites)
+* [Disclaimer](#-disclaimer)
+* [License](#-license)
 
-- Mobile
+---
 
-<kbd><img src="ea1.jpg" width="390"></kbd>  <kbd><img src="ea2.jpg" width="390"></kbd>
+## ✨ Features
 
-<kbd><img src="ea3.jpg" width="390"></kbd>  <kbd><img src="ea4.jpg" width="390"></kbd>
+### 🏠 Home
 
-- Desktop
+* **Multiple Content Types**: Supports illustrations, manga, novels, bookmarks, and more
+* **Rankings**: View daily, weekly, and monthly popular works
+* **Featured Specials**: Browse official curated special content
+* **Personalized Recommendations**: Recommendations based on personal preferences
+* **Discover Page**: Explore site-wide popular and newly discovered works
+* **Random Browse**: Randomly browse high-quality works
+* **Bookmarks**: Centralized display of favorite works
 
-<kbd><img src="ew1.png" width="390"></kbd>  <kbd><img src="ew2.png" width="390"></kbd>
+### 🔍 Search
 
-<kbd><img src="ew3.png" width="390"></kbd>  <kbd><img src="ew4.png" width="390"></kbd>
+* **Comprehensive Search**: Search illustrations & manga, novels, users, bookmarks
+* **Trending Keywords**: Display current trending search terms (long press to view tag cover)
+* **Smart Suggestions**: Automatic keyword autocomplete
+* **Search Filters**: Filter by bookmarks count, submission time, etc.
+* **Popular Preview**: Non-member preview of popular works (first 30 items)
+* **Search by Image**: Upload images to search for similar works
 
-## Alternatives
+### 📊 Rankings
 
-- [Pixivel](https://pxelk.cocomi.eu.org/)
-- [Pixiviz](https://pixiviz.cocomi.eu.org/)
-- [PixivNow](https://pxnow.cocomi.eu.org/)
-- [PixivMoe](https://pixivmoe.cocomi.eu.org/)
-- [PixivLxns](https://pixivlxns.cocomi.eu.org/)
-- [MixPiv](https://mixpiv.cocomi.eu.org/)
-- [PixiviFE](https://pixiv.perennialte.ch/)
-- [pixivic](https://pixivic.com)
-- [vilipix](https://www.vilipix.com/ranking)
-- [moeview](https://moeview.cocomi.eu.org/)
-- [booruwf](https://booru.cocomi.eu.org/)
-- [PixivRanking](https://www.nanoka.top/illust/pixiv/)
+* **Multi-dimensional Rankings**: Overall, illustrations, manga, animations, novels
+* **R18 / AI Rankings**: View adult content and AI-generated works rankings
+* **Historical Rankings**: View rankings by date
 
-## Project Setup
-```sh
+### 📱 Activity
+
+* **Following Updates**: View new works from followed users
+* **My Bookmarks**: Manage bookmarked illustrations and novels
+* **Followed Users**: View and manage followed users
+* **Recommended Users**: View recommended user list
+* **Latest Works**: Browse the latest uploaded works site-wide
+
+### 🖼️ Artwork Page
+
+* **Illustration Actions**: Bookmark, unbookmark, download, view comments, share
+* **Source Link**: Quick access to the Pixiv source page
+* **ID Copy**: One-click copy of artwork/author ID
+* **Animation Playback**: Supports Ugoira playback
+
+#### Novel Reading
+
+* **Novel Download**: Download novel text, supports TXT, HTML, Markdown, DOC, PDF, EPUB formats
+* **Reading Settings**: Customize fonts, colors, reading direction, etc.
+* **Novel Translation**: Integrated online translation
+
+### 👤 Author Page
+
+* **Follow Management**: Follow / unfollow authors
+* **Works Browsing**: View author's illustrations, manga, bookmarks, novels, and collections
+* **Series View**: View author's manga and novel series
+* **Tag Browsing**: View commonly used tags by the author
+* **Related Users**: Discover similar authors
+* **Twitter Media**: View images/videos posted by the author on X (Twitter)
+
+### ⚙️ Settings
+
+#### Login Methods
+
+* **RefreshToken Login**: Log in directly using Pixiv RefreshToken
+* **OAuth Login**: Log in via Pixiv OAuth authorization
+* **Cookie Login**: Log in using Cookies (not recommended)
+
+#### Content Control
+
+* **R18 Toggle**: Control whether adult content is displayed
+* **AI Works Toggle**: Control whether AI-generated works are displayed
+* **Local Blacklist**: Block works from specific tags or users
+
+#### Browsing Experience
+
+* **Multi-language Support**: Supports Simplified Chinese, Traditional Chinese, English, Russian, etc.
+* **Dark Mode**: Eye-friendly night mode
+* **Custom Theme Color**: Customize application theme color
+* **Image Feed Layouts**: Multiple layout options (masonry, grid, virtual list, etc.)
+* **Image Quality Selection**: Supports Medium, Large, Large (WebP), and more
+* **Swipe Navigation**: Swipe left/right on artwork detail pages
+* **Page Transitions**: Multiple page transition animation effects
+
+#### Network & Data
+
+* **Multiple Image Proxies**: Switch between multiple image proxy services
+* **Multiple API Instances**: Switch between multiple backend API instances
+* **AppAPI Proxy Mode**: Directly connect to Pixiv App API (requires self-hosted proxy)
+* **pximg Direct Access**: Direct access to Pixiv original image servers
+* **IndexedDB Cache**: Local caching to improve loading speed
+* **History**: Browsing history management
+* **Clear Cache**: One-click application cache clearing
+
+#### Download Features
+
+* **Long Press Download**: Long press on list images to quickly download
+* **Long Press Block**: Long press to quickly block users
+* **File System Access API**: Download using modern browser File System Access API
+* **Tampermonkey Support**: Download via Tampermonkey scripts
+* **Custom Filename Format**: Customize download filename templates
+* **Animated Export Formats**: Supports ZIP, GIF, WebM, APNG, MP4, AVIF formats
+
+#### Backup & Restore
+
+* **Settings Backup**: Backup current app settings to a file and restore later
+* **History Backup**: Backup browsing history to a file and restore later
+* **Export RefreshToken**: Export RefreshToken for use in other applications
+
+#### Client Support
+
+* [x] PWA Installation
+* [x] Android / Windows Versions
+* [x] iOS / macOS Versions
+
+---
+
+## 📸 Screenshots
+
+* Mobile
+
+<kbd><img src="1.webp" width="390"></kbd>  <kbd><img src="5.webp" width="390"></kbd>
+
+<kbd><img src="6.webp" width="390"></kbd>  <kbd><img src="8.webp" width="390"></kbd>
+
+<details>
+<summary>View More</summary>
+<kbd><img src="2.webp" width="390"></kbd>  <kbd><img src="4.webp" width="390"></kbd>
+
+<kbd><img src="7.webp" width="390"></kbd>  <kbd><img src="3.webp" width="390"></kbd>
+
+</details>
+<br>
+
+* Desktop
+
+<kbd><img src="w1.webp" width="390"></kbd>  <kbd><img src="w7.webp" width="390"></kbd>
+
+<kbd><img src="w3.webp" width="390"></kbd>  <kbd><img src="w4.webp" width="390"></kbd>
+
+<details>
+<summary>View More</summary>
+<kbd><img src="w2.webp" width="390"></kbd>  <kbd><img src="w5.webp" width="390"></kbd>　
+
+<kbd><img src="w6.webp" width="390"></kbd>  <kbd><img src="w8.webp" width="390"></kbd>
+
+</details>
+
+---
+
+## 🚀 Technical Details
+
+### Frontend Architecture
+
+* **Vue 2.7**: Uses the latest Vue 2.7 with Composition API support
+* **Vue Router**: SPA routing with alias and history support
+* **Vuex**: Centralized state management with persistent settings
+* **Vue I18n**: Full internationalization support with language switching
+
+### UI Components
+
+* **Vant UI**: Mobile-first UI component library based on Vant
+* **Stylus**: CSS preprocessor with nesting and variables
+* **Responsive Design**: Automatically adapts to mobile, tablet, and desktop
+
+### PWA Support
+
+* **Service Worker**: Offline access and caching strategies
+* **App Shell**: App shell architecture for faster initial load
+* **Install Prompts**: PWA installation on desktop and mobile
+* **App Shortcuts**: Desktop shortcuts (search, rankings, activity, settings)
+
+### Performance Optimization
+
+* **Image Lazy Loading**: Enabled by default on mobile
+* **Virtual Scrolling**: High-performance rendering for large data sets
+* **Route Transitions**: Smooth page transitions using the View Transitions API
+* **Code Splitting**: Load libraries on demand to reduce bundle size
+
+### Advanced Features
+
+* **Multiple Layout Engines**:
+
+  * Masonry
+  * Grid
+  * Justified
+  * VirtualList
+  * VirtualSlide
+
+* **Animation Processing**:
+
+  * Generate GIF with gif.js
+  * Generate WebM with ts-whammy
+  * Generate MP4 with modern-mp4
+  * Support original ZIP download for animations
+
+* **File System Access**:
+
+  * Uses WICG File System Access API
+  * Supports direct writing to local directories
+  * Supports downloads organized by author
+
+* **Network Requests**:
+
+  * Axios-wrapped HTTP client
+  * Request retry mechanism
+  * Multiple proxy service switching
+
+* **Storage Solutions**:
+
+  * IndexedDB via LocalForage
+  * Supports LocalStorage and SessionStorage
+
+---
+
+## 📦 Development Guide
+
+### Requirements
+
+* Node.js >= 14.x
+* pnpm >= 9.x
+
+### Install Dependencies
+
+```bash
 pnpm install
 ```
 
-### Compile and Hot-reload for Development
-```sh
+### Development Mode
+
+```bash
 pnpm serve
 ```
 
-### Compile and Minify for Production
-```sh
+The application will start at `http://localhost:8080` with hot reload enabled.
+
+### Production Build
+
+```bash
 pnpm build
 ```
 
-### Lint and Fix Files
-```sh
+Build artifacts will be output to the `dist` directory.
+
+### Linting
+
+```bash
 pnpm lint
 ```
 
-### Customize Configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+### Bundle Analysis
 
-## Sponsor
+```bash
+pnpm analyze
+```
 
-If you find this project helpful, feel free to [buy me a coffee](https://sponsors-yumine.netlify.app):
+Generates a bundle analysis report to help optimize bundle size.
+
+---
+
+## Deployment
+
+1. Prepare environment: Git, Node.js, pnpm
+
+2. Prepare PxveAPI / HibiAPI instances and pximg proxy, refer to:
+
+  * [https://github.com/asadahimeka/pxve-api](https://github.com/asadahimeka/pxve-api)
+  * [https://github.com/mixmoe/HibiAPI](https://github.com/mixmoe/HibiAPI)
+  * [https://pixiv.cat/reverseproxy.html](https://pixiv.cat/reverseproxy.html)
+
+3. Download or git clone the project source code to a local directory
+
+4. Enter the project directory and create a `.env` file in the root directory, filling in environment variables according to `.env.example`
+
+```bash
+cp .env.example .env
+# Edit the .env file and fill in the required configuration
+# ⚠ Do not commit the `.env` file to the Git repository
+```
+
+5. Run the following commands to build the project. The built files will be in the `dist` directory and can be deployed to your server
+
+```bash
+pnpm install
+pnpm build
+```
+
+---
+
+## 💖 Sponsorship
+
+If this project helps you, feel free to [buy me a coffee](https://sponsors-yumine.netlify.app):
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/sakurayumine)
 
-## FAQ
+Your support is the motivation for continuous updates!
 
-### How to preset the image proxy and API instance if you build it yourself?
+---
 
-Refer to [#10](https://github.com/asadahimeka/pixiv-viewer/discussions/10) and [#13](https://github.com/asadahimeka/pixiv-viewer/discussions/13).
-You can create a new `.env` file in the root directory of the project and fill in the environment variables in the format of `.env.example`.
+## ❓ FAQ
 
-### Why can't I view some artworks using a US/UK IP?
+### How to obtain a RefreshToken?
 
-See the official pixiv announcement: https://www.pixiv.net/info.php?id=10837
+Refer to the tutorial: [https://www.nanoka.top/posts/e78ef86/](https://www.nanoka.top/posts/e78ef86/)
 
-It is recommended to log in to this site with your own account before using it, and select a non-US/UK region in the official web page [settings](https://www.pixiv.net/setting_user.php). It is best to select the Japan region.
+### API quota exceeded or rate limited
 
-### List and details do not match or repeat, search results do not match the search label
+* Switch to another API instance in settings
+* Log in using RefreshToken or OAuth
 
-It is caused by the CDN cache of the self-built API, you can switch other API instances in the settings or use it after logging in.
+### Images load very slowly
 
-### Keep prompting that the API exceeds the limit or Rate Limit
+* Switch to another image proxy in settings
+* Enable pximg direct access mode (requires a good network environment)
+* Download and use the client version
 
-You can switch the API instance in the settings or log in directly using RefreshToken or OAuth.
+### Some works are not accessible with US/UK IPs
 
-### How to get RefreshToken
+Refer to Pixiv official announcement: [https://www.pixiv.net/info.php?id=10837](https://www.pixiv.net/info.php?id=10837)
 
-See https://www.nanoka.top/posts/e78ef86/
+Recommendations:
 
-### Image loading is very slow
+1. Log in with your own account
+2. Set your region to a non-US/UK region in Pixiv web [settings](https://www.pixiv.net/setting_user.php) (Japan recommended)
 
-Image loading speed may be slow due to network conditions. You can switch to the image proxy in the settings, or download the Android version and turn on the image direct connection function.
+### Cookie / SessionID login errors
 
-### Cookie/SessionID login error
+It is recommended to use RefreshToken login, which is more stable and reliable.
 
-It is recommended to use RefreshToken to log in
+### Mismatched or duplicated images in lists and details, or search results do not match search tags
 
-### Is there an iOS App?
+This is caused by CDN caching of self-hosted APIs. Solutions:
 
-You can download it from [Github Releases](https://github.com/asadahimeka/pixiv-viewer/releases). Note that the iOS installation package is not signed, so you need to sign it yourself. Tutorials: [AltStore](https://faq.AltStore.io)
+* Switch to another API instance
+* Use after logging in
 
-### Android version crashes after clicking download
+### “Page not found”, “No permission to view this work”, or “Your access has been restricted”
 
-Go to the system settings to give this application storage permissions, or download the latest version and try again.
+This usually means the work has been deleted or hidden by the author.
 
-## Contribute
+### Android version crashes when clicking download
 
-This project uses [Vue I18n](https://kazupon.github.io/vue-i18n/) for translations. Non-Chinese language translations are mainly from machine translation, if you find errors, feel free to [contribute a translation](https://github.com/asadahimeka/pixiv-viewer/tree/master/src/locales).
+* Grant storage permissions in system settings
+* Update to the latest version and try again
 
-## Credits
+### How to install the iOS version?
+
+Download from [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/releases)
+
+Note: The iOS version is unsigned and requires manual signing and sideloading:
+
+* [i4 Assistant (Video Tutorial)](https://www.bilibili.com/video/BV1Jg4y1n7hi/)
+* [i4 Assistant](https://www.i4.cn/news_detail_38195.html)
+* [AltStore](https://kerrinz.com/archives/432.html)
+
+### How to preset image proxies and API instances for self-hosted deployment?
+
+Refer to discussions:
+
+* [#10](https://github.com/asadahimeka/pixiv-viewer/discussions/10)
+* [#13](https://github.com/asadahimeka/pixiv-viewer/discussions/13)
+
+---
+
+## 🤝 Contribution Guide
+
+Contributions of code, translations, or suggestions are welcome!
+
+### Translation
+
+This project uses [Vue I18n](https://kazupon.github.io/vue-i18n/) for internationalization.
+
+Most non-Chinese translations are machine-generated. Contributions are welcome if there are inaccuracies.
+
+Translation files are located in the `src/locales/` directory.
+
+### Code Contribution
+
+1. Fork this repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Reporting Issues
+
+Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) to report bugs or request features.
+
+---
+
+## 🏆 Acknowledgements
 
 ### Special Thanks
-- [journey-ad/pixiv-viewer](https://github.com/journey-ad/pixiv-viewer)
+
+* [journey-ad/pixiv-viewer](https://github.com/journey-ad/pixiv-viewer): Original project, modified from this
 
 ### Contributors
-- [@Blueberryy](https://github.com/Blueberryy): Russian translation
-- [@olivertzeng](https://github.com/olivertzeng): Traditional Chinese translation
 
-### Projects
-- [HibiAPI](https://github.com/mixmoe/HibiAPI)
-- [PixivNow](https://github.com/FreeNowOrg/PixivNow)
+* [@Blueberryy](https://github.com/Blueberryy): Russian translation
+* [@olivertzeng](https://github.com/olivertzeng): Traditional Chinese translation
+* [@kidonng](https://github.com/kidonng)
+
+### Related Projects
+
+* [HibiAPI](https://github.com/mixmoe/HibiAPI): Provides most API support
+* [PxveAPI](https://github.com/asadahimeka/pxve-api): HibiAPI-compatible and additional API services
+* [PixivNow](https://github.com/FreeNowOrg/PixivNow): Provides partial Web API support
 
 ### Services
-- [Pixiv.cat](https://pixiv.re/)
-- [SauceNAO](https://saucenao.com/)
-- [Cloudflare Workers](https://workers.cloudflare.com/)
-- [Netlify](https://netlify.com/)
 
-### Developing
-- [Vue](https://vuejs.org/)
-- [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/)
-- [Vue I18n](https://kazupon.github.io/vue-i18n/)
+* [Pixiv.cat](https://pixiv.re/): Image proxy service
+* [SauceNAO](https://saucenao.com/): Image search API
+* [Cloudflare Workers](https://workers.cloudflare.com/): Image proxy service
+* [Cloudflare Pages](https://pages.cloudflare.com/): Page hosting service
 
-## Disclaimer
+### Tech Stack
 
-This project has no affiliation with pixiv.net(ピクシブ株式会社).
+* [Vue](https://vuejs.org/): Frontend framework
+* [Vant UI](https://vant-ui.github.io/vant/v2/#/zh-CN/): UI component library
+* [Vue I18n](https://kazupon.github.io/vue-i18n/): Internationalization support
 
-All artwork copyrights in this project(Website/App) belong to Pixiv or their original authors.
+---
 
-This project is intended for communication and learning only and may not be used for any commercial purposes.
+## 🔗 Related Sites
 
-## LICENSE
+* [Pixivel](https://pxelk.cocomi.eu.org/)
+* [Pixiviz](https://pixiviz.cocomi.eu.org/)
+* [PixivNow](https://pxnow.cocomi.eu.org/)
+* [PixivMoe](https://pixivmoe.cocomi.eu.org/)
+* [PixivLxns](https://pixivlxns.cocomi.eu.org/)
+* [MixPiv](https://mixpiv.cocomi.eu.org/)
+* [PixiviFE](https://pixiv.perennialte.ch/)
+* [pixivic](https://pixivic.com)
+* [vilipix](https://www.vilipix.com/ranking)
+* [moeview](https://moeview.cocomi.eu.org/)
+* [booruwf](https://booru.cocomi.eu.org/)
+* [PixivRanking](https://www.nanoka.top/illust/pixiv/)
 
-[![MIT License](https://img.shields.io/github/license/asadahimeka/pixiv-viewer)](https://github.com/asadahimeka/pixiv-viewer/blob/master/LICENSE)
+---
+
+## 📜 Disclaimer
+
+This project is not affiliated with pixiv.net (ピクシブ株式会社) in any way.
+
+All works displayed on this website and app are copyrighted by Pixiv or their original authors.
+
+This project is for communication and learning purposes only and must not be used for any commercial purposes.
+
+---
+
+## 📄 License
+
+This project is open-sourced under the [MIT License](LICENSE).
+
+---
+
+<br>
+
+**If this project helps you, please give it a ⭐️ Star to show your support!**
+
+Made with ❤️ by Sakura Yumine
