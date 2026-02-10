@@ -140,7 +140,7 @@ import TagsNovel from './components/TagsNovel'
 import { mapState, mapActions } from 'vuex'
 import dayjs from 'dayjs'
 import _ from '@/lib/lodash'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import store from '@/store'
 import { notSelfHibiApi } from '@/consts'
 import NovelCard from '@/components/NovelCard.vue'
@@ -206,7 +206,7 @@ export default {
         { text: this.$t('search.dura.week'), value: 'within_last_week' },
         { text: this.$t('search.dura.month'), value: 'within_last_month' },
       ],
-      showNonCNLangParam: window.APP_CONFIG.useLocalAppApi && isCNLocale(),
+      showNonCNLangParam: localApi.APP_CONFIG.useLocalAppApi && isCNLocale(),
       nonCNLang: 'no',
       nonCNLangOptions: [
         { text: '显示非中文', value: 'no' },

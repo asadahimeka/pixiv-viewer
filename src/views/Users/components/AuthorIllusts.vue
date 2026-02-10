@@ -93,7 +93,7 @@
 
 <script>
 import _ from '@/lib/lodash'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import { generateRandomColor, getContrastingTextColor, sleep } from '@/utils'
 import ImageCard from '@/components/ImageCard.vue'
 import ImageList from '@/components/ImageList.vue'
@@ -160,7 +160,7 @@ export default {
       return this.memberTags.slice(0, 20)
     },
     showR18TagFilter() {
-      return window.APP_CONFIG.useLocalAppApi && this.$store.getters.isR18On
+      return localApi.APP_CONFIG.useLocalAppApi && this.$store.getters.isR18On
     },
   },
   mounted() {

@@ -57,7 +57,7 @@
 import nprogress from 'nprogress'
 import { mapGetters } from 'vuex'
 import { ImagePreview } from 'vant'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import store from '@/store'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
@@ -178,7 +178,7 @@ export default {
         this.artwork = art
         this.loading = false
         SessionStorage.set(`param_art_detail_${id}`, art)
-        if (window.APP_CONFIG.useLocalAppApi) {
+        if (localApi.APP_CONFIG.useLocalAppApi) {
           this.getArtwork(+id)
         } else {
           this.pushHistory(art)

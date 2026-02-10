@@ -62,7 +62,7 @@ export default {
           default: 4,
         },
       },
-      isAppLogin: window.APP_CONFIG.useLocalAppApi,
+      isAppLogin: localApi.APP_CONFIG.useLocalAppApi,
       restrict: 'public',
     }
   },

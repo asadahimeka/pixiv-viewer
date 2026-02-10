@@ -33,7 +33,7 @@
 
 <script>
 import _ from '@/lib/lodash'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import ImageList from '@/components/ImageList.vue'
 import BookmarkTags from '@/views/Account/components/BookmarkTags.vue'
 
@@ -77,7 +77,7 @@ export default {
       finished: false,
       restrict: 'public',
       bookmarkTag: '',
-      showPxcl: window.APP_CONFIG.useLocalAppApi,
+      showPxcl: localApi.APP_CONFIG.useLocalAppApi,
     }
   },
   mounted() {

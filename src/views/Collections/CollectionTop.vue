@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import api from '@/api'
+import api, { localApi } from '@/api'
 import { generateRandomColor, getContrastingTextColor } from '@/utils'
 import { mintVerify, BLOCK_SEARCH_WORD_RE } from '@/utils/filter'
 import CollectionSlide from './components/CollectionSlide.vue'
@@ -65,7 +65,7 @@ export default {
       loading: true,
       tags: [],
       topCol: {},
-      isSearchDisabled: !window.APP_CONFIG.useLocalAppApi,
+      isSearchDisabled: !localApi.APP_CONFIG.useLocalAppApi,
     }
   },
   head() {

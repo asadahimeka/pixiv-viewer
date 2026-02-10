@@ -20,7 +20,7 @@ const isSupportWebP = (() => {
   return false
 })()
 
-export const imgProxy = url => {
+export function imgProxy(url) {
   let result = url.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
   if (url.startsWith('/-/')) {
     result = result.replace(/^\/-\//, `https://${PXIMG_PROXY_BASE}/`)
@@ -37,7 +37,7 @@ export const imgProxy = url => {
   return result
 }
 
-const parseUser = data => {
+function parseUser(data) {
   const { user, profile, workspace } = data
   const { id, account, name, comment } = user
   const { background_image_url, birth, gender, is_premium, is_using_custom_profile_image, job, total_follow_users, total_mypixiv_users, total_illust_bookmarks_public, total_illusts, twitter_account, twitter_url, webpage, country_code } = profile
@@ -72,7 +72,7 @@ const parseUser = data => {
   }
 }
 
-const parseIllust = data => {
+function parseIllust(data) {
   const { id, title, caption, create_date, tags, tools, width, height, x_restrict, total_view, total_bookmarks, type, illust_ai_type } = data
   let images = []
 
@@ -126,7 +126,7 @@ const parseIllust = data => {
   return artwork
 }
 
-const parseNovel = data => {
+function parseNovel(data) {
   const images = [{
     s: imgProxy(data.image_urls.square_medium),
     m: imgProxy(data.image_urls.medium),
@@ -151,7 +151,7 @@ const parseNovel = data => {
   return artwork
 }
 
-const parseWebRankIllust = (d, mode, content) => {
+function parseWebRankIllust(d, mode, content) {
   const url = 'https://i.pximg.net' + d.url.replace('/-/', '/')
   const images = [{
     s: imgProxy(url.replace('_master1200', '_square1200')),
@@ -191,7 +191,7 @@ const parseWebRankIllust = (d, mode, content) => {
   return artwork
 }
 
-export const parseWebApiIllust = d => {
+export function parseWebApiIllust(d) {
   const url = 'https://i.pximg.net' + d.url.replace('/-/', '/')
   const images = [{
     s: imgProxy(url.replace('_master1200', '_square1200')),
@@ -231,7 +231,7 @@ export const parseWebApiIllust = d => {
   return artwork
 }
 
-export const parseWebPopularIllust = d => {
+export function parseWebPopularIllust(d) {
   const url = 'https://i.pximg.net' + d.url.replace('/-/', '/')
   const images = [{
     s: imgProxy(url),
@@ -262,12 +262,248 @@ export const parseWebPopularIllust = d => {
   return artwork
 }
 
-const handleErrMsg = res => {
+function handleErrMsg(res) {
   const isRateLimitCode = res.error?.response?.status == 429
   const err = res.error?.response?.data?.error || res.error?.error || res.error
   let msg = err?.message || err?.user_message || err
   if (msg == 'Rate Limit' || isRateLimitCode) msg = i18n.t('tip.rate_limit')
   return msg
+}
+
+function decodeCFEmail(encodedString) {
+  let email = ''
+  const r = parseInt(encodedString.substr(0, 2), 16)
+  for (let n = 2; n < encodedString.length; n += 2) {
+    const letter = parseInt(encodedString.substr(n, 2), 16) ^ r
+    email += String.fromCharCode(letter)
+  }
+  return email
+}
+
+function reqGet(path, params) {
+  return get('/req_get', {
+    path,
+    params: JSON.stringify(params),
+  })
+}
+
+function reqPost(path, data) {
+  return get('/req_post', {
+    path,
+    data: JSON.stringify(data),
+    t: Date.now(),
+  }, {
+    headers: {
+      'cache-control': 'no-cache',
+    },
+  })
+}
+
+export const localApi = {
+  actionMap: {},
+  APP_CONFIG: {
+    directMode: false,
+    refreshToken: '',
+    useApiProxy: false,
+    useLocalAppApi: false,
+  },
+  isLoggedIn() {
+    return Boolean(localApi.APP_CONFIG.useLocalAppApi)
+  },
+  async me() {
+    const res = await get('/me', { _t: Date.now() })
+    if (res?.id) {
+      return {
+        id: res.id,
+        pixivId: res.account,
+        name: res.name,
+        profileImg: imgProxy(res.profile_image_urls.px_170x170),
+        profileImgBig: imgProxy(res.profile_image_urls.px_170x170),
+        premium: res.is_premium,
+        xRestrict: res.x_restrict,
+      }
+    }
+    return null
+  },
+  async userFollowing(id, page = 1, restrict = 'public') {
+    let list = []
+    const res = await get('/following', {
+      id,
+      page,
+      restrict,
+      t: Date.now(),
+    }, {
+      headers: {
+        'cache-control': 'no-cache',
+      },
+    })
+    if (res.user_previews) {
+      list = res.user_previews
+        .map(u => {
+          return {
+            id: u.user.id,
+            name: u.user.name,
+            avatar: imgProxy(u.user.profile_image_urls.medium),
+            illusts: u.illusts.map(i => ({
+              id: i.id,
+              title: i.title,
+              src: imgProxy(i.image_urls.medium),
+              x_restrict: i.x_restrict,
+              illust_ai_type: i.illust_ai_type,
+            })),
+          }
+        })
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: handleErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
+    }
+
+    return { status: 0, data: list }
+  },
+  async illustFollow(page = 1, restrict = 'all') {
+    let list = []
+    const res = await reqGet('v2/illust/follow', {
+      restrict,
+      offset: (page - 1) * 30,
+    })
+
+    if (res.illusts) {
+      list = res.illusts.map(art => parseIllust(art))
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: handleErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
+    }
+
+    return { status: 0, data: filterCensoredIllusts(list) }
+  },
+  async novelFollow(page = 1, restrict = 'all') {
+    let list = []
+    const offset = (page - 1) * 30
+    const params = { restrict }
+    if (offset > 0) params.offset = offset
+    const res = await reqGet('v1/novel/follow', params)
+
+    if (res.novels) {
+      list = res.novels.map(art => parseNovel(art))
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: handleErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
+    }
+
+    return { status: 0, data: filterCensoredNovels(list) }
+  },
+  async illustBookmarkAdd(id, restrict = 'public', tags) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v2/illust/bookmark/add', {
+        illust_id: `${id}`,
+        restrict,
+        tags,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async illustBookmarkDelete(id) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/illust/bookmark/delete', {
+        illust_id: `${id}`,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async userFollowAdd(id, restrict = 'public') {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/user/follow/add', {
+        user_id: `${id}`,
+        restrict,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async userFollowDelete(id) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/user/follow/delete', {
+        user_id: `${id}`,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async novelBookmarkAdd(id, restrict = 'public', tags) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v2/novel/bookmark/add', {
+        novel_id: `${id}`,
+        restrict,
+        tags,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async novelBookmarkDelete(id) {
+    if (!id) return false
+    try {
+      const res = await reqPost('v1/novel/bookmark/delete', {
+        novel_id: `${id}`,
+      })
+      return !res.error
+    } catch (error) {
+      return false
+    }
+  },
+  async userBookmarkTags(page = 1, restrict = 'public', type = 'illust') {
+    const res = await reqGet(`v1/user/bookmark-tags/${type}`, {
+      restrict,
+      offset: (page - 1) * 30,
+    })
+    console.log('userBookmarkTags: ', type, res)
+    if (res.bookmark_tags) {
+      return { status: 0, data: res.bookmark_tags }
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: handleErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
+    }
+  },
 }
 
 const api = {
@@ -440,7 +676,7 @@ const api = {
   async getRecommendedIllust(params) {
     const cacheKey = 'recommended.illust'
     let relatedList
-    if (!window.APP_CONFIG.useLocalAppApi) {
+    if (!localApi.APP_CONFIG.useLocalAppApi) {
       relatedList = await getCache(cacheKey)
     }
 
@@ -450,7 +686,7 @@ const api = {
       if (res.illusts) {
         relatedList = res.illusts.map(art => parseIllust(art)).filter(e => e.like >= 500)
         relatedList.nextUrl = res.next_url
-        if (!window.APP_CONFIG.useLocalAppApi) {
+        if (!localApi.APP_CONFIG.useLocalAppApi) {
           setCache(cacheKey, relatedList, 60 * 60 * 12)
         }
       } else if (res.error) {
@@ -2216,235 +2452,6 @@ const api = {
 }
 
 export default api
-
-function decodeCFEmail(encodedString) {
-  let email = ''
-  const r = parseInt(encodedString.substr(0, 2), 16)
-  for (let n = 2; n < encodedString.length; n += 2) {
-    const letter = parseInt(encodedString.substr(n, 2), 16) ^ r
-    email += String.fromCharCode(letter)
-  }
-  return email
-}
-
-function reqGet(path, params) {
-  return get('/req_get', {
-    path,
-    params: JSON.stringify(params),
-  })
-}
-
-function reqPost(path, data) {
-  return get('/req_post', {
-    path,
-    data: JSON.stringify(data),
-    t: Date.now(),
-  }, {
-    headers: {
-      'cache-control': 'no-cache',
-    },
-  })
-}
-
-export const localApi = {
-  isLoggedIn() {
-    return Boolean(window.APP_CONFIG.useLocalAppApi)
-  },
-  async me() {
-    const res = await get('/me', { _t: Date.now() })
-    if (res?.id) {
-      return {
-        id: res.id,
-        pixivId: res.account,
-        name: res.name,
-        profileImg: imgProxy(res.profile_image_urls.px_170x170),
-        profileImgBig: imgProxy(res.profile_image_urls.px_170x170),
-        premium: res.is_premium,
-        xRestrict: res.x_restrict,
-      }
-    }
-    return null
-  },
-  async userFollowing(id, page = 1, restrict = 'public') {
-    let list = []
-    const res = await get('/following', {
-      id,
-      page,
-      restrict,
-      t: Date.now(),
-    }, {
-      headers: {
-        'cache-control': 'no-cache',
-      },
-    })
-    if (res.user_previews) {
-      list = res.user_previews
-        .map(u => {
-          return {
-            id: u.user.id,
-            name: u.user.name,
-            avatar: imgProxy(u.user.profile_image_urls.medium),
-            illusts: u.illusts.map(i => ({
-              id: i.id,
-              title: i.title,
-              src: imgProxy(i.image_urls.medium),
-              x_restrict: i.x_restrict,
-              illust_ai_type: i.illust_ai_type,
-            })),
-          }
-        })
-    } else if (res.error) {
-      return {
-        status: -1,
-        msg: handleErrMsg(res),
-      }
-    } else {
-      return {
-        status: -1,
-        msg: i18n.t('tip.unknown_err'),
-      }
-    }
-
-    return { status: 0, data: list }
-  },
-  async illustFollow(page = 1, restrict = 'all') {
-    let list = []
-    const res = await reqGet('v2/illust/follow', {
-      restrict,
-      offset: (page - 1) * 30,
-    })
-
-    if (res.illusts) {
-      list = res.illusts.map(art => parseIllust(art))
-    } else if (res.error) {
-      return {
-        status: -1,
-        msg: handleErrMsg(res),
-      }
-    } else {
-      return {
-        status: -1,
-        msg: i18n.t('tip.unknown_err'),
-      }
-    }
-
-    return { status: 0, data: filterCensoredIllusts(list) }
-  },
-  async novelFollow(page = 1, restrict = 'all') {
-    let list = []
-    const offset = (page - 1) * 30
-    const params = { restrict }
-    if (offset > 0) params.offset = offset
-    const res = await reqGet('v1/novel/follow', params)
-
-    if (res.novels) {
-      list = res.novels.map(art => parseNovel(art))
-    } else if (res.error) {
-      return {
-        status: -1,
-        msg: handleErrMsg(res),
-      }
-    } else {
-      return {
-        status: -1,
-        msg: i18n.t('tip.unknown_err'),
-      }
-    }
-
-    return { status: 0, data: filterCensoredNovels(list) }
-  },
-  async illustBookmarkAdd(id, restrict = 'public', tags) {
-    if (!id) return false
-    try {
-      const res = await reqPost('v2/illust/bookmark/add', {
-        illust_id: `${id}`,
-        restrict,
-        tags,
-      })
-      return !res.error
-    } catch (error) {
-      return false
-    }
-  },
-  async illustBookmarkDelete(id) {
-    if (!id) return false
-    try {
-      const res = await reqPost('v1/illust/bookmark/delete', {
-        illust_id: `${id}`,
-      })
-      return !res.error
-    } catch (error) {
-      return false
-    }
-  },
-  async userFollowAdd(id, restrict = 'public') {
-    if (!id) return false
-    try {
-      const res = await reqPost('v1/user/follow/add', {
-        user_id: `${id}`,
-        restrict,
-      })
-      return !res.error
-    } catch (error) {
-      return false
-    }
-  },
-  async userFollowDelete(id) {
-    if (!id) return false
-    try {
-      const res = await reqPost('v1/user/follow/delete', {
-        user_id: `${id}`,
-      })
-      return !res.error
-    } catch (error) {
-      return false
-    }
-  },
-  async novelBookmarkAdd(id, restrict = 'public', tags) {
-    if (!id) return false
-    try {
-      const res = await reqPost('v2/novel/bookmark/add', {
-        novel_id: `${id}`,
-        restrict,
-        tags,
-      })
-      return !res.error
-    } catch (error) {
-      return false
-    }
-  },
-  async novelBookmarkDelete(id) {
-    if (!id) return false
-    try {
-      const res = await reqPost('v1/novel/bookmark/delete', {
-        novel_id: `${id}`,
-      })
-      return !res.error
-    } catch (error) {
-      return false
-    }
-  },
-  async userBookmarkTags(page = 1, restrict = 'public', type = 'illust') {
-    const res = await reqGet(`v1/user/bookmark-tags/${type}`, {
-      restrict,
-      offset: (page - 1) * 30,
-    })
-    console.log('userBookmarkTags: ', type, res)
-    if (res.bookmark_tags) {
-      return { status: 0, data: res.bookmark_tags }
-    } else if (res.error) {
-      return {
-        status: -1,
-        msg: handleErrMsg(res),
-      }
-    } else {
-      return {
-        status: -1,
-        msg: i18n.t('tip.unknown_err'),
-      }
-    }
-  },
-}
 
 export function getBookmarkRestrictTags(tags = []) {
   return new Promise(resolve => {

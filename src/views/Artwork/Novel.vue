@@ -197,7 +197,7 @@ export default {
         !store.state.isMobile && ({ text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' }),
         { text: 'EPUB', val: 'epub' },
       ].filter(Boolean),
-      showBookmarkBtn: window.APP_CONFIG.useLocalAppApi,
+      showBookmarkBtn: localApi.APP_CONFIG.useLocalAppApi,
       favLoading: false,
       translateLoading: false,
       isTranslated: false,
@@ -477,7 +477,7 @@ export default {
       }
       const blob = await actions[ext]()
       if (blob) await downloadFile(blob, `${fileName}.${ext}`, { subDir: 'novel' })
-      if (window.APP_CONFIG.useLocalAppApi && !this.artwork.is_bookmarked && isAutoBookmarkAfterDownload) {
+      if (localApi.APP_CONFIG.useLocalAppApi && !this.artwork.is_bookmarked && isAutoBookmarkAfterDownload) {
         this.favLoading = true
         localApi.novelBookmarkAdd(
           this.artwork.id,

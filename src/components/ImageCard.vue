@@ -115,7 +115,7 @@ export default {
   },
   data() {
     return {
-      showBookmarkBtn: window.APP_CONFIG.useLocalAppApi,
+      showBookmarkBtn: localApi.APP_CONFIG.useLocalAppApi,
       bLoading: false,
       isBookmarked: false,
       isOuterMeta,
@@ -319,7 +319,7 @@ export default {
         }).catch(() => 'cancel')
         if (res != 'confirm') return
       }
-      if (window.APP_CONFIG.useLocalAppApi && !this.isBookmarked && isAutoBookmarkAfterDownload) {
+      if (localApi.APP_CONFIG.useLocalAppApi && !this.isBookmarked && isAutoBookmarkAfterDownload) {
         this.bLoading = true
         localApi.illustBookmarkAdd(
           this.artwork.id,

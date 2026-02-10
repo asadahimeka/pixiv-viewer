@@ -74,7 +74,7 @@ import dayjs from 'dayjs'
 import ImageList from '@/components/ImageList.vue'
 import Nav from './components/Nav'
 import _ from '@/lib/lodash'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import { i18n } from '@/i18n'
 import { HiddenAuthors, isAiIllust } from '@/utils/filter'
 import { getCache } from '@/utils/storage/siteCache'
@@ -142,7 +142,7 @@ export default {
       actRankCat: '0',
       rankCatLabels: getRankCatLabels(),
       rankCatActions: getRankCatActions(),
-      showFilterFavsBtn: window.APP_CONFIG.useLocalAppApi,
+      showFilterFavsBtn: localApi.APP_CONFIG.useLocalAppApi,
       showFilterFavsPop: false,
       isFilterFavs: false,
       isHideManga,

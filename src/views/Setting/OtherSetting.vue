@@ -511,6 +511,7 @@ import store from '@/store'
 import { APP_API_PROXYS, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, HIBIAPI_ALTS, PXIMG_PROXYS } from '@/consts'
 import { i18n } from '@/i18n'
 import { getSampleFileName } from '@/store/actions/filename'
+import { localApi } from '@/api'
 import { checkImgAvailable, checkUrlAvailable, copyText, downloadURL, isURL, readTextFile } from '@/utils'
 import { mintVerify } from '@/utils/filter'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
@@ -529,7 +530,7 @@ export default {
   },
   data() {
     return {
-      clientConfig: { ...window.APP_CONFIG },
+      clientConfig: { ...localApi.APP_CONFIG },
       isHelperInst: !!window.__httpRequest__,
       apiProxySel: {
         show: false,

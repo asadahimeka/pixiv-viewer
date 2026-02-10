@@ -21,7 +21,7 @@
 
 <script>
 import _ from '@/lib/lodash'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import { filterRecommIllust, filterCensoredIllust } from '@/utils/filter'
 import { tryURL } from '@/utils'
 import TopBar from '@/components/TopBar'
@@ -46,7 +46,7 @@ export default {
       isFromDetail: false,
       finished: false,
       nextUrl: null,
-      showLoadMoreBtn: window.APP_CONFIG.useLocalAppApi,
+      showLoadMoreBtn: localApi.APP_CONFIG.useLocalAppApi,
       showImageList: true,
       forceSlideLayout: false,
     }

@@ -29,6 +29,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { localApi } from '@/api'
 import FollowedUsers from './components/FollowedUsers.vue'
 import LatestAllSite from './components/LatestAllSite.vue'
 import FeedsIllusts from './components/FeedsIllusts.vue'
@@ -51,7 +52,7 @@ export default {
   data() {
     return {
       activeTab: this.$route.params?.tab || '1',
-      isLocalApi: window.APP_CONFIG.useLocalAppApi,
+      isLocalApi: localApi.APP_CONFIG.useLocalAppApi,
     }
   },
   head() {

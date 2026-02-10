@@ -26,7 +26,7 @@
 
 <script>
 import _ from '@/lib/lodash'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import { filterRecommIllust, filterCensoredIllust } from '@/utils/filter'
 import { tryURL } from '@/utils'
 import ImageList from '@/components/ImageList.vue'
@@ -42,7 +42,7 @@ export default {
       artList: [],
       finished: false,
       nextUrl: null,
-      showLoadMoreBtn: window.APP_CONFIG.useLocalAppApi,
+      showLoadMoreBtn: localApi.APP_CONFIG.useLocalAppApi,
       showImageList: true,
       forceSlideLayout: false,
     }

@@ -5,7 +5,7 @@ import { existsSessionId, initUser } from '@/api/user'
 export async function checkIsLogin() {
   let user = null
   try {
-    if (window.APP_CONFIG.useLocalAppApi) {
+    if (localApi.APP_CONFIG.useLocalAppApi) {
       user = await localApi.me()
     } else if (existsSessionId()) {
       user = await initUser()

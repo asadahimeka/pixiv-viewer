@@ -54,7 +54,7 @@ import LatestIllustCard from '../Discovery/LatestIllustCard.vue'
 import Recomm4U from './components/Recomm4U.vue'
 import { notSelfHibiApi } from '@/consts'
 import { existsSessionId } from '@/api/user'
-import api from '@/api'
+import api, { localApi } from '@/api'
 import store from '@/store'
 
 const isWebLogin = existsSessionId()
@@ -75,7 +75,7 @@ export default {
   data() {
     return {
       isSelfHibi: !notSelfHibiApi,
-      isAppLogin: window.APP_CONFIG.useLocalAppApi,
+      isAppLogin: localApi.APP_CONFIG.useLocalAppApi,
       isWebLogin,
       term: '',
       tags: [],

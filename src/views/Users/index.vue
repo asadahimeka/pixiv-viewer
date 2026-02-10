@@ -331,7 +331,7 @@ export default {
       return null
     },
     showFollowBtn() {
-      if (!window.APP_CONFIG.useLocalAppApi) return false
+      if (!localApi.APP_CONFIG.useLocalAppApi) return false
       const id = this.$store.state?.user?.id
       return id && id != this.userInfo.id
     },

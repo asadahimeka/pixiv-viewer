@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     async init() {
-      if (!window.APP_CONFIG.useLocalAppApi) return
+      if (!localApi.APP_CONFIG.useLocalAppApi) return
       if (this.iframeSrc) {
         this.showIFrame = true
         return

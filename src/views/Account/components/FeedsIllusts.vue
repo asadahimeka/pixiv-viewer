@@ -47,7 +47,7 @@ export default {
       loading: false,
       finished: false,
       lastId: null,
-      isAppLogin: window.APP_CONFIG.useLocalAppApi,
+      isAppLogin: localApi.APP_CONFIG.useLocalAppApi,
       restrict: 'all',
     }
   },

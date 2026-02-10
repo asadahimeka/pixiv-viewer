@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import { localApi } from '@/api'
 import { getLoginURL } from '@/api/client/login'
 import PixivAuth from '@/api/client/pixiv-auth'
 import { LocalStorage } from '@/utils/storage'
@@ -61,7 +62,7 @@ export default {
   name: 'Login',
   data() {
     return {
-      appConfig: { ...window.APP_CONFIG },
+      appConfig: { ...localApi.APP_CONFIG },
       showConfirmDialog: false,
       showTokenDialog: false,
       redirectorRuleSrc: location.hostname == 'pxve.cc' ? '/helper/Redirector-pxve-cc.json' : '/helper/Redirector.json',

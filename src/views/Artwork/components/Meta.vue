@@ -260,7 +260,7 @@ export default {
     },
     checkBookmarked() {
       if (!this.artwork.id) return
-      if (window.APP_CONFIG.useLocalAppApi) {
+      if (localApi.APP_CONFIG.useLocalAppApi) {
         this.bookmarkId = this.artwork.is_bookmarked
         return
       }
@@ -273,7 +273,7 @@ export default {
     toggleBookmark() {
       this.favLoading = true
       if (this.bookmarkId) {
-        window.APP_CONFIG.useLocalAppApi
+        localApi.APP_CONFIG.useLocalAppApi
           ? localApi.illustBookmarkDelete(this.artwork.id).then(isOk => {
             this.favLoading = false
             if (isOk) {
@@ -292,7 +292,7 @@ export default {
             }
           })
       } else {
-        window.APP_CONFIG.useLocalAppApi
+        localApi.APP_CONFIG.useLocalAppApi
           ? localApi.illustBookmarkAdd(
             this.artwork.id,
             isDefBookmarkPrivate ? 'private' : void 0,
@@ -342,7 +342,7 @@ export default {
     },
     async showBookmarkDialog(/** @type {Event} */ ev) {
       ev.preventDefault()
-      if (this.bookmarkId || !window.APP_CONFIG.useLocalAppApi) return
+      if (this.bookmarkId || !localApi.APP_CONFIG.useLocalAppApi) return
       const action = async (restrict, tags) => {
         this.favLoading = true
         const isOk = await localApi.illustBookmarkAdd(this.artwork.id, restrict, tags)
@@ -467,7 +467,7 @@ export default {
         this.$emit('ugoira-download')
         return
       }
-      if (window.APP_CONFIG.useLocalAppApi && !this.bookmarkId && isAutoBookmarkAfterDownload) {
+      if (localApi.APP_CONFIG.useLocalAppApi && !this.bookmarkId && isAutoBookmarkAfterDownload) {
         this.favLoading = true
         localApi.illustBookmarkAdd(
           this.artwork.id,

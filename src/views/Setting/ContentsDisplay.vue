@@ -9,7 +9,7 @@
     </van-cell>
     <van-cell center :title="$t('display.r18g')" :label="$t('display.r18g_label')">
       <template #right-icon>
-        <van-switch active-color="#ff3f3f" :value="currentContentSetting.r18g" size="24" @input="onR18Change($event, 2)" />
+        <van-switch active-color="#ff3f3f" :value="currentContentSetting.r18g" :disabled="!isLoggedIn" size="24" @input="onR18Change($event, 2)" />
       </template>
     </van-cell>
     <van-cell center :title="$t('display.ai')" :label="$t('display.ai_label')">
@@ -66,6 +66,7 @@ import _ from '@/lib/lodash'
 import { Dialog } from 'vant'
 import { mapGetters, mapMutations } from 'vuex'
 import store from '@/store'
+import { localApi } from '@/api'
 import { LocalStorage } from '@/utils/storage'
 
 export default {
@@ -75,7 +76,7 @@ export default {
       currentContentSetting: _.cloneDeep(store.state.contentSetting),
       blockTags: '',
       blockUids: '',
-      clientConfig: { ...window.APP_CONFIG },
+      clientConfig: { ...localApi.APP_CONFIG },
       searchMinFavNum: store.state.appSetting.searchListMinFavNum,
     }
   },
@@ -122,10 +123,7 @@ export default {
       window.umami?.track(`set_ai_switch_${checked}`)
     },
     onR18Change(checked, type) {
-      let name
-      if (type === 1) name = 'R-18'
-      if (type === 2) name = 'R-18G'
-
+      const name = ['', 'R-18', 'R-18G'][type]
       window.umami?.track(`set_${name}_switch_${checked}`)
 
       if (checked) {
@@ -136,32 +134,29 @@ export default {
           closeOnPopstate: true,
           cancelButtonText: this.$t('common.cancel'),
           confirmButtonText: this.$t('common.confirm'),
-        })
-          .then(() => {
-            if (type === 1) {
-              this.currentContentSetting.r18 = checked
-              LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
-            }
-            if (type === 2) {
-              this.currentContentSetting.r18g = checked
-              setTimeout(() => {
-                Dialog.alert({
-                  message: this.$t('display.confirm_g', [name]),
-                  confirmButtonText: this.$t('common.confirm'),
-                }).then(() => {
-                  location.reload()
-                })
-              }, 200)
-              LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
-            }
+        }).then(() => {
+          if (type === 1) {
+            this.currentContentSetting.r18 = checked
+            LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
             this.saveSwitchValues()
-            type === 1 && setTimeout(() => {
+            setTimeout(() => {
               location.reload()
             }, 200)
-          })
-          .catch(() => {
-            console.log('操作取消')
-          })
+          }
+          if (type === 2) {
+            this.currentContentSetting.r18g = checked
+            LocalStorage.set('PXV_NSFW_ON', this.isLoggedIn ? 0 : 1)
+            this.saveSwitchValues()
+            setTimeout(() => {
+              Dialog.alert({
+                message: this.$t('display.confirm_g', [name]),
+                confirmButtonText: this.$t('common.confirm'),
+              }).then(() => {
+                location.reload()
+              })
+            }, 200)
+          }
+        }).catch(() => {})
       } else {
         LocalStorage.remove('PXV_NSFW_ON')
         if (type === 1) this.currentContentSetting.r18 = checked

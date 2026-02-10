@@ -24,6 +24,7 @@ import Pximg from '@/components/DirectPximg.vue'
 import App from '@/App.vue'
 import router from '@/router'
 import store from '@/store'
+import { localApi } from '@/api'
 import { LocalStorage } from '@/utils/storage'
 import { loadCustomFont } from '@/utils/font'
 import { getSelectedLang, i18n, initLocale } from '@/i18n'
@@ -64,11 +65,11 @@ async function setupApp() {
 
 async function initLocalApi() {
   const config = LocalStorage.get('PXV_CLIENT_CONFIG', {})
-  window.APP_CONFIG = config
+  localApi.APP_CONFIG = config
   if (!config.useLocalAppApi) return
   document.querySelector('#ldio-loading .ldio-content')
     ?.insertAdjacentHTML('beforeend', `<p class="ldio-title" style="top:180px;font-size:14px">${i18n.t('sBmkLtGcrWIL7xsU-EdM9')}</p>`)
-  window.__localApiMap__ = await getActionMap()
+  localApi.actionMap = await getActionMap()
   await initBookmarkCache()
 }
 

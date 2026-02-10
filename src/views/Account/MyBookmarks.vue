@@ -17,7 +17,7 @@ import { mapState } from 'vuex'
 import ImageList from '@/components/ImageList.vue'
 import BookmarkTags from '@/views/Account/components/BookmarkTags.vue'
 import { getBookmarkIllusts } from '@/api/user'
-import api from '@/api'
+import api, { localApi } from '@/api'
 
 export default {
   name: 'MyBookmarks',
@@ -33,7 +33,7 @@ export default {
       error: false,
       loading: false,
       finished: false,
-      isAppLogin: window.APP_CONFIG.useLocalAppApi,
+      isAppLogin: localApi.APP_CONFIG.useLocalAppApi,
       restrict: 'public',
       bookmarkTag: '',
     }
