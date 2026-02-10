@@ -17,7 +17,7 @@ const router = new VueRouter({
   },
 })
 
-const { pageTransition, imgReso } = store.state.appSetting
+const { pageTransition, imgReso, ctrlClickNewTab } = store.state.appSetting
 const isLargeWebP = imgReso == 'Large(WebP)'
 
 const noSlideRoutes = ['Home', 'HomeManga', 'HomeNovel', 'Search', 'SearchNovel', 'SearchUser', 'Rank', 'RankNovel', 'Following', 'Setting']
@@ -48,20 +48,22 @@ function handlePageTransition(to, from) {
 
 let isPressingMetaKey = false
 
-document.addEventListener('keydown', event => {
-  if (event.metaKey || event.ctrlKey) {
-    isPressingMetaKey = true
-  }
-})
+if (ctrlClickNewTab) {
+  document.addEventListener('keydown', event => {
+    if (event.metaKey || event.ctrlKey) {
+      isPressingMetaKey = true
+    }
+  })
 
-document.addEventListener('keyup', event => {
-  if (!event.metaKey && !event.ctrlKey) {
-    isPressingMetaKey = false
-  }
-})
+  document.addEventListener('keyup', event => {
+    if (!event.metaKey && !event.ctrlKey) {
+      isPressingMetaKey = false
+    }
+  })
+}
 
 router.beforeEach((to, from, next) => {
-  if (isPressingMetaKey) {
+  if (ctrlClickNewTab && isPressingMetaKey) {
     window.open(to.fullPath)
     return
   }

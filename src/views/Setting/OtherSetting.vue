@@ -267,6 +267,11 @@
           <van-switch :value="appSetting.hideNavBarOnScroll" size="24" @change="v => saveAppSetting('hideNavBarOnScroll', v, true)" />
         </template>
       </van-cell>
+      <van-cell v-if="!isMobile" center :title="$t('87ehZBo7vT7vvdqsnOi9k')">
+        <template #right-icon>
+          <van-switch :value="appSetting.ctrlClickNewTab" size="24" @change="v => saveAppSetting('ctrlClickNewTab', v, true)" />
+        </template>
+      </van-cell>
       <van-cell v-if="!appSetting.isDirectPximg" center :title="$t('GnyWarxXoDw49xCft4IlS')">
         <template #right-icon>
           <van-switch :value="appSetting.isImgLazy" size="24" @change="v => saveAppSetting('isImgLazy', v, true)" />
@@ -720,6 +725,9 @@ export default {
     return { title: this.$t('setting.other.title') }
   },
   computed: {
+    isMobile() {
+      return store.state.isMobile
+    },
     selLangLabel() {
       return this.lang.actions.find(e => e._value == this.lang.value)?.name || ''
     },

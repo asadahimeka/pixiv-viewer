@@ -90,6 +90,7 @@ export default new Vuex.Store({
       isLongpressPrivateFollow: false,
       imgViewHorizonScroll: false,
       imgViewHorizonSwiper: false,
+      ctrlClickNewTab: true,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },
