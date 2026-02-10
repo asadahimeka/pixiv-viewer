@@ -21,7 +21,7 @@
 
 English | [中文](../README.md)
 
-Yet another Pixiv viewer that does not require login, providing online browsing of Pixiv illustrations, animations, manga, and novels. It supports multi-platform layouts, offers multiple browsing layout options, supports PWA installation, allows custom APIs and image hosting services, and supports login via RefreshToken, OAuth, or Cookie.
+Yet another Pixiv viewer, providing online browsing of Pixiv illustrations, animations, manga, and novels. It supports multi-platform layouts, offers multiple browsing layout options, supports PWA installation, allows custom APIs and image hosting services, and supports login via RefreshToken, OAuth, or Cookie.
 
 Preview: 🔗 [pixiv.pictures](https://pixiv.pictures)
 
@@ -76,8 +76,8 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 ### 📱 Activity
 
 * **Following Updates**: View new works from followed users
-* **My Bookmarks**: Manage bookmarked illustrations and novels
-* **Followed Users**: View and manage followed users
+* **My Bookmarks**: View bookmarked illustrations and novels
+* **Followed Users**: View followed users
 * **Recommended Users**: View recommended user list
 * **Latest Works**: Browse the latest uploaded works site-wide
 
@@ -99,7 +99,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 * **Follow Management**: Follow / unfollow authors
 * **Works Browsing**: View author's illustrations, manga, bookmarks, novels, and collections
 * **Series View**: View author's manga and novel series
-* **Tag Browsing**: View commonly used tags by the author
+* **Tag Browsing**: View commonly used illustration tags by the author
 * **Related Users**: Discover similar authors
 * **Twitter Media**: View images/videos posted by the author on X (Twitter)
 
@@ -134,7 +134,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 * **AppAPI Proxy Mode**: Directly connect to Pixiv App API (requires self-hosted proxy)
 * **pximg Direct Access**: Direct access to Pixiv original image servers
 * **IndexedDB Cache**: Local caching to improve loading speed
-* **History**: Browsing history management
+* **History**: View browsing history
 * **Clear Cache**: One-click application cache clearing
 
 #### Download Features
@@ -197,7 +197,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
 ### Frontend Architecture
 
-* **Vue 2.7**: Uses the latest Vue 2.7 with Composition API support
+* **Vue 2.7**: Uses Vue 2.7 with Composition API support
 * **Vue Router**: SPA routing with alias and history support
 * **Vuex**: Centralized state management with persistent settings
 * **Vue I18n**: Full internationalization support with language switching
@@ -262,7 +262,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
 ### Requirements
 
-* Node.js >= 14.x
+* Node.js >= 16.x
 * pnpm >= 9.x
 
 ### Install Dependencies
