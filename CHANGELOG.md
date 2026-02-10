@@ -51,6 +51,7 @@
 - Add filename template var
 - Image detail view horizon scroll
 - Open link in new page with meta/ctrl pressed (#77)
+- Ctrl click new tab setting
 
 ### 🐛 Bug Fixes
 
@@ -135,11 +136,14 @@
 - Image detail view horizon swiper
 - Direct pximg load error
 - Some glitches
+- Some glitches
 
 ### 📚 Documentation
 
 - Update locales
 - Update locales
+- Update readme
+- Update readme
 - Update readme
 
 ### ⚙️ Miscellaneous Tasks
@@ -185,6 +189,7 @@
 - Release v1.31.7
 - Release v1.31.8
 - Release v1.31.9
+- Release v1.31.10
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
