@@ -424,6 +424,8 @@ pnpm build
 
 请使用 [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) 报告 bug 或提出功能请求。
 
+也可前往本站[论坛](https://pxve.discourse.group/)进行反馈或讨论。
+
 ---
 
 ## 🏆 致谢

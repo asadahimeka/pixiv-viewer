@@ -89,6 +89,13 @@
     <van-cell-group :title="$t('about.feedback')">
       <van-cell
         center
+        :title="$t('TnXv_wGi3BhyVLjxBYf1u')"
+        is-link
+        label="Github:asadahimeka/pixiv-viewer"
+        @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
+      />
+      <van-cell
+        center
         :title="$t('cIyLKP7_S_Wo0Y0908dnm')"
         is-link
         label="Github:asadahimeka/pixiv-viewer"
@@ -96,18 +103,18 @@
       />
       <van-cell
         center
-        :title="$t('TnXv_wGi3BhyVLjxBYf1u')"
+        title="论坛"
         is-link
-        label="Github:asadahimeka/pixiv-viewer"
-        @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
+        label="https://pxve.discourse.group"
+        @click="openLink('https://pxve.discourse.group/')"
       />
-      <!-- <van-cell
+      <van-cell
         center
         :title="$t('VhMNSWrg03-_ryN7nRBJ3')"
         is-link
         :label="$t('9H-9VJU67Fuabl8OgbhOr')"
         @click="openLink('https://www.nanoka.top/say/pxve_comments.html')"
-      /> -->
+      />
     </van-cell-group>
   </div>
 </template>
