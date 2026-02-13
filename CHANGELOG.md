@@ -137,6 +137,10 @@
 - Direct pximg load error
 - Some glitches
 - Some glitches
+- Update links
+- Media queries
+- Some glitches
+- Clear single history
 
 ### 📚 Documentation
 
@@ -190,6 +194,7 @@
 - Release v1.31.8
 - Release v1.31.9
 - Release v1.31.10
+- Release v1.31.11
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
