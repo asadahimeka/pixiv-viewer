@@ -468,7 +468,7 @@ img[src*="https://api.moedog.org/qr/?url="]
         margin-top -.2rem
       .ia-right
         min-height 100vh
-@media screen and (max-width: 1200px)
+@media screen and (max-width: 1120px)
   .ia-cont
     display block !important
 
@@ -506,7 +506,7 @@ img[src*="https://api.moedog.org/qr/?url="]
       width: 100% !important
       max-width: 100% !important
 
-@media screen and (min-width: 1201px)
+@media screen and (min-width: 1121px)
   .ia-cont
     &:not(:has(.shrink)) .ia-right
       max-height 100vh
@@ -557,7 +557,7 @@ img[src*="https://api.moedog.org/qr/?url="]
       border-radius 20px
       .tag.translated
         color #808080
-      @media screen and (max-width: 1200px)
+      @media screen and (max-width: 1120px)
         margin 0.26667rem 0.13333rem !important
       .shrink::after
         background: linear-gradient(to top, #f5f5f5, rgba(255,255,255,0));

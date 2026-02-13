@@ -159,7 +159,7 @@ html,body
         padding-left 6vw
         padding-right 6vw
 
-@media screen and (min-width: 1280px)
+@media screen and (min-width: 1120px)
   #app
     .Home,
     .search .tags,

@@ -202,7 +202,7 @@ export default {
     width auto
     height 82.5vh
     padding 10px 20px 40px 150px
-    @media screen and (max-width: 1200px)
+    @media screen and (max-width: 1120px)
       height auto
 
 .novel-view
@@ -223,7 +223,7 @@ export default {
       padding 0
       box-sizing border-box
 
-  @media screen and (max-width: 1200px)
+  @media screen and (max-width: 1120px)
     border-radius: 0;
     &.horizon-cols
       width 100vw

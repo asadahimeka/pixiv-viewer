@@ -756,7 +756,7 @@ img[src*="https://api.moedog.org/qr/?url="]
       &::-webkit-scrollbar
         display none
 
-@media screen and (max-width: 1200px)
+@media screen and (max-width: 1120px)
   .ia-cont
     display block !important
 

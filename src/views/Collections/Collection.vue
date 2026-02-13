@@ -120,7 +120,7 @@ export default {
     box-sizing border-box
     overflow hidden
 
-@media screen and (max-width: 1200px)
+@media screen and (max-width: 1120px)
   .ia-cont
     display block !important
 
@@ -150,7 +150,7 @@ export default {
     .ia-right ::v-deep .artwork-meta
       .tag.translated
         color #808080
-      @media screen and (max-width: 1200px)
+      @media screen and (max-width: 1120px)
         margin 0.26667rem 0.13333rem !important
 
 </style>
