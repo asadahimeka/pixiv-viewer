@@ -788,7 +788,7 @@ export default {
   position: fixed;
   top: 120px;
   left 0
-  z-index: 4;
+  z-index: 14;
   width 100%
   background: #fff
 

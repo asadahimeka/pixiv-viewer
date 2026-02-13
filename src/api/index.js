@@ -950,7 +950,7 @@ const api = {
       const res = await get('/search_autocomplete', { word })
 
       if (res.tags) {
-        relatedList = res.tags.map(t => t.name)
+        relatedList = res.tags.map(t => [t.name, t.translated_name]).flat().filter(Boolean)
         setCache(cacheKey, relatedList, 60 * 60 * 72)
       } else if (res.error) {
         return {
