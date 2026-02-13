@@ -11,8 +11,10 @@
     >
       <template #default="{ item }">
         <ImageCard
+          v-longpress="clearSingleFn(item.id)"
           mode="all"
           :artwork="item"
+          no-longpress
           @click-card="toArtwork(item)"
         />
       </template>
@@ -26,7 +28,7 @@ import { Dialog } from 'vant'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { filterCensoredIllusts } from '@/utils/filter'
 import VirtualWaterfall from '@/components/VirtualWaterfall.vue'
-import ImageCard from '@/components/ImageCard'
+import ImageCard from '@/components/ImageCard.vue'
 
 export default {
   name: 'SettingHistoryIllust',
@@ -38,6 +40,7 @@ export default {
     return {
       artList: [],
       loading: false,
+      isLongpressing: false,
     }
   },
   mounted() {
@@ -52,6 +55,7 @@ export default {
       this.getHistory()
     },
     toArtwork(art) {
+      if (this.isLongpressing) return
       this.$store.dispatch('setGalleryList', this.artList)
       this.$router.push({
         name: 'Artwork',
@@ -64,6 +68,30 @@ export default {
       const list = await getCache('illusts.history')
       this.artList = list ? filterCensoredIllusts(list) : []
       this.loading = false
+    },
+    clearSingleFn(id) {
+      return [
+        () => {
+          this.isLongpressing = true
+          Dialog.confirm({
+            message: this.$t('HBhN6EmgH_x2sduNtKpXn'),
+            cancelButtonText: this.$t('common.cancel'),
+            confirmButtonText: this.$t('common.confirm'),
+          }).then(async () => {
+            this.artList = this.artList.filter(e => e.id != id)
+            await setCache('illusts.history', this.artList)
+            this.init()
+          }).catch(() => {})
+        },
+        {
+          modifiers: { stop: true, prevent: true },
+          onMouseUp: () => {
+            setTimeout(() => {
+              this.isLongpressing = false
+            }, 500)
+          },
+        },
+      ]
     },
     clearHistory() {
       Dialog.confirm({

@@ -35,7 +35,7 @@
         name="play"
         scale="8"
       />
-      <div v-if="mode == 'all' || mode === 'meta'" v-longpress="isTriggerLongpress?onLongpress:()=>{}" class="meta">
+      <div v-if="mode == 'all' || mode === 'meta'" v-longpress="onLongpress" class="meta">
         <div v-if="!isOuterMeta" class="content">
           <h2 class="title" :title="artwork.title + ' ' + artwork.created" @click.stop="onImageTitleClick">{{ artwork.title }}</h2>
           <div class="author-cont" @click.stop="toAuthor">
@@ -72,8 +72,6 @@ import { ugoiraAvifSrc } from '@/consts'
 
 const {
   isImageCardOuterMeta,
-  isLongpressDL,
-  isLongpressBlock,
   imgReso,
   isUgoiraAvifSrc,
   isDefBookmarkPrivate,
@@ -112,6 +110,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    noLongpress: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -119,7 +121,6 @@ export default {
       bLoading: false,
       isBookmarked: false,
       isOuterMeta,
-      isTriggerLongpress: isLongpressDL || isLongpressBlock,
     }
   },
   computed: {
@@ -141,6 +142,10 @@ export default {
     ...mapGetters(['isCensored']),
     censored() {
       return this.isCensored(this.artwork)
+    },
+    isTriggerLongpress() {
+      if (this.noLongpress) return false
+      return store.state.appSetting.isLongpressDL || store.state.appSetting.isLongpressBlock
     },
   },
   async mounted() {
@@ -250,7 +255,7 @@ export default {
     onLongpress(/** @type {Event} */ ev) {
       if (!this.isTriggerLongpress) return
       ev.preventDefault()
-      isLongpressDL ? this.downloadArtwork() : this.showBlockDialog()
+      store.state.appSetting.isLongpressDL ? this.downloadArtwork() : this.showBlockDialog()
     },
     onImageTitleClick() {
       if (this.artwork.novel_ai_type) {

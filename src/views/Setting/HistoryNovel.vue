@@ -1,7 +1,13 @@
 <template>
   <div class="illusts">
     <masonry v-bind="$store.getters.novelMyProps">
-      <NovelCard v-for="art in artList" :key="art.id" :artwork="art" @click-card="toArtwork($event)" />
+      <NovelCard
+        v-for="art in artList"
+        :key="art.id"
+        v-longpress="clearSingleFn(art.id)"
+        :artwork="art"
+        @click-card="toArtwork($event)"
+      />
     </masonry>
     <van-empty v-if="!artList.length" :description="$t('tips.no_data')" />
   </div>
@@ -19,6 +25,7 @@ export default {
   data() {
     return {
       artList: [],
+      isLongpressing: false,
     }
   },
   mounted() {
@@ -29,6 +36,7 @@ export default {
       this.getHistory()
     },
     toArtwork(id) {
+      if (this.isLongpressing) return
       this.$router.push({
         name: 'NovelDetail',
         params: { id },
@@ -37,6 +45,30 @@ export default {
     async getHistory() {
       const list = await getCache('novels.history')
       this.artList = list || []
+    },
+    clearSingleFn(id) {
+      return [
+        () => {
+          this.isLongpressing = true
+          Dialog.confirm({
+            message: this.$t('HBhN6EmgH_x2sduNtKpXn'),
+            cancelButtonText: this.$t('common.cancel'),
+            confirmButtonText: this.$t('common.confirm'),
+          }).then(async () => {
+            this.artList = this.artList.filter(e => e.id != id)
+            await setCache('novels.history', this.artList)
+            this.init()
+          }).catch(() => {})
+        },
+        {
+          modifiers: { stop: true, prevent: true },
+          onMouseUp: () => {
+            setTimeout(() => {
+              this.isLongpressing = false
+            }, 500)
+          },
+        },
+      ]
     },
     clearHistory() {
       Dialog.confirm({
