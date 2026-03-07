@@ -52,6 +52,7 @@
 - Image detail view horizon scroll
 - Open link in new page with meta/ctrl pressed (#77)
 - Ctrl click new tab setting
+- Expand multi pics artwork
 
 ### 🐛 Bug Fixes
 
@@ -141,6 +142,8 @@
 - Media queries
 - Some glitches
 - Clear single history
+- Open illust detail as popup
+- Bug fixes
 
 ### 📚 Documentation
 
@@ -195,6 +198,7 @@
 - Release v1.31.9
 - Release v1.31.10
 - Release v1.31.11
+- Release v1.31.12
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
