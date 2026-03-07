@@ -220,6 +220,8 @@ html:has(.van-tabs__content--animated)
     &::-webkit-scrollbar
       width: 0
       height 0
+    .com_sel_tab
+      min-width fit-content
   .comments-popup
     top: unset;
     bottom: 0;
@@ -849,6 +851,11 @@ html:has(.novel_text) #immersive-translate-popup
   .Home .com_sel_tabs .home-search
     display none !important
   @media screen and (max-width: 999px)
+    .Home .home-i-tabs
+      justify-content center
+      padding-left 0.3rem
+      .sel-tabs .com_sel_tab:last-child
+        margin-right 0
     .Home .com_sel_tabs .home-title
       display none !important
     .Home .com_sel_tabs .sel-tabs

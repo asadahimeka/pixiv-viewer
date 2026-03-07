@@ -19,7 +19,7 @@
     </div>
     <div
       class="sp_desc"
-      @click.stop="handleClick($event)"
+      @click.stop.prevent="handleClick"
       v-html="spotlight.content"
     ></div>
     <router-link

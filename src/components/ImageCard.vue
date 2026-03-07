@@ -62,11 +62,12 @@
 <script>
 import { Dialog, ImagePreview } from 'vant'
 import { mapGetters } from 'vuex'
+import _ from '@/lib/lodash'
+import store from '@/store'
 import { getBookmarkRestrictTags, localApi } from '@/api'
 import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { isAiIllust } from '@/utils/filter'
 import { fancyboxShow, downloadFile } from '@/utils'
-import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { ugoiraAvifSrc } from '@/consts'
 
@@ -100,7 +101,7 @@ export default {
       default: 'cover',
     },
     index: {
-      type: Number,
+      type: [Number, String],
     },
     square: {
       type: Boolean,
@@ -343,13 +344,14 @@ export default {
       }
       window.umami?.track('download_artwork_longpress')
       await this.$nextTick()
-      const len = this.artwork.images.length
+      const artwork = _.cloneDeep(this.artwork)
+      const len = artwork.images.length
       for (let index = 0; index < len; index++) {
-        const item = this.artwork.images[index]
-        const fileName = `${getArtworkFileName(this.artwork, index)}.${item.o.split('.').pop()}`
+        const item = artwork.images[index]
+        const fileName = `${getArtworkFileName(artwork, index)}.${item.o.split('.').pop()}`
         await downloadFile(item.o, fileName, {
           message: `${this.$t('tip.downloading')} (${index + 1}/${len})`,
-          subDir: store.state.appSetting.dlSubDirByAuthor ? this.artwork.author.name : undefined,
+          subDir: store.state.appSetting.dlSubDirByAuthor ? artwork.author.name : undefined,
         })
       }
     },

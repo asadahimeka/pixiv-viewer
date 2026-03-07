@@ -3,7 +3,7 @@
     <div class="swiper-wrapper">
       <div
         v-for="(slide, index) in virtualData.slides"
-        :key="slide.id"
+        :key="slide[itemKey]"
         class="swiper-slide"
         :style="{ [positionProp]: `${virtualData.offset}px`, '--bg': getBg(slide) }"
       >
@@ -30,6 +30,7 @@ export default {
   props: {
     height: { type: String, default: '100vh' },
     slides: { type: Array, default: () => [] },
+    itemKey: { type: String, default: 'id' },
     onReachEnd: { type: Function, default: () => {} },
   },
   data() {

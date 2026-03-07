@@ -18,8 +18,8 @@ importers:
         specifier: 11.3.0
         version: 11.3.0(vue@2.7.16)
       axios:
-        specifier: 0.30.2
-        version: 0.30.2
+        specifier: 0.30.3
+        version: 0.30.3
       core-js:
         specifier: 3.40.0
         version: 3.40.0
@@ -1333,8 +1333,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@0.30.2:
-    resolution: {integrity: sha512-0pE4RQ4UQi1jKY6p7u6i1Tkzqmu+d+/tHS7Q7rKunWLB9WyilBTpHHpXzPNMDj5hTbK0B0PTLSz07yqMBiF6xg==}
+  axios@0.30.3:
+    resolution: {integrity: sha512-5/tmEb6TmE/ax3mdXBc/Mi6YdPGxQsv+0p5YlciXWt3PHIn0VamqCXhRMtScnwY3lbgSXLneOuXAKUhgmSRpwg==}
 
   babel-eslint@10.1.0:
     resolution: {integrity: sha512-ifWaTHQ0ce+448CYop8AdrQiBsGrnC+bMgfyKFdi6EsPLTAWG+QfyDeM6OH+FmWnKvEq5NnBMLvlBUPKQZoDSg==}
@@ -6411,7 +6411,7 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.1.0
 
-  axios@0.30.2:
+  axios@0.30.3:
     dependencies:
       follow-redirects: 1.15.11(debug@4.4.3)
       form-data: 4.0.4

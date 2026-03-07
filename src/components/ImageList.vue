@@ -5,6 +5,7 @@
       wrapper-height="95vh"
       :gap="10"
       :items="list"
+      :row-key="itemKey"
       :min-column-count="2"
       :item-min-width="280"
       :preload-screen-count="preloadScreenCount"
@@ -31,6 +32,7 @@
       v-else-if="listType == 'VirtualJustified'"
       wrapper-height="95vh"
       :items="list"
+      :row-key="itemKey"
       :preload-screen-count="preloadScreenCount"
       :on-load-more="onReachEnd"
     >
@@ -53,6 +55,7 @@
       v-else-if="listType == 'VirtualSlide'"
       height="84vh"
       :slides="list"
+      :item-key="itemKey"
       :on-reach-end="onReachEnd"
     >
       <template #default="{ slide }">
@@ -78,7 +81,7 @@
       v-bind="vanListProps"
       @load="onReachEnd"
     >
-      <JustifiedLayout v-if="listType == 'Justified(Transform)'" :items="list">
+      <JustifiedLayout v-if="listType == 'Justified(Transform)'" :items="list" :item-key="itemKey">
         <template #default="{ item }">
           <ImageCard
             mode="all"
@@ -91,7 +94,7 @@
       <wf-cont v-else :layout="forceLayout">
         <ImageCard
           v-for="(item, index) in list"
-          :key="item.id || index"
+          :key="item[itemKey] || index"
           mode="all"
           :square="listType == 'Grid'"
           :artwork="item"
@@ -123,6 +126,7 @@ export default {
   props: {
     list: { type: Array, default: () => [] },
     listClass: { type: String, default: '' },
+    itemKey: { type: String, default: 'id' },
     forceLayout: { type: String, default: '' },
     vanListProps: { type: Object, default: () => ({}) },
     imageCardProps: { type: Function, default: () => ({}) },
@@ -178,12 +182,20 @@ export default {
       if (this.listType == 'VirtualGrid') return itemWidth
       return item.height * (itemWidth / item.width)
     },
-    toArtwork(art) {
-      this.onCardClick(art)
+    toArtwork(artwork) {
+      this.onCardClick(artwork)
       this.$store.dispatch('setGalleryList', this.list)
+      let art = artwork
+      let id = artwork.id
+      if (typeof id == 'string') {
+        id = parseInt(artwork.id)
+      }
+      if (artwork._art) {
+        art = artwork._art
+      }
       this.$router.push({
         name: 'Artwork',
-        params: { id: art.id, art },
+        params: { id, art },
       })
     },
   },

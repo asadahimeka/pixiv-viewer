@@ -13,7 +13,6 @@
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer')"
       />
       <van-cell center :title="$t('QV1uifvU3RRNg7roth-8s')" is-link :label="$t('tips.click_view')" to="/setting/about/faq" />
-      <van-cell center :title="'赞助'" is-link :label="$t('tips.click_view')" @click="openLink('https://sponsors-yumine.netlify.app')" />
     </van-cell-group>
     <van-cell-group :title="$t('about.credits')">
       <van-cell
@@ -94,27 +93,27 @@
         label="Github:asadahimeka/pixiv-viewer"
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
       />
-      <van-cell
+      <!-- <van-cell
         center
         :title="$t('cIyLKP7_S_Wo0Y0908dnm')"
         is-link
         label="Github:asadahimeka/pixiv-viewer"
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer/discussions')"
-      />
+      /> -->
       <van-cell
         center
-        title="论坛"
+        title="E-mail"
         is-link
-        label="https://pxve.discourse.group"
-        @click="openLink('https://pxve.discourse.group/')"
+        label="i@nanoka.top"
+        @click="openLink('mailto:i@nanoka.top')"
       />
-      <van-cell
+      <!-- <van-cell
         center
         :title="$t('VhMNSWrg03-_ryN7nRBJ3')"
         is-link
         :label="$t('9H-9VJU67Fuabl8OgbhOr')"
         @click="openLink('https://www.nanoka.top/say/pxve_comments.html')"
-      />
+      /> -->
     </van-cell-group>
   </div>
 </template>

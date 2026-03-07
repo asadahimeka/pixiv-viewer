@@ -162,16 +162,17 @@
 <script>
 import { mapGetters } from 'vuex'
 import { Dialog } from 'vant'
+import _ from '@/lib/lodash'
+import store from '@/store'
 import { copyText, isSafari, downloadFile, formatIntlDate, formatIntlNumber } from '@/utils'
 import { i18n, isCNLocale } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
 import { getBookmarkRestrictTags, localApi } from '@/api'
 import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { isAiIllust } from '@/utils/filter'
-import CommentsArea from './Comment/CommentsArea.vue'
-import store from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { COMMON_IMAGE_PROXY } from '@/consts'
+import CommentsArea from './Comment/CommentsArea.vue'
 
 const {
   isAutoLoadKissT,
@@ -484,14 +485,15 @@ export default {
             }
           })
       }
-      const len = this.artwork.images.length
+      const artwork = _.cloneDeep(this.artwork)
+      const len = artwork.images.length
       window.umami?.track('download_artwork_btn', { len })
       for (let index = 0; index < len; index++) {
-        const item = this.artwork.images[index]
-        const fileName = `${getArtworkFileName(this.artwork, index)}.${item.o.split('.').pop()}`
+        const item = artwork.images[index]
+        const fileName = `${getArtworkFileName(artwork, index)}.${item.o.split('.').pop()}`
         await downloadFile(item.o, fileName, {
           message: `${this.$t('tip.downloading')} (${index + 1}/${len})`,
-          subDir: store.state.appSetting.dlSubDirByAuthor ? this.artwork.author.name : undefined,
+          subDir: store.state.appSetting.dlSubDirByAuthor ? artwork.author.name : undefined,
         })
       }
     },

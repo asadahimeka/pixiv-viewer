@@ -82,8 +82,6 @@ import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 // import { mintFilter } from '@/utils/filter'
 
-const { isAutoLoadKissT, isEnableSwipe } = store.state.appSetting
-
 export default {
   name: 'Artwork',
   components: {
@@ -132,8 +130,7 @@ export default {
       ],
       maybeAiAuthor: false,
       isSafari: isSafari(),
-      isAutoLoadKissT,
-      disableSwipe: !isEnableSwipe,
+      isAutoLoadKissT: store.state.appSetting.isAutoLoadKissT,
     }
   },
   head() {
@@ -150,6 +147,10 @@ export default {
     },
     isLandscape1Art() {
       return this.artwork?.images?.length == 1 && this.artwork?.width > this.artwork?.height
+    },
+    disableSwipe() {
+      const { isEnableSwipe } = store.state.appSetting
+      return !isEnableSwipe
     },
   },
   watch: {

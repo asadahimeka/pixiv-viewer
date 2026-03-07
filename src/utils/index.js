@@ -471,9 +471,9 @@ export async function previewXMedia(item) {
  * @param {string} algorithm
  */
 export async function calculateFileHash(file, algorithm = 'SHA-256') {
-  const buffer = await file.arrayBuffer();
-  const hashBuffer = await crypto.subtle.digest(algorithm, buffer);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-  return hashHex;
+  const buffer = await file.arrayBuffer()
+  const hashBuffer = await crypto.subtle.digest(algorithm, buffer)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  return hashHex
 }

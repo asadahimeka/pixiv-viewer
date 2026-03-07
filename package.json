@@ -15,7 +15,7 @@
     "@vant/touch-emulator": "1.4.0",
     "@vueuse/core": "11.3.0",
     "@vueuse/components": "11.3.0",
-    "axios": "0.30.2",
+    "axios": "0.30.3",
     "core-js": "3.40.0",
     "crypto-js": "4.2.0",
     "dayjs": "1.11.13",
@@ -57,8 +57,6 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
-      "core-js",
-      "swiper",
       "vue-demi"
     ]
   }

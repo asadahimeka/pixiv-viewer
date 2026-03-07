@@ -393,6 +393,7 @@ export default {
   position: relative;
   min-height: 600px;
   // background-color: #fafafa;
+  padding-bottom 10PX
 
   ::v-deep .swiper-container {
     padding-bottom 0.2rem
