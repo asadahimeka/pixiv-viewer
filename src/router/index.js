@@ -69,7 +69,7 @@ router.beforeEach((to, from, next) => {
     return
   }
 
-  if (openArtDetailAsPopup) {
+  if (from.name && openArtDetailAsPopup) {
     if (to.name == 'Artwork') {
       const art = to.params.art || { id: to.params.id, images: [{ o: PXIMG_PID_BASE + to.params.id }] }
       eventBus.$emit('show-art-detail-popup', art)
