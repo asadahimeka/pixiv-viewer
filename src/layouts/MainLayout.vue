@@ -9,19 +9,38 @@
     <div v-show="!showNav" class="back_to_top" :class="{ 'back_to_top--show': !isNavAppear }" @click="scrollToTop()">
       <van-icon name="back-top" />
     </div>
+    <van-dialog
+      v-if="openArtDetailAsPopup"
+      v-model="showArtDetailPopup"
+      class="art-detail-popup"
+      :overlay-style="{ zIndex: 100 }"
+      close-on-click-overlay
+    >
+      <art-detail v-if="showArtDetailPopup" :popup-art="popupArt" />
+      <van-icon class="art-detail-popup-close" name="cross" @click="closeArtPopup()" />
+    </van-dialog>
   </div>
 </template>
 
 <script>
-import Nav from '@/components/Nav'
+import { eventBus, throttleScroll } from '@/utils'
 import store from '@/store'
-import { throttleScroll } from '@/utils'
+import Nav from '@/components/Nav'
+import Artwork from '@/views/Artwork/index.vue'
 
-const { isImageFitScreen, isImageCardBorderRadius, isImageCardBoxShadow, hideNavBarOnScroll, navBarAltStyle } = store.state.appSetting
+const {
+  isImageFitScreen,
+  isImageCardBorderRadius,
+  isImageCardBoxShadow,
+  hideNavBarOnScroll,
+  navBarAltStyle,
+  openArtDetailAsPopup,
+} = store.state.appSetting
 
 export default {
   components: {
     'my-nav': Nav,
+    'art-detail': Artwork,
   },
   props: {
     safeArea: {
@@ -40,6 +59,9 @@ export default {
         'image-card-no-radius': !isImageCardBorderRadius,
         'image-card-no-shadow': !isImageCardBoxShadow,
       },
+      openArtDetailAsPopup,
+      showArtDetailPopup: false,
+      popupArt: null,
     }
   },
   computed: {
@@ -61,6 +83,14 @@ export default {
     }, () => {
       this.isNavAppear = true
     }), { passive: true })
+
+    eventBus.$on('show-art-detail-popup', art => {
+      this.popupArt = art
+      this.showArtDetailPopup = true
+    })
+    eventBus.$on('close-art-detail-popup', () => {
+      this.closeArtPopup()
+    })
   },
   methods: {
     scrollToTop() {
@@ -70,6 +100,10 @@ export default {
           this.$store.commit('setIsNovelViewShrink', true)
         }, 500)
       }
+    },
+    closeArtPopup() {
+      this.showArtDetailPopup = false
+      this.popupArt = null
     },
   },
 }
@@ -118,4 +152,32 @@ export default {
   // @media screen and (max-width: 1280px)
     // display none
 
+</style>
+<style lang="stylus">
+html, body
+  &:has(.art-detail-popup .artwork)
+    overflow hidden !important
+.art-detail-popup
+  z-index 100 !important
+  top 50%
+  width 95vw !important
+  height 95vh !important
+  overflow-y auto
+  &-close
+    position absolute
+    right 0rem
+    top 0rem
+    padding 0.25rem
+    font-size: 0.6rem
+    cursor pointer
+  &::-webkit-scrollbar,
+  .van-dialog__footer
+    display none
+  .van-dialog__content .artwork
+    .share_btn,
+    .top-bar-wrap,
+    .meta_btns .van-button:last-child
+      display none
+    .ia-cont .ia-left .image-box .image
+      max-height 92vh
 </style>

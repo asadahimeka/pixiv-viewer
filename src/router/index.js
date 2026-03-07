@@ -2,8 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import nprogress from 'nprogress'
 import store from '@/store'
-import { BASE_URL } from '@/consts'
+import { BASE_URL, PXIMG_PID_BASE } from '@/consts'
 import { routes } from './routes'
+import { eventBus } from '@/utils'
 
 Vue.use(VueRouter)
 
@@ -17,7 +18,7 @@ const router = new VueRouter({
   },
 })
 
-const { pageTransition, imgReso, ctrlClickNewTab } = store.state.appSetting
+const { pageTransition, imgReso, ctrlClickNewTab, openArtDetailAsPopup } = store.state.appSetting
 const isLargeWebP = imgReso == 'Large(WebP)'
 
 const noSlideRoutes = ['Home', 'HomeManga', 'HomeNovel', 'Search', 'SearchNovel', 'SearchUser', 'Rank', 'RankNovel', 'Following', 'Setting']
@@ -66,6 +67,16 @@ router.beforeEach((to, from, next) => {
   if (ctrlClickNewTab && isPressingMetaKey) {
     window.open(to.fullPath)
     return
+  }
+
+  if (openArtDetailAsPopup) {
+    if (to.name == 'Artwork') {
+      const art = to.params.art || { id: to.params.id, images: [{ o: PXIMG_PID_BASE + to.params.id }] }
+      eventBus.$emit('show-art-detail-popup', art)
+      return
+    } else {
+      eventBus.$emit('close-art-detail-popup')
+    }
   }
 
   if (pageTransition) {

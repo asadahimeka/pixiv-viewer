@@ -272,6 +272,11 @@
           <van-switch :value="appSetting.ctrlClickNewTab" size="24" @change="v => saveAppSetting('ctrlClickNewTab', v, true)" />
         </template>
       </van-cell>
+      <van-cell v-if="!appSetting.ctrlClickNewTab" center :title="$t('YpPRTcXoLoM5R1mhSy3si')">
+        <template #right-icon>
+          <van-switch :value="appSetting.openArtDetailAsPopup" size="24" @change="v => saveAppSetting('openArtDetailAsPopup', v, true)" />
+        </template>
+      </van-cell>
       <van-cell v-if="!appSetting.isDirectPximg" center :title="$t('GnyWarxXoDw49xCft4IlS')">
         <template #right-icon>
           <van-switch :value="appSetting.isImgLazy" size="24" @change="v => saveAppSetting('isImgLazy', v, true)" />

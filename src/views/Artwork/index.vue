@@ -109,6 +109,9 @@ export default {
       next()
     }
   },
+  props: {
+    popupArt: { type: Object, default: () => null },
+  },
   data() {
     return {
       loading: true,
@@ -149,8 +152,8 @@ export default {
       return this.artwork?.images?.length == 1 && this.artwork?.width > this.artwork?.height
     },
     disableSwipe() {
-      const { isEnableSwipe } = store.state.appSetting
-      return !isEnableSwipe
+      const { isEnableSwipe, openArtDetailAsPopup } = store.state.appSetting
+      return openArtDetailAsPopup || !isEnableSwipe
     },
   },
   watch: {
@@ -162,6 +165,11 @@ export default {
         this.init()
       }
     },
+    popupArt(val) {
+      if (val && val.id != this.artwork.id) {
+        this.init()
+      }
+    },
   },
   mounted() {
     this.init()
@@ -170,9 +178,13 @@ export default {
     init() {
       this.loading = true
       this.artwork = {}
-      const id = Number(this.$route.params.id)
+      let id = Number(this.$route.params.id)
       let art = SessionStorage.get(`param_art_detail_${id}`)
       if (!art) art = this.$route.params.art
+      if (this.popupArt) {
+        art = this.popupArt
+        id = art.id
+      }
       console.log('artwork detail: ', id, art)
       if (art && art.type != 'ugoira' && !art.images[0].o.includes(PXIMG_PID_BASE)) {
         // art.caption = await mintFilter(art.caption)
