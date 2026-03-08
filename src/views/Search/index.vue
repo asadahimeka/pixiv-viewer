@@ -60,9 +60,7 @@
         </div>
       </div>
     </div>
-    <template v-if="isLoggedIn">
-      <ImageSearch v-show="!focus && !keywords.trim()" />
-    </template>
+    <ImageSearch v-show="!focus && !keywords.trim()" />
     <div class="com_sel_tabs" :style="focus?'opacity:0;pointer-events:none':''">
       <div class="com_sel_tab cur">{{ $t('common.illust_manga') }}</div>
       <div class="com_sel_tab" @click="$router.replace('/search_novel')">{{ $t('common.novel') }}</div>
@@ -111,9 +109,6 @@ export default {
     ...mapState(['searchHistory']),
     pidOrUidList() {
       return this.keywords.match(/(\d+)/g) || []
-    },
-    isLoggedIn() {
-      return store.getters.isLoggedIn
     },
     isR18On() {
       return store.getters.isR18On

@@ -1,11 +1,14 @@
 <template>
   <div class="image-search">
-    <van-uploader class="open-dialog" :before-read="beforeRead" :after-read="afterRead" :disabled="loading">
-      <Icon v-show="!loading&&!file" name="image" />
+    <div v-if="notLoggedIn" style="padding: 0.15rem;" @click="openSauceNao">
+      <Icon name="image" />
+    </div>
+    <van-uploader v-else class="open-dialog" :before-read="beforeRead" :after-read="afterRead" :disabled="loading">
+      <Icon v-show="!loading && !file" name="image" />
       <div v-show="loading" class="loading"></div>
     </van-uploader>
-    <span>
-      <Icon v-show="!loading&&file" class="image-search-close" name="close" @click.native="reset" />
+    <span v-show="!loading && file">
+      <Icon class="image-search-close" name="close" @click.native="reset" />
     </span>
     <div v-if="file" class="container">
       <div class="thumb">
@@ -41,8 +44,10 @@ import { Dialog } from 'vant'
 import { COMMON_PROXY, PIXIV_NEXT_URL } from '@/consts'
 import { calculateFileHash } from '@/utils'
 import { getCache, setCache } from '@/utils/storage/siteCache'
+import store from '@/store'
 
 export default {
+  name: 'ImageSearch',
   filters: {
     hostname(val) {
       try {
@@ -54,8 +59,6 @@ export default {
         return ''
       }
     },
-  },
-  components: {
   },
   data() {
     return {
@@ -72,6 +75,11 @@ export default {
       },
     }
   },
+  computed: {
+    notLoggedIn() {
+      return !store.getters.isLoggedIn
+    },
+  },
   methods: {
     reset() {
       this.file = null
@@ -85,7 +93,7 @@ export default {
       return true
     },
     async afterRead(file) {
-      window.umami?.track('image-search')
+      window.umami?.track('image-search', { name: file.file.name })
 
       console.log('file: ', file)
       const hash = await calculateFileHash(file.file)
@@ -163,6 +171,9 @@ export default {
         return
       }
       window.open(url, '_blank', 'noopener')
+    },
+    openSauceNao() {
+      window.open('https://saucenao.com', '_blank', 'noopener')
     },
   },
 }

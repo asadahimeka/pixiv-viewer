@@ -9,15 +9,19 @@ import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON
 import { setProperFontSize } from '@/utils'
 
 const isSupportWebP = (() => {
-  const elem = document.createElement('canvas')
+  try {
+    const elem = document.createElement('canvas')
 
-  if (elem.getContext && elem.getContext('2d')) {
-    // was able or not to get WebP representation
-    return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0
+    if (elem.getContext && elem.getContext('2d')) {
+      // was able or not to get WebP representation
+      return elem.toDataURL('image/webp').indexOf('data:image/webp') === 0
+    }
+
+    // very old browser like IE 8, canvas not supported
+    return false
+  } catch (err) {
+    return false
   }
-
-  // very old browser like IE 8, canvas not supported
-  return false
 })()
 
 export function imgProxy(url) {
