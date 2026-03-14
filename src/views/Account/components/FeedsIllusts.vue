@@ -13,8 +13,8 @@
       </van-radio-group>
       <van-checkbox
         v-if="isAppLogin"
-        v-model="expandMulti"
-        @change="onExpandMultiChange"
+        :value="expandMulti"
+        @click="onExpandMultiChange"
       >
         {{ $t('dDeCBvfHPUoQt48l5Gr3D') }}
       </van-checkbox>
@@ -42,11 +42,12 @@
 </template>
 
 <script>
+import _ from '@/lib/lodash'
+import store from '@/store'
 import { localApi } from '@/api'
 import { getFollowingIllusts } from '@/api/user'
-import ImageList from '@/components/ImageList.vue'
-import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
+import ImageList from '@/components/ImageList.vue'
 
 export default {
   name: 'FeedsIllusts',
@@ -63,10 +64,14 @@ export default {
       lastId: null,
       isAppLogin: localApi.APP_CONFIG.useLocalAppApi,
       restrict: 'all',
-      expandMulti: false,
       showImageList: true,
       forceSlideLayout: false,
     }
+  },
+  computed: {
+    expandMulti() {
+      return store.state.appSetting.isExpandMultiPArtwork
+    },
   },
   async created() {
     this.lastId = await getCache('feeds.last.seen.id')
@@ -87,8 +92,9 @@ export default {
       this.finished = false
       this.getRankList()
     },
-    onExpandMultiChange(val) {
-      window.umami?.track('feed_illust_expand_multi', { val })
+    onExpandMultiChange() {
+      store.commit('setAppSetting', { isExpandMultiPArtwork: !this.expandMulti })
+      window.umami?.track('feed_illust_expand_multi', { val: this.expandMulti })
       this.curPage = 1
       this.artList = []
       this.loading = false

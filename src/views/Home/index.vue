@@ -28,7 +28,7 @@
         </div>
         <RecommendIllustHome />
       </template>
-      <Recomm4U v-else-if="isWebLogin" />
+      <WebRecommCards v-else-if="isWebLogin" />
       <template v-else>
         <div v-if="isSelfHibi" class="rec-cards">
           <DiscoveryCard />
@@ -43,6 +43,10 @@
 
 <script>
 import _ from '@/lib/lodash'
+import store from '@/store'
+import api, { localApi } from '@/api'
+import { notSelfHibiApi } from '@/consts'
+import { existsSessionId } from '@/api/user'
 import RankCard from './components/RankCard.vue'
 import SpotlightCard from '../Spotlights/SpotlightCard.vue'
 import DiscoveryCard from '../Discovery/DiscoveryCard.vue'
@@ -51,11 +55,7 @@ import RecommendIllustHome from '../Discovery/RecommendIllustHome.vue'
 import RandomIllust from './components/RandomIllust.vue'
 import RandomIllustCard from './components/RandomIllustCard.vue'
 import LatestIllustCard from '../Discovery/LatestIllustCard.vue'
-import Recomm4U from './components/Recomm4U.vue'
-import { notSelfHibiApi } from '@/consts'
-import { existsSessionId } from '@/api/user'
-import api, { localApi } from '@/api'
-import store from '@/store'
+import WebRecommCards from './components/WebRecommCards.vue'
 
 const isWebLogin = existsSessionId()
 
@@ -70,7 +70,7 @@ export default {
     RandomIllust,
     RandomIllustCard,
     LatestIllustCard,
-    Recomm4U,
+    WebRecommCards,
   },
   data() {
     return {

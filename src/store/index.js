@@ -92,6 +92,7 @@ export default new Vuex.Store({
       imgViewHorizonSwiper: false,
       ctrlClickNewTab: !isMobile,
       openArtDetailAsPopup: false,
+      isExpandMultiPArtwork: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

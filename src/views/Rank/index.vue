@@ -25,7 +25,7 @@
         <div class="filter-favs-actions">
           <span @click="isFilterFavs=!isFilterFavs">{{ isFilterFavs ? $t('hHPMdWCYd_B2r9F0icW5Y') : $t('KS3utA342Q7yr0mOFARV-') }}</span>
           <span v-if="actRankCat == '0'" @click="isHideManga=!isHideManga">{{ isHideManga ? $t('KBTp7zyXO4ckXvh14iu0K') : $t('1VVoNDWxcoBn236bEV-_H') }}</span>
-          <span @click="expandArtworkMulti=!expandArtworkMulti">{{ expandArtworkMulti ? $t('skzCJPKUWOVtXHRV3puwB') : $t('dDeCBvfHPUoQt48l5Gr3D') }}</span>
+          <span @click="changeExpandArtMulti">{{ expandArtworkMulti ? $t('skzCJPKUWOVtXHRV3puwB') : $t('dDeCBvfHPUoQt48l5Gr3D') }}</span>
         </div>
         <template #reference>
           <van-icon name="filter-o" class="filter-favs-icon" />
@@ -150,7 +150,6 @@ export default {
       isHideManga,
       showImageList: true,
       forceSlideLayout: false,
-      expandArtworkMulti: false,
     }
   },
   head() {
@@ -164,6 +163,9 @@ export default {
     },
     dateNum() {
       return dayjs(this.date).date()
+    },
+    expandArtworkMulti() {
+      return store.state.appSetting.isExpandMultiPArtwork
     },
   },
   watch: {
@@ -187,10 +189,6 @@ export default {
     },
     isHideManga(val) {
       window.umami?.track('rank_hide_manga_change', { val })
-      this.onFilterFavsChange()
-    },
-    expandArtworkMulti(val) {
-      window.umami?.track('rank_expand_multi_change', { val })
       this.onFilterFavsChange()
     },
   },
@@ -223,6 +221,11 @@ export default {
       document.documentElement.scrollTo({ top: 0, behavior: 'smooth' })
       this.showFilterFavsPop = false
       this.init()
+    },
+    changeExpandArtMulti() {
+      store.commit('setAppSetting', { isExpandMultiPArtwork: !this.expandArtworkMulti })
+      window.umami?.track('rank_expand_multi_change', { val: this.expandArtworkMulti })
+      this.onFilterFavsChange()
     },
     reset() {
       const { type = 'daily' } = this.$route.params
@@ -308,9 +311,6 @@ export default {
         this.loading = false
         this.error = true
       }
-    },
-    showPopup() {
-      this.isDatePickerShow = true
     },
   },
 }
