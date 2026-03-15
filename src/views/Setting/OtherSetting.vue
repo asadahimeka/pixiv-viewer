@@ -677,6 +677,7 @@ export default {
       appStartPage: {
         show: false,
         actions: [
+          ...(store.getters.isLoggedIn ? [{ name: i18n.t('nav.home') + ' - ' + i18n.t('nav.home'), _value: '/home_all' }] : []),
           { name: i18n.t('nav.home') + ' - ' + i18n.t('common.illust'), _value: '/' },
           { name: i18n.t('nav.home') + ' - ' + i18n.t('common.manga'), _value: '/home_manga' },
           { name: i18n.t('nav.home') + ' - ' + i18n.t('common.novel'), _value: '/home_novel' },

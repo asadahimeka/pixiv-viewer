@@ -508,6 +508,40 @@ export const localApi = {
       }
     }
   },
+  async homeAll(params = {}) {
+    const res = await reqPost('v1/home/all', params)
+    if (Array.isArray(res.contents)) {
+      res.contents = res.contents.map(e => {
+        let detail = {}
+        const kind = e.kind
+        if (kind == 'illust' || kind == 'manga') {
+          detail = parseIllust(e.thumbnails[0].app_model)
+        }
+        if (kind == 'novel') {
+          detail = parseNovel(e.thumbnails[0].app_model)
+          detail._previewText = e.thumbnails[0].text
+        }
+        if (kind == 'tags_carousel') {
+          detail = e.trend_tags.map((tag, i) => ({
+            ...tag,
+            thumb: imgProxy(e.thumbnails[i].app_model.image_urls.medium),
+          }))
+        }
+        return { kind, detail }
+      })
+      return { status: 0, data: res }
+    } else if (res.error) {
+      return {
+        status: -1,
+        msg: handleErrMsg(res),
+      }
+    } else {
+      return {
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
+      }
+    }
+  },
 }
 
 const api = {

@@ -4,6 +4,7 @@ import MainLayout from '@/layouts/MainLayout.vue'
 import Home from '@/views/Home/index.vue'
 import HomeManga from '@/views/Home/HomeManga.vue'
 import HomeNovel from '@/views/Home/HomeNovel.vue'
+import HomeAll from '@/views/Home/HomeAll.vue'
 import Lives from '@/views/Lives/index.vue'
 import LiveDetail from '@/views/Lives/LiveDetail.vue'
 import Discovery from '@/views/Discovery/Discovery.vue'
@@ -71,6 +72,12 @@ export const routes = [
             component: Home,
             meta: { __depth: 1 },
             alias: ['/home', '/index', '/index.html', '/illustration'],
+          },
+          {
+            path: '/home_all',
+            name: 'HomeAll',
+            component: HomeAll,
+            meta: { __depth: 1 },
           },
           {
             path: '/home_manga',

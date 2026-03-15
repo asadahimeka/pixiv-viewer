@@ -6,11 +6,11 @@
         <h1 class="app-title">Pixiv Viewer</h1>
       </div>
       <div class="sel-tabs flex">
+        <div v-if="isAppLogin" v-t="'nav.home'" class="com_sel_tab" @click="$router.replace('/home_all')"></div>
         <div v-t="'common.illust'" class="com_sel_tab cur"></div>
         <div v-t="'common.manga'" class="com_sel_tab" @click="$router.replace('/home_manga')"></div>
         <div v-t="'common.novel'" class="com_sel_tab" @click="$router.replace('/home_novel')"></div>
-        <div v-t="'dZ93cWZJ03hu5emsVwgjA'" class="com_sel_tab" @click="$router.push('/collection')"></div>
-        <!-- <div v-t="'g4JWYmBbfeweCBkRSgGNw'" class="com_sel_tab" @click="$router.push('/lives')"></div> -->
+        <div v-if="!isAppLogin" v-t="'dZ93cWZJ03hu5emsVwgjA'" class="com_sel_tab" @click="$router.push('/collection')"></div>
       </div>
       <div class="home-search">
         <van-search v-model="term" :placeholder="placeholder" shape="round" @search="onSearch" />

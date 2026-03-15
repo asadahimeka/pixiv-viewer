@@ -333,6 +333,7 @@ function initApp(pixiv) {
       'v1/user/follow/delete': () => pixiv.unfollowUser(d.user_id),
       'v2/novel/bookmark/add': () => pixiv.bookmarkNovel(d.novel_id, d.restrict, d.tags),
       'v1/novel/bookmark/delete': () => pixiv.unbookmarkNovel(d.novel_id),
+      'v1/home/all': () => pixiv.homeAll(d.next_params, d.states),
     }
     return fns[path]?.()
   })

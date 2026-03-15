@@ -25,68 +25,68 @@
           <van-button v-if="novelText.next" color="#7232dd" size="small" plain block @click="toNovel(novelText.next.id)">
             {{ $t('novel.series.next') }} {{ novelText.next.title }}
           </van-button>
-          <van-button type="info" size="small" plain block @click="showShare = true">
-            {{ $t('artwork.share.share') }}
-          </van-button>
-          <van-button
-            v-if="showBookmarkBtn"
-            v-longpress="showBookmarkDialog"
-            :loading="favLoading"
-            type="info"
-            size="small"
-            plain
-            block
-            @click="toggleBookmark"
-          >
-            {{ artwork.is_bookmarked ? $t('user.faved'): $t('user.fav') }}
-          </van-button>
-          <van-button v-if="isNovelDlFormatSet" type="info" size="small" plain block @click="downloadNovel()">
-            {{ $t('common.download') }}
-          </van-button>
-          <van-popover
-            v-else
-            v-model="showDlPopover"
-            :actions="novelDlOptions"
-            trigger="click"
-            placement="top"
-            style="width: 100%;"
-            @select="downloadNovel"
-          >
-            <template #reference>
-              <van-button type="info" size="small" plain block style="margin-bottom: 10px;">{{ $t('common.download') }}</van-button>
-            </template>
-          </van-popover>
-          <van-button type="info" size="small" plain block @click="showComments = true">
-            {{ $t('user.view_comments') }}
-          </van-button>
-          <template v-if="showPntBtn">
-            <van-button v-if="isTranslated" type="info" size="small" plain block @click="showOriginText">显示原文</van-button>
+          <div class="series-btns-group">
             <van-button
-              v-else-if="isNovelDefTranslateSet"
+              v-if="showBookmarkBtn"
+              v-longpress="showBookmarkDialog"
+              :loading="favLoading"
               type="info"
               size="small"
               plain
-              block
-              :loading="translateLoading"
-              @click="doDefPnt"
+              @click="toggleBookmark"
             >
-              翻译
+              ⭐{{ artwork.is_bookmarked ? $t('user.faved'): $t('user.fav') }}
+            </van-button>
+            <van-button type="info" size="small" plain @click="showComments = true">
+              💬{{ $t('user.view_comments') }}
+            </van-button>
+            <van-button type="info" size="small" plain @click="showShare = true">
+              🔗{{ $t('artwork.share.share') }}
+            </van-button>
+          </div>
+          <div class="series-btns-group">
+            <van-button v-if="isNovelDlFormatSet" type="info" size="small" plain @click="downloadNovel()">
+              ⬇️{{ $t('common.download') }}
             </van-button>
             <van-popover
               v-else
-              v-model="showPntPopover"
-              :actions="translateLoading ? [] : pntActions"
+              v-model="showDlPopover"
+              :actions="novelDlOptions"
               trigger="click"
               placement="top"
-              style="width: 100%;"
-              @select="onPntSelect"
+              @select="downloadNovel"
             >
               <template #reference>
-                <van-button type="info" size="small" plain block :loading="translateLoading" style="margin-bottom: 10px;">翻译</van-button>
+                <van-button type="info" size="small" plain style="width: 100%;">⬇️{{ $t('common.download') }}</van-button>
               </template>
             </van-popover>
-          </template>
-          <van-button type="info" size="small" plain block @click="toggleNovelConfigShow">{{ $t('novel.settings.title') }}</van-button>
+            <template v-if="showPntBtn">
+              <van-button v-if="isTranslated" type="info" size="small" plain @click="showOriginText">↩️显示原文</van-button>
+              <van-button
+                v-else-if="isNovelDefTranslateSet"
+                type="info"
+                size="small"
+                plain
+                :loading="translateLoading"
+                @click="doDefPnt"
+              >
+                🌐翻译
+              </van-button>
+              <van-popover
+                v-else
+                v-model="showPntPopover"
+                :actions="translateLoading ? [] : pntActions"
+                trigger="click"
+                placement="top"
+                @select="onPntSelect"
+              >
+                <template #reference>
+                  <van-button type="info" size="small" plain :loading="translateLoading" style="width: 100%;">🌐翻译</van-button>
+                </template>
+              </van-popover>
+            </template>
+          </div>
+          <van-button type="info" size="small" plain @click="toggleNovelConfigShow">⚙{{ $t('novel.settings.title') }}</van-button>
         </div>
         <keep-alive>
           <AuthorNovelCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
@@ -638,15 +638,21 @@ img[src*="https://api.moedog.org/qr/?url="]
       filter: drop-shadow(0.02667rem 0.05333rem 0.05333rem rgba(0,0,0,0.8));
 
   .series-btns
+    display flex
+    flex-direction column
+    gap 10px
     padding 0 40px
     ::v-deep
-      .van-button
-        &:not(:last-child)
-          margin-bottom 10px
-        .van-button__text
-          overflow: hidden
-          text-overflow: ellipsis
-          white-space: nowrap
+      .van-button .van-button__text
+        overflow: hidden
+        text-overflow: ellipsis
+        white-space: nowrap
+    &-group
+      display flex
+      flex-wrap wrap
+      gap 10px
+      > *
+        flex 1
 
   ::v-deep .van-share-sheet
     width 10rem !important

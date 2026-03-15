@@ -1153,6 +1153,20 @@ class PixivApi {
     )
     return this.requestUrl(`/v1/spotlight/articles?${queryString}`)
   }
+
+  homeAll(next_params, states) {
+    const data = {}
+    if (next_params) data.next_params = next_params
+    if (states) data.states = states
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json; charset=UTF8',
+      },
+      data,
+    }
+    return this.requestUrl('/v1/home/all', options)
+  }
 }
 
 export default PixivApi

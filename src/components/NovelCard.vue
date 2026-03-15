@@ -22,6 +22,7 @@
           {{ artwork.like }}
         </van-tag>
       </div>
+      <div v-if="showCaption" class="novel_caption" v-html="artwork.caption"></div>
     </div>
   </div>
 </template>
@@ -49,6 +50,10 @@ export default {
       type: Boolean,
       default: true,
     },
+    showCaption: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {}
@@ -70,7 +75,7 @@ export default {
       } else if (this.artwork.x_restrict == 2) {
         return 'R-18G'
       } else {
-        return false
+        return ''
       }
     },
     novelTagsText() {
@@ -144,6 +149,16 @@ export default {
   .novel_tips {
     margin-top 20px
     padding 0 20px
+  }
+
+  .novel_caption {
+    margin-top 20px
+    padding 0 20px
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .series {
