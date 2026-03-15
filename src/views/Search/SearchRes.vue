@@ -32,25 +32,30 @@
     </div>
     <div v-if="focus" class="search-dropdown">
       <div v-if="keywords.trim()" class="pid-n-uid">
-        <div class="keyword" @click="onSearch">{{ $t('search.seach_tag') }} {{ keywords.trim() }} </div>
+        <div class="keyword" @click="onSearch">{{ $t('search.seach_tag') }} {{ keywords }} </div>
         <template v-if="showR18OrSafeQuickTag">
-          <div class="keyword" @click="onSearch('R18')">{{ $t('pL1gF_vTo1c_iF5GpBIDA') }} {{ keywords.trim() }} </div>
-          <div class="keyword" @click="onSearch('safe')">{{ $t('IxG-Y2odr_0OKUJbaqV0-') }} {{ keywords.trim() }} </div>
+          <div class="keyword" @click="onSearch('R18')">{{ $t('pL1gF_vTo1c_iF5GpBIDA') }} {{ keywords }} </div>
+          <div class="keyword" @click="onSearch('safe')">{{ $t('IxG-Y2odr_0OKUJbaqV0-') }} {{ keywords }} </div>
         </template>
-        <div v-if="isSelfHibi" class="keyword" @click="searchUser">
-          {{ $t('search.search_user') }} {{ keywords.trim() }}
+        <div class="keyword" @click="searchNovelTag">
+          {{ $t('0JnI5_DBdR8YNUHsS-mJr') }} {{ keywords }}
+        </div>
+        <div class="keyword" @click="searchUser">
+          {{ $t('search.search_user') }} {{ keywords }}
+        </div>
+        <div class="keyword" @click="searchCollectionTag">
+          {{ $t('9y6HjIgJZ9CzHOEy8UKr1') }} {{ keywords }}
         </div>
       </div>
       <div v-if="pidOrUidList.length" class="pid-n-uid">
         <template v-for="n in pidOrUidList">
           <div :key="'p_' + n" class="keyword" @click="toPidPage(n)">→ {{ $t('common.artwork') }} ID: {{ n }} </div>
           <div :key="'u_' + n" class="keyword" @click="toUidPage(n)">→ {{ $t('common.user') }} ID: {{ n }} </div>
-          <div v-if="n.length<6" :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div>
         </template>
       </div>
       <div v-if="keywords.trim() && autoCompleteTagList.length" class="search-history">
         <div class="title-bar">{{ $t('search.autocomplete') }}</div>
-        <div v-for="tag in autoCompleteTagList" :key="tag" class="keyword" @click="searchTag(tag)">
+        <div v-for="(tag, i) in autoCompleteTagList" :key="tag+i" class="keyword" @click="searchTag(tag)">
           {{ tag }}
         </div>
       </div>
@@ -116,8 +121,14 @@
       </div>
       <PopularPreview v-if="showPopPreview && keywords.trim()" ref="popPreview" :word="keywords" :params="searchParams" />
       <template v-else-if="keywords.trim()">
+        <van-tabs v-model="actSearchQuickTab" class="search-quick-tabs" :swipeable="false">
+          <van-tab :title="$t('common.illust_manga')" />
+          <van-tab :title="$t('common.novel')" :to="searchNovelTag('isLink')" />
+          <van-tab :title="$t('common.user')" :to="searchUser('isLink')" />
+          <van-tab :title="$t('dZ93cWZJ03hu5emsVwgjA')" :to="searchCollectionTag('isLink')" />
+        </van-tabs>
         <TagStorySlides v-if="$route.query.tss" :tag="keywords.trim()" />
-        <div v-if="$route.query.tss" style="width: 200px;height: 1px;margin: 0.5rem auto;background: #ccc;"></div>
+        <div v-if="$route.query.tss" class="tag-story-divider"></div>
         <ImageList
           :list-class="`result-list${isPagination ? ' is-pagination' : ''}`"
           :list="artList"
@@ -250,6 +261,7 @@ export default {
       isSelfHibi: !notSelfHibiApi,
       totalPages: 166,
       pageBtnNum: document.documentElement.clientWidth / 80,
+      actSearchQuickTab: 0,
     }
   },
   head() {
@@ -341,6 +353,7 @@ export default {
     },
     $route() {
       if (this.$route.name != 'SearchKeyword') return
+      this.actSearchQuickTab = 0
       const keyword = (this.$route.params.keyword || '').trim()
       console.log('watch route SearchKeyword: ', keyword)
       console.log('watch route this.keywords: ', this.keywords)
@@ -629,8 +642,20 @@ export default {
         this.search(keywords + ' ')
       }
     },
-    async searchUser() {
-      this.$router.push(`/search_user/${encodeURIComponent(this.keywords.trim())}`)
+    searchUser(isLink) {
+      const link = `/search_user/${encodeURIComponent(this.keywords.trim())}`
+      if (isLink == 'isLink') return link
+      this.$router.push(link)
+    },
+    searchNovelTag(isLink) {
+      const link = `/search_novel/${encodeURIComponent(this.keywords.trim())}`
+      if (isLink == 'isLink') return link
+      this.$router.push(link)
+    },
+    searchCollectionTag(isLink) {
+      const link = `/collections?tags%5B%5D=${encodeURIComponent(this.keywords.trim())}`
+      if (isLink == 'isLink') return link
+      this.$router.push(link)
     },
     toPidPage(id) {
       this.keywords = ''
@@ -643,12 +668,6 @@ export default {
       this.keywordsList = []
       this.lastWord = ''
       this.$router.push(`/users/${id}`)
-    },
-    toSpotlightPage(id) {
-      this.keywords = ''
-      this.keywordsList = []
-      this.lastWord = ''
-      this.$router.push(`/spotlight/${id}`)
     },
     clearHistory() {
       this.setSearchHistory(null)
@@ -823,17 +842,24 @@ export default {
     z-index: 5;
   }
 
-  .com_sel_tabs {
-    position fixed
-    z-index 3
-    left 50%
-    width 100%
-    transform translateX(-50%)
-    top 120px
-    margin-bottom 0
-    padding 0px 0px 20px
-    backdrop-filter: saturate(200%) blur(10PX);
-    background: rgba(255, 255, 255, 0.8);
+  .search-quick-tabs {
+    width 10rem
+    margin 0 auto 0.5rem
+
+    ::v-deep .van-tabs__nav {
+      background none
+    }
+
+    &+.tag-story-divider {
+      display none
+    }
+  }
+
+  .tag-story-divider {
+    width: 200px;
+    height: 1px;
+    margin: 0.5rem auto;
+    background: #ccc;
   }
 
   .list-wrap {

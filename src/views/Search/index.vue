@@ -25,13 +25,19 @@
     </div>
     <div v-if="focus" class="search-dropdown">
       <div v-if="keywords.trim()" class="pid-n-uid">
-        <div class="keyword" @click="onSearch">{{ $t('search.seach_tag') }} {{ keywords.trim() }} </div>
+        <div class="keyword" @click="onSearch">{{ $t('search.seach_tag') }} {{ keywords }} </div>
         <template v-if="isR18On && !pidOrUidList.length">
-          <div class="keyword" @click="onSearch('R18')">{{ $t('pL1gF_vTo1c_iF5GpBIDA') }} {{ keywords.trim() }} </div>
-          <div class="keyword" @click="onSearch('safe')">{{ $t('IxG-Y2odr_0OKUJbaqV0-') }} {{ keywords.trim() }} </div>
+          <div class="keyword" @click="onSearch('R18')">{{ $t('pL1gF_vTo1c_iF5GpBIDA') }} {{ keywords }} </div>
+          <div class="keyword" @click="onSearch('safe')">{{ $t('IxG-Y2odr_0OKUJbaqV0-') }} {{ keywords }} </div>
         </template>
-        <div v-if="isSelfHibi" class="keyword" @click="searchUser">
-          {{ $t('search.search_user') }} {{ keywords.trim() }}
+        <div class="keyword" @click="searchNovelTag">
+          {{ $t('0JnI5_DBdR8YNUHsS-mJr') }} {{ keywords }}
+        </div>
+        <div class="keyword" @click="searchUser">
+          {{ $t('search.search_user') }} {{ keywords }}
+        </div>
+        <div class="keyword" @click="searchCollectionTag">
+          {{ $t('9y6HjIgJZ9CzHOEy8UKr1') }} {{ keywords }}
         </div>
       </div>
       <div v-if="pidOrUidList.length" class="pid-n-uid">
@@ -44,7 +50,7 @@
       </div>
       <div v-if="keywords.trim() && autoCompleteTagList.length" class="search-history">
         <div class="title-bar">{{ $t('search.autocomplete') }}</div>
-        <div v-for="tag in autoCompleteTagList" :key="tag" class="keyword" @click="searchTag(tag)">
+        <div v-for="(tag, i) in autoCompleteTagList" :key="tag+i" class="keyword" @click="searchTag(tag)">
           {{ tag }}
         </div>
       </div>
@@ -210,8 +216,14 @@ export default {
       console.log('------- searchTag: ', keywords)
       this.search(keywords + ' ', isQueryTagStory)
     },
-    async searchUser() {
+    searchUser() {
       this.$router.push(`/search_user/${encodeURIComponent(this.keywords.trim())}`)
+    },
+    searchNovelTag() {
+      this.$router.push(`/search_novel/${encodeURIComponent(this.keywords.trim())}`)
+    },
+    searchCollectionTag() {
+      this.$router.push(`/collections?tags%5B%5D=${encodeURIComponent(this.keywords.trim())}`)
     },
     toPidPage(id) {
       this.reset()
