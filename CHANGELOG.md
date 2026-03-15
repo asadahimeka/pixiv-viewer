@@ -53,6 +53,7 @@
 - Open link in new page with meta/ctrl pressed (#77)
 - Ctrl click new tab setting
 - Expand multi pics artwork
+- New home feeds
 
 ### 🐛 Bug Fixes
 
@@ -144,6 +145,9 @@
 - Clear single history
 - Open illust detail as popup
 - Bug fixes
+- Bug fix
+- Bug fixes
+- Search type quick jump
 
 ### 📚 Documentation
 
@@ -199,6 +203,7 @@
 - Release v1.31.10
 - Release v1.31.11
 - Release v1.31.12
+- Release v1.32.0
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
