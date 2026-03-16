@@ -2,14 +2,15 @@
 // @name         Pxve HTTP Helper
 // @name:ru      HTTP-помощник Pxve
 // @namespace    https://www.nanoka.top
-// @version      0.8
+// @version      0.9
 // @description  HTTP helper for Pixiv-Viewer.
 // @description:ru HTTP-помощник для Pixiv-Viewer.
 // @author       asadahimeka
 // @license      MIT
-// @match        https://www.pixiv.pictures/*
 // @match        https://pixiv.pictures/*
+// @match        https://www.pixiv.pictures/*
 // @match        https://pxve.cc/*
+// @match        https://www.pxve.cc/*
 // @match        https://pxvek.cocomi.eu.org/*
 // @match        https://pxvek.169889.xyz/*
 // @match        https://pixiv-viewer.netlify.app/*
@@ -34,6 +35,9 @@
   unsafeWindow.__closeWindow__ = () => window.close()
   unsafeWindow.__httpRequest__ = (url, configStr) => {
     const config = JSON.parse(configStr)
+    if (config.headers?.['Content-Type']?.includes('application/json') && config.data && typeof config.data != 'string') {
+      config.data = JSON.stringify(config.data)
+    }
     const isReturnBlobUrl = config.responseType == 'blobUrl'
     if (isReturnBlobUrl) config.responseType = 'blob'
     return new Promise((resolve, reject) => {

@@ -1,14 +1,12 @@
 <template>
   <div class="HomeaIllustCard" :class="{ 'single-img': images.length == 1 }" :style="`--ratio:${ratio}`">
-    <swiper class="swipe-wrap" :options="swiperOption">
-      <swiper-slide v-for="(img, i) in images" :key="i+img" class="swipe-item">
+    <ImageCard mode="all" :artwork="artwork" :style="`--bg:url('${images[0]}') 0`" @click-card="toDetail" />
+    <div v-if="images.length > 1" ref="view" class="slide-wrap" @wheel="handleWheel">
+      <div v-for="(img, i) in images" :key="i+img" class="slide-item">
         <Pximg :src="img" @click.native="toDetail" />
-      </swiper-slide>
-      <div slot="pagination" class="swiper-pagination"></div>
-      <div slot="button-prev" class="swiper-button-prev"></div>
-      <div slot="button-next" class="swiper-button-next"></div>
-    </swiper>
-    <ImageCard :artwork="artwork" mode="all" @click-card="toDetail" />
+        <div class="slide-pagination">{{ i + 1 }} / {{ images.length }}</div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -24,25 +22,6 @@ export default {
   computed: {
     images() {
       return this.artwork.images.map(e => e.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/'))
-    },
-    swiperOption() {
-      return {
-        lazy: true,
-        freeMode: true,
-        mousewheel: true,
-        slidesPerView: 'auto',
-        spaceBetween: 10,
-        centeredSlides: this.artwork.images.length == 1,
-        touchMoveStopPropagation: true,
-        pagination: {
-          el: '.HomeaIllustCard .swiper-pagination',
-          type: 'fraction',
-        },
-        navigation: {
-          nextEl: '.HomeaIllustCard .swiper-button-next',
-          prevEl: '.HomeaIllustCard .swiper-button-prev',
-        },
-      }
     },
     ratio() {
       let ratio = this.artwork.width / this.artwork.height
@@ -61,6 +40,12 @@ export default {
         },
       })
     },
+    handleWheel(e) {
+      if (this.$store.state.isMobile) return
+      e.preventDefault()
+      e.stopPropagation()
+      this.$refs.view.scrollLeft += e.deltaY * 2
+    },
   },
 }
 </script>
@@ -68,45 +53,75 @@ export default {
 <style lang="stylus">
 .HomeaIllustCard
   position relative
-  .swipe-wrap
+
+  .slide-wrap
     position absolute
     top 0
+    z-index 1
+    display flex
+    align-items center
+    gap 10PX
+    overflow-x auto
     width 100%
     border-radius: 12PX
-    .swipe-item
-      width 9rem
-      height 80vh
-      @media screen and (max-width 600px)
-        aspect-ratio: var(--ratio)
-        width 100%
-        height inherit
-      img
-        width 100%
-        height 100%
-        object-fit: cover
-    .swiper-pagination
-      bottom unset
-      left unset
-      top: 0.13333rem
-      right: 0.13333rem
-      z-index 12
-      width fit-content
-      padding: 0.05333rem 0.10667rem
-      border-radius: 0.06667rem
-      font-size: 0.24rem
-      font-weight bold
-      color: #fff
-      background: rgba(0, 0, 0, 0.3)
-      font-family: Bahnschrift, Dosis, Arial, Helvetica, sans-serif;
-    .swiper-button-prev, .swiper-button-next
+    @media screen and (max-width 600px)
+      aspect-ratio: var(--ratio)
+      &::-webkit-scrollbar
+        height 0
+
+  .slide-item
+    position relative
+    min-width fit-content
+    height 80vh
+    @media screen and (max-width 600px)
       height 100%
+    &:first-child
+      &, & img
+        max-width 100%
+    img
+      display block
+      width auto
+      min-width 9rem
+      height 100%
+      object-fit: cover
+
+  .slide-pagination
+    position absolute
+    top: 0.12rem
+    right: 0.12rem
+    z-index 12
+    width fit-content
+    padding: 0.1rem 0.2rem
+    border-radius: 8PX
+    font-size: 0.26rem
+    font-weight bold
+    color: #fff
+    background: rgba(0, 0, 0, 0.3)
+    font-family: Bahnschrift, Dosis, Arial, Helvetica, sans-serif;
+
   &.single-img
-    .swiper-pagination
-      display none
+    @media screen and (min-width 600px)
+      .image-card
+        background: var(--bg)
+      .image-card-wrapper
+        backdrop-filter: saturate(200%) blur(20PX)
+        background: rgba(255, 255, 255, 0.5)
+      .image
+        top 50%
+        left: 50%
+        transform: translate(-50%, -50%) !important
+        width: auto
+        height auto
+        max-width 100%
+        max-height 100%
+        object-fit cover
+        border-radius: 0
+        transition: none
+
   &:not(.single-img)
     .image-card-wrapper .image
       display none
-      filter none
+
   .image-card
     background #f9f9f9
     box-shadow: 0 3PX 1PX -2PX rgba(0, 0, 0, 0.2), 0 2PX 2PX 0 rgba(0, 0, 0, 0.14), 0 1PX 5PX 0 rgba(0, 0, 0, 0.12);
@@ -116,18 +131,14 @@ export default {
         border-bottom-right-radius: 0
       .meta
         display none
+
   .outer-meta
     background #f5f5f5
+
   .image-card-wrapper
     @media screen and (min-width 600px)
       height 80vh
       padding-bottom 0 !important
-    .image
-      filter: saturate(200%) blur(20PX)
-      opacity: 0.5
-      @media screen and (max-width 600px)
-        display none
-        filter none
     .layer-num
       display none
     .tag-r18-ai, .bookmark

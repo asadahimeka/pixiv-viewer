@@ -540,9 +540,9 @@ img[src*="https://api.moedog.org/qr/?url="]
       width max-content !important
       min-width max-content !important
       margin-bottom 0.1rem !important
-      &:nth-child(n+3):has(.image[lazy="loading"])
-        width 50vw !important
-        min-width 50vw !important
+      &:has(.image[lazy="loading"])
+        width 9rem !important
+        min-width 9rem !important
     .image
       max-width unset !important
       max-height 94vh !important
