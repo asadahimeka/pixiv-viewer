@@ -148,6 +148,7 @@
 - Bug fix
 - Bug fixes
 - Search type quick jump
+- New home feeds
 
 ### 📚 Documentation
 
@@ -204,6 +205,7 @@
 - Release v1.31.11
 - Release v1.31.12
 - Release v1.32.0
+- Release v1.32.1
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
