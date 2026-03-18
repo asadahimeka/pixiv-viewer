@@ -1,6 +1,12 @@
 <template>
   <div class="HomeaIllustCard" :class="{ 'single-img': images.length == 1 }" :style="`--ratio:${ratio}`">
-    <ImageCard mode="all" :artwork="artwork" :style="`--bg:url('${images[0]}') 0`" @click-card="toDetail" />
+    <ImageCard
+      mode="all"
+      force-large-webp
+      :artwork="artwork"
+      :style="`--bg:url('${images[0]}') 0`"
+      @click-card="toDetail"
+    />
     <div v-if="images.length > 1" ref="view" class="slide-wrap" @wheel="handleWheel">
       <div v-for="(img, i) in images" :key="i+img" class="slide-item">
         <Pximg :src="img" @click.native="toDetail" />
