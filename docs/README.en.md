@@ -394,9 +394,7 @@ Download from [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
 Note: The iOS version is unsigned and requires manual signing and sideloading:
 
-* [i4 Assistant (Video Tutorial)](https://www.bilibili.com/video/BV1Jg4y1n7hi/)
-* [i4 Assistant](https://www.i4.cn/news_detail_38195.html)
-* [AltStore](https://kerrinz.com/archives/432.html)
+* [AltStore](https://altstore.io/)
 
 ### How to preset image proxies and API instances for self-hosted deployment?
 
@@ -498,8 +496,6 @@ This project is for communication and learning purposes only and must not be use
 This project is open-sourced under the [MIT License](LICENSE).
 
 ---
-
-<br>
 
 **If this project helps you, please give it a ⭐️ Star to show your support!**
 

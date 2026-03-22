@@ -389,6 +389,7 @@ pnpm build
 
 - [爱思助手（视频教程）](https://www.bilibili.com/video/BV1Jg4y1n7hi/)
 - [爱思助手](https://www.i4.cn/news_detail_38195.html)
+- [安装教程](https://kazumi.app/docs/misc/how-to-install-in-ios.html)
 - [AltStore](https://kerrinz.com/archives/432.html)
 
 ### 自建部署如何预设图床与 API 实例？
@@ -493,8 +494,6 @@ pnpm build
 本项目基于 [MIT License](LICENSE) 开源。
 
 ---
-
-<br>
 
 **如果这个项目对你有帮助，请给一个 ⭐️ Star 支持一下！**
 

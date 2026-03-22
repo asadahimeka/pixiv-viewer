@@ -1,4 +1,4 @@
-## [unreleased]
+## [1.32.2] - 2026-03-21
 
 ### 🚀 Features
 
@@ -149,6 +149,8 @@
 - Bug fixes
 - Search type quick jump
 - New home feeds
+- Home feed large img
+- Style fix
 
 ### 📚 Documentation
 
@@ -206,6 +208,7 @@
 - Release v1.31.12
 - Release v1.32.0
 - Release v1.32.1
+- Release v1.32.2
 ## [1.25.5] - 2025-05-11
 
 ### 🚀 Features
