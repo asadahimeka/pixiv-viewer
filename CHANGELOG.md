@@ -1,3 +1,17 @@
+## [unreleased]
+
+### 🚀 Features
+
+- Show pid mask setting
+- Show pid mask setting
+
+### 🐛 Bug Fixes
+
+- Some glitches
+
+### ⚙️ Miscellaneous Tasks
+
+- Update docs
 ## [1.32.2] - 2026-03-21
 
 ### 🚀 Features
