@@ -9,20 +9,20 @@
       label="Github:asadahimeka/pixiv-viewer"
       @click="openLink('https://github.com/asadahimeka/pixiv-viewer/releases')"
     />
-    <van-cell
+    <!-- <van-cell
       center
       title="Android"
       is-link
       label="Go to App Center"
       @click="openLink('https://install.appcenter.ms/users/yumine/apps/pixiv-viewer/distribution_groups/beta')"
-    />
-    <van-cell
+    /> -->
+    <!-- <van-cell
       center
       title="Windows"
       is-link
       label="Go to App Center"
       @click="openLink('https://install.appcenter.ms/users/yumine/apps/pxve/distribution_groups/public')"
-    />
+    /> -->
   </div>
 </template>
 

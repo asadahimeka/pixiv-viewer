@@ -575,6 +575,9 @@ img[src*="https://api.moedog.org/qr/?url="]
     .ia-right ::v-deep .artwork-meta
       background transparent
       border-radius 20px
+      .caption
+        margin-top 0.2rem
+        margin-bottom 0.3rem
       .tag-list
         gap 0.13333rem
         .x_tag
@@ -592,8 +595,6 @@ img[src*="https://api.moedog.org/qr/?url="]
           &.translated
             color #888
             background: linear-gradient(rgba(255, 255, 255, 0.89)), var(--accent-color, #f7f8fa);
-      .shrink::after
-        background: transparent;
 
 .isSimulatedMeta
   ::v-deep .artwork-meta

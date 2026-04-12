@@ -210,6 +210,10 @@ export const routes = [
             meta: { __depth: 20 },
           },
           {
+            path: '/member.php',
+            redirect: to => `/users/${to.query.id}`,
+          },
+          {
             path: '/users/:id/artworks',
             alias: ['/users/:id/illustrations'],
             name: 'AuthorIllusts',

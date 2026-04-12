@@ -135,13 +135,13 @@ export default {
       this.$refs.view.scrollLeft += e.deltaY
     }, 200),
     handleTouchstart: _.throttle(function (e) {
-      if (!store.state.isMobile) return
+      if (!store.state.isMobile || this.textConfig.direction != 'hc') return
       const touch = e.touches[0]
       startX = touch.clientX
       startY = touch.clientY
     }, 200),
     handleTouchend: _.throttle(function (e) {
-      if (!store.state.isMobile) return
+      if (!store.state.isMobile || this.textConfig.direction != 'hc') return
       const touch = e.changedTouches[0]
       endX = touch.clientX
       endY = touch.clientY

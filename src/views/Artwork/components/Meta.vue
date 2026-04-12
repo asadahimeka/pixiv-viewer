@@ -32,6 +32,7 @@
         </div>
       </div>
     </div>
+    <div v-if="hidePIDMask" style="height: 2px;margin: 0.3rem 0;background-color: #e5e5e5;"></div>
     <div class="date">
       <span v-if="isNovel" class="view" style="margin-left: 0;">
         {{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(artwork.text_length)]) }}
@@ -715,6 +716,14 @@ export default {
       }
       .name-box {
         max-width unset
+        .title, .author {
+          display inline-block
+        }
+        .author {
+          margin-top 0
+          margin-left 0.1rem
+          line-height 1.5
+        }
       }
     }
 
