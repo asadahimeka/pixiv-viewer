@@ -272,19 +272,24 @@ export function hexToRgb(hex) {
 }
 
 export async function checkImgAvailable(src) {
-  return new Promise((resolve, reject) => {
-    let img = document.createElement('img')
-    img.referrerPolicy = 'no-referrer'
-    img.src = src
-    img.onload = () => {
-      resolve(true)
-      img = null
-    }
-    img.onerror = () => {
-      reject(new Error('Network error.'))
-      img = null
-    }
-  })
+  return Promise.race([
+    new Promise((resolve, reject) => {
+      let img = document.createElement('img')
+      img.referrerPolicy = 'no-referrer'
+      img.src = src
+      img.onload = () => {
+        resolve(true)
+        img = null
+      }
+      img.onerror = () => {
+        reject(new Error('Network error.'))
+        img = null
+      }
+    }),
+    new Promise((_resolve, reject) => {
+      setTimeout(() => reject(new Error('请求超时')), 5000)
+    }),
+  ])
 }
 
 export async function checkUrlAvailable(url) {

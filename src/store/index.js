@@ -32,6 +32,7 @@ export default new Vuex.Store({
     blockUids: getSettingDef('PXV_B_UIDS', '').split(',').filter(Boolean),
     isNovelViewShrink: true,
     isMobile,
+    isSafari: isSafari(),
     /** @type {any[]|null} */
     appNotice: null,
     /** @type {any[]|null} */
@@ -93,6 +94,7 @@ export default new Vuex.Store({
       ctrlClickNewTab: !isMobile,
       openArtDetailAsPopup: false,
       isExpandMultiPArtwork: false,
+      showPIDMask: true,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

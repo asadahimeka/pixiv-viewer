@@ -277,6 +277,11 @@
           <van-switch :value="appSetting.openArtDetailAsPopup" size="24" @change="v => saveAppSetting('openArtDetailAsPopup', v, true)" />
         </template>
       </van-cell>
+      <van-cell v-if="showPIDMaskSetting" center :title="$t('IT68MlW3enWhsPqXtunqb')">
+        <template #right-icon>
+          <van-switch :value="appSetting.showPIDMask" size="24" @change="v => saveAppSetting('showPIDMask', v, true)" />
+        </template>
+      </van-cell>
       <van-cell v-if="!appSetting.isDirectPximg" center :title="$t('GnyWarxXoDw49xCft4IlS')">
         <template #right-icon>
           <van-switch :value="appSetting.isImgLazy" size="24" @change="v => saveAppSetting('isImgLazy', v, true)" />
@@ -760,6 +765,9 @@ export default {
     },
     sampleArtFileName() {
       return getSampleFileName(this.dlFileNameTpl)
+    },
+    showPIDMaskSetting() {
+      return !store.state.isSafari && !store.state.appSetting.isAutoLoadKissT
     },
   },
   watch: {

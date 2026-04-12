@@ -128,7 +128,7 @@ export default {
         url.host = 'i1.pximg.net'
         const { data } = await window.__httpRequest__(url.href, JSON.stringify({
           responseType: 'blob',
-          headers: { Host: 'i.pximg.net', Referer: 'https://www.pixiv.net/' },
+          headers: { /* Host: 'i.pximg.net',  */Referer: 'https://www.pixiv.net/' },
         }))
         this.localSrc = URL.createObjectURL(data)
         this.loading = false

@@ -1,5 +1,5 @@
 <template>
-  <div class="artwork" :class="{ isSafari, isAutoLoadKissT, isSimulatedMeta }">
+  <div class="artwork" :class="{ isSafari, hidePIDMask, isSimulatedMeta }">
     <TopBar />
     <div class="share_btn" @click="share">
       <Icon class="icon" name="share" />
@@ -62,7 +62,7 @@ import store from '@/store'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
-import { copyText, isSafari } from '@/utils'
+import { copyText } from '@/utils'
 import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE } from '@/consts'
 import TopBar from '@/components/TopBar'
 import ImageView from './components/ImageView'
@@ -132,8 +132,6 @@ export default {
         { name: 'Facebook', icon: IconFacebook },
       ],
       maybeAiAuthor: false,
-      isSafari: isSafari(),
-      isAutoLoadKissT: store.state.appSetting.isAutoLoadKissT,
     }
   },
   head() {
@@ -154,6 +152,16 @@ export default {
     disableSwipe() {
       const { isEnableSwipe, openArtDetailAsPopup } = store.state.appSetting
       return openArtDetailAsPopup || !isEnableSwipe
+    },
+    isSafari() {
+      return store.state.isSafari
+    },
+    hidePIDMask() {
+      return (
+        store.state.isSafari ||
+        store.state.appSetting.isAutoLoadKissT ||
+        !store.state.appSetting.showPIDMask
+      )
     },
   },
   watch: {
@@ -561,19 +569,31 @@ img[src*="https://api.moedog.org/qr/?url="]
   ::v-deep .top-bar-wrap
     width 2rem
     background none
-  &.isSafari, &.isAutoLoadKissT
+  &.isSafari, &.hidePIDMask
     .image-view.loaded
       min-height auto
     .ia-right ::v-deep .artwork-meta
-      padding 20px 30px 40px
-      background #f5f5f5
+      background transparent
       border-radius 20px
-      .tag.translated
-        color #808080
-      @media screen and (max-width: 1120px)
-        margin 0.26667rem 0.13333rem !important
+      .tag-list
+        gap 0.13333rem
+        .x_tag
+          margin-right 0
+        .tag
+          background: linear-gradient(rgba(255, 255, 255, 0.75)), var(--accent-color, #f7f8fa);
+          margin-right 0
+          padding-left: 0.15rem;
+          padding-right: 0.15rem;
+          border-radius: 6PX;
+          &:hover
+            background linear-gradient(rgba(255, 255, 255, 0.5)), var(--accent-color, #f7f8fa) !important
+            &.translated
+              color var(--accent-color, #888) !important
+          &.translated
+            color #888
+            background: linear-gradient(rgba(255, 255, 255, 0.89)), var(--accent-color, #f7f8fa);
       .shrink::after
-        background: linear-gradient(to top, #f5f5f5, rgba(255,255,255,0));
+        background: transparent;
 
 .isSimulatedMeta
   ::v-deep .artwork-meta

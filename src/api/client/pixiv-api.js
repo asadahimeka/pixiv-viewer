@@ -30,6 +30,7 @@ import axios from 'axios'
 import dayjs from 'dayjs'
 import { LocalStorage } from '@/utils/storage'
 import { AwaitLock } from '@/utils/lock'
+import { i18n } from '@/i18n'
 
 const md5 = s => CryptoJS.MD5(s).toString()
 
@@ -40,11 +41,11 @@ const CLIENT_SECRET = 'lsACyCD94FhDUtGTXi3QzcFE2uU1hqtDaKeqrdwj'
 const HASH_SECRET = '28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0bae2c'
 
 const DEFAULT_HEADERS = {
-  'App-OS': 'Android',
-  'App-OS-Version': 'Android 14.0',
-  'App-Version': '6.124.0',
-  'Accept-Language': 'zh-CN',
-  'User-Agent': 'PixivAndroidApp/6.124.0 (Android 14.0; Pixel 8)',
+  'App-OS': 'android',
+  'App-OS-Version': '15',
+  'App-Version': '6.178.0',
+  'Accept-Language': i18n.locale || 'zh-CN',
+  'User-Agent': 'PixivAndroidApp/6.178.0 (Android 15; Pixel 9)',
 }
 
 async function callApi(url, options) {
