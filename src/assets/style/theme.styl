@@ -311,3 +311,62 @@ darken-text-preset()
   bandori-chara-icon("~@/assets/images/bandori/34Tsukushi-Futaba-9uhm4n.png")
 .t_Rui
   bandori-chara-icon("~@/assets/images/bandori/35Rui-Yashio-EfpbT4.png")
+
+.t_Arcana
+  --accent-color darken(#88a9f4, 10%) !important
+  --setting-title-bg: url("~@/assets/images/nikke/Arcana_bg.png")
+  --app-icon-bg: url("~@/assets/images/nikke/Arcana_icon.png")
+.t_Privaty
+  --setting-title-bg url("~@/assets/images/nikke/Privaty_bg.png")
+  --app-icon-bg: url("~@/assets/images/nikke/Privaty_icon.png")
+
+.t_Arcana, .t_Privaty
+  .setting .app-title
+    position relative
+    display: block;
+    width: 100%;
+    height: 5rem;
+    margin: 0;
+    margin-bottom 0.1rem
+    padding: 0;
+    background-image: var(--setting-title-bg)
+    background-repeat no-repeat;
+    background-position center
+    background-size: contain;
+    img
+      display none
+    .app-title-desc
+      position absolute
+      bottom 0
+      right 0
+      small
+        display none
+  .Home .home-title
+    &::before
+      content ''
+      position absolute
+      top 50%
+      left 0
+      width: 0.8rem
+      height: 0.8rem
+      transform translateY(-50%)
+      background var(--app-icon-bg) no-repeat center / contain
+    .app-logo
+      display none
+    .app-title
+      position relative
+      padding-left 0.9rem
+  .ldio-content
+    &::before
+      content ''
+      display block
+      width 80PX
+      height 80PX
+      margin 0 auto
+      background var(--app-icon-bg) no-repeat center / contain
+    img
+      display none
+    .ldio-title
+      top 100PX
+      & + .ldio-title
+        top 140PX !important

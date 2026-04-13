@@ -189,6 +189,8 @@ const colors = [
   { name: 'Timoris', color: '#345566', cname: 'Timoris' },
   { name: 'Amoris', color: '#AB4378', cname: 'Amoris' },
   { name: 'Oblivionis', color: '#7899CC', cname: 'Oblivionis' },
+  { name: 'Arcana', color: '#88a9f4' },
+  { name: 'Privaty', color: '#ba6af4' },
   {
     name: '撫子',
     color: '#DC9FB4',
