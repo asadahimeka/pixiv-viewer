@@ -44,7 +44,7 @@ const DEFAULT_HEADERS = {
   'App-OS': 'android',
   'App-OS-Version': '15',
   'App-Version': '6.178.0',
-  'Accept-Language': i18n.locale || 'zh-CN',
+  'Accept-Language': 'zh-CN',
   'User-Agent': 'PixivAndroidApp/6.178.0 (Android 15; Pixel 9)',
 }
 
@@ -103,6 +103,7 @@ class PixivApi {
 
   constructor() {
     this.headers = { ...DEFAULT_HEADERS }
+    this.headers['Accept-Language'] = i18n.locale || 'zh-CN'
     if (!window.__httpRequest__) delete this.headers['User-Agent']
     const auth = LocalStorage.get('PXV_CLIENT_AUTH')
     if (auth) {

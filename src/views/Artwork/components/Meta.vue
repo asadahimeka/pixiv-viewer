@@ -106,7 +106,7 @@
           #{{ tag.name }}
         </li>
         <li
-          v-if="showTranslatedTags && tag.translated_name"
+          v-if="tag.translated_name"
           :key="ti + tag.translated_name + '_2'"
           class="tag translated"
           @click="toSearch(tag.translated_name)"
@@ -166,7 +166,7 @@ import { Dialog } from 'vant'
 import _ from '@/lib/lodash'
 import store from '@/store'
 import { copyText, downloadFile, formatIntlDate, formatIntlNumber } from '@/utils'
-import { i18n, isCNLocale } from '@/i18n'
+import { isCNLocale } from '@/i18n'
 import { isIllustBookmarked, addBookmark, removeBookmark } from '@/api/user'
 import { getBookmarkRestrictTags, localApi } from '@/api'
 import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
@@ -214,9 +214,6 @@ export default {
     ...mapGetters(['isCensored', 'isLoggedIn']),
     censored() {
       return this.isCensored(this.artwork)
-    },
-    showTranslatedTags() {
-      return i18n.locale.includes('zh')
     },
     isAiIllust() {
       return isAiIllust(this.artwork)
