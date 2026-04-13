@@ -995,12 +995,12 @@ export default {
     importSettings() {
       const input = document.createElement('input')
       input.type = 'file'
-      input.accept = '.txt'
+      input.accept = '.txt,.json'
       input.style.display = 'none'
       input.onchange = async e => {
         try {
           const text = await readTextFile(e.target.files[0])
-          const settings = JSON.parse(decodeURI(atob(text)))
+          const settings = text[0] == '{' ? JSON.parse(text) : JSON.parse(decodeURI(atob(text)))
           console.log('settings: ', settings)
           Object.keys(settings).forEach(k => {
             localStorage.setItem(k, settings[k])
@@ -1023,8 +1023,8 @@ export default {
         const keyName = localStorage.key(i)
         settings[keyName] = localStorage.getItem(keyName)
       }
-      const blob = new Blob([btoa(encodeURI(JSON.stringify(settings)))])
-      downloadURL(blob, 'pixiv-viewer-settings.txt')
+      const blob = new Blob([JSON.stringify(settings)])
+      downloadURL(blob, 'pixiv-viewer-settings.json')
     },
     async importHistory() {
       const input = document.createElement('input')
