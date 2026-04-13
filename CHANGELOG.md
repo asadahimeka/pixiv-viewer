@@ -2,6 +2,17 @@
 
 ### 🚀 Features
 
+- Add theme color
+
+### 🐛 Bug Fixes
+
+- App api language header
+- Settings export to json
+- Style fix
+## [1.33.0] - 2026-04-12
+
+### 🚀 Features
+
 - Show pid mask setting
 - Show pid mask setting
 
@@ -12,6 +23,7 @@
 ### ⚙️ Miscellaneous Tasks
 
 - Update docs
+- Release v1.33.0
 ## [1.32.2] - 2026-03-21
 
 ### 🚀 Features
