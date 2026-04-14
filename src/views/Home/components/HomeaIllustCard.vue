@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     images() {
-      return this.artwork.images.map(e => e.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/'))
+      return this.artwork.images.map(e => e.l.replace(/\/c\/\d+x\d+\w*\//g, '/c/1200x1200_90_webp/'))
     },
     ratio() {
       let ratio = this.artwork.width / this.artwork.height

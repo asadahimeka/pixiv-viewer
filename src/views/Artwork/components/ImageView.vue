@@ -182,8 +182,8 @@ export default {
       }
       const urlMap = {
         'Medium': urls.l,
-        'Large(WebP)': urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/'),
-        'Large': urls.l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/'),
+        'Large(WebP)': urls.l.replace(/\/c\/\d+x\d+\w*\//g, '/c/1200x1200_90_webp/'),
+        'Large': urls.l.replace(/\/c\/\d+x\d+\w*\//g, '/'),
         'Original': urls.o,
       }
       return urlMap[imgReso] || urls.l

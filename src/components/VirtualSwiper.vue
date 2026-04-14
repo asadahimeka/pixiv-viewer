@@ -128,7 +128,7 @@ export default {
     },
     getBg(art) {
       const i0 = art?.images?.[0]
-      const src = isLargeWebp ? i0?.l?.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/c/1200x1200_90_webp/') : i0?.m
+      const src = isLargeWebp ? i0?.l?.replace(/\/c\/\d+x\d+\w*\//g, '/c/1200x1200_90_webp/') : i0?.m
       return src ? `url(${src}) 0` : 'none'
     },
     toggleVsFull(dontUpdate = false) {

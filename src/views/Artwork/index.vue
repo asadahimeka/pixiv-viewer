@@ -282,7 +282,7 @@ export default {
     },
     onShareSel(_, index) {
       const shareUrl = `https://pixiv.pictures/i/${this.artwork.id}`
-      const imageUrl = this.artwork.images[0].l.replace(/\/c\/\d+x\d+(_\d+)?\//g, '/')
+      const imageUrl = this.artwork.images[0].l.replace(/\/c\/\d+x\d+\w*\//g, '/')
       const actions = [
         async () => {
           const shareData = {
