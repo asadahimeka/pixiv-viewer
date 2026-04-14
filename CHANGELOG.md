@@ -3,12 +3,18 @@
 ### 🚀 Features
 
 - Add theme color
+- Add novel rich text formats
 
 ### 🐛 Bug Fixes
 
 - App api language header
 - Settings export to json
 - Style fix
+- Img large src replace fail
+
+### ⚙️ Miscellaneous Tasks
+
+- Release v1.33.1
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
