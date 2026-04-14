@@ -3,8 +3,9 @@ import store from '@/store'
 import { replaceValidFileName } from '@/utils'
 import { isAiIllust } from '@/utils/filter'
 
-export function getArtworkFileName(artwork, index, tpl) {
+export function getArtworkFileName(artwork, index, tpl = '') {
   return (tpl || store.state.appSetting.dlFileNameTpl)
+    .toLowerCase()
     .replaceAll('{author}', artwork.author.name)
     .replaceAll('{authorId}', artwork.author.id)
     .replaceAll('{title}', artwork.title)

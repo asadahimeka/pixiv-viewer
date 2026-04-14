@@ -35,8 +35,9 @@ import { mapGetters } from 'vuex'
 import { imgProxy } from '@/api'
 import store, { novelTextConfig } from '@/store'
 import _ from '@/lib/lodash'
-import { fontFallback } from '@/utils/font'
 import { COMMON_IMAGE_PROXY } from '@/consts'
+import { fontFallback } from '@/utils/font'
+import { detectLanguage } from '@/utils/novel'
 
 const fontMap = {
   'inherit': 'inherit',
@@ -83,11 +84,14 @@ export default {
         ? res.split(/\n/).map(e => `<p${e ? '' : ' style="padding: 1em 0"'}>${e}</p>`).join('')
         : res.replace(/\n/g, '<br>')
       res = res
-        .replace(/\[newpage\]/g, '<hr style="margin: 1rem 0;font-weight: bold;font-size: 1.2em;">')
+        .replace(/\[newpage\]/g, '<hr style="margin: 1em 0;font-weight: bold;font-size: 1.2em;">')
         .replace(/\[\[rb:([^>[\]]+) *> *([^>[\]]+)\]\]/g, '<ruby>$1<rp>(</rp><rt>$2</rt><rp>)</rp></ruby>')
         .replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>')
+        .replace(/\[\[emphasismark:([^>[\]]+) *> *([^>[\]]+)\]\]/g, `<span style='text-emphasis-position: ${detectLanguage(res).language == 'zh' ? 'under' : 'over'} right;text-emphasis-style:"$2"'>$1</span>`)
+        .replace(/\[i:([^[\]]+)\]/g, '<i style="font-style:oblique">$1</i>')
+        .replace(/\[b:([^[\]]+)\]/g, '<b style="font-weight:bolder">$1</b>')
         .replace(/\[pixivimage:([\d-]+)\]/g, '<img style="display:block;max-width:100%;margin:auto" src="https://pximg.cocomi.eu.org/-pid-/$1" alt>')
-        .replace(/\[chapter: *([^[\]]+)\]/g, '<h2 style="margin: 1rem 0;font-weight:bold;font-size:1.5em">$1</h2>')
+        .replace(/\[chapter: *([^[\]]+)\]/g, '<h2 style="margin: 1em 0;font-weight:bold;font-size:1.5em">$1</h2>')
         .replace(/\[uploadedimage:(\d+)\]/g, (_, $1) => `<img style="display:block;max-width:100%;margin:auto" src="${this.getEmbedImg($1)}" alt>`)
         .replace(/若想浏览插图，还请使用网页版。/g, '-- 插图 --')
       return res
