@@ -585,16 +585,14 @@ export default {
       wfType: {
         show: false,
         actions: [
-          { name: 'Masonry', subname: this.$t('setting.layout.m') },
+          { name: 'Masonry2', subname: this.$t('setting.layout.m') },
           { name: 'Grid', subname: this.$t('setting.layout.g') },
-          { name: 'Justified', subname: this.$t('setting.layout.j') },
-          // { name: 'VirtualMasonry', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
-          // { name: 'VirtualGrid', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.g') + ' - ' + this.$t('setting.lab.title') },
-          // { name: 'VirtualJustified', subname: this.$t('4DPjs7ecYtMrqrD1DNkAE') + ' - ' + this.$t('setting.layout.j') + ' - ' + this.$t('setting.lab.title') },
-          { name: 'VirtualSlide', subname: this.$t('WrsiY7DP94fbUlQ6SoLlH') },
-          { name: 'Masonry(CSSGrid)', subname: this.$t('setting.layout.m') },
           { name: 'Justified(Transform)', subname: this.$t('setting.layout.j') },
-          // { name: 'Masonry(FlexOrder)', subname: this.$t('setting.layout.m') + ' - ' + this.$t('setting.lab.title') },
+          { name: 'VirtualSlide', subname: this.$t('WrsiY7DP94fbUlQ6SoLlH') },
+          { name: 'Justified', subname: this.$t('setting.layout.j') },
+          { name: 'Masonry', subname: this.$t('setting.layout.m') },
+          { name: 'Masonry(CSSGrid)', subname: this.$t('setting.layout.m') },
+          { name: 'Masonry(FlexOrder)', subname: this.$t('setting.layout.m') },
         ],
       },
       imgRes: {

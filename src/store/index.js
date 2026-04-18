@@ -39,7 +39,7 @@ export default new Vuex.Store({
     seasonEffects: null,
     routeHistory: SessionStorage.get('PXV_ROUTE_HISTORY', []),
     appSetting: {
-      wfType: getSettingDef('PXV_WF_TYPE', isMobile ? 'Masonry(CSSGrid)' : 'Masonry'),
+      wfType: getSettingDef('PXV_WF_TYPE', isMobile ? 'Masonry(CSSGrid)' : 'Justified'),
       imgReso: getSettingDef('PXV_DTL_IMG_RES', isMobile ? 'Medium' : 'Large'),
       isLongpressBlock: getSettingDef('PXV_LONGPRESS_BLOCK', false),
       isLongpressDL: getSettingDef('PXV_LONGPRESS_DL', false),
@@ -107,7 +107,7 @@ export default new Vuex.Store({
     },
     isCensored: state => artwork => !isArtworkNotCensored(artwork, state),
     isNoOuterMeta(state) {
-      return state.appSetting.isVirtualList || ['VirtualSlide', 'Justified(Transform)'].includes(state.appSetting.wfType)
+      return state.appSetting.isVirtualList || ['VirtualSlide', 'Justified(Transform)', 'Masonry2'].includes(state.appSetting.wfType)
     },
     wfProps: () => ({
       gutter: '8px',

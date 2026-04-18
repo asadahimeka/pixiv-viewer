@@ -89,7 +89,7 @@ export default {
         .replace(/\[\[jumpuri:([^>\s[\]]+) *> *([^>\s[\]]+)\]\]/g, '<a href="$2" target="_blank" rel="noreferrer">$1</a>')
         .replace(/\[\[emphasismark:([^>[\]]+) *> *([^>[\]]+)\]\]/g, `<span style='text-emphasis-position: ${detectLanguage(res).language == 'zh' ? 'under' : 'over'} right;text-emphasis-style:"$2"'>$1</span>`)
         .replace(/\[i:([^[\]]+)\]/g, '<i style="font-style:oblique">$1</i>')
-        .replace(/\[b:([^[\]]+)\]/g, '<b style="font-weight:bolder">$1</b>')
+        .replace(/\[b:([^[\]]+)\]/g, '<b style="font-weight:bolder;text-shadow:1px 1px 1px currentColor">$1</b>')
         .replace(/\[pixivimage:([\d-]+)\]/g, '<img style="display:block;max-width:100%;margin:auto" src="https://pximg.cocomi.eu.org/-pid-/$1" alt>')
         .replace(/\[chapter: *([^[\]]+)\]/g, '<h2 style="margin: 1em 0;font-weight:bold;font-size:1.5em">$1</h2>')
         .replace(/\[uploadedimage:(\d+)\]/g, (_, $1) => `<img style="display:block;max-width:100%;margin:auto" src="${this.getEmbedImg($1)}" alt>`)

@@ -3,7 +3,7 @@
     <div
       v-for="(item, index) in itemsWithSpan"
       :key="item[itemKey]"
-      :style="{ gridRowEnd: `span ${item.span}` }"
+      :style="{ gridRowEnd: `span ${item._span}` }"
     >
       <slot :item="item" :index="index"></slot>
     </div>
@@ -119,7 +119,7 @@ export default {
 
         return {
           ...item,
-          span: Math.max(1, span),
+          _span: Math.max(1, span),
         }
       })
     },

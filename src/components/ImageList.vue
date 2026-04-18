@@ -92,7 +92,7 @@
         </template>
       </JustifiedLayout>
       <MasonryGrid
-        v-else-if="listType == 'Masonry(CSSGrid)'"
+        v-else-if="listType == 'Masonry2'"
         class="masonry-grid"
         :items="list"
         :item-key="itemKey"
@@ -167,9 +167,9 @@ export default {
       if (this.forceLayout) return this.forceLayout
       const { wfType, isVirtualList } = store.state.appSetting
       if (isVirtualList) {
-        if (['Masonry', 'Grid', 'Justified'].includes(wfType)) return `Virtual${wfType}`
         if (wfType == 'Justified(Transform)') return 'VirtualJustified'
-        if (wfType == 'Masonry(CSSGrid)') return 'VirtualMasonry'
+        if (wfType == 'Masonry2' || wfType == 'Masonry(CSSGrid)') return 'VirtualMasonry'
+        if (['Masonry', 'Grid', 'Justified'].includes(wfType)) return `Virtual${wfType}`
       }
       return wfType
     },

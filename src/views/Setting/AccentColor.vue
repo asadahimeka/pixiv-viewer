@@ -23,17 +23,18 @@
 import { getContrastingTextColor, hexToRgb } from '@/utils'
 
 const colors = [
+  { name: 'Arcana', color: '#88a9f4' },
+  { name: 'Privaty', color: '#ba6af4' },
+
   { name: 'Miku', color: '#39C5BB' },
   { name: 'Teto', color: '#D93A49' },
   { name: 'Luka', color: '#FAAFBE' },
   { name: 'Rin', color: '#FFA500' },
-  { name: 'Len', color: '#FFE211' },
   { name: 'IA', color: '#D6758F' },
   { name: 'LuoTianyi', color: '#66CCFF' },
   { name: 'YuezhengLing', color: '#EE0000' },
   { name: 'Stardust', color: '#9999FF', cname: 'Stardust_Blue' },
   { name: 'Miku(Sekai)', color: '#33CCBB', cname: 'Miku_Sekai' },
-  { name: 'Rin(Sekai)', color: '#FFCC11', cname: 'Rin_Sekai' },
   { name: 'Luka(Sekai)', color: '#FFBBCC', cname: 'Luka_Sekai' },
   { name: 'MEIKO(Sekai)', color: '#DD4444', cname: 'MEIKO_Sekai' },
   { name: 'KAITO(Sekai)', color: '#3366CC', cname: 'KAITO_Sekai' },
@@ -189,8 +190,7 @@ const colors = [
   { name: 'Timoris', color: '#345566', cname: 'Timoris' },
   { name: 'Amoris', color: '#AB4378', cname: 'Amoris' },
   { name: 'Oblivionis', color: '#7899CC', cname: 'Oblivionis' },
-  { name: 'Arcana', color: '#88a9f4' },
-  { name: 'Privaty', color: '#ba6af4' },
+
   {
     name: '撫子',
     color: '#DC9FB4',
