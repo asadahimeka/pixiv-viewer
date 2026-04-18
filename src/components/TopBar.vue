@@ -10,13 +10,18 @@
 
 <script>
 import { Dialog } from 'vant'
+import store from '@/store'
 
 export default {
-  components: {
-  },
+  name: 'TopBar',
   props: {
     action: {
       type: Function,
+    },
+  },
+  computed: {
+    homePath() {
+      return store.state.appSetting.appStartPage || '/'
     },
   },
   methods: {
@@ -30,7 +35,7 @@ export default {
         confirmButtonText: this.$t('common.confirm'),
       }).then(res => {
         if (res == 'confirm') {
-          this.$router.push({ name: 'Home' })
+          this.$router.push(this.homePath)
         }
       }).catch(() => {})
     },
@@ -41,7 +46,7 @@ export default {
       }
 
       if (history.length <= 2) {
-        this.$router.push({ name: 'Home' })
+        this.$router.push(this.homePath)
       } else {
         this.$router.back()
       }
