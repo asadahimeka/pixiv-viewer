@@ -12,20 +12,22 @@
     @click="showFull"
     @wheel="handleWheel"
   >
-    <swiper v-if="isImgViewSwiper" ref="mySwiper" :options="swiperOption">
-      <swiper-slide v-for="(url, index) in artwork.images" :key="index" class="image-box">
-        <Pximg
-          :src="getImgUrl(url)"
-          :alt="`${artwork.title} - Page ${index + 1}`"
-          :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
-          class="image"
-          @click.native.stop="view(index)"
-        />
-      </swiper-slide>
-      <div slot="pagination" class="swiper-pagination"></div>
-      <div slot="button-prev" class="swiper-button-prev"></div>
-      <div slot="button-next" class="swiper-button-next"></div>
-    </swiper>
+    <template v-if="isImgViewSwiper">
+      <swiper v-if="showImgViewSwiper" ref="mySwiper" :options="swiperOption">
+        <swiper-slide v-for="(url, index) in artwork.images" :key="index" class="image-box">
+          <Pximg
+            :src="getImgUrl(url)"
+            :alt="`${artwork.title} - Page ${index + 1}`"
+            :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
+            class="image"
+            @click.native.stop="view(index)"
+          />
+        </swiper-slide>
+        <div slot="pagination" class="swiper-pagination"></div>
+        <div slot="button-prev" class="swiper-button-prev"></div>
+        <div slot="button-next" class="swiper-button-next"></div>
+      </swiper>
+    </template>
     <template v-else>
       <div
         v-for="(url, index) in artwork.images"
@@ -92,6 +94,7 @@ import { downloadUgoira, loadUgoira } from '@/utils/ugoira'
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
 
 export default {
+  name: 'ImageView',
   props: {
     artwork: {
       type: Object,
@@ -109,6 +112,7 @@ export default {
       isLongpressDL,
       isLargeWebp: imgReso == 'Large(WebP)',
       isUgoiraAvifSrc,
+      showImgViewSwiper: false,
       swiperOption: {
         mousewheel: true,
         keyboard: true,
@@ -373,7 +377,10 @@ export default {
         this.$refs.view.scrollLeft = 0
       }
       if (this.isImgViewSwiper) {
-        this.$refs.mySwiper?.$swiper?.slideTo(0)
+        this.showImgViewSwiper = false
+        this.$nextTick(() => {
+          this.showImgViewSwiper = true
+        })
       }
       this.resetUgoira()
       this.$nextTick(() => {
