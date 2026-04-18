@@ -1,7 +1,7 @@
 <template>
   <div class="artwork" :class="{ isSafari, hidePIDMask, isSimulatedMeta }">
     <TopBar />
-    <div class="share_btn" @click="share">
+    <div class="share_btn" @click="showShare = true">
       <Icon class="icon" name="share" />
     </div>
     <van-swipe-cell ref="swipeCell" :disabled="disableSwipe" stop-propagation @open="onSwipeOpen">
@@ -117,7 +117,7 @@ export default {
       loading: true,
       artwork: {},
       ugoiraDownloadPanelShow: false,
-      ugoiraDownloadPanelActions: ugoiraDownloadActions,
+      ugoiraDownloadPanelActions: ugoiraDownloadActions(),
       showShare: false,
       shareOptions: [
         { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
@@ -281,6 +281,7 @@ export default {
       }
     },
     onShareSel(_, index) {
+      const openUrl = url => window.open(url, '_blank', 'noopener noreferrer')
       const shareUrl = `https://pixiv.pictures/i/${this.artwork.id}`
       const imageUrl = this.artwork.images[0].l.replace(/\/c\/\d+x\d+\w*\//g, '/')
       const actions = [
@@ -317,32 +318,26 @@ export default {
           })
         },
         () => {
-          this.openUrl(`https://service.weibo.com/share/share.php?language=zh_cn&searchPic=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}&summary=PID%3A${this.artwork.id}&pic=${imageUrl}`)
+          openUrl(`https://service.weibo.com/share/share.php?language=zh_cn&searchPic=true&url=${encodeURIComponent(shareUrl)}&title=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}&summary=PID%3A${this.artwork.id}&pic=${imageUrl}`)
         },
         () => {
-          this.openUrl(`https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title=${this.artwork.title}&url=${encodeURIComponent(shareUrl)}&pics=${imageUrl}&summary=${encodeURIComponent(this.artwork.author.name + ' - PID: ' + this.artwork.id)}`)
+          openUrl(`https://sns.qzone.qq.com/cgi-bin/qzshare/cgi_qzshare_onekey?title=${this.artwork.title}&url=${encodeURIComponent(shareUrl)}&pics=${imageUrl}&summary=${encodeURIComponent(this.artwork.author.name + ' - PID: ' + this.artwork.id)}`)
         },
         () => {
-          this.openUrl(`https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}&source=${encodeURIComponent(shareUrl)}&desc=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}&summary=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}`)
+          openUrl(`https://connect.qq.com/widget/shareqq/index.html?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}&source=${encodeURIComponent(shareUrl)}&desc=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}&summary=${encodeURIComponent(`${this.$t('artwork.share.share')} ${this.$t('artwork.share.of_art', [this.artwork.author.name])}「${this.artwork.title}」- PID: ${this.artwork.id}`)}`)
         },
         // () => {
-        //   this.openUrl(`https://wechat-share.pwp.space/?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}`)
+        //   openUrl(`https://wechat-share.pwp.space/?url=${encodeURIComponent(shareUrl)}&title=${this.artwork.title}`)
         // },
         () => {
-          this.openUrl(`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.pixiv.net/artworks/${this.artwork.id}`)}&text=${this.artwork.title}&hashtags=pixiv`)
+          openUrl(`https://twitter.com/intent/tweet?url=${encodeURIComponent(`https://www.pixiv.net/artworks/${this.artwork.id}`)}&text=${this.artwork.title}&hashtags=pixiv`)
         },
         () => {
-          this.openUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.pixiv.net/artworks/${this.artwork.id}`)}`)
+          openUrl(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://www.pixiv.net/artworks/${this.artwork.id}`)}`)
         },
       ]
       actions[index]?.()
       this.showShare = false
-    },
-    openUrl(url) {
-      window.open(url, '_blank', 'noopener noreferrer')
-    },
-    async share() {
-      this.showShare = true
     },
     async pidRecover(id, setFakeAuthor = false) {
       if (!store.getters.isR18On) return

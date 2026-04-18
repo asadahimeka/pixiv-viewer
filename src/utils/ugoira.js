@@ -44,7 +44,7 @@ export async function loadUgoira(id, onDownloadProgress) {
   return meta
 }
 
-export const ugoiraDownloadActions = [
+export const ugoiraDownloadActions = () => [
   { name: 'ZIP', subname: i18n.t('artwork.download.zip') },
   { name: 'GIF', subname: i18n.t('artwork.download.gif') },
   { name: 'WebM', subname: i18n.t('artwork.download.webm') }, // chrome only

@@ -630,7 +630,7 @@ export default {
         show: false,
         actions: [
           { name: '', subname: i18n.t('ks96nwuAms0B8wSWBWhil') },
-          ...ugoiraDownloadActions,
+          ...ugoiraDownloadActions(),
         ],
       },
       ugoiraBitrates: {
