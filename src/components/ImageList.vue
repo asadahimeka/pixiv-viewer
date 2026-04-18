@@ -91,6 +91,23 @@
           />
         </template>
       </JustifiedLayout>
+      <MasonryGrid
+        v-else-if="listType == 'Masonry(CSSGrid)'"
+        class="masonry-grid"
+        :items="list"
+        :item-key="itemKey"
+        :gap="{ default: 10 }"
+        :cols="masonryCols"
+      >
+        <template #default="{ item }">
+          <ImageCard
+            mode="all"
+            :artwork="item"
+            v-bind="imageCardProps(item)"
+            @click-card="toArtwork(item)"
+          />
+        </template>
+      </MasonryGrid>
       <wf-cont v-else :layout="forceLayout">
         <ImageCard
           v-for="(item, index) in list"
@@ -112,6 +129,7 @@ import VirtualSwiper from '@/components/VirtualSwiper.vue'
 import VirtualWaterfall from '@/components/VirtualWaterfall.vue'
 import VirtualJustified from '@/components/VirtualJustified.vue'
 import JustifiedLayout from '@/components/JustifiedLayoutComp.vue'
+import MasonryGrid from '@/components/MasonryGrid.vue'
 import ImageCard from '@/components/ImageCard.vue'
 
 export default {
@@ -121,6 +139,7 @@ export default {
     VirtualWaterfall,
     VirtualJustified,
     JustifiedLayout,
+    MasonryGrid,
     ImageCard,
   },
   props: {
@@ -156,6 +175,12 @@ export default {
     },
     preloadScreenCount() {
       return this.vwtfNoTop ? [2, 1] : [1, 1]
+    },
+    masonryCols() {
+      const { isImageFitScreen } = store.state.appSetting
+      return isImageFitScreen
+        ? { 300: 1, 600: 2, 900: 3, 1200: 4, 1600: 5, default: 6 }
+        : { 300: 1, 600: 2, 1200: 3, default: 4 }
     },
   },
   watch: {

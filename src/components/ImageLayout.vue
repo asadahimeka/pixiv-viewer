@@ -141,7 +141,17 @@ export default {
   }
 }
 
-.true-masonry .image-card:not(.isOuterMeta) .image-card-wrapper{
+.true-masonry .image-card:not(.isOuterMeta) .image-card-wrapper {
+  height: 100%;
+  padding-bottom: 0 !important;
+}
+
+.masonry-grid .image-card {
+  height: 100%;
+  margin-bottom: 0 !important;
+}
+
+.masonry-grid .image-card .image-card-wrapper {
   height: 100%;
   padding-bottom: 0 !important;
 }
