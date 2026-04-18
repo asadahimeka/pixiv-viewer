@@ -17,7 +17,7 @@ import { vOnLongPress } from '@vueuse/components'
 
 import setupVant from '@/lib/vant'
 import SvgIcon from '@/icons'
-import VueMasonry from '@/components/VueMasonryCss'
+import VueMasonry from '@/components/LegacyCssMasonry'
 import ImageLayout from '@/components/ImageLayout.vue'
 import TopBar from '@/components/TopBar.vue'
 import Pximg from '@/components/DirectPximg.vue'

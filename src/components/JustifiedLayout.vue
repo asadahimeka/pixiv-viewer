@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import justifiedLayout from './justified-layout'
+import justified from '@/utils/justified'
 
 export default {
   name: 'JustifiedLayout',
@@ -68,7 +68,7 @@ export default {
     },
     getGeometry(list, containerWidth) {
       if (!list?.length) return []
-      return justifiedLayout(list, {
+      return justified(list, {
         // The width that boxes will be contained within irrelevant of padding.
         containerWidth,
         // Provide a single integer to apply padding to all sides or provide an object to apply individual values to each side.

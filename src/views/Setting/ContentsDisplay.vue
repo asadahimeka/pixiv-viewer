@@ -9,7 +9,7 @@
     </van-cell>
     <van-cell center :title="$t('display.r18g')" :label="$t('display.r18g_label')">
       <template #right-icon>
-        <van-switch active-color="#ff3f3f" :value="currentContentSetting.r18g" :disabled="!isLoggedIn" size="24" @input="onR18Change($event, 2)" />
+        <van-switch active-color="#ff3f3f" :value="currentContentSetting.r18g" :disabled="!currentContentSetting.r18" size="24" @input="onR18Change($event, 2)" />
       </template>
     </van-cell>
     <van-cell center :title="$t('display.ai')" :label="$t('display.ai_label')">

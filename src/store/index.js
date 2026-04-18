@@ -79,7 +79,7 @@ export default new Vuex.Store({
       novelFilterTagLenMax: 30,
       novelFilterTagSplitMax: 5,
       searchListPagination: false,
-      navBarAltStyle: isSafari(),
+      navBarAltStyle: navigator.userAgent.toLowerCase().includes('ios'),
       appStartPage: '',
       isDefBookmarkPrivate: false,
       isDefFollowPrivate: false,
