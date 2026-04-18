@@ -11,10 +11,21 @@
 - Settings export to json
 - Style fix
 - Img large src replace fail
+- Back button home path
+- Ugoira popup locale
+- Image view swiper refresh
+- Masonry grid component
+- Masonry grid component
+
+### 📚 Documentation
+
+- Update readme
 
 ### ⚙️ Miscellaneous Tasks
 
 - Release v1.33.1
+- Release v1.34.0
+- Rename components
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
