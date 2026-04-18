@@ -16,7 +16,7 @@
 <img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer"  alt="Version">
 <img src="https://img.shields.io/badge/license-MIT-green"  alt="License" >
 <img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages" alt="Pages" >
-<img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer/total?logo=github" alt="Downloads" >
+<img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer-app/total?logo=github" alt="Downloads" >
 </p>
 
 中文 | [English](./docs/README.en.md)
@@ -51,7 +51,7 @@
 ### 🏠 首页功能
 
 - **多类型内容浏览**：支持插画、漫画、小说、珍藏册等多种内容类型
-- **排行榜**：查看每日、每周、每月的热门作品排行
+- **排行榜**：查看每日的热门作品排行
 - **特辑推荐**：浏览官方精选的特辑内容
 - **个性化推荐**：基于个人喜好的作品推荐
 - **发现页面**：探索全站热门作品和新发现

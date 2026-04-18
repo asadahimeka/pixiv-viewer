@@ -51,7 +51,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 ### 🏠 Home
 
 * **Multiple Content Types**: Supports illustrations, manga, novels, bookmarks, and more
-* **Rankings**: View daily, weekly, and monthly popular works
+* **Rankings**: View daily popular works
 * **Featured Specials**: Browse official curated special content
 * **Personalized Recommendations**: Recommendations based on personal preferences
 * **Discover Page**: Explore site-wide popular and newly discovered works
