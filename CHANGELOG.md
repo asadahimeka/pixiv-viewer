@@ -4,6 +4,7 @@
 
 - Add theme color
 - Add novel rich text formats
+- Novel scroll position record
 
 ### 🐛 Bug Fixes
 
@@ -16,6 +17,7 @@
 - Image view swiper refresh
 - Masonry grid component
 - Masonry grid component
+- Swiper mixin
 
 ### 📚 Documentation
 
@@ -26,6 +28,7 @@
 - Release v1.33.1
 - Release v1.34.0
 - Rename components
+- Release v1.34.1
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
