@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import justified from '@/utils/justified'
+import justified from '@/lib/justified'
 
 export default {
   name: 'JustifiedLayout',

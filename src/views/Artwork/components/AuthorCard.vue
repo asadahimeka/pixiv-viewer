@@ -42,11 +42,14 @@ import ImageSlide from '@/components/ImageSlide'
 import { mapActions, mapGetters } from 'vuex'
 import api from '@/api'
 import { isAiIllust } from '@/utils/filter'
+import { swiperMixin } from '@/components/mixin'
+
 export default {
   components: {
     ImageCard,
     ImageSlide,
   },
+  mixins: [swiperMixin],
   props: {
     id: {
       type: Number,
@@ -56,15 +59,8 @@ export default {
   data() {
     return {
       memberArtwork: null,
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        touchMoveStopPropagation: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
+      extSwiperOption: {
+        navigation: false,
       },
     }
   },

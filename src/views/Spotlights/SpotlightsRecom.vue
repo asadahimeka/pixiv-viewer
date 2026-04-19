@@ -8,7 +8,7 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="art in list" :key="art.id" class="swipe-item">
           <div class="spec_wp" @click="toDetail(art.id)">
             <Pximg :src="art.thumbnail" :alt="art.title" />
@@ -26,12 +26,12 @@
 </template>
 
 <script>
+import { swiperMixin } from '@/components/mixin'
 import store from '@/store'
 
 export default {
   name: 'SpotlightsRecomCard',
-  components: {
-  },
+  mixins: [swiperMixin],
   props: {
     isTypeDetail: {
       type: Boolean,
@@ -53,23 +53,6 @@ export default {
       type: Array,
       default: () => [],
     },
-  },
-  data() {
-    return {
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      },
-    }
   },
   methods: {
     toDetail(id) {

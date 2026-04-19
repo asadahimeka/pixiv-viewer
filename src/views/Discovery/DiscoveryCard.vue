@@ -7,7 +7,7 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="art in artList.slice(0, 10)" :key="art.id" class="swipe-item">
           <ImageCard mode="meta" square :artwork="art" @click-card="toArtwork(art)" />
         </swiper-slide>
@@ -36,6 +36,7 @@ import api from '@/api'
 // import { SessionStorage } from '@/utils/storage'
 import ImageCard from '@/components/ImageCard'
 import ImageSlide from '@/components/ImageSlide'
+import { swiperMixin } from '@/components/mixin'
 
 export default {
   name: 'DiscoveryCard',
@@ -43,23 +44,11 @@ export default {
     ImageCard,
     ImageSlide,
   },
+  mixins: [swiperMixin],
   data() {
     return {
       artList: [],
       loading: true,
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        // mousewheel: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      },
     }
   },
   computed: {

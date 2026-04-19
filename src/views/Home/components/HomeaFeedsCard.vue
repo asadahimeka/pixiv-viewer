@@ -7,7 +7,7 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="art in artList.slice(0, 10)" :key="art.id" class="swipe-item">
           <ImageCard mode="meta" :artwork="art" @click-card="toArtwork(art)" />
         </swiper-slide>
@@ -34,6 +34,7 @@
 import { localApi } from '@/api'
 import ImageCard from '@/components/ImageCard.vue'
 import ImageSlide from '@/components/ImageSlide.vue'
+import { swiperMixin } from '@/components/mixin'
 
 export default {
   name: 'HomeaFeedsCard',
@@ -41,13 +42,12 @@ export default {
     ImageCard,
     ImageSlide,
   },
+  mixins: [swiperMixin],
   data() {
     return {
       artList: [],
       loading: true,
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
+      extSwiperOption: {
         scrollbar: {
           el: '.HomeaFeedsCard .swiper-scrollbar',
           draggable: true,

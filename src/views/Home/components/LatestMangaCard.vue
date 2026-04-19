@@ -8,7 +8,7 @@
     </van-cell>
     <van-empty v-show="!show" :description="$t('tips.click_view')" @click.native="getRankList" />
     <div v-show="show" class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="art in artList" :key="art.id" class="swipe-item">
           <ImageCard mode="meta" square :artwork="art" @click-card="toArtwork(art)" />
         </swiper-slide>
@@ -32,30 +32,19 @@ import ImageCard from '@/components/ImageCard'
 import ImageSlide from '@/components/ImageSlide'
 import api from '@/api'
 import { filterRecommIllust } from '@/utils/filter'
+import { swiperMixin } from '@/components/mixin'
 export default {
   name: 'LatestMangaCard',
   components: {
     ImageCard,
     ImageSlide,
   },
+  mixins: [swiperMixin],
   data() {
     return {
       artList: [],
       loading: false,
       show: false,
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      },
     }
   },
   methods: {

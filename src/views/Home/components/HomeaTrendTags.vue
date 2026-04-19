@@ -7,7 +7,7 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="(tag, i) in tags" :key="tag+i" class="swipe-item">
           <div class="spec_wp" @click="$router.push(`/search/${tag.name}`)">
             <Pximg :src="tag.thumb" :alt="tag.name" />
@@ -29,18 +29,17 @@
 </template>
 
 <script>
+import { swiperMixin } from '@/components/mixin'
 
 export default {
   name: 'TrendTagsCard',
+  mixins: [swiperMixin],
   props: {
     tags: { type: Array, default: () => [] },
   },
   data() {
     return {
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
+      extSwiperOption: {
         scrollbar: {
           el: '.TrendTagsCard .swiper-scrollbar',
           draggable: true,

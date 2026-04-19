@@ -29,7 +29,7 @@
 <script setup>
 import { computed, onMounted, onBeforeUnmount, ref, shallowRef, watchEffect } from 'vue'
 import { useElementBounding, useElementSize } from '@vueuse/core'
-import justifiedLayout from '../utils/justified'
+import justifiedLayout from '@/lib/justified'
 
 const props = defineProps({
   virtual: { type: Boolean, default: true },

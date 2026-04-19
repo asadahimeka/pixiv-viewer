@@ -7,7 +7,7 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="art in spotlights.articles" :key="art.id" class="swipe-item">
           <div class="spec_wp" @click="toDetail(art.id)">
             <Pximg :src="art.thumbnail" :alt="art.title" />
@@ -39,29 +39,18 @@
 import ImageSlide from '@/components/ImageSlide'
 import api from '@/api'
 import store from '@/store'
+import { swiperMixin } from '@/components/mixin'
 
 export default {
   name: 'SpotlightCard',
   components: {
     ImageSlide,
   },
+  mixins: [swiperMixin],
   data() {
     return {
       spotlights: [],
       loading: true,
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      },
     }
   },
   computed: {

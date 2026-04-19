@@ -7,7 +7,7 @@
       </template>
     </van-cell>
     <div class="card-box">
-      <swiper class="swipe-wrap" :options="swiperOption">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption">
         <swiper-slide v-for="art in artList.slice(0, 10)" :key="art.id" class="swipe-item">
           <div class="novel_item">
             <van-tag class="novel_length" color="#cdeefe" text-color="#0b6aaf">
@@ -47,6 +47,7 @@ import api from '@/api'
 import { filterHomeNovel } from '@/utils/filter'
 import { formatIntlNumber } from '@/utils'
 import { isCNLocale } from '@/i18n'
+import { swiperMixin } from '@/components/mixin'
 
 export default {
   name: 'RankCardNovel',
@@ -54,23 +55,11 @@ export default {
     ImageCard,
     ImageSlide,
   },
+  mixins: [swiperMixin],
   data() {
     return {
       artList: [],
       loading: true,
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      },
     }
   },
   computed: {

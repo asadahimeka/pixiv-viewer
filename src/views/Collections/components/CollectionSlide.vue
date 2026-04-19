@@ -39,12 +39,14 @@
 
 <script>
 import { imgProxy } from '@/api'
+import { swiperMixin } from '@/components/mixin'
 import { COMMON_IMAGE_PROXY } from '@/consts'
 import { randomBg } from '@/utils'
 import { filterCensoredCollections } from '@/utils/filter'
 
 export default {
   name: 'CollectionSlide',
+  mixins: [swiperMixin],
   props: {
     title: { type: String, default: '' },
     link: { type: String, default: '' },
@@ -54,14 +56,8 @@ export default {
   },
   data() {
     return {
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
+      extSwiperOption: {
+        scrollbar: false,
       },
     }
   },

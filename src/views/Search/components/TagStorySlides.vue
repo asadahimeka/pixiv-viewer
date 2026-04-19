@@ -8,7 +8,7 @@
       </template>
     </van-cell>
     <div class="card-box" style="padding: 0 20px">
-      <swiper class="swipe-wrap" :options="swiperOption" @reach-end="onReachEnd">
+      <swiper ref="mySwiper" class="swipe-wrap" :options="swiperOption" @reach-end="onReachEnd">
         <swiper-slide v-for="it in listDetails" :key="it.id" class="swipe-item">
           <div class="spec_wp" @click="toDetail(it)">
             <Pximg :src="it.coverImage" :alt="it.label" />
@@ -30,9 +30,11 @@
 
 <script>
 import api from '@/api'
+import { swiperMixin } from '@/components/mixin'
 
 export default {
   name: 'TagStorySlides',
+  mixins: [swiperMixin],
   props: {
     tag: {
       type: String,
@@ -47,19 +49,6 @@ export default {
       listIds: [],
       /** @type {Awaited<ReturnType<typeof api.getTagStoryDetails>>} */
       listDetails: [],
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
-        navigation: {
-          nextEl: '.swiper-button-next',
-          prevEl: '.swiper-button-prev',
-        },
-      },
     }
   },
   watch: {

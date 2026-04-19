@@ -34,12 +34,14 @@ import ImageSlide from '@/components/ImageSlide'
 import { mapGetters } from 'vuex'
 import api from '@/api'
 import NovelCard from '@/components/NovelCard.vue'
+import { swiperMixin } from '@/components/mixin'
 export default {
   name: 'AuthorNovelCard',
   components: {
     ImageSlide,
     NovelCard,
   },
+  mixins: [swiperMixin],
   props: {
     id: {
       type: Number,
@@ -49,14 +51,8 @@ export default {
   data() {
     return {
       memberArtwork: null,
-      swiperOption: {
-        freeMode: true,
-        slidesPerView: 'auto',
-        mousewheel: true,
-        scrollbar: {
-          el: '.swiper-scrollbar',
-          draggable: true,
-        },
+      extSwiperOption: {
+        navigation: false,
       },
     }
   },
