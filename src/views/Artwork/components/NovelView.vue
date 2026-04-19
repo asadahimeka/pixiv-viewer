@@ -34,21 +34,16 @@
 import { mapGetters } from 'vuex'
 import { imgProxy } from '@/api'
 import store, { novelTextConfig } from '@/store'
-import _ from '@/lib/lodash'
 import { COMMON_IMAGE_PROXY } from '@/consts'
 import { fontFallback } from '@/utils/font'
 import { detectLanguage } from '@/utils/novel'
+import { getCache } from '@/utils/storage/siteCache'
 
 const fontMap = {
   'inherit': 'inherit',
   'sans-serif': 'YuGothic, "Hiragino Kaku Gothic Pro", "Source Han Sans", "Source Han Sans JP", "Noto Sans CJK JP", "Avenir Next", Avenir, "Source Sans", "Noto Sans", Roboto, Verdana, "Pingfang SC", "Hiragino Sans GB", "Lantinghei SC", "Source Han Sans CN", "Noto Sans CJK SC", "Microsoft Yahei", DengXian, "Pingfang TC", "Pingfang HK", "Hiragino Sans CNS", "Lantinghei TC", "Source Han Sans TW", "Source Han Sans HK", "Noto Sans CJK TC", "Microsoft JhengHei", "Apple SD Gothic Neo", "Source Han Sans K", "Source Han Sans KR", "Noto Sans CJK KR", "Malgun Gothic", sans-serif',
   'serif': '"Source Serif Pro", "Source Serif", "Noto Serif", "Times New Roman", "Georgia Pro", Georgia, "Songti SC", "Source Han Serif SC", "Source Han Serif CN", "Noto Serif SC", Simsun, "Yu Mincho", YuMincho, "Hiragino Mincho ProN", "Hiragino Mincho Pro", "Source Han Serif", "Source Han Serif JP", "BIZ UDMincho Medium", "Noto Serif JP", "Songti TC", "Source Han Serif TC", "Source Han Serif TW", "Source Han Serif HK", "Noto Serif TC", PMingLiu, AppleMyungjo, "Source Han Serif K", "Source Han Serif KR", "Noto Serif KR", Batang, serif',
 }
-
-let startX = 0
-let startY = 0
-let endX = 0
-let endY = 0
 
 export default {
   name: 'NovelView',
@@ -61,6 +56,14 @@ export default {
       type: Object,
       required: true,
     },
+  },
+  data() {
+    return {
+      startX: 0,
+      startY: 0,
+      endX: 0,
+      endY: 0,
+    }
   },
   computed: {
     ...mapGetters(['isCensored']),
@@ -113,50 +116,81 @@ export default {
       return match?.src || ''
     },
   },
+  activated() {
+    console.log('++++++ novel view activated')
+    this.$nextTick(() => {
+      this.restoreScrollPosition()
+    })
+  },
+  mounted() {
+    console.log('++++++ novel view mounted')
+    this.$nextTick(() => {
+      this.restoreScrollPosition()
+    })
+  },
   methods: {
     getEmbedImg(id) {
       const urls = this.textObj.embedImgs?.[id]?.urls
       return imgProxy(urls?.['1200x1200'] || urls?.original || '')
     },
-    handleContClick: _.throttle(function (e) {
+    async restoreScrollPosition() {
+      if (!this.artwork.id || (this.textConfig.direction == 'h' && this.isShrink)) {
+        return
+      }
+      const position = await getCache(`novel.scroll.${this.artwork.id}`)
+      console.log('restoreScrollPosition: ', position)
+      if (!position) return
+      if (this.textConfig.direction == 'h') {
+        document.documentElement.scrollTop = position
+      } else {
+        this.$refs.view.scrollLeft = position
+      }
+    },
+    handleContClick(e) {
       if (this.isShrink) {
         this.$store.commit('setIsNovelViewShrink', false)
+        this.textConfig.direction == 'h' && this.$nextTick(() => {
+          getCache(`novel.scroll.${this.artwork.id}`).then(position => {
+            if (position) document.documentElement.scrollTop = position
+          })
+        })
       }
       if (this.textConfig.direction == 'hc') {
         const w = this.$refs.view.offsetWidth
         const i = e.clientX > (w / 2) ? 1 : -1
         this.$refs.view.scrollLeft += w * i
       }
-    }, 200),
-    handleWheel: _.throttle(function (e) {
+    },
+    handleWheel(e) {
       if (store.state.isMobile) return
       if (this.textConfig.direction == 'h') return
       e.preventDefault()
+      e.stopPropagation()
       if (this.textConfig.direction == 'hc') {
         this.$refs.view.scrollLeft += this.$refs.view.clientWidth * (e.deltaY > 0 ? 1 : -1)
         return
       }
-      this.$refs.view.scrollLeft += e.deltaY
-    }, 200),
-    handleTouchstart: _.throttle(function (e) {
+      this.$refs.view.scrollLeft += e.deltaY * 2
+    },
+    handleTouchstart(e) {
       if (!store.state.isMobile || this.textConfig.direction != 'hc') return
       const touch = e.touches[0]
-      startX = touch.clientX
-      startY = touch.clientY
-    }, 200),
-    handleTouchend: _.throttle(function (e) {
+      this.startX = touch.clientX
+      this.startY = touch.clientY
+    },
+    handleTouchend(e) {
       if (!store.state.isMobile || this.textConfig.direction != 'hc') return
       const touch = e.changedTouches[0]
-      endX = touch.clientX
-      endY = touch.clientY
+      this.endX = touch.clientX
+      this.endY = touch.clientY
 
-      const deltaX = endX - startX
-      const deltaY = endY - startY
+      const deltaX = this.endX - this.startX
+      const deltaY = this.endY - this.startY
 
       if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
         this.$refs.view.scrollLeft += this.$refs.view.clientWidth * (deltaX > 0 ? -1 : 1)
       }
-    }, 200),
+    },
   },
 }
 </script>

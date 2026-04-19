@@ -119,7 +119,7 @@ import _ from '@/lib/lodash'
 import { mapGetters } from 'vuex'
 import { ImagePreview } from 'vant'
 import api, { getBookmarkRestrictTags, localApi } from '@/api'
-import store from '@/store'
+import store, { novelTextConfig } from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
@@ -165,6 +165,14 @@ export default {
     RelatedNovel,
     CommentsArea,
     NovelTextConfig,
+  },
+  beforeRouteUpdate(_to, _from, next) {
+    this.recordScrollPosition()
+    next()
+  },
+  beforeRouteLeave(_to, _from, next) {
+    this.recordScrollPosition()
+    next()
   },
   data() {
     return {
@@ -253,6 +261,11 @@ export default {
     this.init()
   },
   methods: {
+    recordScrollPosition() {
+      const position = novelTextConfig.direction == 'h' ? document.documentElement.scrollTop : this.$refs.novelView?.$refs?.view?.scrollLeft
+      console.log('recordScrollPosition: ', position)
+      setCache(`novel.scroll.${this.artwork.id}`, position)
+    },
     init() {
       this.loading = true
       const id = +this.$route.params.id
