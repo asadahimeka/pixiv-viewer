@@ -7,7 +7,6 @@ export const swiperMixin = {
         freeMode: true,
         slidesPerView: 'auto',
         mousewheel: true,
-        touchMoveStopPropagation: true,
         scrollbar: {
           el: '.swiper-scrollbar',
           draggable: true,
