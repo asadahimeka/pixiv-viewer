@@ -5,8 +5,20 @@ export const swiperMixin = {
     swiperOption() {
       return {
         freeMode: true,
+        freeModeMomentum: true,
+        freeModeMomentumRatio: 0.6,
+        freeModeMomentumBounce: false,
         slidesPerView: 'auto',
         mousewheel: true,
+
+        resistance: false,
+        touchEventsTarget: 'wrapper',
+        threshold: 15,
+        touchAngle: 30,
+        snapOnRelease: true,
+        momentumRatio: 0.5,
+        preloadImages: false,
+
         scrollbar: {
           el: '.swiper-scrollbar',
           draggable: true,
@@ -18,15 +30,5 @@ export const swiperMixin = {
         ...(this.extSwiperOption || {}),
       }
     },
-  },
-  activated() {
-    this.$nextTick(() => {
-      this.$refs.mySwiper?.$swiper?.attachEvents()
-    })
-  },
-  deactivated() {
-    this.$nextTick(() => {
-      this.$refs.mySwiper?.$swiper?.detachEvents()
-    })
   },
 }

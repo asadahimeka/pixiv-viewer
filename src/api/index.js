@@ -2313,6 +2313,7 @@ const api = {
         const act = thumbnail.novel[nid]
         if (!act) return
         const figure = a.querySelector('figure')
+        if (!figure) return
         figure.setAttribute('src', act.url)
         figure.setAttribute('alt', act.title)
         figure.setAttribute('style', 'object-fit: cover; object-position: center center;')
@@ -2326,7 +2327,7 @@ const api = {
         const act = thumbnail.novel[nid]
         if (!act) return
         const caption = el.querySelector('.break-all.w-full > [class*="line-clamp-1"] + [title=""][class*="line-clamp-2"]')
-        if (!caption.innerHTML.trim()) caption.innerHTML = act.description
+        if (caption && !caption.innerHTML.trim()) caption.innerHTML = act.description
       })
       setProperFontSize(
         doc.querySelectorAll('[data-ga4-label="thumbnail"]:not(:has(a[href^="/novel/show.php"])) div[lang][style*="font-family"]')
