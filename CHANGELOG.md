@@ -5,6 +5,7 @@
 - Add theme color
 - Add novel rich text formats
 - Novel scroll position record
+- Remove p0 in filename
 
 ### 🐛 Bug Fixes
 
@@ -18,6 +19,8 @@
 - Masonry grid component
 - Masonry grid component
 - Swiper mixin
+- Swiper mixin
+- Some glitches
 
 ### 📚 Documentation
 
@@ -29,6 +32,7 @@
 - Release v1.34.0
 - Rename components
 - Release v1.34.1
+- Release v1.34.2
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
