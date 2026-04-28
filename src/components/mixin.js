@@ -1,6 +1,4 @@
 export const swiperMixin = {
-  // ref="mySwiper"
-  // mixins: [swiperMixin],
   computed: {
     swiperOption() {
       return {

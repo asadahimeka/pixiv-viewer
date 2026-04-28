@@ -512,6 +512,12 @@
           <span>{{ $t('P2gkznjKnjtHZDGXgzYfg') }}</span>
         </div>
       </div>
+      <van-cell v-if="dlFileNameTpl.endsWith('_p{index}')">
+        <div class="flex">
+          <span style="margin-right: 0.3rem">{{ $t('Y3hzjy9MHFQ8kFiI6r0o-') }}</span>
+          <van-switch :value="appSetting.dlFileNameNoSingleP0" size="24" @change="v => saveAppSetting('dlFileNameNoSingleP0', v)" />
+        </div>
+      </van-cell>
       <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="2.5em" />
       <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}:&nbsp;&nbsp;&nbsp;&nbsp;{{ sampleArtFileName }}</van-cell>
     </van-dialog>
