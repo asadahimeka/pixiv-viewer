@@ -123,12 +123,13 @@ export function tryURL(url) {
 
 export function replaceValidFileName(str = '', isDir = false) {
   const maxLen = 128
+  const re = /[/\\:*?"<>|.&$]/g
   if (isDir) {
-    str = str.replace(/[\\/|?*:<>'"\s.]/g, '_')
+    str = str.replace(re, '')
   } else {
     const strArr = str.split('.')
     const ext = strArr.pop()
-    str = strArr.join('').replace(/[\\/|?*:<>'"\s.]/g, '_') + '.' + ext
+    str = strArr.join('').replace(re, '') + '.' + ext
   }
   if (str.length > maxLen) str = str.slice(-maxLen)
   return str
@@ -142,34 +143,41 @@ export function replaceValidFileName(str = '', isDir = false) {
  * @param {string} options.subDir
  */
 export async function downloadFile(source, fileName, options = {}) {
+  let loading
   try {
     if (typeof source == 'string' && !/\.\w+$/.test(fileName)) {
       fileName += `.${source.split('.').pop()}`
     }
     fileName = replaceValidFileName(fileName)
 
-    const loading = Toast.loading({
+    Toast.allowMultiple()
+    loading = Toast({
       duration: 0,
-      // forbidClick: true,
-      message: options.message || (i18n.t('tip.downloading') + ': ' + fileName),
+      className: 'download-toast',
+      message: `${options.message}: ${fileName}` || `${i18n.t('tip.downloading')}: ${fileName}`,
+      getContainer: '#app .app-base',
     })
 
     if (isFsaSupported && store.state.appSetting.preferDownloadByFsa) {
       if (options.subDir) options.subDir = replaceValidFileName(options.subDir, true)
       const res = await saveFile(source, fileName, options.subDir)
-      loading.clear()
-      Toast(i18n.t('tip.downloaded') + ': ' + res)
+      loading.message = `${i18n.t('tip.downloaded')}: ${res}`
+      setTimeout(() => {
+        loading.clear()
+      }, 2000)
     } else if (typeof source == 'string' && window.__download__ && store.state.appSetting.preferDownloadByTm) {
       await window.__download__(source, fileName)
-      loading.clear()
-      Toast(i18n.t('tip.downloaded') + ': ' + fileName)
+      loading.message = `${i18n.t('tip.downloaded')}: ${fileName}`
+      setTimeout(() => {
+        loading.clear()
+      }, 2000)
     } else {
       await downloadURL(source, fileName)
       loading.clear()
     }
   } catch (err) {
     console.log('err: ', err)
-    Toast.clear(true)
+    loading?.clear()
     if (typeof source == 'string') downloadLink(source, fileName)
   }
 }

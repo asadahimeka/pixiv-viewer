@@ -954,3 +954,21 @@ body.dark::before
 
 .van-dialog__content
   user-select text !important
+
+.download-toast
+  transform: none !important
+  top: unset !important
+  bottom: 10PX !important
+  left: unset !important
+  right: 10PX !important
+  max-width: 5rem !important
+  max-height: 36PX !important
+  white-space: nowrap !important
+  .van-toast__text
+    width 100% !important
+    overflow hidden !important
+    white-space: nowrap !important
+    text-overflow: ellipsis !important
+  for i in 3..18
+    &:nth-child({i})
+      bottom ((i - 2) * 42 + 10) * 1PX !important

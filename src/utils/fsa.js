@@ -19,13 +19,25 @@ export async function saveFile(urlOrBlob, fileName, subdir) {
   if (!(await verifyPermission(mainDirHandle))) {
     throw new Error('Permission not granted.')
   }
-  const fileHandle = subdir
+  const fileHandle = async () => subdir
     ? await getSubDirFileHandle(mainDirHandle, subdir, fileName)
     : await mainDirHandle.getFileHandle(fileName, { create: true })
   if (typeof urlOrBlob == 'string') {
-    await writeURLToFile(fileHandle, urlOrBlob)
+    // Make an HTTP request for the contents.
+    const response = await fetch(urlOrBlob)
+    if (!response.ok) throw new Error('Response not ok.')
+    // Create a FileSystemWritableFileStream to write to.
+    const writable = await (await fileHandle()).createWritable()
+    // Stream the response into the file.
+    await response.body.pipeTo(writable)
+    // pipeTo() closes the destination pipe by default, no need to close it.
   } else {
-    await writeBlobToFile(fileHandle, urlOrBlob)
+    // Create a FileSystemWritableFileStream to write to.
+    const writable = await (await fileHandle()).createWritable()
+    // Write the contents of the file to the stream.
+    await writable.write(urlOrBlob)
+    // Close the file and write the contents to disk.
+    await writable.close()
   }
   return `${mainDirHandle.name}${subdir ? `/${subdir}` : ''}/${fileName}`
 }
@@ -61,34 +73,6 @@ async function verifyPermission(handle) {
 
   // The user didn't grant permission, so return false.
   return false
-}
-
-/**
- * @param {FileSystemFileHandle} fileHandle
- * @param {string} url
- */
-async function writeURLToFile(fileHandle, url) {
-  // Make an HTTP request for the contents.
-  const response = await fetch(url)
-  if (!response.ok) throw new Error('Response not ok.')
-  // Create a FileSystemWritableFileStream to write to.
-  const writable = await fileHandle.createWritable()
-  // Stream the response into the file.
-  await response.body.pipeTo(writable)
-  // pipeTo() closes the destination pipe by default, no need to close it.
-}
-
-/**
- * @param {FileSystemFileHandle} fileHandle
- * @param {Blob} blob
- */
-async function writeBlobToFile(fileHandle, blob) {
-  // Create a FileSystemWritableFileStream to write to.
-  const writable = await fileHandle.createWritable()
-  // Write the contents of the file to the stream.
-  await writable.write(blob)
-  // Close the file and write the contents to disk.
-  await writable.close()
 }
 
 /**

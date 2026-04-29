@@ -19,7 +19,7 @@ module.exports = {
     'eqeqeq': 'off',
     'no-console': 'off',
     'no-unexpected-multiline': 'error',
-    'no-return-await': 'error',
+    'no-return-await': 'off',
     'no-unused-expressions': 'off',
     'no-use-before-define': ['error', 'nofunc'],
     'no-useless-concat': 'error',

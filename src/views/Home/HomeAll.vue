@@ -162,7 +162,7 @@ export default {
 .homea-pixivision .card-box .swipe-wrap .swipe-item
   width 8.6rem !important
 
-.van-list .home-i .ha-item:has(.censored)
+.home-i .van-list .ha-item:has(.censored)
   display none
 
 </style>
