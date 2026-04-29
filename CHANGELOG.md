@@ -21,6 +21,7 @@
 - Swiper mixin
 - Swiper mixin
 - Some glitches
+- Download toast
 
 ### 📚 Documentation
 
@@ -33,6 +34,7 @@
 - Rename components
 - Release v1.34.1
 - Release v1.34.2
+- Release v1.34.3
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
