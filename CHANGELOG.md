@@ -6,6 +6,8 @@
 - Add novel rich text formats
 - Novel scroll position record
 - Remove p0 in filename
+- Original novel webview reader
+- New artworks search params
 
 ### 🐛 Bug Fixes
 
@@ -22,6 +24,7 @@
 - Swiper mixin
 - Some glitches
 - Download toast
+- Block tags using Set
 
 ### 📚 Documentation
 
@@ -35,6 +38,7 @@
 - Release v1.34.1
 - Release v1.34.2
 - Release v1.34.3
+- Release v1.34.4
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
