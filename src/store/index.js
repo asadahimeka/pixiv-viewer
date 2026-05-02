@@ -96,6 +96,7 @@ export default new Vuex.Store({
       openArtDetailAsPopup: false,
       isExpandMultiPArtwork: false,
       showPIDMask: true,
+      useNovelWebview: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

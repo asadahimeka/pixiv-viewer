@@ -1457,6 +1457,74 @@ const api = {
     return { status: 0, data: artwork }
   },
 
+  async getNovelHtml(id) {
+    try {
+      const cacheKey = `novel.html.${id}`
+      let html = await getCache(cacheKey)
+      if (!html) {
+        html = await get('/webview_novel', { id, raw: 'true' })
+        await setCache(cacheKey, html, -1)
+      }
+      if (!html) return null
+
+      html = html.replace(/i\.pximg\.net/g, PXIMG_PROXY_BASE)
+      const doc = new DOMParser().parseFromString(html, 'text/html')
+
+      const jsElems = doc.querySelectorAll('script')
+      const jsList = []
+      for (const el of jsElems) {
+        if (!el.getAttribute('src')) {
+          if (el.innerHTML.includes('/cdn-cgi/challenge-platform')) {
+            el.remove()
+          }
+          continue
+        }
+        let js = await getCache(el.src)
+        if (!js) {
+          js = await fetch(PIXIV_NEXT_URL + '/' + el.src).then(r => r.text())
+          await setCache(el.src, js)
+        }
+        jsList.push(js)
+        el.remove()
+      }
+
+      const cssLinks = [...doc.querySelectorAll('link[href$=".css"]')]
+      const cssList = []
+      for (const link of cssLinks) {
+        let css = await getCache(link.href)
+        if (!css) {
+          css = await fetch(PIXIV_NEXT_URL + '/' + link.href).then(r => r.text())
+          await setCache(link.href, css)
+        }
+        cssList.push(css)
+        link.remove()
+      }
+
+      doc.head.insertAdjacentHTML('beforeend', `
+        ${cssList.map(e => `<style>${e}</style>`).join('\n')}
+        <style>
+          #root>div:not(:nth-child(1),:nth-child(2)){display:none}
+          ::-webkit-scrollbar{width: 5px;height: 5px;}
+          ::-webkit-scrollbar-track{background: transparent;}
+          ::-webkit-scrollbar-thumb{background: #b0b0b0;border-radius: 7px;}
+          ::-webkit-scrollbar-thumb:hover{background: #666;}
+          @media screen and (max-width: 600px) { ::-webkit-scrollbar{width: 0 !important} }
+        </style>
+      `)
+      jsList.forEach(e => {
+        const script = document.createElement('script')
+        script.innerHTML = e
+        doc.head.appendChild(script)
+      })
+
+      const result = doc.documentElement.outerHTML
+      return result
+    } catch (err) {
+      console.log('err: ', err)
+      return null
+    }
+  },
+
   async getNovelText(id) {
     const cacheKey = `novel_text_${id}`
     let artwork = await getCache(cacheKey)

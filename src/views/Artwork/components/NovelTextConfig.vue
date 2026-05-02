@@ -12,7 +12,7 @@
             </van-slider>
           </div>
         </div>
-        <div class="conf-fitem" style="flex: 0.3;text-align: center;">
+        <div v-if="notUseNovelWebview" class="conf-fitem" style="flex: 0.3;text-align: center;">
           <div class="conf-title">{{ $t('BL3mClhoBiB1ETwTnJpqV') }}</div>
           <div class="conf-inp" style="padding-right: 0.26667rem;">
             <van-switch v-model="novelTextConfig.indent" size="18" />
@@ -23,7 +23,7 @@
         <div class="conf-fitem">
           <div class="conf-title">
             <span>{{ $t('novel.settings.text.font') }}</span>
-            <a href="javascript:;" style="float: right;margin-top: 2PX;font-size: 0.8em;" @click="openFontSelect">{{ $t('k8lr4kQuHztU5VK45a39z') }}</a>
+            <a v-if="notUseNovelWebview" href="javascript:;" style="float: right;margin-top: 2PX;font-size: 0.8em;" @click="openFontSelect">{{ $t('k8lr4kQuHztU5VK45a39z') }}</a>
           </div>
           <div class="conf-inp">
             <van-radio-group v-model="novelTextConfig.font" direction="horizontal">
@@ -33,7 +33,7 @@
             </van-radio-group>
           </div>
         </div>
-        <div class="conf-fitem">
+        <div v-if="notUseNovelWebview" class="conf-fitem">
           <div class="conf-title">{{ $t('novel.settings.text.direction') }}</div>
           <div class="conf-inp">
             <van-radio-group v-model="novelTextConfig.direction" direction="horizontal">
@@ -55,7 +55,7 @@
             </van-slider>
           </div>
         </div>
-        <div class="conf-fitem">
+        <div v-if="notUseNovelWebview" class="conf-fitem">
           <div class="conf-title">{{ $t('novel.settings.text.weight') }}</div>
           <div class="conf-inp">
             <van-slider v-model="novelTextConfig.weight" :min="100" :max="900" :step="100" class="conf-slider" @change="onSizeChange">
@@ -106,11 +106,11 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { Toast } from 'vant'
 import { i18n } from '@/i18n'
 import { LocalStorage } from '@/utils/storage'
-import { novelTextConfig } from '@/store'
+import store, { novelTextConfig } from '@/store'
 import PageFontSelect from './PageFontSelect.vue'
 import { loadCustomFont } from '@/utils/font'
 
@@ -123,6 +123,8 @@ const textColorPresets = ref([
   ['#e6f1fa', '#1f1f1f'],
   ['#fff8eb', '#1f1f1f'],
 ])
+
+const notUseNovelWebview = computed(() => !store.state.appSetting.useNovelWebview)
 
 watch(
   () => novelTextConfig,

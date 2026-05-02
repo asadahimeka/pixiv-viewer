@@ -154,7 +154,7 @@ export async function downloadFile(source, fileName, options = {}) {
     loading = Toast({
       duration: 0,
       className: 'download-toast',
-      message: `${options.message}: ${fileName}` || `${i18n.t('tip.downloading')}: ${fileName}`,
+      message: options.message ? `${options.message}: ${fileName}` : `${i18n.t('tip.downloading')}: ${fileName}`,
       getContainer: '#app .app-base',
     })
 

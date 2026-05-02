@@ -1,15 +1,16 @@
 <template>
   <div class="artwork novel">
     <TopBar />
-    <div class="more_btn" @click="toggleNovelConfigShow">
+    <div v-if="!useNovelWebview" class="more_btn" @click="toggleNovelConfigShow">
       <Icon class="icon" name="novel_setting" />
     </div>
     <div class="ia-cont" :class="{ isCollapseMeta }">
       <div class="ia-left">
         <van-loading v-if="loading" size="50px" style="margin-top: 3rem;" />
         <template v-else>
-          <NovelView ref="novelView" :artwork="artwork" :text-obj="novelText" />
-          <div class="collapse-btn" @click="isCollapseMeta=!isCollapseMeta">
+          <NovelEmbedView v-if="useNovelWebview" :html="novelHtml" />
+          <NovelView v-else ref="novelView" :artwork="artwork" :text-obj="novelText" />
+          <div v-if="!useNovelWebview" class="collapse-btn" @click="isCollapseMeta=!isCollapseMeta">
             <Icon class="icon" name="double_arrow_down" />
           </div>
         </template>
@@ -86,7 +87,7 @@
               </van-popover>
             </template>
           </div>
-          <van-button type="info" size="small" plain @click="toggleNovelConfigShow">⚙{{ $t('novel.settings.title') }}</van-button>
+          <van-button v-if="!useNovelWebview" type="info" size="small" plain @click="toggleNovelConfigShow">⚙{{ $t('novel.settings.title') }}</van-button>
         </div>
         <keep-alive>
           <AuthorNovelCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
@@ -129,6 +130,7 @@ import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCac
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
 import NovelView from './components/NovelView.vue'
+import NovelEmbedView from './components/NovelEmbedView.vue'
 import NovelTextConfig from './components/NovelTextConfig.vue'
 import Meta from './components/Meta'
 import AuthorNovelCard from './components/AuthorNovelCard.vue'
@@ -162,6 +164,7 @@ export default {
     NovelMeta: Meta,
     AuthorNovelCard,
     NovelView,
+    NovelEmbedView,
     RelatedNovel,
     CommentsArea,
     NovelTextConfig,
@@ -179,6 +182,7 @@ export default {
       loading: false,
       artwork: {},
       novelText: {},
+      novelHtml: '',
       showShare: false,
       shareOptions: [
         { name: i18n.t('artwork.share.type.web'), icon: IconWeb },
@@ -201,9 +205,9 @@ export default {
         { text: 'HTML', val: 'html' },
         { text: 'MD', val: 'md' },
         { text: 'DOC', val: 'doc' },
-        { text: 'PDF', val: 'pdf' },
+        !store.state.appSetting.useNovelWebview && { text: 'PDF', val: 'pdf' },
         !store.state.isMobile && ({ text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' }),
-        { text: 'EPUB', val: 'epub' },
+        !store.state.appSetting.useNovelWebview && { text: 'EPUB', val: 'epub' },
       ].filter(Boolean),
       showBookmarkBtn: localApi.APP_CONFIG.useLocalAppApi,
       favLoading: false,
@@ -221,7 +225,9 @@ export default {
   computed: {
     ...mapGetters(['isCensored']),
     showPntBtn() {
-      if (store.state.appSetting.isAutoLoadKissT) return false
+      if (store.state.appSetting.isAutoLoadKissT || store.state.appSetting.useNovelWebview) {
+        return false
+      }
       return (
         i18n.locale.includes('zh') &&
         !/中文|中国语|Chinese|中國語|中国語/.test(JSON.stringify(this.artwork.tags))
@@ -231,7 +237,10 @@ export default {
       return Boolean(store.state.appSetting.novelDefTranslate)
     },
     isNovelDlFormatSet() {
-      return Boolean(store.state.appSetting.novelDefDlFormat)
+      return Boolean(store.state.appSetting.novelDefDlFormat && !store.state.appSetting.useNovelWebview)
+    },
+    useNovelWebview() {
+      return store.state.appSetting.useNovelWebview
     },
   },
   watch: {
@@ -262,6 +271,7 @@ export default {
   },
   methods: {
     recordScrollPosition() {
+      if (this.useNovelWebview) return
       const position = novelTextConfig.direction == 'h' ? document.documentElement.scrollTop : this.$refs.novelView?.$refs?.view?.scrollLeft
       console.log('recordScrollPosition: ', position)
       setCache(`novel.scroll.${this.artwork.id}`, position)
@@ -271,6 +281,7 @@ export default {
       const id = +this.$route.params.id
       this.artwork = {}
       this.novelText = {}
+      this.novelHtml = ''
       Promise.all([
         this.getArtwork(id),
         this.getNovelText(id),
@@ -279,16 +290,31 @@ export default {
       })
     },
     async getNovelText(id) {
-      const res = await api.getNovelText(id)
-      if (res.status === 0) {
-        this.novelText = res.data
-        novelTextBak = res.data.text
+      if (this.useNovelWebview) {
+        const res = await api.getNovelHtml(id)
+        if (!res) return
+        this.novelHtml = res
+        const json = JSON.parse(res.match(/novel:\s({.+}),/)?.[1])
+        console.log('json: ', json)
+        this.novelText = {
+          text: json.text,
+          prev: json.seriesNavigation?.prevNovel,
+          next: json.seriesNavigation?.nextNovel,
+          embedImgs: json.images,
+        }
+        novelTextBak = json.text
       } else {
-        this.$toast({
-          message: res.msg,
-          icon: require('@/icons/error.svg'),
-          duration: 3000,
-        })
+        const res = await api.getNovelText(id)
+        if (res.status === 0) {
+          this.novelText = res.data
+          novelTextBak = res.data.text
+        } else {
+          this.$toast({
+            message: res.msg,
+            icon: require('@/icons/error.svg'),
+            duration: 3000,
+          })
+        }
       }
     },
     async getArtwork(id) {
@@ -454,6 +480,9 @@ export default {
       window.umami?.track('download_novel', { ext })
       const fileName = `${getArtworkFileName(this.artwork)}`
       const getOuterHTML = () => {
+        if (this.useNovelWebview) {
+          return document.querySelector('.novel-embed-view iframe')?.contentWindow?.document?.querySelector('#text')?.innerHTML
+        }
         const el = document.querySelector('.novel-view').cloneNode(true)
         el.querySelector('svg').remove()
         el.style.padding = '1rem'

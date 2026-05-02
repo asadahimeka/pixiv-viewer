@@ -43,9 +43,9 @@ const HASH_SECRET = '28c1fdd170a5204386cb1313c7077b34f83e4aaf4aa829ce78c231e05b0
 const DEFAULT_HEADERS = {
   'App-OS': 'android',
   'App-OS-Version': '15',
-  'App-Version': '6.178.0',
+  'App-Version': '6.180.0',
   'Accept-Language': 'zh-CN',
-  'User-Agent': 'PixivAndroidApp/6.178.0 (Android 15; Pixel 9)',
+  'User-Agent': 'PixivAndroidApp/6.180.0 (Android 15; Pixel 9)',
 }
 
 async function callApi(url, options) {
@@ -1016,7 +1016,28 @@ class PixivApi {
       throw new Error('novel_id required')
     }
 
-    const queryString = qs.stringify({ id, viewer_version: '20221031_ai' })
+    const config = LocalStorage.get('PXV_TEXT_CONFIG', {})
+    const fontMap = {
+      'inherit': 'default',
+      'sans-serif': 'gothic',
+      'serif': 'mincho',
+    }
+
+    const queryString = qs.stringify({
+      id,
+      font: fontMap[config.font] || 'default',
+      font_size: config.size ? `${config.size}px` : '18.0px',
+      line_height: config.height || '1.75',
+      color: config.color || '#101010',
+      background_color: config.bg || '#EFEFEF',
+      margin_top: '64px',
+      margin_bottom: '53px',
+      theme: 'light',
+      use_block: 'true',
+      viewer_version: '20260126_viewer_comments',
+      restricted_mode: 'false',
+      view_name: 'HomeNovel',
+    })
     const response = await this.requestUrl(`/webview/v2/novel?${queryString}`, {
       responseType: 'text',
     })
