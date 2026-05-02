@@ -73,11 +73,12 @@
     </div>
     <div class="list-wrap" :class="{ focus: focus }" :style="{ paddingTop: keywords.trim() ? '1.6rem' : '2.6rem' }">
       <div v-show="keywords.trim()" class="search_params">
-        <van-dropdown-menu class="search_param_sel" :class="{ showPopPreview }" active-color="#f2c358">
+        <van-dropdown-menu class="search_param_sel" :class="{ showPopPreview }" active-color="#f2c358" z-index="99">
           <template v-if="!showPopPreview">
             <van-dropdown-item v-model="searchParams.mode" :options="searchModes" />
-            <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
+            <van-dropdown-item v-model="searchParams.content_type" :title="$t('FowunigEBlCKmDG2YhR44')" :options="searchContents" />
             <van-dropdown-item v-model="searchParams.order" :options="searchOrders" />
+            <van-dropdown-item v-model="usersIriTag" :options="usersIriTags" />
           </template>
           <van-dropdown-item
             ref="s_date"
@@ -115,7 +116,11 @@
             <van-dropdown-item v-model="searchDurationParam" :options="searchDurations" @change="handleDurationChange" />
             <van-dropdown-item v-model="searchParams.search_ai_type" :disabled="!isAIOn" :options="searchAIOptions" />
             <van-dropdown-item v-model="searchParams.searchR18Type" :disabled="!isR18On" :options="searchR18Options" />
-            <van-dropdown-item v-model="searchParams.ratioFilter" :options="ratioOptions" />
+            <van-dropdown-item v-if="searchParams.content_type == 'manga'" v-model="searchParams.lang" :title="$t('w_o-jyGfUrVwuq-c1ktF_')" :options="searchOtherOptions.illust.lang" />
+            <van-dropdown-item v-model="searchParams.searchResolution" :options="searchResolutions" />
+            <van-dropdown-item v-model="searchParams.ratio_pattern" :options="searchRatioOptions" />
+            <van-dropdown-item v-model="searchParams.tool" :title="$t('38voBbE8fUIdxgli3n14t')" :options="searchOtherOptions.illust.tool" />
+            <van-dropdown-item v-model="searchParams.include_potential_violation_works" :options="searchPotentialViolations" />
           </template>
         </van-dropdown-menu>
       </div>
@@ -178,6 +183,7 @@ import { notSelfHibiApi } from '@/consts'
 import { mintVerify, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE, BLOCK_SEARCH_WORD_RE, BLOCK_RESULT_RE, isAiIllust } from '@/utils/filter'
 import { i18n } from '@/i18n'
 import { sleep } from '@/utils'
+import { searchOtherOptions } from './searchOptions'
 import ImageList from '@/components/ImageList.vue'
 import PopularPreview from './components/PopularPreview.vue'
 import TagStorySlides from './components/TagStorySlides.vue'
@@ -221,12 +227,25 @@ export default {
         end_date: '',
         search_ai_type: '',
         searchR18Type: '',
-        ratioFilter: '',
+        content_type: '',
+        searchResolution: '',
+        ratio_pattern: '',
+        tool: '',
+        lang: '',
+        include_potential_violation_works: 'false',
       },
+      searchContents: [
+        { text: `${this.$t('common.illust')} / ${this.$t('common.manga')} / ${this.$t('common.ugoira')}`, value: 'illust_and_manga_and_ugoira' },
+        { text: `${this.$t('common.illust')} / ${this.$t('common.ugoira')}`, value: 'illust_and_ugoira' },
+        { text: this.$t('common.illust'), value: 'illust' },
+        { text: this.$t('common.ugoira'), value: 'ugoira' },
+        { text: this.$t('common.manga'), value: 'manga' },
+      ],
       searchModes: [
         { text: this.$t('search.mode.partial'), value: 'partial_match_for_tags' },
         { text: this.$t('search.mode.exact'), value: 'exact_match_for_tags' },
         { text: this.$t('search.mode.title'), value: 'title_and_caption' },
+        { text: this.$t('dMmUqu2l6ysykwKgWNf2g'), value: 'keyword' },
       ],
       searchOrders: [
         { text: this.$t('search.date.desc'), value: 'date_desc' },
@@ -251,12 +270,23 @@ export default {
         { text: this.$t('D3kINSMv_LLXKunaXRBkY'), value: '' },
         { text: this.$t('VTewlLtKnSV8muyw35y8P'), value: '1' },
       ],
-      ratioOptions: [
+      searchRatioOptions: [
         { text: this.$t('60rHZkbSVyvMXR5mxfOUS'), value: '' },
-        { text: this.$t('4qZPW5NFW8YYDwkKtrKjz'), value: 'w>h' },
-        { text: this.$t('lveNeJo4VKOxFL7t6wvN_'), value: 'w=h' },
-        { text: this.$t('Fe6ZIApJoqbXO5UU5S001'), value: 'w<h' },
+        { text: this.$t('4qZPW5NFW8YYDwkKtrKjz'), value: 'landscape' },
+        { text: this.$t('Fe6ZIApJoqbXO5UU5S001'), value: 'portrait' },
+        { text: this.$t('lveNeJo4VKOxFL7t6wvN_'), value: 'square' },
       ],
+      searchResolutions: [
+        { text: this.$t('_clhVQdTeyFhQK1rRq69b'), value: '' },
+        { text: this.$t('PTzMTBx4taixMClb9G5jJ'), value: '{"width_min":3000,"height_min":3000}' },
+        { text: '1000px×1000px - 2999px×2999px', value: '{"width_min":1000,"height_min":1000,"width_max":2999,"height_max":2999}' },
+        { text: this.$t('yd8Cnr3o_aHBOMsOwTTjS'), value: '{"width_max":999,"height_max":999}' },
+      ],
+      searchPotentialViolations: [
+        { text: this.$t('bsUkOJL1hGMF910TAuAs7'), value: 'true' },
+        { text: this.$t('B6_a-r-LnCBiHNTtnmv_-'), value: 'false' },
+      ],
+      searchOtherOptions,
       showPopPreview: false,
       isSelfHibi: !notSelfHibiApi,
       totalPages: 166,
@@ -519,7 +549,13 @@ export default {
       if (this.usersIriTag) val += ' ' + this.usersIriTag
       const params = _.pickBy(this.searchParams, Boolean)
       delete params.searchR18Type
-      delete params.ratioFilter
+      if (params.searchResolution) {
+        Object.assign(params, JSON.parse(params.searchResolution))
+        delete params.searchResolution
+      }
+      if (params.content_type != 'manga') {
+        delete params.lang
+      }
       if (!this.isAIOn || val.includes(' -AI')) {
         params.search_ai_type = 1 // 不显示AI作品
       }
@@ -545,16 +581,6 @@ export default {
 
           if (this.searchParams.search_ai_type == '1' || this.keywords__.includes(' -AI')) {
             artList = artList.filter(e => !isAiIllust(e))
-          }
-
-          const { ratioFilter } = this.searchParams
-          if (ratioFilter) {
-            artList = artList.filter(e => {
-              if (ratioFilter == 'w>h') return e.width > e.height
-              if (ratioFilter == 'w=h') return e.width == e.height
-              if (ratioFilter == 'w<h') return e.width < e.height
-              return true
-            })
           }
 
           artList = artList.filter(e => {
@@ -928,49 +954,30 @@ export default {
   top -24px
   @media screen and (max-width: 1280px)
     overflow-x: auto;
+    &::after
+      content: "→"
+      position: absolute;
+      right: 0.25rem;
+      bottom: 0.1rem;
+      font-size 0.6rem
+      line-height 1
+      color var(--accent-color, #f2c358)
+      transform: translateX(0);
+      opacity: 0.6;
+      animation: fade 1.5s infinite;
     &::-webkit-scrollbar
       display none
     ::v-deep .van-dropdown-menu
       padding-bottom 0.3rem
-  @media screen and (min-width: 1281px)
-    ::v-deep .van-dropdown-menu:not(.showPopPreview)
-      >div:nth-child(2) .van-dropdown-item__content
-        width: 14.5vw
-        border-bottom-right-radius: 8PX
-      >div:nth-child(3) .van-dropdown-item__content
-        width: 12.5vw
-        left: 12.5vw
-        border-bottom-left-radius: 8PX
-        border-bottom-right-radius: 8PX
-      >div:nth-child(4) .van-dropdown-item__content
-        width: 12.5vw
-        left: 12.5vw*2
-        border-bottom-left-radius: 8PX
-        border-bottom-right-radius: 8PX
-      >div:nth-child(6) .van-dropdown-item__content
-        width: 12.5vw
-        left: 12.5vw*4
-        border-bottom-left-radius: 8PX
-        border-bottom-right-radius: 8PX
-      >div:nth-child(7) .van-dropdown-item__content
-        width: 12.5vw
-        left: 12.5vw*5
-        border-bottom-left-radius: 8PX
-        border-bottom-right-radius: 8PX
-      >div:nth-child(8) .van-dropdown-item__content
-        width: 12.5vw
-        left: 12.5vw*6
-        border-bottom-left-radius: 8PX
-        border-bottom-right-radius: 8PX
-      >div:nth-child(9) .van-dropdown-item__content
-        width: 12.5vw
-        left: unset
-        right 0
-        border-bottom-left-radius: 8PX
+
+@keyframes fade {
+  0% { opacity: 0.2; transform: translateX(0); }
+  50% { opacity: 0.8; transform: translateX(5px); }
+  100% { opacity: 0.2; transform: translateX(0); }
+}
 
 .search_param_sel
   height 70px
-
   ::v-deep .van-dropdown-menu__title
     font-size 0.26rem
   ::v-deep .van-dropdown-menu__bar
@@ -997,7 +1004,6 @@ export default {
   z-index: 14;
   width 100%
   background: #fff
-
   .pid-n-uid
     display flex
     flex-wrap wrap

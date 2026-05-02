@@ -972,3 +972,12 @@ body.dark::before
   for i in 3..18
     &:nth-child({i})
       bottom ((i - 2) * 42 + 10) * 1PX !important
+
+.search_param_sel .van-dropdown-item__option
+  justify-content center
+  gap 0.2rem
+  > div
+    flex none
+  &:not(.van-dropdown-item__option--active)
+    .van-cell__title
+      margin-right: 0.45rem

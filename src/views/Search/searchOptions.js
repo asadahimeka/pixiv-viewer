@@ -1,0 +1,398 @@
+export const searchOtherOptions = {
+  illust: {
+    tool: [
+      '_ALL_',
+      'SAI',
+      'Photoshop',
+      'CLIP STUDIO PAINT',
+      'IllustStudio',
+      'ComicStudio',
+      'Pixia',
+      'AzPainter2',
+      'Painter',
+      'Illustrator',
+      'GIMP',
+      'FireAlpaca',
+      '网上描绘',
+      'AzPainter',
+      'CGillust',
+      '描画聊天室',
+      '手画博克',
+      'MS_Paint',
+      'PictBear',
+      'openCanvas',
+      'PaintShopPro',
+      'EDGE',
+      'drawr',
+      'COMICWORKS',
+      'AzDrawing',
+      'SketchBookPro',
+      'PhotoStudio',
+      'Paintgraphic',
+      'MediBang Paint',
+      'NekoPaint',
+      'Inkscape',
+      'ArtRage',
+      'AzDrawing2',
+      'Fireworks',
+      'ibisPaint',
+      'AfterEffects',
+      'mdiapp',
+      'GraphicsGale',
+      'Krita',
+      'kokuban.in',
+      'RETAS STUDIO',
+      'えもふり・E-mote',
+      '4thPaint',
+      'ComiLabo',
+      'pixiv Sketch',
+      'Pixelmator',
+      'Procreate',
+      'Expression',
+      'PicturePublisher',
+      'Processing',
+      'Live2D',
+      'ドットピクト',
+      'Aseprite',
+      'Pastela',
+      'Poser',
+      'Metasequoia',
+      'Blender',
+      'Shade',
+      '3dsMax',
+      'DAZ Studio',
+      'ZBrush',
+      'Comi Po!',
+      'Maya',
+      'Lightwave3D',
+      '六角大王',
+      'Vue',
+      'SketchUp',
+      'CINEMA4D',
+      'XSI',
+      'CARRARA',
+      'Bryce',
+      'STRATA',
+      'Sculptris',
+      'modo',
+      'AnimationMaster',
+      'VistaPro',
+      'Sunny3D',
+      '3D-Coat',
+      'Paint 3D',
+      'VRoid Studio',
+      '笔芯笔',
+      '铅笔',
+      '原子笔',
+      '毫笔',
+      '颜色铅笔',
+      'Copic麦克笔',
+      '沾水笔',
+      '透明水彩',
+      '毛笔',
+      '毛笔',
+      '记号笔',
+      '麦克笔',
+      '水彩色鉛筆',
+      '涂料',
+      '丙烯颜料',
+      '钢笔',
+      '粉彩',
+      '喷笔',
+      '颜色墨水',
+      '蜡笔',
+      '油彩',
+      'クーピーペンシル',
+      '颜彩',
+      '蜡笔',
+    ].map(e => (e == '_ALL_' ? { text: 'All', value: '' } : { text: e, value: e })),
+    lang: [
+      {
+        code: '',
+        name: 'All',
+      },
+      {
+        code: 'ja',
+        name: '日本語',
+      },
+      {
+        code: 'en',
+        name: 'English',
+      },
+      {
+        code: 'ko',
+        name: '한국어',
+      },
+      {
+        code: 'zh-cn',
+        name: '简体中文',
+      },
+      {
+        code: 'zh-tw',
+        name: '繁體中文',
+      },
+      {
+        code: 'id',
+        name: 'Bahasa Indonesia',
+      },
+      {
+        code: 'da',
+        name: 'Dansk',
+      },
+      {
+        code: 'de',
+        name: 'Deutsch',
+      },
+      {
+        code: 'es',
+        name: 'Español',
+      },
+      {
+        code: 'es-419',
+        name: 'Español (Latinoamérica)',
+      },
+      {
+        code: 'tl',
+        name: 'Filipino',
+      },
+      {
+        code: 'fr',
+        name: 'Français',
+      },
+      {
+        code: 'hr',
+        name: 'Hrvatski',
+      },
+      {
+        code: 'it',
+        name: 'Italiano',
+      },
+      {
+        code: 'ms',
+        name: 'Bahasa Melayu',
+      },
+      {
+        code: 'nl',
+        name: 'Nederlands',
+      },
+      {
+        code: 'pl',
+        name: 'Polski',
+      },
+      {
+        code: 'pt-br',
+        name: 'Português (Brasil)',
+      },
+      {
+        code: 'pt-pt',
+        name: 'Português (Portugal)',
+      },
+      {
+        code: 'vi',
+        name: 'Tiếng Việt',
+      },
+      {
+        code: 'tr',
+        name: 'Türkçe',
+      },
+      {
+        code: 'ru',
+        name: 'Русский',
+      },
+      {
+        code: 'ar',
+        name: 'العربية',
+      },
+      {
+        code: 'th',
+        name: 'ไทย',
+      },
+      {
+        code: 'other',
+        name: 'Other',
+      },
+    ].map(e => ({ text: e.name, value: e.code })),
+  },
+  novel: {
+    genre: [
+      {
+        id: 0,
+        label: 'All',
+      },
+      {
+        id: 1,
+        label: '恋爱',
+      },
+      {
+        id: 2,
+        label: '异世界奇幻',
+      },
+      {
+        id: 3,
+        label: '现代奇幻',
+      },
+      {
+        id: 4,
+        label: '悬疑',
+      },
+      {
+        id: 5,
+        label: '恐怖',
+      },
+      {
+        id: 6,
+        label: '科幻',
+      },
+      {
+        id: 7,
+        label: '文学',
+      },
+      {
+        id: 8,
+        label: '生活・情感',
+      },
+      {
+        id: 9,
+        label: '历史・时代',
+      },
+      {
+        id: 10,
+        label: 'BL',
+      },
+      {
+        id: 11,
+        label: '百合',
+      },
+      {
+        id: 12,
+        label: '儿童向',
+      },
+      {
+        id: 13,
+        label: '散文・诗歌',
+      },
+      {
+        id: 14,
+        label: '随笔・纪实',
+      },
+      {
+        id: 15,
+        label: '剧本・台本',
+      },
+      {
+        id: 16,
+        label: '评论・感想',
+      },
+      {
+        id: 17,
+        label: '其他',
+      },
+    ].map(e => ({ text: e.label, value: e.id })),
+    lang: [
+      {
+        code: '',
+        name: 'All',
+      },
+      {
+        code: 'ja',
+        name: '日本語',
+      },
+      {
+        code: 'en',
+        name: 'English',
+      },
+      {
+        code: 'ko',
+        name: '한국어',
+      },
+      {
+        code: 'zh-cn',
+        name: '简体中文',
+      },
+      {
+        code: 'zh-tw',
+        name: '繁體中文',
+      },
+      {
+        code: 'id',
+        name: 'Bahasa Indonesia',
+      },
+      {
+        code: 'da',
+        name: 'Dansk',
+      },
+      {
+        code: 'de',
+        name: 'Deutsch',
+      },
+      {
+        code: 'es',
+        name: 'Español',
+      },
+      {
+        code: 'es-419',
+        name: 'Español (Latinoamérica)',
+      },
+      {
+        code: 'tl',
+        name: 'Filipino',
+      },
+      {
+        code: 'fr',
+        name: 'Français',
+      },
+      {
+        code: 'hr',
+        name: 'Hrvatski',
+      },
+      {
+        code: 'it',
+        name: 'Italiano',
+      },
+      {
+        code: 'ms',
+        name: 'Bahasa Melayu',
+      },
+      {
+        code: 'nl',
+        name: 'Nederlands',
+      },
+      {
+        code: 'pl',
+        name: 'Polski',
+      },
+      {
+        code: 'pt-br',
+        name: 'Português (Brasil)',
+      },
+      {
+        code: 'pt-pt',
+        name: 'Português (Portugal)',
+      },
+      {
+        code: 'vi',
+        name: 'Tiếng Việt',
+      },
+      {
+        code: 'tr',
+        name: 'Türkçe',
+      },
+      {
+        code: 'ru',
+        name: 'Русский',
+      },
+      {
+        code: 'ar',
+        name: 'العربية',
+      },
+      {
+        code: 'th',
+        name: 'ไทย',
+      },
+      {
+        code: 'other',
+        name: 'Other',
+      },
+    ].map(e => ({ text: e.name, value: e.code })),
+  },
+}
