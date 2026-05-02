@@ -30,11 +30,13 @@ export function filterHomeNovel(e) {
 }
 
 export function isArtworkNotCensored(artwork, state) {
-  if (state.blockUids.length && state.blockUids.includes(`${artwork?.author?.id}`)) {
+  const blockUidsSet = store.getters.blockUidsSet
+  if (blockUidsSet.size && blockUidsSet.has(`${artwork?.author?.id}`)) {
     return false
   }
 
-  if (isBlockTagHit(state.blockTags, artwork?.tags)) {
+  const blockTagsSet = store.getters.blockTagsSet
+  if (blockTagsSet.size && isBlockTagHit(blockTagsSet, artwork?.tags)) {
     return false
   }
 
@@ -90,11 +92,13 @@ export function filterCensoredNovels(list = []) {
 
 export function filterCensoredCollections(list = []) {
   const state = store.state
+  const blockUidsSet = store.getters.blockUidsSet
+  const blockTagsSet = store.getters.blockTagsSet
   return list.filter(artwork => {
-    if (state.blockUids.length && state.blockUids.includes(`${artwork.userId}`)) {
+    if (blockUidsSet.size && blockUidsSet.has(`${artwork.userId}`)) {
       return false
     }
-    if (isBlockTagHit(state.blockTags, artwork.tags)) {
+    if (isBlockTagHit(blockTagsSet, artwork.tags)) {
       return false
     }
     if (artwork.xRestrict == 1) {
@@ -175,13 +179,12 @@ async function ensureACFilter() {
 }
 
 /**
- * @param {string[]} blockTags
+ * @param {Set} blockTagsSet
  * @param {string[]|undefined} value
  */
-export function isBlockTagHit(blockTags, value) {
+export function isBlockTagHit(blockTagsSet, value) {
   const tags = Array.isArray(value) ? value : []
-  if (!tags.length || !blockTags.length) return false
-  const blockTagsSet = new Set(blockTags)
+  if (!tags.length || !blockTagsSet.size) return false
   return tags.some(tag => blockTagsSet.has(typeof tag == 'string' ? tag : tag.name))
 }
 

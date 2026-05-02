@@ -362,7 +362,7 @@ export default {
       const id = +this.$route.params.id
       this.userInfo = {}
       this.activeTab = this.$route.params.tab || 'illusts'
-      if (this.$store.state.blockUids.includes(`${id}`)) {
+      if (this.$store.getters.blockUidsSet.has(`${id}`)) {
         this.$toast(this.$t('common.content.hide'))
         return
       }

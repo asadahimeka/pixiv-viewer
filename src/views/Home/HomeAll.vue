@@ -118,7 +118,7 @@ export default {
     async initSearch() {
       const res = await api.getTags()
       if (res.status === 0) {
-        this.tags = res.data.map(e => e.name).filter(e => !this.$store.state.blockTags.includes(e))
+        this.tags = res.data.map(e => e.name).filter(e => !this.$store.getters.blockTagsSet.has(e))
         this.placeholder = _.sample(this.tags)
       }
     },
