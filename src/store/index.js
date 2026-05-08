@@ -95,7 +95,7 @@ export default new Vuex.Store({
       ctrlClickNewTab: !isMobile,
       openArtDetailAsPopup: false,
       isExpandMultiPArtwork: false,
-      showPIDMask: true,
+      showPIDMask: !localStorage.PXV_ACT_COLOR,
       useNovelWebview: false,
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
