@@ -86,7 +86,7 @@ export async function loadKISSTranslator(isAutoLoad = false) {
 //       buildinConfig.translationService = 'siliconcloud'
 //       buildinConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
 //       buildinConfig.translationServices.siliconcloud.assistantId = 'common'
-//       buildinConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2-7B-Instruct'
+//       buildinConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2.5-7B-Instruct'
 //       localStorage.buildinConfig = JSON.stringify({ buildinConfig })
 //       const userConfig = JSON.parse(localStorage.userConfig).userConfig
 //       userConfig.telemetry = false
@@ -96,7 +96,7 @@ export async function loadKISSTranslator(isAutoLoad = false) {
 //       userConfig.translationServices.siliconcloud = userConfig.translationServices.siliconcloud || {}
 //       userConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
 //       userConfig.translationServices.siliconcloud.assistantId = 'common'
-//       userConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2-7B-Instruct'
+//       userConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2.5-7B-Instruct'
 //       localStorage.userConfig = JSON.stringify({ userConfig })
 //     } catch (err) {
 //       console.log('err: ', err)
@@ -131,17 +131,11 @@ export function getNoTranslateWords(tags = []) {
 }
 
 export const aiModelMap = {
-  glm: 'THUDM/glm-4-9b-chat',
+  glm: 'THUDM/GLM-Z1-9B-0414',
   qwen2_5: 'Qwen/Qwen2.5-7B-Instruct',
   hy_mt: 'tencent/Hunyuan-MT-7B',
-  qwen2: 'Qwen/Qwen2-7B-Instruct',
   qwen3: 'Qwen/Qwen3-8B',
-  // glm_0414: 'THUDM/GLM-4-9B-0414',
-  // glm_z1: 'THUDM/GLM-Z1-9B-0414',
-  // glm_4_1: 'THUDM/GLM-4.1V-9B-Thinking',
-  // ds_r1_qwen: 'deepseek-ai/DeepSeek-R1-Distill-Qwen-7B',
-  // ds_r1_qwen3: 'deepseek-ai/DeepSeek-R1-0528-Qwen3-8B',
-  // ds_r1_llama: 'deepseek-ai/DeepSeek-R1-Distill-Llama-8B',
+  qwen3_5: 'Qwen/Qwen3.5-4B',
 }
 export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd = 'glm', onRead = console.log) {
   try {
