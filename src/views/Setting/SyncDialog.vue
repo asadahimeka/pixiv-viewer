@@ -305,62 +305,62 @@ export default {
 
 <style lang="stylus" scoped>
 .sync-dialog-body
-  padding 16px
+  padding 16PX
   max-height 70vh
   overflow-y auto
 
 .sync-field-group
-  margin-bottom 12px
+  margin-bottom 12PX
 
 .sync-label
   display block
-  font-size 13px
+  font-size 13PX
   color #666
-  margin-bottom 4px
-  padding 0 16px
+  margin-bottom 4PX
+  padding 0 16PX
 
 .sync-label-desc
-  font-size 11px
+  font-size 11PX
   color #999
 
 .sync-options
-  margin 8px 0
+  margin 8PX 0
   .van-cell
-    padding 10px 0
+    padding 10PX 0
 
 .sync-actions
   display flex
   justify-content center
-  gap 10px
-  margin 16px 0
+  gap 10PX
+  margin 16PX 0
 
 .sync-status
   text-align center
-  font-size 13px
+  font-size 13PX
   color #333
-  margin 8px 0
+  margin 8PX 0
 
 .sync-status-muted
   color #999
-  font-size 12px
+  font-size 12PX
 
 .sync-notice
-  margin-top 16px
-  padding 12px
+  margin-top 16PX
+  padding 12PX
   background #f8f8f8
-  border-radius 6px
-  font-size 12px
+  border-radius 6PX
+  font-size 12PX
   color #666
   line-height 1.6
 
   .sync-notice-section
-    margin-bottom 10px
+    margin-bottom 10PX
     &:last-child
       margin-bottom 0
 
   ul
-    margin 4px 0 0
-    padding-left 16px
+    margin 4PX 0 0
+    padding-left 16PX
 
   strong
     color #333
@@ -368,25 +368,25 @@ export default {
 .sync-blue-notice
   display flex
   align-items flex-start
-  gap 6px
-  margin 4px 0 12px
-  padding 8px 12px
+  gap 6PX
+  margin 4PX 0 12PX
+  padding 8PX 12PX
   background #e8f4fd
-  border-radius 6px
-  font-size 12px
+  border-radius 6PX
+  font-size 12PX
   line-height 1.6
   color #0056b3
   text-align left
 
 .sync-blue-notice-icon
   flex-shrink 0
-  font-size 14px
+  font-size 14PX
 
 .sync-blue-notice-text
   flex 1
 
 .sync-notice-experimental
   background #fff8e1
-  border-radius 6px
-  padding 8px 12px
+  border-radius 6PX
+  padding 8PX 12PX
 </style>
