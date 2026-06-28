@@ -203,7 +203,11 @@ export default {
       this.statusText = '正在上传...'
       try {
         const result = await SyncManager.upload(this.password, this.syncIdentifier)
-        if (result.ok) {
+        if (result.conflict) {
+          const date = new Date(result.serverTimestamp).toLocaleString()
+          this.statusText = `⚠️ 同步冲突：服务端有更新的数据（${date}），请先下载再上传`
+          Toast.fail('同步冲突：服务端数据更新')
+        } else if (result.ok) {
           this.statusText = '✅ 同步成功！'
           this.lastSyncText = new Date(result.timestamp).toLocaleString()
           if (result.timestamp) {

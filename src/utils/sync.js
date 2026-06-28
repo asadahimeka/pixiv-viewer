@@ -163,6 +163,10 @@ class SyncManager {
           version: SYNC_VERSION,
         }),
       })
+      if (res.status === 409) {
+        const errData = await res.json()
+        return { ok: false, conflict: true, error: errData.error, serverTimestamp: errData.serverTimestamp }
+      }
       if (!res.ok) {
         return { ok: false, error: `上传失败: HTTP ${res.status}` }
       }
