@@ -10,6 +10,7 @@
 - New artworks search params
 - *(sync)* Add SyncManager core module with PBKDF2 key derivation and AES encryption
 - *(sync)* Redesign cloud sync with dual-input auth scheme
+- *(sync)* Handle upload conflict with 409 response
 
 ### 🐛 Bug Fixes
 
@@ -48,6 +49,7 @@
 - Update deps
 - Init AGENTS.md
 - Update deps
+- Release v1.35.1
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
