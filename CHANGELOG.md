@@ -8,6 +8,8 @@
 - Remove p0 in filename
 - Original novel webview reader
 - New artworks search params
+- *(sync)* Add SyncManager core module with PBKDF2 key derivation and AES encryption
+- *(sync)* Redesign cloud sync with dual-input auth scheme
 
 ### 🐛 Bug Fixes
 
@@ -25,6 +27,9 @@
 - Some glitches
 - Download toast
 - Block tags using Set
+- Some glitches
+- Update filter
+- Update translate model
 
 ### 📚 Documentation
 
@@ -39,6 +44,10 @@
 - Release v1.34.2
 - Release v1.34.3
 - Release v1.34.4
+- Release v1.35.0
+- Update deps
+- Init AGENTS.md
+- Update deps
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
