@@ -67,6 +67,10 @@ App.vue
 - **Vue component order**: `<template>` then `<script>` then `<style>`
 - **Single-word component names allowed** (`vue/multi-word-component-names: off`)
 
+### Work Rules
+- **Do NOT commit, push, or create PRs unless explicitly asked** — all changes must be presented for user review and manual commit only
+- **Do NOT create branches** — work on current branch and present changes via `git diff`
+
 ### Component Patterns
 - Global components registered in `main.js`: `WfCont` (ImageLayout), `TopBar`, `Pximg` (DirectPximg)
 - SVG icon system: custom component via `src/icons/`, SVGs loaded as XML

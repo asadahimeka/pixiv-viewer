@@ -1,12 +1,12 @@
 import CryptoJS from 'crypto-js'
-import localDb from '@/utils/storage/localDb'
 import { getCache, setCache } from '@/utils/storage/siteCache'
+import { PIXIV_NEXT_URL } from '@/consts'
 
 const STORAGE_KEY_CONFIG = 'PXV_SYNC_CONFIG'
 const STORAGE_KEY_PASSWORD = 'PXV_SYNC_PASSWORD'
 const SYNC_SALT = 'pixiv-sync-v1'
 const PBKDF2_ITERATIONS = 100000
-const SYNC_VERSION = 2
+const SYNC_VERSION = 3
 
 class SyncManager {
   static getConfig() {
@@ -14,7 +14,7 @@ class SyncManager {
       const raw = localStorage.getItem(STORAGE_KEY_CONFIG)
       if (raw) return JSON.parse(raw)
     } catch (e) { /* ignore */ }
-    return { syncUrl: '', autoSync: false }
+    return { syncUrl: '', autoSync: false, syncIdentifier: '' }
   }
 
   static saveConfig(config) {
@@ -22,8 +22,8 @@ class SyncManager {
   }
 
   static getPassword() {
-    return localStorage.getItem(STORAGE_KEY_PASSWORD)
-      || sessionStorage.getItem(STORAGE_KEY_PASSWORD)
+    return localStorage.getItem(STORAGE_KEY_PASSWORD) ||
+      sessionStorage.getItem(STORAGE_KEY_PASSWORD)
   }
 
   static savePassword(password, remember = false) {
@@ -36,16 +36,36 @@ class SyncManager {
     sessionStorage.removeItem(STORAGE_KEY_PASSWORD)
   }
 
-  static deriveKeys(password) {
-    const derivation = CryptoJS.PBKDF2(password, SYNC_SALT, {
-      keySize: 512 / 32,
-      iterations: PBKDF2_ITERATIONS,
-      hasher: CryptoJS.algo.SHA256,
-    })
-    const words = derivation.words
-    const encKey = CryptoJS.lib.WordArray.create(words.slice(0, 8)).toString()
-    const syncKey = CryptoJS.lib.WordArray.create(words.slice(8, 16)).toString()
-    return { encKey, syncKey }
+  static async deriveEncKey(password) {
+    try {
+      const enc = new TextEncoder()
+      const keyMaterial = await crypto.subtle.importKey(
+        'raw',
+        enc.encode(password),
+        'PBKDF2',
+        false,
+        ['deriveBits']
+      )
+      const buffer = await crypto.subtle.deriveBits(
+        {
+          name: 'PBKDF2',
+          salt: enc.encode(SYNC_SALT),
+          iterations: PBKDF2_ITERATIONS,
+          hash: 'SHA-256',
+        },
+        keyMaterial,
+        256
+      )
+      return Array.from(new Uint8Array(buffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('')
+    } catch (e) {
+      return null
+    }
+  }
+
+  static deriveXSyncKey(password, syncIdentifier) {
+    return CryptoJS.SHA256(password + ':' + syncIdentifier).toString()
   }
 
   static encrypt(data, key) {
@@ -69,6 +89,7 @@ class SyncManager {
     const len = localStorage.length
     for (let i = 0; i < len; i++) {
       const key = localStorage.key(i)
+      if (key.startsWith('PXV_SYNC_')) continue
       settings[key] = localStorage.getItem(key)
     }
     return settings
@@ -90,6 +111,7 @@ class SyncManager {
   static applySettings(settings) {
     if (!settings || typeof settings !== 'object') return
     Object.keys(settings).forEach(k => {
+      if (k.startsWith('PXV_SYNC_')) return
       localStorage.setItem(k, settings[k])
     })
   }
@@ -98,17 +120,16 @@ class SyncManager {
     if (!history) return
     const keys = ['illusts.history', 'novels.history', 'users.history']
     const values = [history.illusts, history.novels, history.users]
-    await Promise.all(values.map((arr, i) => {
+    await Promise.all(values.map(async (arr, i) => {
       if (Array.isArray(arr)) return setCache(keys[i], arr)
     }))
   }
 
   static getDefaultSyncUrl() {
-    const baseUrl = process.env.VUE_APP_PXVEAPI_MAIN || ''
-    return baseUrl ? `${baseUrl}/sync` : ''
+    return `${PIXIV_NEXT_URL}/api/sync`
   }
 
-  static async upload(password) {
+  static async upload(password, syncIdentifier) {
     const config = this.getConfig()
     if (!config.syncUrl) {
       return { ok: false, error: '请先配置同步服务地址' }
@@ -116,8 +137,12 @@ class SyncManager {
     if (!password) {
       return { ok: false, error: '请输入加密密码' }
     }
+    if (!syncIdentifier) {
+      return { ok: false, error: '请输入同步标识' }
+    }
 
-    const { encKey, syncKey } = this.deriveKeys(password)
+    const encKey = await this.deriveEncKey(password)
+    const syncKey = this.deriveXSyncKey(password, syncIdentifier)
     const settings = this.gatherSettings()
     const history = await this.gatherHistory()
 
@@ -148,7 +173,7 @@ class SyncManager {
     }
   }
 
-  static async download(password) {
+  static async download(password, syncIdentifier) {
     const config = this.getConfig()
     if (!config.syncUrl) {
       return { ok: false, error: '请先配置同步服务地址' }
@@ -156,15 +181,18 @@ class SyncManager {
     if (!password) {
       return { ok: false, error: '请输入加密密码' }
     }
+    if (!syncIdentifier) {
+      return { ok: false, error: '请输入同步标识' }
+    }
 
-    const { encKey, syncKey } = this.deriveKeys(password)
+    const encKey = await this.deriveEncKey(password)
+    const syncKey = this.deriveXSyncKey(password, syncIdentifier)
 
     try {
-      let url = `${config.syncUrl}/download`
-      const info = await this.checkInfo()
-      const lastTimestamp = localStorage.getItem('PXV_SYNC_LAST_TIMESTAMP')
-      if (lastTimestamp && info && info.timestamp) {
-      }
+      const lastTs = localStorage.getItem('PXV_SYNC_LAST_TIMESTAMP')
+      const url = lastTs
+        ? `${config.syncUrl}/download?since=${encodeURIComponent(lastTs)}`
+        : `${config.syncUrl}/download`
 
       const res = await fetch(url, {
         headers: { 'X-Sync-Key': syncKey },
@@ -197,13 +225,16 @@ class SyncManager {
     }
   }
 
-  static async checkInfo() {
+  static async checkInfo(password, syncIdentifier) {
     const config = this.getConfig()
     if (!config.syncUrl) return null
+    if (!syncIdentifier) return null
+
+    const syncKey = this.deriveXSyncKey(password || '', syncIdentifier)
 
     try {
       const res = await fetch(`${config.syncUrl}/info`, {
-        headers: { 'X-Sync-Key': 'check' },
+        headers: { 'X-Sync-Key': syncKey },
       })
       if (!res.ok) return null
       return await res.json()
@@ -227,9 +258,10 @@ class SyncManager {
     const config = this.getConfig()
     if (!config.autoSync) return
     const password = this.getPassword()
-    if (!password) return
+    const syncIdentifier = config.syncIdentifier
+    if (!password || !syncIdentifier) return
     try {
-      const result = await this.download(password)
+      const result = await this.download(password, syncIdentifier)
       if (result.ok) {
         console.log('Auto-sync completed:', result.timestamp ? new Date(result.timestamp).toLocaleString() : 'no update')
       }

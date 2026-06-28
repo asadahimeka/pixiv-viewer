@@ -322,6 +322,7 @@
       <van-cell center :title="$t('Bi5BpYwKhUhWcm_RueGZN')" is-link @click="exportSettings" />
       <van-cell center :title="$t('zhO6bfsyPM1-GpZgyer-L')" is-link @click="importHistory" />
       <van-cell center :title="$t('VV1Yh4x2vpWMf-YwVIRSl')" is-link @click="exportHistory" />
+      <van-cell center title="云同步配置" is-link @click="syncDialogShow = true" />
     </van-cell-group>
 
     <van-dialog
@@ -523,6 +524,7 @@
       <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="2.5em" />
       <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}:&nbsp;&nbsp;&nbsp;&nbsp;{{ sampleArtFileName }}</van-cell>
     </van-dialog>
+    <SyncDialog v-model="syncDialogShow" />
   </div>
 </template>
 
@@ -544,12 +546,14 @@ import { aiModelMap } from '@/utils/translate'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import NovelTextConfig from '../Artwork/components/NovelTextConfig.vue'
 import PageFontSelect from '../Artwork/components/PageFontSelect.vue'
+import SyncDialog from './SyncDialog.vue'
 
 export default {
   name: 'SettingOthers',
   components: {
     NovelTextConfig,
     PageFontSelect,
+    SyncDialog,
   },
   data() {
     return {
@@ -736,6 +740,7 @@ export default {
       novelFilterTextLenMin: store.state.appSetting.novelFilterTextLenMin,
       novelFilterTagLenMax: store.state.appSetting.novelFilterTagLenMax,
       novelFilterTagSplitMax: store.state.appSetting.novelFilterTagSplitMax,
+      syncDialogShow: false,
     }
   },
   head() {

@@ -8,7 +8,7 @@
     "release": "bumpp package.json src/consts/index.js --all --no-tag",
     "changelog": "git-cliff -o CHANGELOG.md",
     "analyze": "vue-cli-service build --report",
-    "lint": "vue-cli-service lint",
+    "lint": "eslint src --fix --ext .js,.vue",
     "prerelease": "npm run changelog && git add ."
   },
   "dependencies": {
