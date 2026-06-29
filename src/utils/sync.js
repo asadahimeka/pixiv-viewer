@@ -254,11 +254,91 @@ class SyncManager {
     }))
   }
 
+  // ── Partial sync helpers ──
+
+  static _applySearchHistory(settings) {
+    const key = 'PIXIV_SearchHistory'
+    const cloudRaw = settings[key]
+    if (cloudRaw == null) return
+    const localRaw = localStorage.getItem(key)
+    const merged = this._mergeSearchHistory(localRaw, cloudRaw)
+    if (merged != null) localStorage.setItem(key, merged)
+  }
+
+  static _overwriteLocalBlock(key, cloudSettings) {
+    const val = cloudSettings[key]
+    if (val != null) {
+      localStorage.setItem(key, val)
+    }
+  }
+
   static getDefaultSyncUrl() {
     return `${PIXIV_NEXT_URL}/api/sync`
   }
 
-  static async upload(password, syncIdentifier) {
+  static async _downloadRaw(password, syncIdentifier, forceFull = false) {
+    const config = this.getConfig()
+    const encKey = await this.deriveEncKey(password)
+    const syncKey = this.deriveXSyncKey(password, syncIdentifier)
+
+    try {
+      const lastTs = forceFull ? null : this.getLastTimestamp()
+      const url = lastTs
+        ? `${config.syncUrl}/download?since=${encodeURIComponent(lastTs)}`
+        : `${config.syncUrl}/download`
+
+      const res = await fetch(url, { headers: { 'X-Sync-Key': syncKey } })
+      if (res.status === 304) return { ok: true, noUpdate: true }
+      if (!res.ok) return { ok: false, error: `下载失败: HTTP ${res.status}` }
+
+      const data = await res.json()
+      const settings = this.decrypt(data.settings, encKey)
+      const history = this.decrypt(data.history, encKey)
+      if (!settings || !history) {
+        return { ok: false, error: '解密失败，密码可能不正确' }
+      }
+      return { ok: true, settings, history, timestamp: data.timestamp }
+    } catch (e) {
+      return { ok: false, error: `网络错误: ${e.message}` }
+    }
+  }
+
+  static async _mergeLocalIntoCloud(cloudSettings, cloudHistory, options) {
+    const { includeHistory, includeBlocks } = options
+
+    if (includeBlocks) {
+      cloudSettings.PXV_B_TAGS = localStorage.getItem('PXV_B_TAGS') || ''
+      cloudSettings.PXV_B_UIDS = localStorage.getItem('PXV_B_UIDS') || ''
+    }
+
+    if (includeHistory) {
+      const localHistory = await this.gatherHistory()
+      if (localHistory) {
+        if (Array.isArray(localHistory.illusts)) {
+          cloudHistory.illusts = this._mergeHistoryArrays(cloudHistory.illusts || [], localHistory.illusts)
+        }
+        if (Array.isArray(localHistory.novels)) {
+          cloudHistory.novels = this._mergeHistoryArrays(cloudHistory.novels || [], localHistory.novels)
+        }
+        if (Array.isArray(localHistory.users)) {
+          cloudHistory.users = this._mergeHistoryArrays(cloudHistory.users || [], localHistory.users)
+        }
+      }
+      const shKey = 'PIXIV_SearchHistory'
+      if (shKey in cloudSettings) {
+        const localRaw = localStorage.getItem(shKey)
+        const merged = this._mergeSearchHistory(localRaw, cloudSettings[shKey])
+        if (merged != null) cloudSettings[shKey] = merged
+      }
+    }
+  }
+
+  // ── Main sync operations ──
+
+  static async upload(password, syncIdentifier, options = {}) {
+    if (typeof options === 'boolean') options = {}
+    const { all = true, history: includeHistory = true, blocks: includeBlocks = true } = options
+
     const config = this.getConfig()
     if (!config.syncUrl) {
       return { ok: false, error: '请先配置同步服务地址' }
@@ -272,8 +352,26 @@ class SyncManager {
 
     const encKey = await this.deriveEncKey(password)
     const syncKey = this.deriveXSyncKey(password, syncIdentifier)
-    const settings = this.gatherSettings()
-    const history = await this.gatherHistory()
+
+    let settings, history
+
+    if (all) {
+      settings = this.gatherSettings()
+      history = await this.gatherHistory()
+    } else {
+      let cloudRes = await this._downloadRaw(password, syncIdentifier)
+      if (cloudRes.noUpdate) {
+        // 304: 云端无变更，不带 since 参数重试获取全量数据
+        cloudRes = await this._downloadRaw(password, syncIdentifier, true)
+      }
+      if (!cloudRes.ok) {
+        return { ok: false, error: cloudRes.error || '无法获取云端数据以合并' }
+      }
+      settings = cloudRes.settings || {}
+      history = cloudRes.history || { illusts: [], novels: [], users: [] }
+
+      await this._mergeLocalIntoCloud(settings, history, { includeHistory, includeBlocks })
+    }
 
     const encryptedSettings = this.encrypt(settings, encKey)
     const encryptedHistory = this.encrypt(history, encKey)
@@ -309,7 +407,10 @@ class SyncManager {
     }
   }
 
-  static async download(password, syncIdentifier) {
+  static async download(password, syncIdentifier, options = {}) {
+    if (typeof options === 'boolean') options = {}
+    const { all = true, history: includeHistory = true, blocks: includeBlocks = true } = options
+
     const config = this.getConfig()
     if (!config.syncUrl) {
       return { ok: false, error: '请先配置同步服务地址' }
@@ -348,8 +449,19 @@ class SyncManager {
         return { ok: false, error: '解密失败，密码可能不正确' }
       }
 
-      this.applySettings(settings)
-      await this.applyHistory(history)
+      if (all) {
+        this.applySettings(settings)
+        await this.applyHistory(history)
+      } else {
+        if (includeBlocks) {
+          this._overwriteLocalBlock('PXV_B_TAGS', settings)
+          this._overwriteLocalBlock('PXV_B_UIDS', settings)
+        }
+        if (includeHistory) {
+          await this.applyHistory(history)
+          this._applySearchHistory(settings)
+        }
+      }
 
       if (data.timestamp) {
         this.setLastTimestamp(data.timestamp)

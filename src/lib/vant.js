@@ -34,6 +34,7 @@ import RadioGroup from 'vant/lib/radio-group'
 import Empty from 'vant/lib/empty'
 import Uploader from 'vant/lib/uploader'
 import Checkbox from 'vant/lib/checkbox'
+import CheckboxGroup from 'vant/lib/checkbox-group'
 import NoticeBar from 'vant/lib/notice-bar'
 import Pagination from 'vant/lib/pagination'
 
@@ -73,6 +74,7 @@ export default function setupVant() {
   Vue.use(Empty)
   Vue.use(Uploader)
   Vue.use(Checkbox)
+  Vue.use(CheckboxGroup)
   Vue.use(NoticeBar)
   Vue.use(Pagination)
 }
