@@ -28,8 +28,8 @@ export default new Vuex.Store({
     }),
     /** @type {object|null} */
     user: null,
-    blockTags: getSettingDef('PXV_B_TAGS', '').split(',').filter(Boolean),
-    blockUids: getSettingDef('PXV_B_UIDS', '').split(',').filter(Boolean),
+    blockTags: getSettingDef('PXV_B_TAGS', '').split(',').map(t => t.trim()).filter(Boolean),
+    blockUids: getSettingDef('PXV_B_UIDS', '').split(',').map(u => u.trim()).filter(Boolean),
     isNovelViewShrink: true,
     isMobile,
     isSafari: isSafari(),
@@ -177,6 +177,14 @@ export default new Vuex.Store({
         state.blockUids = _.uniq([...state.blockUids, ...arr])
       }
     },
+    removeBlockTag(state, tag) {
+      state.blockTags = state.blockTags.filter(t => t !== tag)
+      LocalStorage.set('PXV_B_TAGS', state.blockTags.join(','))
+    },
+    removeBlockUid(state, uid) {
+      state.blockUids = state.blockUids.filter(u => u !== uid)
+      LocalStorage.set('PXV_B_UIDS', state.blockUids.join(','))
+    },
     setIsNovelViewShrink(state, val) {
       state.isNovelViewShrink = val
     },
@@ -205,8 +213,14 @@ export default new Vuex.Store({
     appendBlockTags({ commit }, value) {
       commit('setBlockTags', value)
     },
+    removeBlockTag({ commit }, tag) {
+      commit('removeBlockTag', tag)
+    },
     appendBlockUids({ commit }, value) {
       commit('setBlockUids', value)
+    },
+    removeBlockUid({ commit }, uid) {
+      commit('removeBlockUid', uid)
     },
   },
 })
