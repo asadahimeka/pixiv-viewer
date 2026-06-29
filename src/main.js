@@ -61,13 +61,6 @@ async function setupApp() {
     i18n,
     render: h => h(App),
   }).$mount('#app')
-
-  // 延迟执行自动同步，不阻塞首屏渲染
-  setTimeout(() => {
-    import('@/utils/sync').then(mod => {
-      mod.default.autoSync()
-    }).catch(() => {})
-  }, 3000)
 }
 
 async function initLocalApi() {

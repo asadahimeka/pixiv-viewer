@@ -1,4 +1,5 @@
 import CryptoJS from 'crypto-js'
+import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { PIXIV_NEXT_URL } from '@/consts'
 
@@ -7,6 +8,7 @@ const STORAGE_KEY_PASSWORD = 'PXV_SYNC_PASSWORD'
 const SYNC_SALT = 'pixiv-sync-v1'
 const PBKDF2_ITERATIONS = 100000
 const SYNC_VERSION = 3
+const STORAGE_KEY_TIMESTAMP_MAP = 'PXV_SYNC_LAST_TIMESTAMP_MAP'
 
 class SyncManager {
   static getConfig() {
@@ -84,6 +86,120 @@ class SyncManager {
     }
   }
 
+  // ── Merge utility methods ──
+
+  static get MERGE_KEYS() {
+    return ['PIXIV_SearchHistory', 'PXV_APP_SETTING', 'PXV_CNT_SHOW', 'PXV_TEXT_CONFIG', 'PXV_CLIENT_CONFIG']
+  }
+
+  static _isWrapped(val) {
+    return val && typeof val === 'object' && !Array.isArray(val) && 'data' in val && 'expires' in val
+  }
+
+  static _parseRaw(raw) {
+    if (raw == null) return null
+    try {
+      return JSON.parse(raw)
+    } catch {
+      return raw
+    }
+  }
+
+  static _extractData(raw) {
+    if (raw == null) return undefined
+    const parsed = this._parseRaw(raw)
+    if (this._isWrapped(parsed)) return parsed.data
+    return parsed
+  }
+
+  static _extractExpires(raw) {
+    if (raw == null) return -1
+    const parsed = this._parseRaw(raw)
+    if (this._isWrapped(parsed)) return parsed.expires ?? -1
+    return -1
+  }
+
+  static _wrap(data, expires = -1) {
+    return JSON.stringify({ data, expires })
+  }
+
+  static _pickExpires(localRaw, cloudRaw) {
+    const localExp = this._extractExpires(localRaw)
+    const cloudExp = this._extractExpires(cloudRaw)
+    if (localExp === -1 || cloudExp === -1) return -1
+    return Math.max(Number(localExp) || -1, Number(cloudExp) || -1)
+  }
+
+  static _mergeHistoryArrays(localArr, remoteArr, maxLen = 500) {
+    if (!Array.isArray(localArr)) return (remoteArr || []).slice(0, maxLen)
+    if (!Array.isArray(remoteArr)) return localArr.slice(0, maxLen)
+    const merged = _.uniqBy([...remoteArr, ...localArr], 'id')
+    return merged.slice(0, maxLen)
+  }
+
+  static _mergeSearchHistory(localRaw, cloudRaw) {
+    const extractArr = raw => {
+      const data = this._extractData(raw)
+      return Array.isArray(data) ? data : []
+    }
+    const local = extractArr(localRaw)
+    const cloud = extractArr(cloudRaw)
+    const merged = _.uniq([...cloud, ...local]).slice(0, 20)
+    const expires = this._pickExpires(localRaw, cloudRaw)
+    return this._wrap(merged, expires)
+  }
+
+  static _mergeWrappedObject(localRaw, cloudRaw) {
+    if (localRaw == null) return cloudRaw
+    const localData = this._extractData(localRaw)
+    const cloudData = this._extractData(cloudRaw)
+    if (typeof localData !== 'object' || typeof cloudData !== 'object' || localData === null || cloudData === null) {
+      return cloudRaw
+    }
+    const merged = { ...localData, ...cloudData }
+    const expires = this._pickExpires(localRaw, cloudRaw)
+    return this._wrap(merged, expires)
+  }
+
+  static _applyMerge(key, localRaw, cloudRaw) {
+    if (localRaw == null) return cloudRaw
+    switch (key) {
+      case 'PIXIV_SearchHistory':
+        return this._mergeSearchHistory(localRaw, cloudRaw)
+      default:
+        return this._mergeWrappedObject(localRaw, cloudRaw)
+    }
+  }
+
+  // ── Timestamp space isolation ──
+
+  static _genSpaceKey(syncUrl, syncIdentifier) {
+    return CryptoJS.SHA256(syncUrl + '::' + syncIdentifier).toString()
+  }
+
+  static _readTimestampMap() {
+    try {
+      return JSON.parse(localStorage.getItem(STORAGE_KEY_TIMESTAMP_MAP) || '{}')
+    } catch {
+      return {}
+    }
+  }
+
+  static getLastTimestamp() {
+    const config = this.getConfig()
+    if (!config.syncUrl || !config.syncIdentifier) return null
+    const map = this._readTimestampMap()
+    return map[this._genSpaceKey(config.syncUrl, config.syncIdentifier)] || null
+  }
+
+  static setLastTimestamp(timestamp) {
+    const config = this.getConfig()
+    if (!config.syncUrl || !config.syncIdentifier) return
+    const map = this._readTimestampMap()
+    map[this._genSpaceKey(config.syncUrl, config.syncIdentifier)] = String(timestamp)
+    localStorage.setItem(STORAGE_KEY_TIMESTAMP_MAP, JSON.stringify(map))
+  }
+
   static gatherSettings() {
     const settings = {}
     const len = localStorage.length
@@ -112,7 +228,13 @@ class SyncManager {
     if (!settings || typeof settings !== 'object') return
     Object.keys(settings).forEach(k => {
       if (k.startsWith('PXV_SYNC_')) return
-      localStorage.setItem(k, settings[k])
+      if (this.MERGE_KEYS.includes(k)) {
+        const localRaw = localStorage.getItem(k)
+        const merged = this._applyMerge(k, localRaw, settings[k])
+        if (merged != null) localStorage.setItem(k, merged)
+      } else {
+        localStorage.setItem(k, settings[k])
+      }
     })
   }
 
@@ -121,7 +243,14 @@ class SyncManager {
     const keys = ['illusts.history', 'novels.history', 'users.history']
     const values = [history.illusts, history.novels, history.users]
     await Promise.all(values.map(async (arr, i) => {
-      if (Array.isArray(arr)) return setCache(keys[i], arr)
+      if (!Array.isArray(arr)) return
+      const localArr = await getCache(keys[i])
+      const merged = Array.isArray(localArr)
+        ? this._mergeHistoryArrays(localArr, arr)
+        : arr.slice(0, 500)
+      if (merged.length > 0) {
+        await setCache(keys[i], merged)
+      }
     }))
   }
 
@@ -171,6 +300,9 @@ class SyncManager {
         return { ok: false, error: `上传失败: HTTP ${res.status}` }
       }
       const data = await res.json()
+      if (data.timestamp) {
+        this.setLastTimestamp(data.timestamp)
+      }
       return { ok: true, timestamp: data.timestamp }
     } catch (e) {
       return { ok: false, error: `网络错误: ${e.message}` }
@@ -193,7 +325,7 @@ class SyncManager {
     const syncKey = this.deriveXSyncKey(password, syncIdentifier)
 
     try {
-      const lastTs = localStorage.getItem('PXV_SYNC_LAST_TIMESTAMP')
+      const lastTs = this.getLastTimestamp()
       const url = lastTs
         ? `${config.syncUrl}/download?since=${encodeURIComponent(lastTs)}`
         : `${config.syncUrl}/download`
@@ -220,7 +352,7 @@ class SyncManager {
       await this.applyHistory(history)
 
       if (data.timestamp) {
-        localStorage.setItem('PXV_SYNC_LAST_TIMESTAMP', String(data.timestamp))
+        this.setLastTimestamp(data.timestamp)
       }
 
       return { ok: true, timestamp: data.timestamp }
@@ -248,30 +380,17 @@ class SyncManager {
   }
 
   static getLastSyncTimeText() {
-    const ts = localStorage.getItem('PXV_SYNC_LAST_TIMESTAMP')
+    const ts = this.getLastTimestamp()
     if (!ts) return ''
     try {
-      const d = new Date(Number(ts))
-      return d.toLocaleString()
-    } catch (e) {
+      return new Date(Number(ts)).toLocaleString()
+    } catch {
       return ''
     }
   }
 
   static async autoSync() {
-    const config = this.getConfig()
-    if (!config.autoSync) return
-    const password = this.getPassword()
-    const syncIdentifier = config.syncIdentifier
-    if (!password || !syncIdentifier) return
-    try {
-      const result = await this.download(password, syncIdentifier)
-      if (result.ok) {
-        console.log('Auto-sync completed:', result.timestamp ? new Date(result.timestamp).toLocaleString() : 'no update')
-      }
-    } catch (e) {
-      console.log('Auto-sync skipped:', e.message)
-    }
+    // Auto-sync disabled — user must manually trigger upload/download
   }
 }
 
