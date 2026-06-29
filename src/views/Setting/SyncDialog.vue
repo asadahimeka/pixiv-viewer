@@ -62,18 +62,13 @@
       </div>
 
       <!-- 选项 -->
-      <div class="sync-options">
+      <!-- <div class="sync-options">
         <van-cell center title="记住密码" label="关闭标签页后无需重新输入">
           <template #right-icon>
             <van-switch :value="rememberPassword" size="22" @input="v => rememberPassword = v" />
           </template>
         </van-cell>
-        <van-cell center title="启动应用时自动同步" label="打开应用时自动从云端拉取最新数据">
-          <template #right-icon>
-            <van-switch :value="autoSync" size="22" @input="v => setAutoSync(v)" />
-          </template>
-        </van-cell>
-      </div>
+      </div> -->
 
       <!-- 操作按钮 -->
       <div class="sync-actions">
@@ -84,7 +79,7 @@
           :disabled="!isPasswordValid || !isSyncIdentifierValid || loading"
           @click="onUpload"
         >
-          ☁️ 上传到云端
+          上传到云端
         </van-button>
         <van-button
           type="primary"
@@ -93,7 +88,7 @@
           :disabled="!isPasswordValid || !isSyncIdentifierValid || loading"
           @click="onDownload"
         >
-          ☁️ 从云端下载
+          从云端下载
         </van-button>
         <van-button
           size="small"
@@ -101,7 +96,7 @@
           :disabled="!isPasswordValid || !isSyncIdentifierValid || loading"
           @click="onCheckInfo"
         >
-          ℹ️ 查询状态
+          查询状态
         </van-button>
       </div>
 
@@ -165,7 +160,6 @@ export default {
       password: savedPassword || '',
       syncIdentifier: config.syncIdentifier || '',
       rememberPassword: !!localStorage.getItem('PXV_SYNC_PASSWORD'),
-      autoSync: config.autoSync || false,
       showPassword: false,
       loading: false,
       action: '',
@@ -182,11 +176,6 @@ export default {
     },
   },
   methods: {
-    async setAutoSync(val) {
-      this.autoSync = val
-      const config = SyncManager.getConfig()
-      SyncManager.saveConfig({ ...config, autoSync: val, syncIdentifier: this.syncIdentifier })
-    },
     async onUpload() {
       const message = `将以下数据加密后上传至 <b>${this.syncUrl}</b>：<br><br>• 应用设置（含 RefreshToken 等凭据）<br>• 浏览历史（插画、小说、用户）<br><br>数据将使用 AES-256 加密，服务端仅存储密文。<br><br>⚠️ 如果服务端已有相同同步标识+密码的数据，则将覆盖旧数据。<br>请确认您的同步标识「<b>${this.syncIdentifier}</b>」与加密密码与其他设备一致。<br>是否继续？`
       const confirmed = await Dialog.confirm({
@@ -210,9 +199,6 @@ export default {
         } else if (result.ok) {
           this.statusText = '✅ 同步成功！'
           this.lastSyncText = new Date(result.timestamp).toLocaleString()
-          if (result.timestamp) {
-            localStorage.setItem('PXV_SYNC_LAST_TIMESTAMP', String(result.timestamp))
-          }
           Toast.success('上传成功')
         } else {
           this.statusText = `❌ ${result.error}`
@@ -226,7 +212,25 @@ export default {
       this.action = ''
     },
     async onDownload() {
-      const message = `将使用本地密码解密并覆盖当前：<br><br>• 应用设置<br>• 浏览历史<br><br>⚠️ 当前本地数据将被云端数据替换。<br>请确认您的同步标识「<b>${this.syncIdentifier}</b>」与加密密码与其他设备一致，<br>以确保下载到的是正确的同步数据。<br>是否继续？`
+      this.savePasswordIfNeeded()
+      this.saveConfig()
+
+      // Conflict detection: check if cloud has newer data
+      const info = await SyncManager.checkInfo(this.password, this.syncIdentifier)
+      if (info && info.timestamp) {
+        const lastTs = SyncManager.getLastTimestamp()
+        if (lastTs && Number(info.timestamp) > Number(lastTs)) {
+          const date = new Date(info.timestamp).toLocaleString()
+          const confirmed = await Dialog.confirm({
+            title: '☁️ 检测到云端更新',
+            message: `云端数据（${date}）比上次同步更新。下载将合并浏览历史，云端设置会覆盖本地同名设置（部分设置会智能合并），本地独有设置会保留。是否继续？`,
+            messageAlign: 'left',
+          }).catch(() => false)
+          if (!confirmed) return
+        }
+      }
+
+      const message = `将从云端下载并合并到当前设备：<br><br>• <b>浏览历史</b>：合并去重，不会丢失本地记录<br>• <b>应用设置</b>（布局、画质、过滤等）：云端覆盖同名设置，本地独有设置保留<br>• <b>搜索历史</b>：与云端记录合并去重<br>• <b>其他设置</b>（API 地址、主题、屏蔽列表等）：云端覆盖<br><br>⚠️ 请确认您的同步标识「<b>${this.syncIdentifier}</b>」与加密密码与其他设备一致，<br>以确保下载到的是正确的同步数据。<br>是否继续？`
       const confirmed = await Dialog.confirm({
         title: '☁️ 即将从云端下载同步数据',
         message,
@@ -234,8 +238,6 @@ export default {
       }).catch(() => false)
       if (!confirmed) return
 
-      this.savePasswordIfNeeded()
-      this.saveConfig()
       this.loading = true
       this.action = 'download'
       this.statusText = '正在下载...'
@@ -293,7 +295,7 @@ export default {
     saveConfig() {
       if (this.syncUrl) {
         const config = SyncManager.getConfig()
-        SyncManager.saveConfig({ ...config, syncUrl: this.syncUrl, syncIdentifier: this.syncIdentifier, autoSync: this.autoSync })
+        SyncManager.saveConfig({ ...config, syncUrl: this.syncUrl, syncIdentifier: this.syncIdentifier })
       }
     },
     onClosed() {
