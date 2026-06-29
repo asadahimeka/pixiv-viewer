@@ -11,6 +11,10 @@
 - *(sync)* Add SyncManager core module with PBKDF2 key derivation and AES encryption
 - *(sync)* Redesign cloud sync with dual-input auth scheme
 - *(sync)* Handle upload conflict with 409 response
+- *(sync)* Add smart merge and timestamp isolation, disable auto-sync
+- *(sync)* Update dialog with conflict detection and accurate copy
+- *(block)* Improve block tag/uid management with tag-based UI and individual remove actions
+- *(sync)* Add scope selection UI and partial sync with data merge
 
 ### 🐛 Bug Fixes
 
@@ -31,6 +35,7 @@
 - Some glitches
 - Update filter
 - Update translate model
+- Update sync dialog style
 
 ### 📚 Documentation
 
@@ -50,6 +55,8 @@
 - Init AGENTS.md
 - Update deps
 - Release v1.35.1
+- Release v1.35.2
+- Ignore docs/superpowers
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
