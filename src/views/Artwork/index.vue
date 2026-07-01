@@ -13,7 +13,14 @@
       <div class="ia-cont" :class="{ 'landscape-1-art': isLandscape1Art }">
         <div class="ia-left">
           <van-loading v-if="loading" class="i-loading" size="50px" />
-          <ImageView ref="imgView" :artwork="artwork" @open-download="ugoiraDownloadPanelShow = true" />
+          <ImageView
+            ref="imgView"
+            :artwork="artwork"
+            :show-pic-translate-btn="showPicTranslateBtn"
+            :translating-index="translatingIndex"
+            @open-download="ugoiraDownloadPanelShow = true"
+            @translate="handleTranslate"
+          />
         </div>
         <div class="ia-right">
           <van-skeleton class="skeleton" title avatar :row="5" row-width="200px" avatar-size="42px" :loading="loading">
@@ -30,6 +37,14 @@
         </div>
       </template>
     </van-swipe-cell>
+    <PicTranslatePanel
+      :visible="showPicTranslatePanel"
+      :translations="picTranslations[currentTransPage]"
+      :current-page="currentTransPage"
+      :loading="picTranslating[currentTransPage]"
+      @close="handleClosePanel"
+      @retry="handleRetry(currentTransPage)"
+    />
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
       <Related v-show="artwork.id" :key="artwork.id" :artwork="artwork" />
@@ -80,6 +95,8 @@ import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
+import { translateMangaPage, getCachedTranslation } from '@/utils/picTranslate'
+import PicTranslatePanel from './components/PicTranslatePanel.vue'
 // import { mintFilter } from '@/utils/filter'
 
 export default {
@@ -90,6 +107,7 @@ export default {
     ArtworkMeta: Meta,
     AuthorCard,
     Related,
+    PicTranslatePanel,
   },
   beforeRouteUpdate(to, from, next) {
     if (this.$refs.artworkMeta?.showComments) {
@@ -132,6 +150,10 @@ export default {
         { name: 'Facebook', icon: IconFacebook },
       ],
       maybeAiAuthor: false,
+      picTranslations: {},
+      picTranslating: {},
+      showPicTranslatePanel: false,
+      currentTransPage: 0,
     }
   },
   head() {
@@ -162,6 +184,21 @@ export default {
         store.state.appSetting.isAutoLoadKissT ||
         !store.state.appSetting.showPIDMask
       )
+    },
+    showPicTranslateBtn() {
+      return (
+        this.artwork.type === 'manga' &&
+        this.$i18n.locale.includes('zh') &&
+        !/中文|中国语|Chinese|中國語|中国語/.test(
+          JSON.stringify(this.artwork.tags || [])
+        )
+      )
+    },
+    translatingIndex() {
+      for (const key in this.picTranslating) {
+        if (this.picTranslating[key]) return parseInt(key)
+      }
+      return -1
     },
   },
   watch: {
@@ -371,6 +408,41 @@ export default {
         count: arr.length,
         type: 'illust',
       }
+    },
+    async handleTranslate(pageIndex) {
+      this.showPicTranslatePanel = true
+      this.currentTransPage = pageIndex
+      const cached = await getCachedTranslation(this.artwork.id, pageIndex)
+      if (cached) {
+        this.$set(this.picTranslations, pageIndex, cached)
+        return
+      }
+      this.$set(this.picTranslating, pageIndex, true)
+      const imageUrl = this.artwork.images[pageIndex].l
+      try {
+        const result = await translateMangaPage(imageUrl, this.artwork.id, pageIndex)
+        if (result) {
+          this.$set(this.picTranslations, pageIndex, result)
+        } else {
+          this.$toast('翻译失败，请重试')
+        }
+      } catch (err) {
+        console.log('translate err: ', err)
+        this.$toast('翻译出错: ' + err.message)
+      } finally {
+        this.$set(this.picTranslating, pageIndex, false)
+      }
+    },
+    handleClosePanel() {
+      this.showPicTranslatePanel = false
+    },
+    async handleRetry(pageIndex) {
+      try {
+        const { setCache } = await import('@/utils/storage/siteCache')
+        await setCache(`pic.translate.${this.artwork.id}.${pageIndex}`, null)
+      } catch (e) {}
+      this.$set(this.picTranslations, pageIndex, null)
+      this.handleTranslate(pageIndex)
     },
   },
 }

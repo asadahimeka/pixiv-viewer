@@ -22,6 +22,19 @@
             class="image"
             @click.native.stop="view(index)"
           />
+          <template v-if="showPicTranslateBtn">
+            <van-button
+              class="translate-btn"
+              size="mini"
+              round
+              plain
+              :loading="translatingIndex === index"
+              :disabled="translatingIndex === index"
+              @click.stop="$emit('translate', index)"
+            >
+              🌐{{ translatingIndex === index ? '' : '翻' }}
+            </van-button>
+          </template>
         </swiper-slide>
         <div slot="pagination" class="swiper-pagination"></div>
         <div slot="button-prev" class="swiper-button-prev"></div>
@@ -54,6 +67,19 @@
           @click.native.stop="view(index)"
           @contextmenu.native="preventContext"
         />
+        <template v-if="showPicTranslateBtn">
+          <van-button
+            class="translate-btn"
+            size="mini"
+            round
+            plain
+            :loading="translatingIndex === index"
+            :disabled="translatingIndex === index"
+            @click.stop="$emit('translate', index)"
+          >
+            🌐{{ translatingIndex === index ? '' : '翻' }}
+          </van-button>
+        </template>
         <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
         <canvas
           v-if="showUgoiraControl"
@@ -84,7 +110,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { Dialog, ImagePreview } from 'vant'
+import { Dialog, ImagePreview, Button } from 'vant'
 import store from '@/store'
 import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 import { fancyboxShow, downloadFile } from '@/utils'
@@ -95,10 +121,21 @@ const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.
 
 export default {
   name: 'ImageView',
+  components: {
+    VanButton: Button,
+  },
   props: {
     artwork: {
       type: Object,
       required: true,
+    },
+    showPicTranslateBtn: {
+      type: Boolean,
+      default: false,
+    },
+    translatingIndex: {
+      type: Number,
+      default: -1,
     },
   },
   data() {
@@ -506,6 +543,19 @@ export default {
       bottom 0.1rem
       right 0.1rem
       font-weight bold
+    }
+
+    .translate-btn {
+      position absolute
+      bottom 0.2rem
+      right 0.2rem
+      z-index 10
+      font-size 0.24rem
+      padding 0 0.15rem
+      opacity 0.7
+      transition opacity 0.2s
+      &:hover
+        opacity 1
     }
   }
 
