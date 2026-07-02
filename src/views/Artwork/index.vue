@@ -438,9 +438,10 @@ export default {
     },
     async handleRetry(pageIndex) {
       try {
-        const { setCache } = await import('@/utils/storage/siteCache')
         await setCache(`pic.translate.${this.artwork.id}.${pageIndex}`, null)
-      } catch (e) {}
+      } catch (e) {
+        console.warn('Failed to clear translate cache', e)
+      }
       this.$set(this.picTranslations, pageIndex, null)
       this.handleTranslate(pageIndex)
     },
