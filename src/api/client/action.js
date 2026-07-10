@@ -144,6 +144,7 @@ function initApp(pixiv) {
   })
   app.get('/favorite_novel', async req => {
     const { id, ...opts } = req.query
+    if (opts.max_bookmark_id == 0) delete opts.max_bookmark_id
     return pixiv.userBookmarksNovel(id, opts)
   })
   app.get('/follower', async req => {
