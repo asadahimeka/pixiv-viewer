@@ -77,7 +77,7 @@
             :disabled="translatingIndex === index"
             @click.stop="$emit('translate', index)"
           >
-            🌐{{ translatingIndex === index ? '' : '翻' }}
+            🌐{{ translatingIndex === index ? '' : '译' }}
           </van-button>
         </template>
         <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
@@ -554,8 +554,9 @@ export default {
       padding 0 0.15rem
       opacity 0.7
       transition opacity 0.2s
-      &:hover
+      &:hover {
         opacity 1
+      }
     }
   }
 

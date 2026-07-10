@@ -95,7 +95,7 @@ import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
-import { translateMangaPage, getCachedTranslation } from '@/utils/picTranslate'
+import { translateMangaPage, getCachedTranslation } from '@/utils/translate/manga'
 import PicTranslatePanel from './components/PicTranslatePanel.vue'
 // import { mintFilter } from '@/utils/filter'
 
@@ -164,7 +164,7 @@ export default {
       : {}
   },
   computed: {
-    ...mapGetters(['isCensored']),
+    ...mapGetters(['isCensored', 'isLoggedIn']),
     isSimulatedMeta() {
       return this.artwork.width == 0
     },
@@ -187,8 +187,10 @@ export default {
     },
     showPicTranslateBtn() {
       return (
+        this.isLoggedIn &&
         this.artwork.type === 'manga' &&
-        this.$i18n.locale.includes('zh') &&
+        this.artwork.x_restrict < 1 &&
+        i18n.locale.includes('zh') &&
         !/中文|中国语|Chinese|中國語|中国語/.test(
           JSON.stringify(this.artwork.tags || [])
         )
@@ -417,19 +419,29 @@ export default {
         this.$set(this.picTranslations, pageIndex, cached)
         return
       }
+
+      this.$set(this.picTranslations, pageIndex, '')
       this.$set(this.picTranslating, pageIndex, true)
+
       const imageUrl = this.artwork.images[pageIndex].l
       try {
-        const result = await translateMangaPage(imageUrl, this.artwork.id, pageIndex)
-        if (result) {
-          this.$set(this.picTranslations, pageIndex, result)
-        } else {
-          this.$toast('翻译失败，请重试')
-        }
+        await translateMangaPage(imageUrl, this.artwork.id, pageIndex, ({ content, done, error }) => {
+          if (content) {
+            const prev = this.picTranslations[pageIndex] || ''
+            this.$set(this.picTranslations, pageIndex, prev + content)
+          }
+          if (done) {
+            this.$set(this.picTranslating, pageIndex, false)
+            if (error) {
+              this.$toast('翻译出错: ' + error)
+            } else if (!this.picTranslations[pageIndex]) {
+              this.$toast('翻译失败，请重试')
+            }
+          }
+        })
       } catch (err) {
         console.log('translate err: ', err)
         this.$toast('翻译出错: ' + err.message)
-      } finally {
         this.$set(this.picTranslating, pageIndex, false)
       }
     },
@@ -442,7 +454,7 @@ export default {
       } catch (e) {
         console.warn('Failed to clear translate cache', e)
       }
-      this.$set(this.picTranslations, pageIndex, null)
+      this.$set(this.picTranslations, pageIndex, '')
       this.handleTranslate(pageIndex)
     },
   },

@@ -52,8 +52,8 @@ export default {
       default: false,
     },
     translations: {
-      type: Array,
-      default: () => null,
+      type: String,
+      default: null,
     },
     currentPage: {
       type: Number,
@@ -77,7 +77,9 @@ $breakpoint-mobile = 1120px
 
 // --- Desktop: right-side popup ---
 .pic-translate-popup
-  width 5rem
+  width 28vw
+  min-width 4rem
+  max-width 7rem
 
 @media (max-width: $breakpoint-mobile)
   .pic-translate-popup

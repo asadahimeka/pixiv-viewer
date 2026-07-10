@@ -173,6 +173,7 @@ export const routes = [
           },
           {
             path: '/setting',
+            alias: ['/settings'],
             name: 'Setting',
             component: Setting,
             meta: { __depth: 1 },

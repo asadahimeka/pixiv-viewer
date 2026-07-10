@@ -1,7 +1,7 @@
 import { Dialog } from 'vant'
 import { i18n } from '@/i18n'
 import { SILICON_CLOUD_API_KEY } from '@/consts'
-import { loadScript } from '.'
+import { loadScript } from '@/utils'
 
 export async function loadKISSTranslator(isAutoLoad = false) {
   if (!isAutoLoad && !localStorage.getItem('PXV_KISST_CFMED')) {
@@ -131,7 +131,7 @@ export function getNoTranslateWords(tags = []) {
 }
 
 export const aiModelMap = {
-  glm: 'THUDM/GLM-Z1-9B-0414',
+  glm: 'THUDM/GLM-4-9B-0414',
   qwen2_5: 'Qwen/Qwen2.5-7B-Instruct',
   hy_mt: 'tencent/Hunyuan-MT-7B',
   qwen3: 'Qwen/Qwen3-8B',
@@ -154,7 +154,6 @@ export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd =
       },
       body: JSON.stringify({
         model: aiModelMap[aimd],
-        // temperature: aimd == 'glm' ? 0.01 : 0,
         stream: true,
         messages: [
           {
