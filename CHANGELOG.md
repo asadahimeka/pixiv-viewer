@@ -15,6 +15,9 @@
 - *(sync)* Update dialog with conflict detection and accurate copy
 - *(block)* Improve block tag/uid management with tag-based UI and individual remove actions
 - *(sync)* Add scope selection UI and partial sync with data merge
+- Add manga image translation utility and panel component
+- Integrate manga image translation into artwork page
+- Manga image translation — streaming, raw text, desktop panel
 
 ### 🐛 Bug Fixes
 
@@ -36,6 +39,14 @@
 - Update filter
 - Update translate model
 - Update sync dialog style
+- Remove redundant dynamic import in handleRetry
+- *(Users)* Remove conflicting loading guard in FavoriteNovels pagination
+- *(api)* Add max_bookmark_id=0 cleanup for novel bookmarks endpoint
+- *(Account)* Remove conflicting loading guard in MyBookmarksNovel pagination
+
+### 🚜 Refactor
+
+- Extract PanelContent to eliminate template duplication
 
 ### 📚 Documentation
 
@@ -57,6 +68,7 @@
 - Release v1.35.1
 - Release v1.35.2
 - Ignore docs/superpowers
+- Release v1.35.3
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
