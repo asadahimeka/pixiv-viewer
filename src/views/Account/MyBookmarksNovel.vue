@@ -85,7 +85,7 @@ export default {
       this.finished = false
     },
     getMemberFavorite: _.throttle(async function () {
-      if (!this.user?.id || this.loading || this.finished) return
+      if (!this.user?.id || this.finished) return
       if (this.next == null) return
       this.loading = true
       const options = {}

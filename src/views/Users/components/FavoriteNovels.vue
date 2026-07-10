@@ -122,7 +122,8 @@ export default {
       this.finished = false
     },
     getMemberFavorite: _.throttle(async function () {
-      if (!this.id || this.loading || this.finished) return
+      if (!this.id || this.finished) return
+      if (this.next == null) return
       this.loading = true
       let newList
       const options = {}
