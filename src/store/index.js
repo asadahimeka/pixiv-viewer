@@ -35,6 +35,16 @@ export default new Vuex.Store({
     isSafari: isSafari(),
     /** @type {any[]|null} */
     appNotice: null,
+    /** @type {string} */
+    translationEngine: getSettingDef('PXV_TRANSLATION_ENGINE', 'vl-api'),
+    /** @type {string} */
+    translationProvider: getSettingDef('PXV_TRANSLATION_PROVIDER', 'siliconcloud'),
+    /** @type {Object<string, {apiKey?: string, model?: string, baseUrl?: string}>} */
+    translationProviders: getSettingDef('PXV_TRANSLATION_PROVIDERS', {}),
+    /** @type {'translate'|'erase'|'original'} */
+    translationProcessMode: getSettingDef('PXV_TRANSLATION_PROCESS_MODE', 'translate'),
+    /** @type {boolean} */
+    translationAutoTranslate: getSettingDef('PXV_TRANSLATION_AUTO_TRANSLATE', false),
     /** @type {any[]|null} */
     seasonEffects: null,
     routeHistory: SessionStorage.get('PXV_ROUTE_HISTORY', []),
@@ -202,6 +212,26 @@ export default new Vuex.Store({
     setRouteHistory(state, val) {
       state.routeHistory = val
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
+    },
+    SET_TRANSLATION_ENGINE(state, val) {
+      state.translationEngine = val
+      LocalStorage.set('PXV_TRANSLATION_ENGINE', val)
+    },
+    SET_TRANSLATION_PROVIDER(state, val) {
+      state.translationProvider = val
+      LocalStorage.set('PXV_TRANSLATION_PROVIDER', val)
+    },
+    SET_TRANSLATION_PROVIDERS(state, val) {
+      state.translationProviders = { ...state.translationProviders, ...val }
+      LocalStorage.set('PXV_TRANSLATION_PROVIDERS', state.translationProviders)
+    },
+    SET_TRANSLATION_PROCESS_MODE(state, val) {
+      state.translationProcessMode = val
+      LocalStorage.set('PXV_TRANSLATION_PROCESS_MODE', val)
+    },
+    SET_TRANSLATION_AUTO_TRANSLATE(state, val) {
+      state.translationAutoTranslate = val
+      LocalStorage.set('PXV_TRANSLATION_AUTO_TRANSLATE', val)
     },
   },
   actions: {
