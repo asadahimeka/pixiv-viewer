@@ -18,6 +18,9 @@
             :artwork="artwork"
             :show-pic-translate-btn="showPicTranslateBtn"
             :translating-index="translatingIndex"
+            :translated-canvases="translatedCanvases"
+            :show-translated="showTranslated"
+            :pipeline-progress="pipelineProgress"
             @open-download="ugoiraDownloadPanelShow = true"
             @translate="handleTranslate"
           />
@@ -154,6 +157,9 @@ export default {
       picTranslating: {},
       showPicTranslatePanel: false,
       currentTransPage: 0,
+      translatedCanvases: {},
+      showTranslated: false,
+      pipelineProgress: {},
     }
   },
   head() {
@@ -412,49 +418,76 @@ export default {
       }
     },
     async handleTranslate(pageIndex) {
-      this.showPicTranslatePanel = true
-      this.currentTransPage = pageIndex
-      const cached = await getCachedTranslation(this.artwork.id, pageIndex)
-      if (cached) {
-        this.$set(this.picTranslations, pageIndex, cached)
-        return
-      }
+      const engine = store.state.translationEngine
 
-      this.$set(this.picTranslations, pageIndex, '')
-      this.$set(this.picTranslating, pageIndex, true)
+      if (engine === 'vl-api') {
+        // EXISTING VL-API path — keep unchanged
+        this.showPicTranslatePanel = true
+        this.currentTransPage = pageIndex
+        const cached = await getCachedTranslation(this.artwork.id, pageIndex)
+        if (cached) {
+          this.$set(this.picTranslations, pageIndex, cached)
+          return
+        }
 
-      const imageUrl = this.artwork.images[pageIndex].l
-      try {
-        await translateMangaPage(imageUrl, this.artwork.id, pageIndex, ({ content, done, error }) => {
-          if (content) {
-            const prev = this.picTranslations[pageIndex] || ''
-            this.$set(this.picTranslations, pageIndex, prev + content)
-          }
-          if (done) {
-            this.$set(this.picTranslating, pageIndex, false)
-            if (error) {
-              this.$toast('翻译出错: ' + error)
-            } else if (!this.picTranslations[pageIndex]) {
-              this.$toast('翻译失败，请重试')
+        this.$set(this.picTranslations, pageIndex, '')
+        this.$set(this.picTranslating, pageIndex, true)
+
+        const imageUrl = this.artwork.images[pageIndex].l
+        try {
+          await translateMangaPage(imageUrl, this.artwork.id, pageIndex, ({ content, done, error }) => {
+            if (content) {
+              const prev = this.picTranslations[pageIndex] || ''
+              this.$set(this.picTranslations, pageIndex, prev + content)
             }
-          }
-        })
-      } catch (err) {
-        console.log('translate err: ', err)
-        this.$toast('翻译出错: ' + err.message)
-        this.$set(this.picTranslating, pageIndex, false)
+            if (done) {
+              this.$set(this.picTranslating, pageIndex, false)
+              if (error) {
+                this.$toast('翻译出错: ' + error)
+              } else if (!this.picTranslations[pageIndex]) {
+                this.$toast('翻译失败，请重试')
+              }
+            }
+          })
+        } catch (err) {
+          console.log('translate err: ', err)
+          this.$toast('翻译出错: ' + err.message)
+          this.$set(this.picTranslating, pageIndex, false)
+        }
+      } else {
+        // ONNX PIPELINE path
+        this.showTranslated = false
+        this.currentTransPage = pageIndex
+        this.$set(this.pipelineProgress, pageIndex, { stage: 'starting', detail: '准备中…', percent: 0 })
+        this.$set(this.translatedCanvases, pageIndex, null)
+
+        // NOTE: The actual pipeline call will be wired in Task 19/25
+        // For now, show the overlay ready state
+        this.$set(this.pipelineProgress, pageIndex, { stage: 'ready', detail: '管线就绪，等待调用', percent: 0 })
+        console.log('ONNX pipeline: translate page', pageIndex, '— pipeline to be wired in Task 19')
       }
     },
     handleClosePanel() {
-      this.showPicTranslatePanel = false
+      const engine = store.state.translationEngine
+      if (engine === 'vl-api') {
+        this.showPicTranslatePanel = false
+      } else {
+        this.showTranslated = false
+      }
     },
     async handleRetry(pageIndex) {
-      try {
-        await setCache(`pic.translate.${this.artwork.id}.${pageIndex}`, null)
-      } catch (e) {
-        console.warn('Failed to clear translate cache', e)
+      const engine = store.state.translationEngine
+      if (engine === 'vl-api') {
+        try {
+          await setCache(`pic.translate.${this.artwork.id}.${pageIndex}`, null)
+        } catch (e) {
+          console.warn('Failed to clear translate cache', e)
+        }
+        this.$set(this.picTranslations, pageIndex, '')
+      } else {
+        this.$set(this.translatedCanvases, pageIndex, null)
+        this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
       }
-      this.$set(this.picTranslations, pageIndex, '')
       this.handleTranslate(pageIndex)
     },
   },
