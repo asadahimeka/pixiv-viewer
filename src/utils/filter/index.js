@@ -171,7 +171,7 @@ export async function mintFilter(word = '') {
 }
 async function ensureACFilter() {
   if (!acFilter) {
-    let filterWords = await getCache('sensitive~filter~words')
+    let filterWords = await getCache('sensitivefilterwords')
     if (!filterWords) {
       const resp = await fetch('https://hibiapi.cocomi.eu.org/sensitive-words-filter/words.txt')
       filterWords = (await resp.text()).split('\n').concat(presetWords)

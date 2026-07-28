@@ -18,6 +18,7 @@
 - Add manga image translation utility and panel component
 - Integrate manga image translation into artwork page
 - Manga image translation — streaming, raw text, desktop panel
+- Improve search UX — editable cursor and numeric ID navigation
 
 ### 🐛 Bug Fixes
 
@@ -69,6 +70,7 @@
 - Release v1.35.2
 - Ignore docs/superpowers
 - Release v1.35.3
+- Release v1.35.4
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
