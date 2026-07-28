@@ -48,6 +48,29 @@
       @close="handleClosePanel"
       @retry="handleRetry(currentTransPage)"
     />
+    <TranslateToolbar
+      :visible="showTranslateToolbar"
+      :translating="pipelineTranslating"
+      :show-translated="showTranslated"
+      :status-text="translateStatusText"
+      :page-count="pageCount"
+      :current-page="currentTransPage"
+      :error-count="translateErrorCount"
+      @translate-current="handleTranslate(currentTransPage)"
+      @translate-all="handleTranslateAll"
+      @toggle-view="showTranslated = !showTranslated"
+      @open-settings="showTranslateSettings = true"
+    />
+    <van-popup
+      v-model="showTranslateSettings"
+      position="bottom"
+      :style="{ maxHeight: '80%' }"
+      closeable
+      close-icon-position="top-right"
+      get-container="body"
+    >
+      <TranslateSettings />
+    </van-popup>
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
       <Related v-show="artwork.id" :key="artwork.id" :artwork="artwork" />
@@ -100,6 +123,8 @@ import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation } from '@/utils/translate/manga'
 import PicTranslatePanel from './components/PicTranslatePanel.vue'
+import TranslateToolbar from './components/TranslateToolbar'
+import TranslateSettings from './components/TranslateSettings'
 // import { mintFilter } from '@/utils/filter'
 
 export default {
@@ -111,6 +136,8 @@ export default {
     AuthorCard,
     Related,
     PicTranslatePanel,
+    TranslateToolbar,
+    TranslateSettings,
   },
   beforeRouteUpdate(to, from, next) {
     if (this.$refs.artworkMeta?.showComments) {
@@ -160,6 +187,10 @@ export default {
       translatedCanvases: {},
       showTranslated: false,
       pipelineProgress: {},
+      pipelineTranslating: false,
+      translateStatusText: '',
+      translateErrorCount: 0,
+      showTranslateSettings: false,
     }
   },
   head() {
@@ -207,6 +238,12 @@ export default {
         if (this.picTranslating[key]) return parseInt(key)
       }
       return -1
+    },
+    pageCount() {
+      return this.artwork?.pageCount || 0
+    },
+    showTranslateToolbar() {
+      return this.pageCount > 1 && store.state.translationEngine !== 'vl-api'
     },
   },
   watch: {
@@ -474,6 +511,15 @@ export default {
       } else {
         this.showTranslated = false
       }
+    },
+    async handleTranslateAll() {
+      const count = this.pageCount
+      this.pipelineTranslating = true
+      for (let i = 0; i < count; i++) {
+        this.currentTransPage = i
+        await this.handleTranslate(i)
+      }
+      this.pipelineTranslating = false
     },
     async handleRetry(pageIndex) {
       const engine = store.state.translationEngine
