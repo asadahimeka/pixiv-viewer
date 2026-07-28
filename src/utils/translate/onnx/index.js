@@ -19,6 +19,7 @@ export function createWorker() {
 
 /**
  * Load a model in the worker. Returns a promise that resolves when ready.
+ * By default tries WebGPU → WASM. Pass custom `executionProviders` in sessionOptions to override.
  * @param {Worker} worker
  * @param {string} modelUrl
  * @param {object} [sessionOptions]

@@ -63,6 +63,7 @@ self.addEventListener('message', async (event) => {
 
 /**
  * Initialize: create an InferenceSession from a model URL.
+ * Tries WebGPU first, falls back to WASM if unavailable.
  * @param {{ modelUrl: string, sessionOptions?: object }} msg
  */
 async function handleInit(msg) {
@@ -73,14 +74,46 @@ async function handleInit(msg) {
     session = null
   }
 
-  session = await ort.InferenceSession.create(modelUrl, sessionOptions)
+  // Try WebGPU first, fall back to WASM
+  const options = {
+    executionProviders: ['webgpu', 'wasm'],
+    ...sessionOptions,
+  }
 
-  postMessage({
-    type: 'ready',
-    provider: ort.env.debug ? 'wasm' : 'wasm',
-    inputNames: session.inputNames,
-    outputNames: session.outputNames,
-  })
+  const startTime = performance.now()
+
+  try {
+    session = await ort.InferenceSession.create(modelUrl, options)
+    const elapsed = ((performance.now() - startTime) / 1000).toFixed(1)
+    console.log(`[TranslateWorker] Model loaded in ${elapsed}s (executionProviders: ${options.executionProviders.join(', ')})`)
+
+    postMessage({
+      type: 'ready',
+      provider: 'webgpu+wasm',
+      inputNames: session.inputNames,
+      outputNames: session.outputNames,
+    })
+  } catch (err) {
+    // WebGPU+WASM failed, retry with WASM only
+    console.log('[TranslateWorker] WebGPU+WASM failed, retrying with WASM only:', err.message)
+
+    try {
+      const optionsWasm = { executionProviders: ['wasm'], ...sessionOptions }
+      const wasmStart = performance.now()
+      session = await ort.InferenceSession.create(modelUrl, optionsWasm)
+      const elapsed = ((performance.now() - wasmStart) / 1000).toFixed(1)
+      console.log(`[TranslateWorker] Model loaded in ${elapsed}s (executionProviders: wasm)`)
+
+      postMessage({
+        type: 'ready',
+        provider: 'wasm',
+        inputNames: session.inputNames,
+        outputNames: session.outputNames,
+      })
+    } catch (err2) {
+      throw new Error(`Failed to create inference session: ${err2.message}`)
+    }
+  }
 }
 
 /**
