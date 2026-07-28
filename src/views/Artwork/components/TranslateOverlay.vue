@@ -1,5 +1,5 @@
 <template>
-  <div class="translate-overlay" v-show="showOverlay">
+  <div class="translate-overlay" v-show="showOverlay" tabindex="0" @keydown.t.prevent="$emit('toggle')">
     <canvas ref="overlayCanvas" class="overlay-canvas"></canvas>
     <div v-if="loading" class="loading-overlay">
       <van-loading type="spinner" />
@@ -7,6 +7,9 @@
       <div class="progress-bar-wrap">
         <div class="progress-bar-fill" :style="{ width: progress.percent + '%' }"></div>
       </div>
+    </div>
+    <div v-if="showToggleBtn" class="toggle-btn" @click.stop="$emit('toggle')">
+      {{ showTranslated ? '原图' : '译图' }}
     </div>
   </div>
 </template>
@@ -54,6 +57,9 @@ export default {
     showOverlay() {
       return this.loading || this.showTranslated
     },
+    showToggleBtn() {
+      return !this.loading && !!this.translatedCanvas
+    },
   },
   watch: {
     translatedCanvas() {
@@ -77,19 +83,23 @@ export default {
     this.$nextTick(() => {
       this.positionOverlay()
     })
+    document.addEventListener('keydown', this.handleKeydown)
   },
   activated() {
     this.initObserver()
     this.$nextTick(() => {
       this.positionOverlay()
     })
+    document.addEventListener('keydown', this.handleKeydown)
   },
   deactivated() {
     this.disconnectObserver()
+    document.removeEventListener('keydown', this.handleKeydown)
   },
   beforeDestroy() {
     this.disconnectObserver()
     this.clearCanvas()
+    document.removeEventListener('keydown', this.handleKeydown)
   },
   methods: {
     initObserver() {
@@ -146,6 +156,11 @@ export default {
       if (!ctx) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
     },
+    handleKeydown(e) {
+      if ((e.key === 't' || e.key === 'T') && !this.loading && !!this.translatedCanvas) {
+        this.$emit('toggle')
+      }
+    },
   },
 }
 </script>
@@ -159,6 +174,7 @@ export default {
   height 100%
   z-index 5
   pointer-events none
+  transition opacity 0.2s ease
 
 .overlay-canvas
   width 100%
@@ -197,4 +213,21 @@ export default {
   background linear-gradient(90deg, #667eea, #764ba2)
   border-radius 0.04rem
   transition width 0.3s ease
+
+.toggle-btn
+  position absolute
+  top 0.1rem
+  right 0.1rem
+  padding 0.06rem 0.16rem
+  font-size 0.22rem
+  color #fff
+  background rgba(0, 0, 0, 0.55)
+  border-radius 0.06rem
+  cursor pointer
+  pointer-events auto
+  user-select none
+  z-index 10
+  transition background 0.15s ease
+  &:active
+    background rgba(0, 0, 0, 0.75)
 </style>
