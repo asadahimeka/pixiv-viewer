@@ -197,6 +197,7 @@ export default {
       translateErrorCount: 0,
       showTranslateSettings: false,
       _pipelineAbort: null,
+      _isActive: true,
     }
   },
   head() {
@@ -277,8 +278,12 @@ export default {
   mounted() {
     this.init()
   },
+  activated() {
+    this._isActive = true
+  },
   deactivated() {
     console.log('[Artwork] deactivated — cleaning up translation state')
+    this._isActive = false
     // Abort in-progress pipeline
     if (this._pipelineAbort) {
       this._pipelineAbort.abort()
@@ -530,6 +535,12 @@ export default {
         }
       } else {
         // ONNX PIPELINE path
+        // Guard: only one page at a time
+        if (this.pipelineTranslating) {
+          this.$toast('正在翻译中，请稍候')
+          return
+        }
+
         this.showTranslated = false
         this.currentTransPage = pageIndex
 
@@ -576,6 +587,20 @@ export default {
 
         try {
           const artifacts = await runPipeline(imageUrl, config, onProgress, abortController.signal)
+
+          // Check if component is still active (not deactivated/navigated away)
+          if (!this._isActive) {
+            console.log('[Artwork] Component deactivated during pipeline — discarding result')
+            return
+          }
+
+          // No text detected
+          if (artifacts.detectedRegions.length === 0) {
+            this.$toast('未检测到文字')
+            this.$set(this.translatedCanvases, pageIndex, null)
+            return
+          }
+
           if (artifacts.resultCanvas) {
             this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
             // Cache the result
@@ -595,7 +620,16 @@ export default {
             this.$toast('已取消')
           } else {
             console.log('ONNX pipeline err:', err)
-            this.$toast('翻译失败: ' + err.message)
+            const msg = err.message || ''
+            if (msg.includes('429') || msg.includes('rate limit') || msg.includes('RateLimit')) {
+              this.$toast('翻译服务频率限制，请稍后重试')
+            } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('Network')) {
+              this.$toast('模型下载失败，请检查网络')
+            } else if (msg.includes('memory') || msg.includes('allocate') || msg.includes('Out of')) {
+              this.$toast('内存不足，请关闭其他标签页')
+            } else {
+              this.$toast('翻译失败: ' + err.message)
+            }
           }
         } finally {
           this.pipelineTranslating = false

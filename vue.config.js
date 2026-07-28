@@ -1,6 +1,7 @@
 const path = require('path')
 const autoprefixer = require('autoprefixer')
 const pxtorem = require('postcss-pxtorem')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const svgIconDir = path.join(__dirname, 'src/icons/svg')
@@ -64,6 +65,19 @@ module.exports = {
       //   'crypto-js': 'CryptoJS',
       // }
     }
+    // Copy ONNX Runtime Web WASM files to output
+    config.plugins.push(
+      new CopyWebpackPlugin({
+        patterns: [
+          {
+            from: 'node_modules/onnxruntime-web/dist/',
+            to: 'js/',
+            globOptions: { ignore: ['**/*.js', '**/*.js.map', '**/*.d.ts', '**/*.d.cts', '**/*.mjs', '**/*.mjs.map'] },
+            noErrorOnMissing: true,
+          },
+        ],
+      })
+    )
   },
   chainWebpack: config => {
     config
@@ -87,6 +101,15 @@ module.exports = {
       .use('xml-loader')
       .loader('xml-loader')
       .end()
+
+    // Handle .wasm files for ONNX Runtime Web
+    config.module
+      .rule('wasm')
+      .test(/\.wasm$/)
+      .type('javascript/auto')
+      .exclude
+        .add(/node_modules/)
+        .end()
 
     config.plugin('html')
       .tap(args => {
