@@ -99,3 +99,45 @@ export async function getModelUrl(name) {
   const baseUrl = manifest.baseUrl || getDefaultBaseUrl()
   return baseUrl + model.url
 }
+
+/**
+ * Verify SHA-256 integrity of downloaded model data.
+ * Skips verification if no expected hash is provided.
+ * @param {ArrayBuffer} data - Downloaded model data
+ * @param {string} [expectedHash] - Expected SHA-256 hex string
+ * @returns {Promise<boolean>}
+ */
+export async function verifyModelIntegrity(data, expectedHash) {
+  if (!expectedHash) return true
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  return hashHex === expectedHash.toLowerCase()
+}
+
+/**
+ * Download a model and verify its integrity.
+ * Throws on hash mismatch with a Chinese error message for end users.
+ * @param {string} name - Model name from manifest
+ * @returns {Promise<ArrayBuffer>} Verified model data
+ */
+export async function downloadModel(name) {
+  const [modelUrl, modelConfig] = await Promise.all([
+    getModelUrl(name),
+    getModel(name),
+  ])
+
+  const res = await fetch(modelUrl)
+  if (!res.ok) {
+    throw new Error(`Failed to fetch model "${name}": ${res.status} ${res.statusText}`)
+  }
+
+  const data = await res.arrayBuffer()
+
+  const valid = await verifyModelIntegrity(data, modelConfig.sha256)
+  if (!valid) {
+    throw new Error('模型文件损坏，请重新加载')
+  }
+
+  return data
+}

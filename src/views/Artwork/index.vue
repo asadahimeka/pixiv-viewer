@@ -277,6 +277,30 @@ export default {
   mounted() {
     this.init()
   },
+  deactivated() {
+    console.log('[Artwork] deactivated — cleaning up translation state')
+    // Abort in-progress pipeline
+    if (this._pipelineAbort) {
+      this._pipelineAbort.abort()
+      this._pipelineAbort = null
+    }
+    // Reset translating state
+    this.pipelineTranslating = false
+    this.translateStatusText = ''
+    // Note: keep translatedCanvases for when component is reactivated (keep-alive)
+    // canvases are released in beforeDestroy only
+  },
+  beforeDestroy() {
+    console.log('[Artwork] beforeDestroy — releasing all translation canvases')
+    // Abort pipeline
+    if (this._pipelineAbort) {
+      this._pipelineAbort.abort()
+      this._pipelineAbort = null
+    }
+    // Release translated canvas references (GC will handle cleanup)
+    this.translatedCanvases = {}
+    this.pipelineProgress = {}
+  },
   methods: {
     init() {
       this.loading = true
@@ -557,6 +581,13 @@ export default {
             // Cache the result
             await setCache(cacheKey, artifacts.resultCanvas)
             this.showTranslated = true
+          }
+          if (process.env.NODE_ENV !== 'production') {
+            const canvasCount = Object.keys(this.translatedCanvases).filter(k => this.translatedCanvases[k]).length
+            console.log(`[Artwork] Translation canvases retained: ${canvasCount}`)
+            if (canvasCount > 5) {
+              console.warn(`[Artwork] High canvas count (${canvasCount}) — possible memory pressure`)
+            }
           }
           this.$toast('翻译完成')
         } catch (err) {

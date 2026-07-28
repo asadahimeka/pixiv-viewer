@@ -98,7 +98,12 @@ export default {
   },
   beforeDestroy() {
     this.disconnectObserver()
-    this.clearCanvas()
+    // Clear canvas context and release resources
+    if (this.$refs.overlayCanvas) {
+      const ctx = this.$refs.overlayCanvas.getContext('2d')
+      if (ctx) ctx.clearRect(0, 0, this.$refs.overlayCanvas.width, this.$refs.overlayCanvas.height)
+    }
+    this._canvasRef = null
     document.removeEventListener('keydown', this.handleKeydown)
   },
   methods: {

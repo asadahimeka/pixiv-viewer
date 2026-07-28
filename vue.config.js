@@ -147,6 +147,7 @@ module.exports = {
         /kiss-translator[\\/].*/,
         /static[\\/](js|css)[\\/](?!flexible\..*)/,
         /test[\\/].*/,
+        /\/models\/.*\.onnx$/,  // ONNX models — too large for SW cache
       ],
       // navigateFallbackDenylist: [/^\/prks\//],
       runtimeCaching: [
