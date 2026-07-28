@@ -23,6 +23,7 @@
             :pipeline-progress="pipelineProgress"
             @open-download="ugoiraDownloadPanelShow = true"
             @translate="handleTranslate"
+            @toggle-translate="showTranslated = !showTranslated"
           />
         </div>
         <div class="ia-right">
@@ -122,6 +123,7 @@ import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation } from '@/utils/translate/manga'
+import { runPipeline, getArtworkError, clearArtworkError } from '@/utils/translate/pipeline/index.js'
 import PicTranslatePanel from './components/PicTranslatePanel.vue'
 import TranslateToolbar from './components/TranslateToolbar'
 import TranslateSettings from './components/TranslateSettings'
@@ -154,6 +156,9 @@ export default {
       next(false)
       nprogress.done()
     } else {
+      if (this._pipelineAbort) {
+        this._pipelineAbort.abort()
+      }
       next()
     }
   },
@@ -191,6 +196,7 @@ export default {
       translateStatusText: '',
       translateErrorCount: 0,
       showTranslateSettings: false,
+      _pipelineAbort: null,
     }
   },
   head() {
@@ -244,6 +250,13 @@ export default {
     },
     showTranslateToolbar() {
       return this.pageCount > 1 && store.state.translationEngine !== 'vl-api'
+    },
+    translationProvider() {
+      return store.state.translationProvider
+    },
+    providerConfig() {
+      const name = store.state.translationProvider
+      return store.state.translationProviders[name] || {}
     },
   },
   watch: {
@@ -495,13 +508,69 @@ export default {
         // ONNX PIPELINE path
         this.showTranslated = false
         this.currentTransPage = pageIndex
+
+        const imageUrl = this.artwork.images[pageIndex]?.l || this.artwork.images[pageIndex]?.original
+        if (!imageUrl) {
+          this.$toast('无法获取图片 URL')
+          return
+        }
+
+        // Check cache first
+        const cacheKey = `pic.translate.${this.artwork.id}.${pageIndex}`
+        const cached = await getCache(cacheKey)
+        if (cached) {
+          this.$set(this.translatedCanvases, pageIndex, cached)
+          this.showTranslated = true
+          this.$toast('使用缓存的翻译结果')
+          return
+        }
+
+        this.pipelineTranslating = true
+        this.translateStatusText = '准备中…'
         this.$set(this.pipelineProgress, pageIndex, { stage: 'starting', detail: '准备中…', percent: 0 })
         this.$set(this.translatedCanvases, pageIndex, null)
+        clearArtworkError(imageUrl)
 
-        // NOTE: The actual pipeline call will be wired in Task 19/25
-        // For now, show the overlay ready state
-        this.$set(this.pipelineProgress, pageIndex, { stage: 'ready', detail: '管线就绪，等待调用', percent: 0 })
-        console.log('ONNX pipeline: translate page', pageIndex, '— pipeline to be wired in Task 19')
+        const config = {
+          processMode: store.state.translationProcessMode || 'translate',
+          targetLang: 'chi',
+          ocrEngine: 'paddleocr',
+          providers: {
+            name: this.translationProvider,
+            ...this.providerConfig,
+            fallback: [],
+          },
+        }
+
+        const onProgress = (progress) => {
+          this.$set(this.pipelineProgress, pageIndex, progress)
+          this.translateStatusText = progress.detail || ''
+        }
+
+        const abortController = new AbortController()
+        this._pipelineAbort = abortController
+
+        try {
+          const artifacts = await runPipeline(imageUrl, config, onProgress, abortController.signal)
+          if (artifacts.resultCanvas) {
+            this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
+            // Cache the result
+            await setCache(cacheKey, artifacts.resultCanvas)
+            this.showTranslated = true
+          }
+          this.$toast('翻译完成')
+        } catch (err) {
+          if (err.name === 'AbortError') {
+            this.$toast('已取消')
+          } else {
+            console.log('ONNX pipeline err:', err)
+            this.$toast('翻译失败: ' + err.message)
+          }
+        } finally {
+          this.pipelineTranslating = false
+          this.translateStatusText = ''
+          this._pipelineAbort = null
+        }
       }
     },
     handleClosePanel() {
@@ -531,6 +600,12 @@ export default {
         }
         this.$set(this.picTranslations, pageIndex, '')
       } else {
+        const cacheKey = `pic.translate.${this.artwork.id}.${pageIndex}`
+        try {
+          await setCache(cacheKey, null)
+        } catch (e) {
+          console.warn('Failed to clear ONNX translate cache', e)
+        }
         this.$set(this.translatedCanvases, pageIndex, null)
         this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
       }

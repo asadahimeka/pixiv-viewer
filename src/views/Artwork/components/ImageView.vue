@@ -35,6 +35,16 @@
               🌐{{ translatingIndex === index ? '' : '翻' }}
             </van-button>
           </template>
+          <TranslateOverlay
+            v-if="showOverlay"
+            :artwork-id="artwork.id"
+            :page-index="index"
+            :translated-canvas="translatedCanvases[index]"
+            :show-translated="showTranslated"
+            :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
+            :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+            @toggle="$emit('toggle-translate')"
+          />
         </swiper-slide>
         <div slot="pagination" class="swiper-pagination"></div>
         <div slot="button-prev" class="swiper-button-prev"></div>
@@ -80,6 +90,16 @@
             🌐{{ translatingIndex === index ? '' : '译' }}
           </van-button>
         </template>
+        <TranslateOverlay
+          v-if="showOverlay"
+          :artwork-id="artwork.id"
+          :page-index="index"
+          :translated-canvas="translatedCanvases[index]"
+          :show-translated="showTranslated"
+          :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
+          :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+          @toggle="$emit('toggle-translate')"
+        />
         <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
         <canvas
           v-if="showUgoiraControl"
@@ -116,6 +136,7 @@ import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 import { fancyboxShow, downloadFile } from '@/utils'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { downloadUgoira, loadUgoira } from '@/utils/ugoira'
+import TranslateOverlay from './TranslateOverlay'
 
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
 
@@ -123,6 +144,7 @@ export default {
   name: 'ImageView',
   components: {
     VanButton: Button,
+    TranslateOverlay,
   },
   props: {
     artwork: {
@@ -136,6 +158,18 @@ export default {
     translatingIndex: {
       type: Number,
       default: -1,
+    },
+    translatedCanvases: {
+      type: Object,
+      default: () => ({}),
+    },
+    showTranslated: {
+      type: Boolean,
+      default: false,
+    },
+    pipelineProgress: {
+      type: Object,
+      default: () => ({}),
     },
   },
   data() {
@@ -201,6 +235,12 @@ export default {
         !this.showUgoiraControl &&
         store.state.appSetting.imgViewHorizonSwiper &&
         !store.state.appSetting.imgViewHorizonScroll
+    },
+    translationEngine() {
+      return store.state.translationEngine
+    },
+    showOverlay() {
+      return this.translationEngine === 'onnx-pipeline'
     },
   },
   watch: {
