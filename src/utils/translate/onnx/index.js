@@ -89,3 +89,103 @@ export function disposeWorker(worker) {
     }, 3000)
   })
 }
+
+/**
+ * Load multiple models sequentially with progress reporting.
+ * Models are loaded one at a time to avoid memory spikes.
+ * If a model fails, error is reported via progress callback but loading continues.
+ *
+ * @param {Worker} worker
+ * @param {string[]} modelNames - Array of model names (as in the manifest)
+ * @param {Function} onProgress - Callback({ model: string, loaded: number, total: number, status: 'loading'|'ready'|'error', error?: string })
+ * @param {AbortSignal} [signal] - Optional AbortSignal to cancel loading
+ * @returns {Promise<string[]>} - Array of model names that loaded successfully
+ */
+export async function loadModelsSequentially(worker, modelNames, onProgress, signal) {
+  const loaded = []
+
+  for (let i = 0; i < modelNames.length; i++) {
+    if (signal?.aborted) {
+      console.log(`[loadModels] Aborted at model ${i}/${modelNames.length}`)
+      break
+    }
+
+    const modelName = modelNames[i]
+
+    onProgress({
+      model: modelName,
+      loaded: i,
+      total: modelNames.length,
+      status: 'loading',
+    })
+
+    try {
+      const { getModelUrl } = await import('./modelRegistry.js')
+      const modelUrl = await getModelUrl(modelName)
+
+      if (signal?.aborted) {
+        console.log(`[loadModels] Aborted before loading ${modelName}`)
+        break
+      }
+
+      await loadModel(worker, modelUrl)
+
+      loaded.push(modelName)
+
+      onProgress({
+        model: modelName,
+        loaded: loaded.length,
+        total: modelNames.length,
+        status: 'ready',
+      })
+    } catch (err) {
+      console.log(`[loadModels] Failed to load model "${modelName}":`, err.message)
+
+      onProgress({
+        model: modelName,
+        loaded: i,
+        total: modelNames.length,
+        status: 'error',
+        error: err.message,
+      })
+    }
+  }
+
+  return loaded
+}
+
+/**
+ * Unload the current model session in the worker.
+ * @param {Worker} worker
+ * @returns {Promise<void>}
+ */
+export function unloadModel(worker) {
+  return new Promise((resolve) => {
+    const handler = (e) => {
+      if (e.data.type === 'disposed') {
+        worker.removeEventListener('message', handler)
+        resolve()
+      }
+    }
+    worker.addEventListener('message', handler)
+    worker.postMessage({ type: 'dispose' })
+    setTimeout(() => {
+      worker.removeEventListener('message', handler)
+      resolve()
+    }, 3000)
+  })
+}
+
+/**
+ * Unload all models and terminate the worker.
+ * @param {Worker} worker
+ * @returns {Promise<void>}
+ */
+export async function unloadAll(worker) {
+  try {
+    await unloadModel(worker)
+  } catch (e) {
+    // Ignore errors during cleanup
+  }
+  worker.terminate()
+}
