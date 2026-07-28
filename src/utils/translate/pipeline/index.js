@@ -18,10 +18,47 @@ import { mergeTextLines } from './merge.js'
 import { sortRegionsForRender } from './readingOrder.js'
 import { translateRegions } from './translate.js'
 import { runInpaint } from './inpaint.js'
-import { createMaskFromRegions, refineTextMask } from './refineMask.js'
+import { createMaskFromRegions } from './refineMask.js'
 import { drawTypesetHorizontal, drawTypesetVertical } from './typeset.js'
 import { createPipelineArtifacts } from './types.js'
 import { createWorker, disposeWorker } from '../onnx/index.js'
+
+/**
+ * Structured pipeline stage error with available artifacts.
+ */
+class PipelineStageError extends Error {
+  constructor(stage, message, artifacts, cause) {
+    super(`[${stage}] ${message}`)
+    this.name = 'PipelineStageError'
+    this.stage = stage
+    this.artifacts = artifacts || null
+    this.cause = cause || null
+  }
+}
+
+const STAGE_ERROR_MESSAGES = {
+  'load-image': '图片加载失败',
+  'init': '推理引擎初始化失败',
+  'detect': '文本检测失败',
+  'ocr': '文字识别失败',
+  'translate': '翻译失败',
+  'inpaint': '去字修复失败',
+  'typeset': '排版渲染失败',
+}
+
+const artworkErrors = new Map()
+
+export function getArtworkError(imageUrl) {
+  return artworkErrors.get(imageUrl) || null
+}
+
+export function clearArtworkError(imageUrl) {
+  artworkErrors.delete(imageUrl)
+}
+
+function setArtworkError(imageUrl, stage, message) {
+  artworkErrors.set(imageUrl, { stage, message, timestamp: Date.now() })
+}
 
 function loadImage(url) {
   return new Promise((resolve, reject) => {
@@ -57,6 +94,24 @@ function createAbortError() {
   return err
 }
 
+function abortIfRequested(signal) {
+  if (signal?.aborted) throw createAbortError()
+}
+
+function copyCanvas(source) {
+  const canvas = document.createElement('canvas')
+  canvas.width = source.width
+  canvas.height = source.height
+  canvas.getContext('2d').drawImage(source, 0, 0)
+  return canvas
+}
+
+function makeFallbackResult(artifacts) {
+  if (!artifacts.resultCanvas && artifacts.originalCanvas) {
+    artifacts.resultCanvas = copyCanvas(artifacts.originalCanvas)
+  }
+}
+
 /**
  * Run the full manga translation pipeline.
  *
@@ -84,39 +139,59 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
     })
   }
 
+  function stageTiming(stage, label, start) {
+    timings.push({
+      stage,
+      label,
+      durationMs: Math.round(performance.now() - start),
+    })
+  }
+
+  function handleStageError(stage, message, err) {
+    console.warn(`[pipeline] Stage "${stage}" failed:`, err.message)
+    setArtworkError(imageUrl, stage, message)
+    makeFallbackResult(artifacts)
+  }
+
+  // Outer safety net — catches anything that escapes per-stage handling
   try {
     // ── Image Loading ─────────────────────────────────────────────
-    {
-      if (signal?.aborted) throw createAbortError()
+    try {
+      abortIfRequested(signal)
 
       const stageLabel = '加载图片'
       const stageStart = performance.now()
       report('load-image', stageLabel, 5)
 
-      const imageCanvas = await loadImage(imageUrl)
-      artifacts.originalCanvas = imageCanvas
+      artifacts.originalCanvas = await loadImage(imageUrl)
 
-      timings.push({
-        stage: 'load-image',
-        label: stageLabel,
-        durationMs: Math.round(performance.now() - stageStart),
-      })
-      console.log(`[pipeline] Image loaded: ${imageCanvas.width}x${imageCanvas.height}`)
+      stageTiming('load-image', stageLabel, stageStart)
+      console.log(`[pipeline] Image loaded: ${artifacts.originalCanvas.width}x${artifacts.originalCanvas.height}`)
       report('load-image', '图片加载完成', 10)
+    } catch (err) {
+      if (err.name === 'AbortError') throw err
+      handleStageError('load-image', STAGE_ERROR_MESSAGES['load-image'], err)
+      report('error', STAGE_ERROR_MESSAGES['load-image'], 0)
+      return artifacts
     }
 
     // ── ONNX Worker Creation ──────────────────────────────────────
-    {
-      if (signal?.aborted) throw createAbortError()
+    try {
+      abortIfRequested(signal)
       report('init', '创建推理引擎…', 12)
       worker = createWorker()
       console.log('[pipeline] ONNX worker created')
+    } catch (err) {
+      if (err.name === 'AbortError') throw err
+      handleStageError('init', STAGE_ERROR_MESSAGES['init'], err)
+      report('error', STAGE_ERROR_MESSAGES['init'], 0)
+      return artifacts
     }
 
     // ── Stage 1: Text Detection ──────────────────────────────────
     let detectedRegions = []
-    {
-      if (signal?.aborted) throw createAbortError()
+    try {
+      abortIfRequested(signal)
 
       const stageLabel = '文本检测'
       const stageStart = performance.now()
@@ -126,36 +201,32 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       detectedRegions = result.regions
       artifacts.detectedRegions = detectedRegions
 
-      timings.push({
-        stage: 'detect',
-        label: stageLabel,
-        durationMs: Math.round(performance.now() - stageStart),
-      })
+      stageTiming('detect', stageLabel, stageStart)
       console.log(`[pipeline] Detection found ${detectedRegions.length} regions`)
       report(
         'detect',
         `检测到 ${detectedRegions.length} 个文本区域`,
         detectedRegions.length > 0 ? 30 : 100
       )
+    } catch (err) {
+      if (err.name === 'AbortError') throw err
+      handleStageError('detect', STAGE_ERROR_MESSAGES['detect'], err)
+      report('error', STAGE_ERROR_MESSAGES['detect'], 0)
+      return artifacts
     }
 
     // If no text detected → skip remaining stages, return original image
     if (detectedRegions.length === 0) {
       console.log('[pipeline] No text detected, skipping OCR/translate/inpaint')
-      // Copy original as result
-      const canvas = document.createElement('canvas')
-      canvas.width = artifacts.originalCanvas.width
-      canvas.height = artifacts.originalCanvas.height
-      canvas.getContext('2d').drawImage(artifacts.originalCanvas, 0, 0)
-      artifacts.resultCanvas = canvas
+      artifacts.resultCanvas = copyCanvas(artifacts.originalCanvas)
       report('complete', '未检测到文字', 100)
       return artifacts
     }
 
     // ── Stage 2: OCR ──────────────────────────────────────────────
     let stageRegions = []
-    {
-      if (signal?.aborted) throw createAbortError()
+    try {
+      abortIfRequested(signal)
 
       const stageLabel = '文字识别'
       const stageStart = performance.now()
@@ -164,20 +235,21 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       stageRegions = await runOcr(artifacts.originalCanvas, detectedRegions, worker)
       artifacts.stageRegions = stageRegions
 
-      timings.push({
-        stage: 'ocr',
-        label: stageLabel,
-        durationMs: Math.round(performance.now() - stageStart),
-      })
+      stageTiming('ocr', stageLabel, stageStart)
       const recognizedCount = stageRegions.filter(r => r.sourceText && r.sourceText.trim()).length
       console.log(`[pipeline] OCR completed: ${recognizedCount}/${stageRegions.length} regions with text`)
       report('ocr', `文字识别完成 (${recognizedCount} 项)`, 50)
+    } catch (err) {
+      if (err.name === 'AbortError') throw err
+      handleStageError('ocr', STAGE_ERROR_MESSAGES['ocr'], err)
+      report('error', STAGE_ERROR_MESSAGES['ocr'], 0)
+      return artifacts
     }
 
     // ── Stage 3: Merge + Sort ────────────────────────────────────
     let sortedRegions = []
-    {
-      if (signal?.aborted) throw createAbortError()
+    try {
+      abortIfRequested(signal)
 
       const stageLabel = '文本合并与排序'
       const stageStart = performance.now()
@@ -185,23 +257,24 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
 
       const w = artifacts.originalCanvas.width
       const h = artifacts.originalCanvas.height
-      const mergedRegions = mergeTextLines(stageRegions, w, h)
-      sortedRegions = sortRegionsForRender(mergedRegions, w, h)
+      sortedRegions = sortRegionsForRender(mergeTextLines(stageRegions, w, h), w, h)
 
-      timings.push({
-        stage: 'merge',
-        label: stageLabel,
-        durationMs: Math.round(performance.now() - stageStart),
-      })
+      stageTiming('merge', stageLabel, stageStart)
       console.log(`[pipeline] Merge + sort: ${sortedRegions.length} groups`)
       report('merge', `文本合并完成 (${sortedRegions.length} 组)`, 60)
+    } catch (err) {
+      // Merge/sort is non-fatal: if it fails, fall back to unsorted OCR regions
+      console.warn(`[pipeline] Merge+sort failed, using raw OCR regions:`, err.message)
+      sortedRegions = stageRegions
     }
 
     // ── Stage 4 + Stage 5a: Translation & Mask Creation (Parallel) ─
     let translatedRegions = []
     let maskCanvas = null
+    let translationFailed = false
+    let maskFailed = false
     {
-      if (signal?.aborted) throw createAbortError()
+      abortIfRequested(signal)
 
       const stageLabel = '翻译文本'
       const parallelStart = performance.now()
@@ -209,16 +282,36 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
 
       const translatePromise = translateRegions(sortedRegions, config, (p) => {
         onProgress?.(p)
-      }).then((result) => {
-        translatedRegions = result
-        return result
       })
+        .then((result) => {
+          translatedRegions = result
+          return result
+        })
+        .catch((err) => {
+          if (err.name === 'AbortError') throw err
+          console.warn(`[pipeline] Translation failed:`, err.message)
+          setArtworkError(imageUrl, 'translate', STAGE_ERROR_MESSAGES['translate'])
+          translationFailed = true
+          // Keep original text instead of translated
+          translatedRegions = sortedRegions.map((r) => ({
+            ...r,
+            translatedText: r.sourceText || '',
+          }))
+          return translatedRegions
+        })
 
       const maskPromise = Promise.resolve().then(() => {
-        const w = artifacts.originalCanvas.width
-        const h = artifacts.originalCanvas.height
-        maskCanvas = createMaskFromRegions(sortedRegions, w, h)
-        return maskCanvas
+        try {
+          const w = artifacts.originalCanvas.width
+          const h = artifacts.originalCanvas.height
+          maskCanvas = createMaskFromRegions(sortedRegions, w, h)
+          return maskCanvas
+        } catch (err) {
+          console.warn(`[pipeline] Mask creation failed:`, err.message)
+          maskFailed = true
+          maskCanvas = null
+          return null
+        }
       })
 
       await Promise.all([translatePromise, maskPromise])
@@ -226,49 +319,52 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       artifacts.translatedRegions = translatedRegions
       artifacts.maskCanvas = maskCanvas
 
-      timings.push({
-        stage: 'translate',
-        label: stageLabel,
-        durationMs: Math.round(performance.now() - parallelStart),
-      })
-      console.log(`[pipeline] Translation + mask done in ${Math.round(performance.now() - parallelStart)}ms`)
-      report('translate', '翻译完成', 80)
+      stageTiming('translate', stageLabel, parallelStart)
+      if (translationFailed) {
+        report('error', STAGE_ERROR_MESSAGES['translate'], 75)
+      } else {
+        console.log(`[pipeline] Translation completed (${translatedRegions.filter(r => r.translatedText).length} regions)`)
+        report('translate', '翻译完成', 80)
+      }
     }
 
     // ── Stage 5b: Inpainting ─────────────────────────────────────
     let inpaintedCanvas = null
-    {
-      if (signal?.aborted) throw createAbortError()
+    try {
+      abortIfRequested(signal)
 
       const stageLabel = '去字修复'
       const stageStart = performance.now()
       report('inpaint', stageLabel, 85)
 
-      if (maskCanvas && hasMaskContent(maskCanvas)) {
+      if (!maskFailed && maskCanvas && hasMaskContent(maskCanvas)) {
         inpaintedCanvas = await runInpaint(artifacts.originalCanvas, maskCanvas, worker)
         artifacts.inpaintedCanvas = inpaintedCanvas
         console.log('[pipeline] Inpainting completed')
       } else {
-        console.log('[pipeline] Mask empty — skipping inpainting')
+        console.log('[pipeline] Mask empty or failed — skipping inpainting')
       }
 
-      timings.push({
-        stage: 'inpaint',
-        label: stageLabel,
-        durationMs: Math.round(performance.now() - stageStart),
-      })
+      stageTiming('inpaint', stageLabel, stageStart)
       report('inpaint', inpaintedCanvas ? '去字完成' : '无需去字', 90)
+    } catch (err) {
+      if (err.name === 'AbortError') throw err
+      // Inpainting failure is non-fatal: typeset on original image
+      console.warn(`[pipeline] Inpainting failed, typesetting on original:`, err.message)
+      setArtworkError(imageUrl, 'inpaint', STAGE_ERROR_MESSAGES['inpaint'])
+      inpaintedCanvas = null
+      artifacts.inpaintedCanvas = null
+      report('inpaint', STAGE_ERROR_MESSAGES['inpaint'] + '，使用原图', 90)
     }
 
     // ── Stage 6: Typesetting ─────────────────────────────────────
-    {
-      if (signal?.aborted) throw createAbortError()
+    try {
+      abortIfRequested(signal)
 
       const stageLabel = '排版渲染'
       const stageStart = performance.now()
       report('typeset', stageLabel, 92)
 
-      // Start from inpainted canvas if available, otherwise original
       const baseCanvas = inpaintedCanvas || artifacts.originalCanvas
       const resultCanvas = document.createElement('canvas')
       resultCanvas.width = baseCanvas.width
@@ -276,7 +372,6 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       const ctx = resultCanvas.getContext('2d')
       ctx.drawImage(baseCanvas, 0, 0)
 
-      // Typeset each region with translated text
       let typesetCount = 0
       for (const region of translatedRegions) {
         if (!region.translatedText) continue
@@ -287,48 +382,38 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
             drawTypesetHorizontal(ctx, region, region.translatedText)
           }
           typesetCount++
-        } catch (err) {
-          console.log(`[pipeline] Typesetting failed for region ${region.id}:`, err.message)
+        } catch (regionErr) {
+          console.warn(`[pipeline] Typeset skip region ${region.id}:`, regionErr.message)
         }
       }
 
       artifacts.resultCanvas = resultCanvas
 
-      timings.push({
-        stage: 'typeset',
-        label: stageLabel,
-        durationMs: Math.round(performance.now() - stageStart),
-      })
+      stageTiming('typeset', stageLabel, stageStart)
       console.log(`[pipeline] Typeset ${typesetCount}/${translatedRegions.length} regions`)
       report('typeset', `排版完成 (${typesetCount} 区域)`, 100)
+    } catch (err) {
+      if (err.name === 'AbortError') throw err
+      // Typesetting failure: fall back to image without text overlay
+      console.warn(`[pipeline] Typesetting failed entirely, returning cleaned image:`, err.message)
+      setArtworkError(imageUrl, 'typeset', STAGE_ERROR_MESSAGES['typeset'])
+      const baseCanvas = inpaintedCanvas || artifacts.originalCanvas
+      artifacts.resultCanvas = copyCanvas(baseCanvas)
+      report('typeset', STAGE_ERROR_MESSAGES['typeset'], 100)
     }
   } catch (err) {
     if (err.name === 'AbortError') {
       console.log('[pipeline] Pipeline cancelled by user')
-      // Ensure we have at least the original as result
-      if (!artifacts.resultCanvas && artifacts.originalCanvas) {
-        const fallback = document.createElement('canvas')
-        fallback.width = artifacts.originalCanvas.width
-        fallback.height = artifacts.originalCanvas.height
-        fallback.getContext('2d').drawImage(artifacts.originalCanvas, 0, 0)
-        artifacts.resultCanvas = fallback
-      }
+      makeFallbackResult(artifacts)
       report('error', '已取消', 0)
       throw err
     }
 
-    // Graceful degradation on unexpected errors
-    console.log('[pipeline] Pipeline error:', err.message)
-    if (!artifacts.resultCanvas && artifacts.originalCanvas) {
-      const fallback = document.createElement('canvas')
-      fallback.width = artifacts.originalCanvas.width
-      fallback.height = artifacts.originalCanvas.height
-      fallback.getContext('2d').drawImage(artifacts.originalCanvas, 0, 0)
-      artifacts.resultCanvas = fallback
-    }
+    // Unexpected errors that escaped per-stage handling
+    console.warn('[pipeline] Unexpected pipeline error:', err.message)
+    makeFallbackResult(artifacts)
     report('error', `处理失败: ${err.message}`, 0)
   } finally {
-    // Clean up ONNX worker regardless of success or failure
     if (worker) {
       try {
         await disposeWorker(worker)
