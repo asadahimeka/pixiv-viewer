@@ -12,7 +12,7 @@
         @focus="onFocus"
         @search="onSearch"
       />
-      <div ref="words" class="search-bar-word" @click="handleWordsClick($event)">
+      <div v-show="!focus" ref="words" class="search-bar-word" @click="handleWordsClick($event)">
         <span v-if="keywordsList.length === 0 && !lastWord" class="placeholder">{{ $t('search.placeholder') }}</span>
         <div v-for="(word, index) in keywordsList" :key="index" class="word">
           <span class="text">{{ word }}</span>
@@ -77,6 +77,22 @@
       <Tags @search="tag => searchTag(tag, true)" />
       <div class="mask" @click="focus = false"></div>
     </div>
+    <van-dialog
+      v-model="showNumberDialog"
+      title="选择跳转类型"
+      :show-confirm-button="false"
+      close-on-click-overlay
+    >
+      <div style="padding: 10px 20px 20px;">
+        <van-cell
+          v-for="item in numberDialogActions"
+          :key="item.value"
+          :title="item.name"
+          is-link
+          @click="onNumberChoice(item.value)"
+        />
+      </div>
+    </van-dialog>
   </div>
 </template>
 
@@ -86,6 +102,7 @@ import { mapState, mapActions } from 'vuex'
 import { notSelfHibiApi } from '@/consts'
 import { BLOCK_LAST_WORD_RE } from '@/utils/filter'
 import api from '@/api'
+
 import store from '@/store'
 import Tags from './components/Tags'
 import ImageSearch from './components/ImageSearch'
@@ -102,6 +119,14 @@ export default {
       keywordsList: [], // 关键词搜索框分词列表（空格分割）
       lastWord: '', // 正在输入的关键词
       focus: false, // 编辑框是否获取焦点
+      showNumberDialog: false,
+      pendingNumber: '',
+      numberDialogActions: [
+        { name: '作品ID', value: 'artwork' },
+        { name: '小说ID', value: 'novel' },
+        { name: '用户ID', value: 'user' },
+        { name: '搜索关键词', value: 'keyword' },
+      ],
       autoCompleteTagList: [],
       isSelfHibi: !notSelfHibiApi,
     }
@@ -204,7 +229,23 @@ export default {
       this.focus = true // 获取焦点
     },
     async onSearch(searchType) {
+      console.log('searchType: ', searchType)
       console.log('onSearch: ', this.keywords)
+      const trimmed = this.keywords.trim()
+
+      // Pure number detection
+      if (/^\d+$/.test(trimmed)) {
+        const defaultType = store.state.appSetting.searchDefaultIdType
+        if (defaultType) {
+          const routeMap = { artwork: '/artworks/', novel: '/novel/', user: '/users/' }
+          this.$router.push(routeMap[defaultType] + trimmed)
+          return
+        }
+        this.pendingNumber = trimmed
+        this.showNumberDialog = true
+        return
+      }
+
       this.focus = false
       let words = this.keywords
       this.reset()
@@ -243,6 +284,15 @@ export default {
     },
     clearHistory() {
       this.setSearchHistory(null)
+    },
+    onNumberChoice(value) {
+      this.showNumberDialog = false
+      if (value === 'keyword') {
+        this.$router.push(`/search/${encodeURIComponent(this.pendingNumber)}`)
+        return
+      }
+      const routeMap = { artwork: '/artworks/', novel: '/novel/', user: '/users/' }
+      this.$router.push(routeMap[value] + this.pendingNumber)
     },
     ...mapActions(['setSearchHistory']),
   },
@@ -305,6 +355,18 @@ export default {
         input {
           display: inline-block;
           opacity: 0;
+        }
+      }
+    }
+
+    // Edit mode: show input with cursor
+    &.dropdown {
+      ::v-deep .van-cell input {
+        opacity: 1
+        color: #333
+        caret-color: #000
+        &::placeholder {
+          color: transparent
         }
       }
     }

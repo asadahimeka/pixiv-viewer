@@ -97,6 +97,7 @@ export default new Vuex.Store({
       isExpandMultiPArtwork: false,
       showPIDMask: !localStorage.PXV_ACT_COLOR,
       useNovelWebview: false,
+      searchDefaultIdType: '',
       ...getSettingDef('PXV_APP_SETTING', {}),
     },
   },

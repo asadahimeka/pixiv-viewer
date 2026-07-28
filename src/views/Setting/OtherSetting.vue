@@ -52,6 +52,13 @@
           <van-switch :value="appSetting.searchListPagination" size="24" @change="v => saveAppSetting('searchListPagination', v, true)" />
         </template>
       </van-cell>
+      <van-cell
+        center
+        title="数字搜索默认跳转"
+        :label="searchDefaultIdTypeLabel"
+        is-link
+        @click="showSearchDefaultTypePicker"
+      />
     </van-cell-group>
 
     <van-cell-group v-if="clientConfig.useLocalAppApi" :title="$t('YEPi_dV_gdvw9NzE4iBEu')">
@@ -525,6 +532,14 @@
       <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}:&nbsp;&nbsp;&nbsp;&nbsp;{{ sampleArtFileName }}</van-cell>
     </van-dialog>
     <SyncDialog v-model="syncDialogShow" />
+    <van-action-sheet
+      v-model="showDefaultTypeSheet"
+      :actions="defaultTypeActions"
+      cancel-text="取消"
+      close-on-click-action
+      @select="onDefaultTypeSelect"
+      @cancel="onDefaultTypeCancel"
+    />
   </div>
 </template>
 
@@ -741,6 +756,13 @@ export default {
       novelFilterTagLenMax: store.state.appSetting.novelFilterTagLenMax,
       novelFilterTagSplitMax: store.state.appSetting.novelFilterTagSplitMax,
       syncDialogShow: false,
+      showDefaultTypeSheet: false,
+      defaultTypeActions: [
+        { name: '每次询问', value: '' },
+        { name: '作品ID', value: 'artwork' },
+        { name: '小说ID', value: 'novel' },
+        { name: '用户ID', value: 'user' },
+      ],
     }
   },
   head() {
@@ -779,6 +801,15 @@ export default {
     },
     showPIDMaskSetting() {
       return !store.state.isSafari && !store.state.appSetting.isAutoLoadKissT
+    },
+    searchDefaultIdTypeLabel() {
+      const map = {
+        '': '每次询问',
+        'artwork': '作品',
+        'novel': '小说',
+        'user': '用户',
+      }
+      return map[this.appSetting.searchDefaultIdType] || '每次询问'
     },
   },
   watch: {
@@ -962,6 +993,16 @@ export default {
     },
     showNovelConfig() {
       this.$refs.novelConfigRef?.open()
+    },
+    showSearchDefaultTypePicker() {
+      this.showDefaultTypeSheet = true
+    },
+    onDefaultTypeSelect(item) {
+      this.saveAppSetting('searchDefaultIdType', item.value)
+      this.showDefaultTypeSheet = false
+    },
+    onDefaultTypeCancel() {
+      this.showDefaultTypeSheet = false
     },
     async changeAutoLoadKissT(val) {
       if (val) {
