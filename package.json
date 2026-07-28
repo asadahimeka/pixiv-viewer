@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@vant/touch-emulator": "1.5.0",
-    "@vueuse/core": "11.3.0",
     "@vueuse/components": "11.3.0",
+    "@vueuse/core": "11.3.0",
     "axios": "0.33.0",
     "core-js": "3.49.0",
     "crypto-js": "4.2.0",
@@ -25,6 +25,7 @@
     "lodash": "4.17.21",
     "modern-mp4": "0.1.2",
     "nprogress": "0.2.0",
+    "onnxruntime-web": "^1.27.0",
     "register-service-worker": "1.7.2",
     "swiper": "5.4.5",
     "ts-whammy": "1.1.5",
