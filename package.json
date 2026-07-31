@@ -9,6 +9,7 @@
     "changelog": "git-cliff -o CHANGELOG.md",
     "analyze": "vue-cli-service build --report",
     "lint": "eslint src --fix --ext .js,.vue",
+    "models:download": "node scripts/download-models.mjs",
     "prerelease": "npm run changelog && git add ."
   },
   "dependencies": {
@@ -25,7 +26,7 @@
     "lodash": "4.17.21",
     "modern-mp4": "0.1.2",
     "nprogress": "0.2.0",
-    "onnxruntime-web": "^1.27.0",
+    "onnxruntime-web": "1.27.0",
     "register-service-worker": "1.7.2",
     "swiper": "5.4.5",
     "ts-whammy": "1.1.5",

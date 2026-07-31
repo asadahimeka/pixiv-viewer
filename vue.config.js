@@ -1,7 +1,6 @@
 const path = require('path')
 const autoprefixer = require('autoprefixer')
 const pxtorem = require('postcss-pxtorem')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 const svgIconDir = path.join(__dirname, 'src/icons/svg')
@@ -47,7 +46,7 @@ module.exports = {
   //     },
   //   },
   // },
-  transpileDependencies: ['mint-filter'],
+  // transpileDependencies: ['mint-filter'],
   configureWebpack: config => {
     if (isProduction) {
       config.optimization.minimizer[0].options.minimizer.options.compress.drop_console = true
@@ -65,19 +64,6 @@ module.exports = {
       //   'crypto-js': 'CryptoJS',
       // }
     }
-    // Copy ONNX Runtime Web WASM files to output
-    config.plugins.push(
-      new CopyWebpackPlugin({
-        patterns: [
-          {
-            from: 'node_modules/onnxruntime-web/dist/',
-            to: 'js/',
-            globOptions: { ignore: ['**/*.js', '**/*.js.map', '**/*.d.ts', '**/*.d.cts', '**/*.mjs', '**/*.mjs.map'] },
-            noErrorOnMissing: true,
-          },
-        ],
-      })
-    )
   },
   chainWebpack: config => {
     config
@@ -108,8 +94,14 @@ module.exports = {
       .test(/\.wasm$/)
       .type('javascript/auto')
       .exclude
-        .add(/node_modules/)
-        .end()
+      .add(/node_modules/)
+      .end()
+
+    // Prevent webpack from auto-extracting ONNX Runtime WASM files (loaded from CDN at runtime)
+    config.module
+      .rule('ort-js')
+      .test(/onnxruntime-web/)
+      .parser({ url: false })
 
     config.plugin('html')
       .tap(args => {
@@ -170,7 +162,7 @@ module.exports = {
         /kiss-translator[\\/].*/,
         /static[\\/](js|css)[\\/](?!flexible\..*)/,
         /test[\\/].*/,
-        /\/models\/.*\.onnx$/,  // ONNX models — too large for SW cache
+        /\/models\/.*\.onnx$/, // ONNX models — too large for SW cache
       ],
       // navigateFallbackDenylist: [/^\/prks\//],
       runtimeCaching: [

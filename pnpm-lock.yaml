@@ -48,7 +48,7 @@ importers:
         specifier: 0.2.0
         version: 0.2.0
       onnxruntime-web:
-        specifier: ^1.27.0
+        specifier: 1.27.0
         version: 1.27.0
       register-service-worker:
         specifier: 1.7.2
