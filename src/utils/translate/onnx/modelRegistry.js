@@ -1,6 +1,8 @@
 /**
- * Model registry — loads model manifest from CDN and resolves model URLs.
- * Reads VUE_APP_MODEL_MANIFEST_URL env var for manifest location.
+ * Model registry — loads model manifest and resolves model URLs.
+ * Supports local manifest (./models/models.json) for dev server
+ * and GitHub Releases CDN when VUE_APP_MODEL_RELEASE_TAG is set.
+ * Reads VUE_APP_MODEL_MANIFEST_URL env var for custom manifest location.
  */
 
 let manifestCache = null
@@ -14,18 +16,25 @@ function getDefaultManifestUrl() {
   if (typeof process !== 'undefined' && process.env && process.env.VUE_APP_MODEL_MANIFEST_URL) {
     return process.env.VUE_APP_MODEL_MANIFEST_URL
   }
-  return 'https://cdn.jsdelivr.net/gh/zyddnys/manga-image-translator@main/models/models.json'
+  // Default to local manifest for dev server
+  return './models/models.json'
 }
 
 /**
- * Resolve model base URL from env var mirror or fall back to upstream default.
+ * Resolve model URL based on environment.
+ * When VUE_APP_MODEL_RELEASE_TAG is set, returns CDN URL from GitHub Releases.
+ * Otherwise returns the local path relative to the public directory.
+ * @param {string} path - Model URL from manifest (e.g., "detector.onnx")
  * @returns {string}
  */
-function getDefaultBaseUrl() {
-  if (typeof process !== 'undefined' && process.env && process.env.VUE_APP_MODEL_MIRROR) {
-    return process.env.VUE_APP_MODEL_MIRROR
+function resolveModelUrl(path) {
+  const releaseTag = typeof process !== 'undefined' && process.env && process.env.VUE_APP_MODEL_RELEASE_TAG
+  if (releaseTag) {
+    const filename = path.split('/').pop()
+    return `https://github.com/DonutShinobu/ShinobuTranslator/releases/download/${releaseTag}/${filename}`
   }
-  return 'https://huggingface.co/zyddnys/manga-image-translator/resolve/main/models/'
+  // In dev mode, models are served from public/models/ via dev server
+  return `./models/${path.replace(/^\//, '')}`
 }
 
 /**
@@ -38,6 +47,7 @@ export async function loadManifest(manifestUrl) {
   if (manifestPromise) return manifestPromise
 
   const url = manifestUrl || getDefaultManifestUrl()
+  console.log(`[modelRegistry] Loading model manifest from: ${url}`)
 
   manifestPromise = (async () => {
     const res = await fetch(url)
@@ -96,8 +106,7 @@ export async function getModelUrl(name) {
   const manifest = await loadManifest()
   const model = manifest.models[name]
   if (!model) throw new Error(`Model "${name}" not found in manifest`)
-  const baseUrl = manifest.baseUrl || getDefaultBaseUrl()
-  return baseUrl + model.url
+  return resolveModelUrl(model.url)
 }
 
 /**
