@@ -1,4 +1,5 @@
 import { ProviderError, registerProvider } from './index'
+import { parseStructuredResponse, anySignal } from './parseResponse.js'
 
 export const name = 'glm'
 
@@ -7,17 +8,41 @@ const DEFAULT_MODEL = 'glm-4-plus'
 
 const SYSTEM_PROMPT = '你是专业漫画本地化译者和中文润色编辑。\n你的目标是把台词改写成自然、口语化、符合中文漫画阅读习惯的译文。\n不要保留日语倒装语序。只输出译文，不输出解释。'
 
+const LANG_NAMES = {
+  'ja': '日文',
+  'zh-CN': '简体中文',
+  'zh-TW': '繁体中文',
+  'en': '英文',
+  'ko': '韩文',
+  'fr': '法文',
+  'de': '德文',
+  'ru': '俄文',
+  'es': '西班牙文',
+  'it': '意大利文',
+  'pt': '葡萄牙文',
+  'th': '泰文',
+  'vi': '越南文',
+}
+
+function getLangName(code) {
+  return LANG_NAMES[code] || code
+}
+
 /**
  * @param {Array} regions
+ * @param {string} [sourceLang]
+ * @param {string} [targetLang]
  * @returns {string}
  */
-function buildUserPrompt(regions) {
+function buildUserPrompt(regions, sourceLang, targetLang) {
+  const sourceName = getLangName(sourceLang || 'ja')
+  const targetName = getLangName(targetLang || 'zh-CN')
   const textItems = regions
     .filter(r => r.sourceText && r.sourceText.trim())
     .map(r => `[${r.id}] ${r.sourceText}`)
     .join('\n')
 
-  return `请把以下文本从 日文 翻译成 简体中文。
+  return `请把以下文本从 ${sourceName} 翻译成 ${targetName}。
 如果原文包含换行，它可能只是漫画竖排或横排的视觉断列；
 请把它当作同一段语义处理，不要逐行逐列直译。
 只输出最终译文，不要输出注释。
@@ -50,7 +75,7 @@ export async function translate(regions, config) {
     return { regions: [] }
   }
 
-  const userPrompt = buildUserPrompt(regions)
+  const userPrompt = buildUserPrompt(regions, config.sourceLang, config.targetLang)
 
   const body = {
     model,
@@ -63,6 +88,13 @@ export async function translate(regions, config) {
 
   let response
   try {
+    // 60s timeout
+    const timeoutSignal = AbortSignal.timeout(60000)
+    // Merge with any external signal from config
+    const combinedSignal = config.signal
+      ? anySignal([config.signal, timeoutSignal])
+      : timeoutSignal
+
     response = await fetch(`${BASE_URL}/chat/completions`, {
       method: 'POST',
       headers: {
@@ -70,6 +102,7 @@ export async function translate(regions, config) {
         'content-type': 'application/json',
       },
       body: JSON.stringify(body),
+      signal: combinedSignal,
     })
   } catch (err) {
     throw new ProviderError(
@@ -112,69 +145,6 @@ export async function translate(regions, config) {
   }
 
   return parseStructuredResponse(content, regions)
-}
-
-/**
- * @param {string} content
- * @param {Array} originalRegions
- * @returns {{regions: Array<{id: string, translation: string}>}}
- */
-function parseStructuredResponse(content, originalRegions) {
-  let jsonStr = content.trim()
-
-  const jsonMatch = jsonStr.match(/```(?:json)?\s*([\s\S]*?)```/)
-  if (jsonMatch) {
-    jsonStr = jsonMatch[1].trim()
-  }
-
-  const objectMatch = jsonStr.match(/\{[\s\S]*\}/)
-  if (objectMatch) {
-    jsonStr = objectMatch[0]
-  }
-
-  try {
-    const parsed = JSON.parse(jsonStr)
-    if (parsed.regions && Array.isArray(parsed.regions)) {
-      return { regions: parsed.regions }
-    }
-    if (parsed.translations && Array.isArray(parsed.translations)) {
-      return { regions: parsed.translations }
-    }
-    if (parsed.results && Array.isArray(parsed.results)) {
-      return { regions: parsed.results }
-    }
-  } catch (_) {
-  }
-
-  const idMap = {}
-  for (const r of originalRegions) {
-    if (r.id) idMap[r.id] = true
-  }
-
-  const fallbackRegions = []
-  const lines = content.split('\n')
-  for (const line of lines) {
-    const match = line.match(/^\s*(?:\[)?(r\d+)(?:\])?\s*[:：]\s*(.+)/)
-    if (match) {
-      const id = match[1]
-      const translation = match[2].trim()
-      if (idMap[id]) {
-        fallbackRegions.push({ id, translation })
-      }
-    }
-  }
-
-  if (fallbackRegions.length > 0) {
-    return { regions: fallbackRegions }
-  }
-
-  if (originalRegions.length > 0 && content.trim()) {
-    return {
-      regions: [{ id: originalRegions[0].id, translation: content.trim() }],
-    }
-  }
-
-  return { regions: [] }
 }
 
 registerProvider({ name, translate })
