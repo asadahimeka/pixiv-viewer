@@ -1,0 +1,41 @@
+{
+  "source": "ShinobuTranslator",
+  "note": "ONNX models for manga image translation pipeline. Downloaded via pnpm models:download.",
+  "baseUrl": "/models/",
+  "models": {
+    "detector": {
+      "name": "detector",
+      "task": "detection",
+      "url": "detector.onnx",
+      "input": "image",
+      "runtime": ["webgpu", "wasm"],
+      "baseUrl": "/models/"
+    },
+    "inpaint": {
+      "name": "inpaint",
+      "task": "inpainting",
+      "url": "inpaint.onnx",
+      "input": "image",
+      "runtime": ["webgpu", "wasm"],
+      "baseUrl": "/models/"
+    },
+    "paddleocr_v6_medium_rec": {
+      "name": "paddleocr_v6_medium_rec",
+      "task": "ocr",
+      "url": "paddleocr_v6_medium_rec.onnx",
+      "input": "image",
+      "runtime": ["webgpu", "wasm"],
+      "dictUrl": "paddleocr_v6_dict.txt",
+      "baseUrl": "/models/"
+    },
+    "bubble": {
+      "name": "bubble",
+      "task": "detection",
+      "url": "bubble.onnx",
+      "input": "image",
+      "runtime": ["webgpu", "wasm"],
+      "baseUrl": "/models/"
+    }
+  },
+  "modelOrder": ["detector", "paddleocr_v6_medium_rec", "inpaint", "bubble"]
+}
