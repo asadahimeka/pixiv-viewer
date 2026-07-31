@@ -123,7 +123,7 @@ import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation } from '@/utils/translate/manga'
-import { runPipeline, getArtworkError, clearArtworkError } from '@/utils/translate/pipeline/index.js'
+import { runPipeline, clearArtworkError } from '@/utils/translate/pipeline/index.js'
 import PicTranslatePanel from './components/PicTranslatePanel.vue'
 import TranslateToolbar from './components/TranslateToolbar'
 import TranslateSettings from './components/TranslateSettings'
@@ -156,8 +156,8 @@ export default {
       next(false)
       nprogress.done()
     } else {
-      if (this._pipelineAbort) {
-        this._pipelineAbort.abort()
+      if (this.pipelineAbort) {
+        this.pipelineAbort.abort()
       }
       next()
     }
@@ -196,8 +196,8 @@ export default {
       translateStatusText: '',
       translateErrorCount: 0,
       showTranslateSettings: false,
-      _pipelineAbort: null,
-      _isActive: true,
+      pipelineAbort: null,
+      isActive: true,
     }
   },
   head() {
@@ -235,9 +235,7 @@ export default {
         this.artwork.type === 'manga' &&
         this.artwork.x_restrict < 1 &&
         i18n.locale.includes('zh') &&
-        !/中文|中国语|Chinese|中國語|中国語/.test(
-          JSON.stringify(this.artwork.tags || [])
-        )
+        !/中文|中国语|Chinese|中國語|中国語/.test(JSON.stringify(this.artwork.tags || []))
       )
     },
     translatingIndex() {
@@ -247,10 +245,11 @@ export default {
       return -1
     },
     pageCount() {
-      return this.artwork?.pageCount || 0
+      return this.artwork?.images?.length || 0
     },
     showTranslateToolbar() {
-      return this.pageCount > 1 && store.state.translationEngine !== 'vl-api'
+      // return this.pageCount > 1 && store.state.translationEngine !== 'vl-api'
+      return this.showPicTranslateBtn
     },
     translationProvider() {
       return store.state.translationProvider
@@ -279,15 +278,15 @@ export default {
     this.init()
   },
   activated() {
-    this._isActive = true
+    this.isActive = true
   },
   deactivated() {
     console.log('[Artwork] deactivated — cleaning up translation state')
-    this._isActive = false
+    this.isActive = false
     // Abort in-progress pipeline
-    if (this._pipelineAbort) {
-      this._pipelineAbort.abort()
-      this._pipelineAbort = null
+    if (this.pipelineAbort) {
+      this.pipelineAbort.abort()
+      this.pipelineAbort = null
     }
     // Reset translating state
     this.pipelineTranslating = false
@@ -298,9 +297,9 @@ export default {
   beforeDestroy() {
     console.log('[Artwork] beforeDestroy — releasing all translation canvases')
     // Abort pipeline
-    if (this._pipelineAbort) {
-      this._pipelineAbort.abort()
-      this._pipelineAbort = null
+    if (this.pipelineAbort) {
+      this.pipelineAbort.abort()
+      this.pipelineAbort = null
     }
     // Release translated canvas references (GC will handle cleanup)
     this.translatedCanvases = {}
@@ -551,7 +550,10 @@ export default {
         }
 
         // Check cache first
-        const cacheKey = `pic.translate.${this.artwork.id}.${pageIndex}`
+        // NOTE: ONNX cache key includes 'onnx' prefix to avoid collision
+        // with VL-API engine's cache ('pic.translate.{id}.{page}').
+        // VL-API stores text strings, ONNX stores Canvas objects — incompatible data types.
+        const cacheKey = `pic.translate.onnx.${this.artwork.id}.${pageIndex}`
         const cached = await getCache(cacheKey)
         if (cached) {
           this.$set(this.translatedCanvases, pageIndex, cached)
@@ -577,19 +579,19 @@ export default {
           },
         }
 
-        const onProgress = (progress) => {
+        const onProgress = progress => {
           this.$set(this.pipelineProgress, pageIndex, progress)
           this.translateStatusText = progress.detail || ''
         }
 
         const abortController = new AbortController()
-        this._pipelineAbort = abortController
+        this.pipelineAbort = abortController
 
         try {
           const artifacts = await runPipeline(imageUrl, config, onProgress, abortController.signal)
 
           // Check if component is still active (not deactivated/navigated away)
-          if (!this._isActive) {
+          if (!this.isActive) {
             console.log('[Artwork] Component deactivated during pipeline — discarding result')
             return
           }
@@ -614,7 +616,11 @@ export default {
               console.warn(`[Artwork] High canvas count (${canvasCount}) — possible memory pressure`)
             }
           }
-          this.$toast('翻译完成')
+          if (artifacts.error) {
+            this.$toast(artifacts.error.message)
+          } else {
+            this.$toast('翻译完成')
+          }
         } catch (err) {
           if (err.name === 'AbortError') {
             this.$toast('已取消')
@@ -634,7 +640,7 @@ export default {
         } finally {
           this.pipelineTranslating = false
           this.translateStatusText = ''
-          this._pipelineAbort = null
+          this.pipelineAbort = null
         }
       }
     },
@@ -665,7 +671,7 @@ export default {
         }
         this.$set(this.picTranslations, pageIndex, '')
       } else {
-        const cacheKey = `pic.translate.${this.artwork.id}.${pageIndex}`
+        const cacheKey = `pic.translate.onnx.${this.artwork.id}.${pageIndex}`
         try {
           await setCache(cacheKey, null)
         } catch (e) {

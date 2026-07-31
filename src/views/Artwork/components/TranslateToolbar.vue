@@ -27,7 +27,7 @@
         :loading="translating"
         @click.stop="$emit('translate-current')"
       >
-        <span v-if="!isCompact">{{ $t('artwork.translate.translatePage') || '翻译当前' }}</span>
+        <span v-if="!isCompact">{{ '翻译当前' }}</span>
       </van-button>
 
       <!-- Translate All Pages (multi-page only) -->
@@ -39,7 +39,7 @@
         icon="replay"
         @click.stop="$emit('translate-all')"
       >
-        <span v-if="!isCompact">{{ $t('artwork.translate.translateAll') || '全部翻译' }}</span>
+        <span v-if="!isCompact">{{ '全部翻译' }}</span>
       </van-button>
 
       <!-- Toggle Original/Translated -->
@@ -57,9 +57,14 @@
         icon="setting-o"
         @click.stop="$emit('open-settings')"
       >
-        <span v-if="!isCompact">{{ $t('common.settings') || '设置' }}</span>
+        <span v-if="!isCompact">{{ '设置' }}</span>
       </van-button>
     </div>
+
+    <!-- Runtime Status Indicator -->
+    <span class="runtime-indicator" :title="runtimeTooltip">
+      <span class="runtime-dot" :class="runtimeDotClass"></span>
+    </span>
 
     <!-- Error Badge -->
     <div v-if="errorCount > 0" class="translate-toolbar__error-badge">
@@ -69,6 +74,8 @@
 </template>
 
 <script>
+import { selfCheck } from '../../../utils/translate/runtime/selfCheck.js'
+
 export default {
   name: 'TranslateToolbar',
   props: {
@@ -86,7 +93,37 @@ export default {
       autoHideTimer: null,
       isDesktop: window.innerWidth >= 1000,
       isCompact: window.innerWidth < 600,
+      runtimeStatus: null,
+      runtimeChecking: true,
     }
+  },
+  computed: {
+    runtimeDotClass() {
+      if (this.runtimeChecking) return 'checking'
+      if (!this.runtimeStatus) return 'unknown'
+      if (this.runtimeStatus.webgpu === 'available') return 'webgpu'
+      if (this.runtimeStatus.wasm === 'available') return 'wasm'
+      return 'unavailable'
+    },
+    runtimeTooltip() {
+      if (this.runtimeChecking) return '检测运行环境中…'
+      if (!this.runtimeStatus) return '运行时状态未知'
+      const parts = []
+      parts.push('WebGPU: ' + this.runtimeStatus.webgpu)
+      parts.push('WASM: ' + this.runtimeStatus.wasm)
+      parts.push('WebNN: ' + this.runtimeStatus.webnn)
+      parts.push('推荐: ' + this.runtimeStatus.recommended)
+      return parts.join(' | ')
+    },
+  },
+  mounted() {
+    window.addEventListener('resize', this.onResize)
+    this.resetAutoHide()
+    this.checkRuntime()
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.onResize)
+    if (this.autoHideTimer) clearTimeout(this.autoHideTimer)
   },
   methods: {
     resetAutoHide() {
@@ -107,14 +144,18 @@ export default {
       this.isDesktop = window.innerWidth >= 1000
       this.isCompact = window.innerWidth < 600
     },
-  },
-  mounted() {
-    window.addEventListener('resize', this.onResize)
-    this.resetAutoHide()
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize)
-    if (this.autoHideTimer) clearTimeout(this.autoHideTimer)
+    async checkRuntime() {
+      try {
+        this.runtimeChecking = true
+        const result = await selfCheck()
+        this.runtimeStatus = result
+      } catch (err) {
+        console.warn('[TranslateToolbar] Runtime check failed:', err.message)
+        this.runtimeStatus = { webgpu: 'error', wasm: 'unknown', webnn: 'unknown', recommended: 'wasm' }
+      } finally {
+        this.runtimeChecking = false
+      }
+    },
   },
 }
 </script>
@@ -198,4 +239,38 @@ $breakpoint-compact = 600px
     text-align center
     border-radius 0.14rem
     pointer-events none
+
+.runtime-indicator
+  display inline-flex
+  align-items center
+  margin-left 0.08rem
+  cursor help
+
+.runtime-dot
+  width 0.08rem
+  height 0.08rem
+  border-radius 50%
+  display inline-block
+
+  &.webgpu
+    background-color #4caf50
+    box-shadow 0 0 0.04rem #4caf50
+
+  &.wasm
+    background-color #ff9800
+    box-shadow 0 0 0.04rem #ff9800
+
+  &.unavailable
+    background-color #f44336
+
+  &.checking,
+  &.unknown
+    background-color #9e9e9e
+    animation pulse 1.5s infinite
+
+@keyframes pulse
+  0%, 100%
+    opacity 1
+  50%
+    opacity 0.3
 </style>

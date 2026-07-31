@@ -1,5 +1,5 @@
 <template>
-  <div class="translate-overlay" v-show="showOverlay" tabindex="0" @keydown.t.prevent="$emit('toggle')">
+  <div v-show="showOverlay" class="translate-overlay" tabindex="0" @keydown.t.prevent="$emit('toggle')">
     <canvas ref="overlayCanvas" class="overlay-canvas"></canvas>
     <div v-if="loading" class="loading-overlay">
       <van-loading type="spinner" />

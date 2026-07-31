@@ -1,140 +1,138 @@
 <template>
-  <template v-if="isDev">
-    <div class="translate-debug" v-show="visible">
-      <div class="translate-debug__header">
-        <span class="translate-debug__title">🔧 Pipeline Debug</span>
-        <van-icon name="cross" class="translate-debug__close" @click="$emit('close')" />
-      </div>
+  <div v-if="isDev" v-show="visible" class="translate-debug">
+    <div class="translate-debug__header">
+      <span class="translate-debug__title">🔧 Pipeline Debug</span>
+      <van-icon name="cross" class="translate-debug__close" @click="$emit('close')" />
+    </div>
 
-      <van-collapse v-model="activeSections" :accordion="false">
-        <!-- Model Info -->
-        <van-collapse-item title="Model Info" name="model">
-          <div class="translate-debug__section">
-            <van-icon name="copy" class="translate-debug__copy" @click="copySection('model')" />
-            <div class="translate-debug__grid">
-              <div v-for="(val, key) in modelInfo" :key="key" class="translate-debug__row">
-                <span class="translate-debug__label">{{ key }}</span>
-                <span class="translate-debug__value">{{ val }}</span>
+    <van-collapse v-model="activeSections" :accordion="false">
+      <!-- Model Info -->
+      <van-collapse-item title="Model Info" name="model">
+        <div class="translate-debug__section">
+          <van-icon name="copy" class="translate-debug__copy" @click="copySection('model')" />
+          <div class="translate-debug__grid">
+            <div v-for="(val, key) in modelInfo" :key="key" class="translate-debug__row">
+              <span class="translate-debug__label">{{ key }}</span>
+              <span class="translate-debug__value">{{ val }}</span>
+            </div>
+            <div v-if="Object.keys(modelInfo).length === 0" class="translate-debug__empty">
+              No model info available
+            </div>
+          </div>
+        </div>
+      </van-collapse-item>
+
+      <!-- Stage Timings -->
+      <van-collapse-item title="Stage Timings" name="timings">
+        <div class="translate-debug__section">
+          <van-icon name="copy" class="translate-debug__copy" @click="copySection('timings')" />
+          <div v-if="stageTimings.length > 0" class="translate-debug__table">
+            <div class="translate-debug__table-header">
+              <span class="translate-debug__table-col--stage">Stage</span>
+              <span class="translate-debug__table-col--ms">Duration</span>
+            </div>
+            <div
+              v-for="(timing, idx) in stageTimings"
+              :key="idx"
+              class="translate-debug__table-row"
+            >
+              <span class="translate-debug__table-col--stage">{{ timing.stage || timing.label || timing.name }}</span>
+              <span class="translate-debug__table-col--ms">{{ timing.durationMs || timing.duration || 0 }}ms</span>
+            </div>
+            <div class="translate-debug__table-total">
+              <span class="translate-debug__table-col--stage">Total</span>
+              <span class="translate-debug__table-col--ms">{{ totalDuration }}ms</span>
+            </div>
+          </div>
+          <div v-else class="translate-debug__empty">No timing data available</div>
+        </div>
+      </van-collapse-item>
+
+      <!-- Detection Results -->
+      <van-collapse-item title="Detection Results" name="detection">
+        <div class="translate-debug__section">
+          <van-icon name="copy" class="translate-debug__copy" @click="copySection('detection')" />
+          <div v-if="detectedRegions.length > 0">
+            <div
+              v-for="(region, idx) in detectedRegions"
+              :key="region.id || idx"
+              class="translate-debug__region"
+            >
+              <div class="translate-debug__region-header">
+                <span class="translate-debug__region-id">{{ region.id || `#${idx}` }}</span>
+                <span class="translate-debug__region-prob">{{ (region.prob * 100).toFixed(1) }}%</span>
+                <span class="translate-debug__region-dir">{{ region.direction === 'v' ? 'Vertical' : 'Horizontal' }}</span>
               </div>
-              <div v-if="Object.keys(modelInfo).length === 0" class="translate-debug__empty">
-                No model info available
+              <div class="translate-debug__region-box">
+                Box: {{ formatBox(region.box) }}
               </div>
             </div>
           </div>
-        </van-collapse-item>
+          <div v-else class="translate-debug__empty">No detection data available</div>
+        </div>
+      </van-collapse-item>
 
-        <!-- Stage Timings -->
-        <van-collapse-item title="Stage Timings" name="timings">
-          <div class="translate-debug__section">
-            <van-icon name="copy" class="translate-debug__copy" @click="copySection('timings')" />
-            <div v-if="stageTimings.length > 0" class="translate-debug__table">
-              <div class="translate-debug__table-header">
-                <span class="translate-debug__table-col--stage">Stage</span>
-                <span class="translate-debug__table-col--ms">Duration</span>
+      <!-- OCR Results -->
+      <van-collapse-item title="OCR Results" name="ocr">
+        <div class="translate-debug__section">
+          <van-icon name="copy" class="translate-debug__copy" @click="copySection('ocr')" />
+          <div v-if="ocrRegions.length > 0">
+            <div
+              v-for="(region, idx) in ocrRegions"
+              :key="region.id || idx"
+              class="translate-debug__region"
+            >
+              <div class="translate-debug__region-header">
+                <span class="translate-debug__region-id">{{ region.id || `#${idx}` }}</span>
+                <span class="translate-debug__region-prob">{{ (region.prob * 100).toFixed(1) }}%</span>
               </div>
-              <div
-                v-for="(timing, idx) in stageTimings"
-                :key="idx"
-                class="translate-debug__table-row"
-              >
-                <span class="translate-debug__table-col--stage">{{ timing.stage || timing.label || timing.name }}</span>
-                <span class="translate-debug__table-col--ms">{{ timing.durationMs || timing.duration || 0 }}ms</span>
-              </div>
-              <div class="translate-debug__table-total">
-                <span class="translate-debug__table-col--stage">Total</span>
-                <span class="translate-debug__table-col--ms">{{ totalDuration }}ms</span>
+              <div class="translate-debug__region-text">
+                {{ region.sourceText || '(empty)' }}
               </div>
             </div>
-            <div v-else class="translate-debug__empty">No timing data available</div>
           </div>
-        </van-collapse-item>
+          <div v-else class="translate-debug__empty">No OCR data available</div>
+        </div>
+      </van-collapse-item>
 
-        <!-- Detection Results -->
-        <van-collapse-item title="Detection Results" name="detection">
-          <div class="translate-debug__section">
-            <van-icon name="copy" class="translate-debug__copy" @click="copySection('detection')" />
-            <div v-if="detectedRegions.length > 0">
-              <div
-                v-for="(region, idx) in detectedRegions"
-                :key="region.id || idx"
-                class="translate-debug__region"
-              >
-                <div class="translate-debug__region-header">
-                  <span class="translate-debug__region-id">{{ region.id || `#${idx}` }}</span>
-                  <span class="translate-debug__region-prob">{{ (region.prob * 100).toFixed(1) }}%</span>
-                  <span class="translate-debug__region-dir">{{ region.direction === 'v' ? 'Vertical' : 'Horizontal' }}</span>
-                </div>
-                <div class="translate-debug__region-box">
-                  Box: {{ formatBox(region.box) }}
-                </div>
+      <!-- Translation Results -->
+      <van-collapse-item title="Translation Results" name="translation">
+        <div class="translate-debug__section">
+          <van-icon name="copy" class="translate-debug__copy" @click="copySection('translation')" />
+          <div v-if="translatedRegions.length > 0">
+            <div
+              v-for="(region, idx) in translatedRegions"
+              :key="region.id || idx"
+              class="translate-debug__region"
+            >
+              <div class="translate-debug__region-header">
+                <span class="translate-debug__region-id">{{ region.id || `#${idx}` }}</span>
               </div>
-            </div>
-            <div v-else class="translate-debug__empty">No detection data available</div>
-          </div>
-        </van-collapse-item>
-
-        <!-- OCR Results -->
-        <van-collapse-item title="OCR Results" name="ocr">
-          <div class="translate-debug__section">
-            <van-icon name="copy" class="translate-debug__copy" @click="copySection('ocr')" />
-            <div v-if="ocrRegions.length > 0">
-              <div
-                v-for="(region, idx) in ocrRegions"
-                :key="region.id || idx"
-                class="translate-debug__region"
-              >
-                <div class="translate-debug__region-header">
-                  <span class="translate-debug__region-id">{{ region.id || `#${idx}` }}</span>
-                  <span class="translate-debug__region-prob">{{ (region.prob * 100).toFixed(1) }}%</span>
-                </div>
-                <div class="translate-debug__region-text">
+              <div class="translate-debug__region-pair">
+                <div class="translate-debug__region-source">
+                  <span class="translate-debug__region-label">Source:</span>
                   {{ region.sourceText || '(empty)' }}
                 </div>
-              </div>
-            </div>
-            <div v-else class="translate-debug__empty">No OCR data available</div>
-          </div>
-        </van-collapse-item>
-
-        <!-- Translation Results -->
-        <van-collapse-item title="Translation Results" name="translation">
-          <div class="translate-debug__section">
-            <van-icon name="copy" class="translate-debug__copy" @click="copySection('translation')" />
-            <div v-if="translatedRegions.length > 0">
-              <div
-                v-for="(region, idx) in translatedRegions"
-                :key="region.id || idx"
-                class="translate-debug__region"
-              >
-                <div class="translate-debug__region-header">
-                  <span class="translate-debug__region-id">{{ region.id || `#${idx}` }}</span>
-                </div>
-                <div class="translate-debug__region-pair">
-                  <div class="translate-debug__region-source">
-                    <span class="translate-debug__region-label">Source:</span>
-                    {{ region.sourceText || '(empty)' }}
-                  </div>
-                  <div class="translate-debug__region-target">
-                    <span class="translate-debug__region-label">Target:</span>
-                    {{ region.translatedText || '(empty)' }}
-                  </div>
+                <div class="translate-debug__region-target">
+                  <span class="translate-debug__region-label">Target:</span>
+                  {{ region.translatedText || '(empty)' }}
                 </div>
               </div>
             </div>
-            <div v-else class="translate-debug__empty">No translation data available</div>
           </div>
-        </van-collapse-item>
+          <div v-else class="translate-debug__empty">No translation data available</div>
+        </div>
+      </van-collapse-item>
 
-        <!-- Raw Artifacts -->
-        <van-collapse-item title="Raw Artifacts" name="raw">
-          <div class="translate-debug__section">
-            <van-icon name="copy" class="translate-debug__copy" @click="copySection('raw')" />
-            <pre class="translate-debug__json">{{ rawArtifactsJSON }}</pre>
-          </div>
-        </van-collapse-item>
-      </van-collapse>
-    </div>
-  </template>
+      <!-- Raw Artifacts -->
+      <van-collapse-item title="Raw Artifacts" name="raw">
+        <div class="translate-debug__section">
+          <van-icon name="copy" class="translate-debug__copy" @click="copySection('raw')" />
+          <pre class="translate-debug__json">{{ rawArtifactsJSON }}</pre>
+        </div>
+      </van-collapse-item>
+    </van-collapse>
+  </div>
 </template>
 
 <script>

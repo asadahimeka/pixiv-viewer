@@ -34,15 +34,15 @@
             <van-icon name="fail" class="status-error" />
           </template>
           <template v-else-if="getStageStatus(stageDef.key) === 'running'">
-            <div class="status-pulse" />
+            <div class="status-pulse"></div>
           </template>
           <template v-else>
-            <div class="status-pending" />
+            <div class="status-pending"></div>
           </template>
         </div>
 
         <!-- Stage Connector Line -->
-        <div v-if="index < stageDefs.length - 1" class="translate-progress__stage-line" />
+        <div v-if="index < stageDefs.length - 1" class="translate-progress__stage-line"></div>
 
         <!-- Label -->
         <span class="translate-progress__stage-label">{{ stageDef.label }}</span>

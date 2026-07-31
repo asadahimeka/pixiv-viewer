@@ -15,10 +15,10 @@
           </van-cell>
         </van-cell-group>
       </van-radio-group>
-      <div class="engine-help" v-if="translationEngine === 'vl-api'">
+      <div v-if="translationEngine === 'vl-api'" class="engine-help">
         <van-icon name="info-o" /> VL API: 使用云端视觉语言模型翻译，速度快，无需下载模型。文本在侧边栏面板显示，支持流式输出。
       </div>
-      <div class="engine-help" v-else>
+      <div v-else class="engine-help">
         <van-icon name="info-o" /> ONNX 管线: 完全在浏览器端运行，支持原文擦除和图像排版。首次使用需要下载约 50-75MB 模型文件。
       </div>
     </van-cell-group>
@@ -353,13 +353,13 @@ export default {
         }
 
         const authMode = config.authMode || 'api_key'
-        let headers = { 'Content-Type': 'application/json' }
+        const headers = { 'Content-Type': 'application/json' }
         if (authMode === 'bearer_token') {
-          headers['Authorization'] = apiKey
+          headers.Authorization = apiKey
         } else if (authMode === 'custom_header') {
           headers[config.customHeaderName || 'X-API-Key'] = config.customHeaderValue || apiKey
         } else {
-          headers['Authorization'] = `Bearer ${apiKey}`
+          headers.Authorization = `Bearer ${apiKey}`
         }
 
         const response = await fetch(url, {

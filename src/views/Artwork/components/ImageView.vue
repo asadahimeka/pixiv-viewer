@@ -32,7 +32,7 @@
               :disabled="translatingIndex === index"
               @click.stop="$emit('translate', index)"
             >
-              🌐{{ translatingIndex === index ? '' : '翻' }}
+              🌐{{ translatingIndex === index ? '' : '译' }}
             </van-button>
           </template>
           <TranslateOverlay
