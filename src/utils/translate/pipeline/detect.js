@@ -5,7 +5,7 @@
  * edge-detection fallback when ONNX is unavailable or returns no results.
  */
 
-import { createWorker, loadModel, runInference } from '../onnx/index.js'
+import { createWorker, loadModel, runInference, getModelSession } from '../onnx/index.js'
 import { getModelUrl } from '../onnx/modelRegistry.js'
 import { createTextRegion } from './types.js'
 
@@ -118,8 +118,8 @@ function componentToRegion(pixels, { scale, offsetX, offsetY, origWidth, origHei
     if (py > maxY) maxY = py
   }
 
-  const mapX = (x1024) => (x1024 - offsetX) / scale
-  const mapY = (y1024) => (y1024 - offsetY) / scale
+  const mapX = x1024 => (x1024 - offsetX) / scale
+  const mapY = y1024 => (y1024 - offsetY) / scale
 
   const direction = (maxX - minX) > (maxY - minY) ? 'h' : 'v'
 
@@ -186,12 +186,12 @@ function sobelEdgeDetect(gray, width, height) {
     for (let x = 1; x < width - 1; x++) {
       const idx = y * width + x
       const gx =
-        -gray[idx - width - 1] + gray[idx - width + 1]
-        - 2 * gray[idx - 1] + 2 * gray[idx + 1]
-        - gray[idx + width - 1] + gray[idx + width + 1]
+        -gray[idx - width - 1] + gray[idx - width + 1] -
+        2 * gray[idx - 1] + 2 * gray[idx + 1] -
+        gray[idx + width - 1] + gray[idx + width + 1]
       const gy =
-        -gray[idx - width - 1] - 2 * gray[idx - width] - gray[idx - width + 1]
-        + gray[idx + width - 1] + 2 * gray[idx + width] + gray[idx + width + 1]
+        -gray[idx - width - 1] - 2 * gray[idx - width] - gray[idx - width + 1] +
+        gray[idx + width - 1] + 2 * gray[idx + width] + gray[idx + width + 1]
       edges[idx] = Math.min(255, Math.sqrt(gx * gx + gy * gy))
     }
   }
@@ -234,8 +234,11 @@ async function heuristicDetect(image) {
   const regions = components
     .map(pixels =>
       componentToRegion(pixels, {
-        scale: 1, offsetX: 0, offsetY: 0,
-        origWidth, origHeight,
+        scale: 1,
+        offsetX: 0,
+        offsetY: 0,
+        origWidth,
+        origHeight,
       })
     )
     .filter(r => {
@@ -257,7 +260,7 @@ async function onnxDetect(image, { worker, signal }) {
   const preprocessed = preprocessImage(image)
 
   const modelUrl = await getModelUrl('detector')
-  await loadModel(worker, modelUrl)
+  await getModelSession('detector', modelUrl)
 
   if (signal?.aborted) return []
 

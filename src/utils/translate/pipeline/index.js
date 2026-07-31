@@ -21,19 +21,42 @@ import { runInpaint } from './inpaint.js'
 import { createMaskFromRegions } from './refineMask.js'
 import { drawTypesetHorizontal, drawTypesetVertical } from './typeset.js'
 import { createPipelineArtifacts } from './types.js'
-import { createWorker, disposeWorker } from '../onnx/index.js'
+import { getWorker, disposeAllModelSessions } from '../onnx/index.js'
+import { selfCheck } from '../runtime/selfCheck.js'
+
+// ── Pipeline Status ──────────────────────────────────────────────
+
+/** @type {{ status: string, detail: string }} */
+let pipelineStatus = { status: 'idle', detail: '' }
+
+/** @type {number|null} */
+let idleTimer = null
+
+const IDLE_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes
+
+export function getPipelineStatus() {
+  return pipelineStatus
+}
+
+function setPipelineStatus(status, detail) {
+  pipelineStatus = { status, detail }
+}
 
 /**
- * Structured pipeline stage error with available artifacts.
+ * Reset the idle cleanup timer.
+ * Each pipeline run or status check resets it.
  */
-class PipelineStageError extends Error {
-  constructor(stage, message, artifacts, cause) {
-    super(`[${stage}] ${message}`)
-    this.name = 'PipelineStageError'
-    this.stage = stage
-    this.artifacts = artifacts || null
-    this.cause = cause || null
+export function resetIdleTimer() {
+  if (idleTimer !== null) {
+    clearTimeout(idleTimer)
+    idleTimer = null
   }
+  idleTimer = setTimeout(() => {
+    console.log('[pipeline] Idle timeout — releasing model sessions')
+    disposeAllModelSessions()
+    setPipelineStatus('idle', '模型已释放')
+    idleTimer = null
+  }, IDLE_TIMEOUT_MS)
 }
 
 const STAGE_ERROR_MESSAGES = {
@@ -48,6 +71,8 @@ const STAGE_ERROR_MESSAGES = {
 
 const artworkErrors = new Map()
 
+const ARTWORK_ERRORS_MAX = 100
+
 export function getArtworkError(imageUrl) {
   return artworkErrors.get(imageUrl) || null
 }
@@ -57,6 +82,10 @@ export function clearArtworkError(imageUrl) {
 }
 
 function setArtworkError(imageUrl, stage, message) {
+  if (artworkErrors.size >= ARTWORK_ERRORS_MAX) {
+    const firstKey = artworkErrors.keys().next().value
+    if (firstKey) artworkErrors.delete(firstKey)
+  }
   artworkErrors.set(imageUrl, { stage, message, timestamp: Date.now() })
 }
 
@@ -106,9 +135,12 @@ function copyCanvas(source) {
   return canvas
 }
 
-function makeFallbackResult(artifacts) {
+function makeFallbackResult(artifacts, stage, message) {
   if (!artifacts.resultCanvas && artifacts.originalCanvas) {
     artifacts.resultCanvas = copyCanvas(artifacts.originalCanvas)
+  }
+  if (stage && message) {
+    artifacts.error = { stage, message }
   }
 }
 
@@ -150,7 +182,7 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
   function handleStageError(stage, message, err) {
     console.warn(`[pipeline] Stage "${stage}" failed:`, err.message)
     setArtworkError(imageUrl, stage, message)
-    makeFallbackResult(artifacts)
+    makeFallbackResult(artifacts, stage, message)
   }
 
   // Outer safety net — catches anything that escapes per-stage handling
@@ -175,16 +207,28 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       return artifacts
     }
 
-    // ── ONNX Worker Creation ──────────────────────────────────────
+    // ── Runtime Self-Check ────────────────────────────────────
+    selfCheck().then(checkResult => {
+      artifacts.debug = artifacts.debug || {}
+      artifacts.debug.runtimeCheck = checkResult
+      console.log('[pipeline] Runtime check completed:', checkResult.recommended)
+    }).catch(err => {
+      console.warn('[pipeline] Runtime self-check failed:', err.message)
+    })
+
+    // ── ONNX Worker Singleton ─────────────────────────────────────
     try {
       abortIfRequested(signal)
-      report('init', '创建推理引擎…', 12)
-      worker = createWorker()
-      console.log('[pipeline] ONNX worker created')
+      setPipelineStatus('loading-model', '初始化推理引擎…')
+      report('init', '初始化推理引擎…', 12)
+      worker = await getWorker()
+      console.log('[pipeline] ONNX worker ready (singleton)')
+      setPipelineStatus('ready', '')
     } catch (err) {
       if (err.name === 'AbortError') throw err
-      handleStageError('init', STAGE_ERROR_MESSAGES['init'], err)
-      report('error', STAGE_ERROR_MESSAGES['init'], 0)
+      setPipelineStatus('error', err.message)
+      handleStageError('init', STAGE_ERROR_MESSAGES.init, err)
+      report('error', STAGE_ERROR_MESSAGES.init, 0)
       return artifacts
     }
 
@@ -210,8 +254,8 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       )
     } catch (err) {
       if (err.name === 'AbortError') throw err
-      handleStageError('detect', STAGE_ERROR_MESSAGES['detect'], err)
-      report('error', STAGE_ERROR_MESSAGES['detect'], 0)
+      handleStageError('detect', STAGE_ERROR_MESSAGES.detect, err)
+      report('error', STAGE_ERROR_MESSAGES.detect, 0)
       return artifacts
     }
 
@@ -241,8 +285,8 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       report('ocr', `文字识别完成 (${recognizedCount} 项)`, 50)
     } catch (err) {
       if (err.name === 'AbortError') throw err
-      handleStageError('ocr', STAGE_ERROR_MESSAGES['ocr'], err)
-      report('error', STAGE_ERROR_MESSAGES['ocr'], 0)
+      handleStageError('ocr', STAGE_ERROR_MESSAGES.ocr, err)
+      report('error', STAGE_ERROR_MESSAGES.ocr, 0)
       return artifacts
     }
 
@@ -264,7 +308,7 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       report('merge', `文本合并完成 (${sortedRegions.length} 组)`, 60)
     } catch (err) {
       // Merge/sort is non-fatal: if it fails, fall back to unsorted OCR regions
-      console.warn(`[pipeline] Merge+sort failed, using raw OCR regions:`, err.message)
+      console.warn('[pipeline] Merge+sort failed, using raw OCR regions:', err.message)
       sortedRegions = stageRegions
     }
 
@@ -280,20 +324,20 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       const parallelStart = performance.now()
       report('translate', stageLabel, 65)
 
-      const translatePromise = translateRegions(sortedRegions, config, (p) => {
+      const translatePromise = translateRegions(sortedRegions, config, p => {
         onProgress?.(p)
       })
-        .then((result) => {
+        .then(result => {
           translatedRegions = result
           return result
         })
-        .catch((err) => {
+        .catch(err => {
           if (err.name === 'AbortError') throw err
-          console.warn(`[pipeline] Translation failed:`, err.message)
-          setArtworkError(imageUrl, 'translate', STAGE_ERROR_MESSAGES['translate'])
+          console.warn('[pipeline] Translation failed:', err.message)
+          setArtworkError(imageUrl, 'translate', STAGE_ERROR_MESSAGES.translate)
           translationFailed = true
           // Keep original text instead of translated
-          translatedRegions = sortedRegions.map((r) => ({
+          translatedRegions = sortedRegions.map(r => ({
             ...r,
             translatedText: r.sourceText || '',
           }))
@@ -307,7 +351,7 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
           maskCanvas = createMaskFromRegions(sortedRegions, w, h)
           return maskCanvas
         } catch (err) {
-          console.warn(`[pipeline] Mask creation failed:`, err.message)
+          console.warn('[pipeline] Mask creation failed:', err.message)
           maskFailed = true
           maskCanvas = null
           return null
@@ -321,7 +365,7 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
 
       stageTiming('translate', stageLabel, parallelStart)
       if (translationFailed) {
-        report('error', STAGE_ERROR_MESSAGES['translate'], 75)
+        report('error', STAGE_ERROR_MESSAGES.translate, 75)
       } else {
         console.log(`[pipeline] Translation completed (${translatedRegions.filter(r => r.translatedText).length} regions)`)
         report('translate', '翻译完成', 80)
@@ -338,7 +382,7 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
       report('inpaint', stageLabel, 85)
 
       if (!maskFailed && maskCanvas && hasMaskContent(maskCanvas)) {
-        inpaintedCanvas = await runInpaint(artifacts.originalCanvas, maskCanvas, worker)
+        inpaintedCanvas = await runInpaint(artifacts.originalCanvas, maskCanvas, worker, { regions: sortedRegions })
         artifacts.inpaintedCanvas = inpaintedCanvas
         console.log('[pipeline] Inpainting completed')
       } else {
@@ -350,11 +394,11 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
     } catch (err) {
       if (err.name === 'AbortError') throw err
       // Inpainting failure is non-fatal: typeset on original image
-      console.warn(`[pipeline] Inpainting failed, typesetting on original:`, err.message)
-      setArtworkError(imageUrl, 'inpaint', STAGE_ERROR_MESSAGES['inpaint'])
+      console.warn('[pipeline] Inpainting failed, typesetting on original:', err.message)
+      setArtworkError(imageUrl, 'inpaint', STAGE_ERROR_MESSAGES.inpaint)
       inpaintedCanvas = null
       artifacts.inpaintedCanvas = null
-      report('inpaint', STAGE_ERROR_MESSAGES['inpaint'] + '，使用原图', 90)
+      report('inpaint', STAGE_ERROR_MESSAGES.inpaint + '，使用原图', 90)
     }
 
     // ── Stage 6: Typesetting ─────────────────────────────────────
@@ -395,11 +439,11 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
     } catch (err) {
       if (err.name === 'AbortError') throw err
       // Typesetting failure: fall back to image without text overlay
-      console.warn(`[pipeline] Typesetting failed entirely, returning cleaned image:`, err.message)
-      setArtworkError(imageUrl, 'typeset', STAGE_ERROR_MESSAGES['typeset'])
+      console.warn('[pipeline] Typesetting failed entirely, returning cleaned image:', err.message)
+      setArtworkError(imageUrl, 'typeset', STAGE_ERROR_MESSAGES.typeset)
       const baseCanvas = inpaintedCanvas || artifacts.originalCanvas
       artifacts.resultCanvas = copyCanvas(baseCanvas)
-      report('typeset', STAGE_ERROR_MESSAGES['typeset'], 100)
+      report('typeset', STAGE_ERROR_MESSAGES.typeset, 100)
     }
   } catch (err) {
     if (err.name === 'AbortError') {
@@ -414,14 +458,8 @@ export async function runPipeline(imageUrl, config, onProgress, signal) {
     makeFallbackResult(artifacts)
     report('error', `处理失败: ${err.message}`, 0)
   } finally {
-    if (worker) {
-      try {
-        await disposeWorker(worker)
-        console.log('[pipeline] Worker disposed')
-      } catch (e) {
-        console.log('[pipeline] Worker dispose error:', e.message)
-      }
-    }
+    // Reset idle timer — worker stays alive, models may be released later
+    resetIdleTimer()
   }
 
   return artifacts

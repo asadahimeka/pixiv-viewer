@@ -3,7 +3,7 @@
  * Handles width-bucket batching, preprocessing, inference, decoding, and post-filtering.
  */
 
-import { runInference, loadModel } from '../onnx/index.js'
+import { runInference, loadModel, getModelSession } from '../onnx/index.js'
 import { getModelUrl, getModel } from '../onnx/modelRegistry.js'
 import { buildPaddleOcrInput } from './ocrPreprocess.js'
 import { loadCharset, decodePaddleCtc, ocrPostFilter } from './ocrDecode.js'
@@ -20,7 +20,7 @@ function bucketByWidth(regions) {
 
   for (const key of bucketKeys) buckets.set(key, [])
 
-  const getBucketKey = (w) => {
+  const getBucketKey = w => {
     if (w <= 48) return '0-48'
     if (w <= 64) return '48-64'
     if (w <= 96) return '64-96'
@@ -54,7 +54,7 @@ export async function runOcr(image, regions, worker) {
   if (!regions || regions.length === 0) return []
 
   const modelUrl = await getModelUrl('paddleocr_v6_medium_rec')
-  await loadModel(worker, modelUrl)
+  await getModelSession('paddleocr_v6_medium_rec', modelUrl)
 
   const modelConfig = await getModel('paddleocr_v6_medium_rec')
   const dictUrl = modelConfig.dictUrl
@@ -68,6 +68,10 @@ export async function runOcr(image, regions, worker) {
   for (const [, bucket] of buckets) {
     if (bucket.length === 0) continue
 
+    // Collect all valid preprocessed inputs in this bucket
+    const batchInputs = []
+    let maxW = 0
+
     for (const { region, index } of bucket) {
       try {
         const input = buildPaddleOcrInput(image, region.box)
@@ -75,30 +79,66 @@ export async function runOcr(image, regions, worker) {
           allResults[index] = null
           continue
         }
-
-        const outputs = await runInference(worker, { input: input.tensor })
-
-        const outputName = Object.keys(outputs)[0]
-        const output = outputs[outputName]
-
-        const dims = output.dims
-        const timesteps = dims[1] || 1
-        const numClasses = dims[2] || output.data.length / timesteps
-
-        const { text, confidence } = decodePaddleCtc(
-          output.data,
-          timesteps,
-          numClasses,
-          charset
-        )
-
-        console.log(`[ocr] Region ${index} (w=${Math.round(region.box.width)}): "${text}" (conf=${confidence.toFixed(3)})`)
-
-        allResults[index] = { region, text, confidence, index }
+        // input: { tensor: { data: Float32Array, dims: [1, 3, 48, W] }, width: W }
+        batchInputs.push({ data: input.tensor.data, width: input.width, index, region })
+        if (input.width > maxW) maxW = input.width
       } catch (err) {
-        console.log(`[ocr] Region ${index} failed:`, err.message)
+        console.debug(`[ocr] Region ${index} failed:`, err.message)
         allResults[index] = null
       }
+    }
+
+    if (batchInputs.length === 0) continue
+
+    // Stack into batch tensor [N, 3, 48, maxW], padding narrower regions
+    const N = batchInputs.length
+    const C = 3
+    const H = 48 // PP-OCRv6 fixed input height
+    const batchData = new Float32Array(N * C * H * maxW)
+
+    for (let i = 0; i < N; i++) {
+      const { data, width } = batchInputs[i]
+      if (width === maxW) {
+        batchData.set(data, i * C * H * maxW)
+      } else {
+        // Pad to maxW: copy row by row within each channel
+        for (let c = 0; c < C; c++) {
+          for (let h = 0; h < H; h++) {
+            const srcOff = c * H * width + h * width
+            const dstOff = i * C * H * maxW + c * H * maxW + h * maxW
+            batchData.set(data.subarray(srcOff, srcOff + width), dstOff)
+          }
+        }
+      }
+    }
+
+    // Single batch inference call
+    const outputs = await runInference(worker, {
+      input: { data: batchData, dims: [N, C, H, maxW], type: 'float32' },
+    })
+
+    const outputName = Object.keys(outputs)[0]
+    const output = outputs[outputName]
+    const dims = output.dims
+    const timesteps = dims[1] || 1
+    const numClasses = dims[2] || output.data.length / (N * timesteps)
+    const outputStride = timesteps * numClasses
+
+    // Split batch output and decode each region
+    for (let i = 0; i < N; i++) {
+      const { index, region } = batchInputs[i]
+      const outputSlice = output.data.subarray(i * outputStride, (i + 1) * outputStride)
+
+      const { text, confidence } = decodePaddleCtc(
+        outputSlice,
+        timesteps,
+        numClasses,
+        charset
+      )
+
+      console.debug(`[ocr] Region ${index} (w=${Math.round(region.box.width)}): "${text}" (conf=${confidence.toFixed(3)})`)
+
+      allResults[index] = { region, text, confidence, index }
     }
   }
 

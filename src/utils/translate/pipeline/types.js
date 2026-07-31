@@ -25,7 +25,8 @@
 /**
  * @typedef {Object} PipelineConfig
  * @property {'translate'|'erase'|'original'} processMode - Processing mode
- * @property {string} targetLang - Target language code (e.g., 'chi')
+ * @property {string} [sourceLang='ja'] - Source language code (e.g., 'ja', 'en', 'ko')
+ * @property {string} [targetLang='zh-CN'] - Target language code (e.g., 'zh-CN', 'en', 'ja')
  * @property {'paddleocr'} ocrEngine - OCR engine to use
  * @property {Object} providers - LLM provider config
  * @property {string} providers.name - Provider name (e.g., 'siliconcloud', 'deepseek')
@@ -55,6 +56,7 @@
  * @property {HTMLCanvasElement} [inpaintedCanvas] - Inpainted canvas (text removed, if inpaint stage ran)
  * @property {HTMLCanvasElement} resultCanvas - Final canvas with translated text rendered over original/inpainted image
  * @property {Array<PipelineProgress>} progressLog - Full progress log of the pipeline run
+ * @property {{ stage: string, message: string }} [error] - Error info if a pipeline stage failed (sets fallback result)
  * @property {Object} [debug] - Debug information (model versions, timing breakdown)
  */
 
@@ -97,5 +99,6 @@ export function createPipelineArtifacts() {
     resultCanvas: null,
     progressLog: [],
     debug: null,
+    error: null,
   }
 }

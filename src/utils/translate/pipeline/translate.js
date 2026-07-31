@@ -30,6 +30,10 @@ export async function translateRegions(regions, config, onProgress) {
 
   const providerConfig = config.providers || {}
 
+  // Add sourceLang/targetLang from pipeline config with defaults
+  providerConfig.sourceLang = config.sourceLang || 'ja'
+  providerConfig.targetLang = config.targetLang || 'zh-CN'
+
   if (!providerConfig.name) {
     console.warn('translate: No provider configured, skipping translation')
     return regions.map(r => ({ ...r }))

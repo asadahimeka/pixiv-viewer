@@ -3,9 +3,10 @@
  *
  * Takes original image and a mask marking text regions,
  * runs ONNX inference to fill text areas with background-like content.
+ * Supports region-crop inpainting for better quality on localized text.
  */
 
-import { runInference, loadModel } from '../onnx/index.js'
+import { runInference, loadModel, getModelSession } from '../onnx/index.js'
 import { getModelUrl } from '../onnx/modelRegistry.js'
 
 /**
@@ -126,16 +127,17 @@ function compositeResult(originalCanvas, maskCanvas, resultCanvas) {
 }
 
 /**
- * Run inpainting using aot_inpaint_512.onnx.
- *
- * @param {HTMLCanvasElement} originalCanvas - Source image canvas
- * @param {HTMLCanvasElement} maskCanvas - Binary mask (white = text to remove)
- * @param {Worker} worker - ONNX inference worker
- * @returns {Promise<HTMLCanvasElement>} Inpainted canvas (same dimensions as original)
+ * Full-image inpainting: resize entire original + mask to model size,
+ * run inference, then composite back (original fallback behavior).
+ * @param {HTMLCanvasElement} originalCanvas
+ * @param {HTMLCanvasElement} maskCanvas
+ * @param {Worker} worker
+ * @param {number} modelSize
+ * @returns {Promise<HTMLCanvasElement>}
  */
-export async function runInpaint(originalCanvas, maskCanvas, worker) {
+async function fullImageInpaint(originalCanvas, maskCanvas, worker, modelSize) {
   if (isMaskEmpty(maskCanvas)) {
-    console.log('[inpaint] Mask is empty — no inpainting needed')
+    console.debug('[inpaint] Mask is empty — no inpainting needed')
     const result = document.createElement('canvas')
     result.width = originalCanvas.width
     result.height = originalCanvas.height
@@ -145,12 +147,11 @@ export async function runInpaint(originalCanvas, maskCanvas, worker) {
 
   const origWidth = originalCanvas.width
   const origHeight = originalCanvas.height
-  const modelSize = 512
 
   const modelUrl = await getModelUrl('inpaint')
-  await loadModel(worker, modelUrl)
+  await getModelSession('inpaint', modelUrl)
 
-  const resizeCanvas = (source) => {
+  const resizeCanvas = source => {
     const c = document.createElement('canvas')
     c.width = modelSize
     c.height = modelSize
@@ -193,7 +194,7 @@ export async function runInpaint(originalCanvas, maskCanvas, worker) {
   const outputImageData = denormalizeOutput(outputData, modelSize, modelSize)
 
   if (!isValidOutput(outputImageData)) {
-    console.log('[inpaint] Model produced invalid (all-dark) output — returning original')
+    console.debug('[inpaint] Model produced invalid (all-dark) output — returning original')
     const result = document.createElement('canvas')
     result.width = origWidth
     result.height = origHeight
@@ -207,4 +208,147 @@ export async function runInpaint(originalCanvas, maskCanvas, worker) {
   result512.getContext('2d').putImageData(outputImageData, 0, 0)
 
   return compositeResult(originalCanvas, maskCanvas, result512)
+}
+
+/**
+ * Region-crop inpainting: for each text region, crop + pad + resize to 512×512,
+ * inpaint, resize back, and composite onto a growing result canvas.
+ * Regions are processed sequentially so later ones overlay earlier.
+ * @param {HTMLCanvasElement} originalCanvas
+ * @param {HTMLCanvasElement} maskCanvas
+ * @param {Worker} worker
+ * @param {Array} regions - Text regions with box { x, y, width, height }
+ * @param {number} modelSize
+ * @returns {Promise<HTMLCanvasElement>}
+ */
+async function regionCropInpaint(originalCanvas, maskCanvas, worker, regions, modelSize) {
+  const modelUrl = await getModelUrl('inpaint')
+  await getModelSession('inpaint', modelUrl)
+
+  const origWidth = originalCanvas.width
+  const origHeight = originalCanvas.height
+
+  // Start with a copy of the original as the base
+  const baseCanvas = document.createElement('canvas')
+  baseCanvas.width = origWidth
+  baseCanvas.height = origHeight
+  const baseCtx = baseCanvas.getContext('2d')
+  baseCtx.drawImage(originalCanvas, 0, 0)
+
+  for (const region of regions) {
+    const { box } = region
+    const padding = Math.max(32, Math.round(box.width * 0.2))
+
+    // Calculate crop region (clamp to image bounds)
+    const cropX = Math.max(0, Math.round(box.x - padding))
+    const cropY = Math.max(0, Math.round(box.y - padding))
+    const cropW = Math.min(origWidth - cropX, Math.round(box.width + padding * 2))
+    const cropH = Math.min(origHeight - cropY, Math.round(box.height + padding * 2))
+
+    if (cropW <= 0 || cropH <= 0) continue
+
+    // Extract crop from original and mask
+    const cropCanvas = document.createElement('canvas')
+    cropCanvas.width = modelSize
+    cropCanvas.height = modelSize
+    const cropCtx = cropCanvas.getContext('2d')
+    cropCtx.drawImage(originalCanvas, cropX, cropY, cropW, cropH, 0, 0, modelSize, modelSize)
+
+    const maskCropCanvas = document.createElement('canvas')
+    maskCropCanvas.width = modelSize
+    maskCropCanvas.height = modelSize
+    const maskCropCtx = maskCropCanvas.getContext('2d')
+    maskCropCtx.drawImage(maskCanvas, cropX, cropY, cropW, cropH, 0, 0, modelSize, modelSize)
+
+    // Prepare tensors
+    const cropImageData = cropCtx.getImageData(0, 0, modelSize, modelSize)
+    const maskImageData = maskCropCtx.getImageData(0, 0, modelSize, modelSize)
+
+    const imageTensor = normalizeImage(cropImageData, modelSize, modelSize)
+    const maskTensor = normalizeMask(maskImageData, modelSize, modelSize)
+
+    const feeds = {
+      image: { data: imageTensor, dims: [1, 3, modelSize, modelSize], type: 'float32' },
+      mask: { data: maskTensor, dims: [1, 1, modelSize, modelSize], type: 'float32' },
+    }
+
+    const outputs = await runInference(worker, feeds)
+
+    // Find output tensor
+    let outputData = null
+    for (const tensor of Object.values(outputs)) {
+      if (tensor.dims && tensor.dims.length === 4 && tensor.dims[1] === 3 && tensor.dims[2] === modelSize) {
+        outputData = tensor.data
+        break
+      }
+    }
+    if (!outputData) {
+      const firstOutput = Object.values(outputs)[0]
+      outputData = firstOutput?.data
+    }
+    if (!outputData) continue
+
+    const outputImageData = denormalizeOutput(outputData, modelSize, modelSize)
+
+    if (!isValidOutput(outputImageData)) continue
+
+    // Resize inpainted crop back to original crop size
+    const inpaintCropCanvas = document.createElement('canvas')
+    inpaintCropCanvas.width = cropW
+    inpaintCropCanvas.height = cropH
+    const inpaintCropCtx = inpaintCropCanvas.getContext('2d')
+    // Draw the 512×512 model output, resized to crop dimensions
+    const tempCanvas = document.createElement('canvas')
+    tempCanvas.width = modelSize
+    tempCanvas.height = modelSize
+    tempCanvas.getContext('2d').putImageData(outputImageData, 0, 0)
+    inpaintCropCtx.drawImage(tempCanvas, 0, 0, modelSize, modelSize, 0, 0, cropW, cropH)
+
+    // Composite the inpainted crop onto the base
+    baseCtx.save()
+    baseCtx.globalCompositeOperation = 'source-over'
+    baseCtx.drawImage(inpaintCropCanvas, cropX, cropY)
+    baseCtx.restore()
+  }
+
+  return baseCanvas
+}
+
+/**
+ * Run inpainting using aot_inpaint_512.onnx.
+ *
+ * Supports region-crop mode for better quality on localized text regions,
+ * with automatic fallback to full-image inpainting when regions are too
+ * numerous or cover too much of the image.
+ *
+ * @param {HTMLCanvasElement} originalCanvas - Source image canvas
+ * @param {HTMLCanvasElement} maskCanvas - Binary mask (white = text to remove)
+ * @param {Worker} worker - ONNX inference worker
+ * @param {object} [options] - Optional settings
+ * @param {Array} [options.regions=[]] - Text regions for crop-inpainting
+ * @param {boolean} [options.useRegionInpainting=true] - Enable region-crop mode
+ * @returns {Promise<HTMLCanvasElement>} Inpainted canvas (same dimensions as original)
+ */
+export async function runInpaint(originalCanvas, maskCanvas, worker, options = {}) {
+  const {
+    regions = [],
+    useRegionInpainting = true,
+  } = options
+
+  const origWidth = originalCanvas.width
+  const origHeight = originalCanvas.height
+  const modelSize = 512
+
+  // Determine if we should use region-crop or full-image
+  const totalRegionArea = regions.reduce((sum, r) => sum + r.box.width * r.box.height, 0)
+  const totalImageArea = origWidth * origHeight
+  const useRegionMode = useRegionInpainting &&
+    regions.length <= 50 &&
+    totalRegionArea / totalImageArea < 0.5
+
+  if (useRegionMode && regions.length > 0) {
+    return await regionCropInpaint(originalCanvas, maskCanvas, worker, regions, modelSize)
+  } else {
+    return await fullImageInpaint(originalCanvas, maskCanvas, worker, modelSize)
+  }
 }
