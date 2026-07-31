@@ -5,6 +5,8 @@
  * All font sizes are in pixels; font strings use the CSS font shorthand.
  */
 
+import { adjustLineBreakForKinsoku } from './typesetKinsoku.js'
+
 /** Default font stack for CJK text rendering (system fonts only) */
 export const FONT_STACK = [
   '"Noto Sans SC"',
@@ -35,7 +37,7 @@ function isCJK(char) {
     (code >= 0x4E00 && code <= 0x9FFF) || // CJK Unified Ideographs
     (code >= 0xF900 && code <= 0xFAFF) || // CJK Compatibility
     (code >= 0xAC00 && code <= 0xD7AF) || // Hangul Syllables
-    (code >= 0xFF00 && code <= 0xFFEF)    // Fullwidth Forms
+    (code >= 0xFF00 && code <= 0xFFEF) // Fullwidth Forms
   )
 }
 
@@ -149,5 +151,56 @@ export function fitTextToWidth(text, maxWidth, font) {
     lines.push(currentLine)
   }
 
-  return lines
+  // Apply kinsoku adjustments — fix prohibited line-start/end characters
+  return adjustLineBreakForKinsoku(lines, text => measureTextWidth(text, font), maxWidth)
+}
+
+// Binary search font fitting adapted from ShinobuTranslator src/pipeline/typeset/renderHorizontal.ts
+/**
+ * Binary search for the largest font size that fits text in the given width and height.
+ *
+ * Measures text width at each candidate size, splits into lines using
+ * the existing fitTextToWidth, and checks total height against maxHeight.
+ *
+ * @param {string} text - Text to measure
+ * @param {number} maxWidth - Maximum line width in pixels
+ * @param {number} maxHeight - Maximum total text height in pixels
+ * @param {string} fontFamily - Font family string
+ * @param {Object} [options]
+ * @param {number} [options.minSize=6] - Minimum font size to try
+ * @param {number} [options.maxSize=96] - Maximum font size to try
+ * @param {number} [options.lineHeight=1.2] - Line height multiplier
+ * @param {number} [options.precision=1] - Precision in pixels (stop when range < this)
+ * @returns {number} Best font size in pixels
+ */
+export function binarySearchFontSize(text, maxWidth, maxHeight, fontFamily, options = {}) {
+  const {
+    minSize = 6,
+    maxSize = 96,
+    lineHeight = 1.2,
+    precision = 1,
+  } = options
+
+  let low = minSize
+  let high = maxSize
+  let best = minSize
+
+  while (high - low > precision) {
+    const mid = Math.floor((low + high) / 2)
+    const font = buildFontString(mid, fontFamily)
+    const lines = fitTextToWidth(text, maxWidth, font)
+    if (lines.length === 0) {
+      high = mid
+      continue
+    }
+    const totalHeight = lines.length * mid * lineHeight
+    if (totalHeight <= maxHeight) {
+      best = mid
+      low = mid
+    } else {
+      high = mid
+    }
+  }
+
+  return best
 }

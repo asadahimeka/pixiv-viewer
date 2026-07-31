@@ -6,7 +6,7 @@
  * onto manga images.
  */
 
-import { calcFontSize, buildFontString, fitTextToWidth, measureTextWidth } from './typesetLib.js'
+import { calcFontSize, buildFontString, fitTextToWidth, measureTextWidth, binarySearchFontSize } from './typesetLib.js'
 
 /**
  * Default gap between vertical columns in pixels
@@ -28,7 +28,6 @@ const MIN_FONT_SIZE = 6
  * @param {import('./types').TextRegion} region
  * @param {string} translatedText
  * @param {Object} [options]
- * @param {string} [options.color] - Text color
  * @param {number} [options.fontSize] - Font size in px
  * @param {number} [options.columnGap] - Gap between columns in px (default: 4)
  */
@@ -36,10 +35,11 @@ export function drawTypesetVertical(ctx, region, translatedText, options = {}) {
   if (!translatedText || translatedText.length === 0) return
 
   const {
-    color = '#FFFFFF',
     fontSize: explicitFontSize,
     columnGap = DEFAULT_COLUMN_GAP,
   } = options
+
+  const { textColor: resolvedColor, bgColor: resolvedBg } = resolveTextColors(region)
 
   const { box } = region
   const padding = 4
@@ -67,11 +67,25 @@ export function drawTypesetVertical(ctx, region, translatedText, options = {}) {
   if (fontSize < MIN_FONT_SIZE) return
 
   const font = buildFontString(fontSize)
+
+  // Draw background for readability
+  if (resolvedBg) {
+    ctx.save()
+    ctx.fillStyle = resolvedBg
+    ctx.fillRect(box.x, box.y, box.width, box.height)
+    ctx.restore()
+  }
+
   ctx.save()
   ctx.font = font
-  ctx.fillStyle = color
+  ctx.fillStyle = resolvedColor
   ctx.textBaseline = 'top'
   ctx.textAlign = 'center'
+
+  // Setup stroke (outline) for readability — drawn before fill
+  ctx.strokeStyle = resolvedBg && isColorDark(resolvedBg) ? '#000000' : '#FFFFFF'
+  ctx.lineWidth = fontSize * 0.07
+  ctx.lineJoin = 'round'
 
   // Calculate layout
   const charHeight = fontSize * 1.1 // line height with slight spacing
@@ -83,7 +97,6 @@ export function drawTypesetVertical(ctx, region, translatedText, options = {}) {
 
   const columnWidth = fontSize + columnGap
   const totalColumns = Math.ceil(translatedText.length / charsPerColumn)
-  const totalWidth = totalColumns * columnWidth
 
   // Start position: rightmost column (right-to-left progression)
   // Center the text block horizontally within the region
@@ -101,6 +114,7 @@ export function drawTypesetVertical(ctx, region, translatedText, options = {}) {
     for (let row = 0; row < colText.length; row++) {
       const char = colText[row]
       const charY = startY + row * charHeight
+      ctx.strokeText(char, colX, charY)
       ctx.fillText(char, colX, charY)
     }
   }
@@ -121,7 +135,6 @@ export function drawTypesetVertical(ctx, region, translatedText, options = {}) {
  * @param {string} [options.fontFamily] - Font family override
  * @param {'left'|'center'} [options.align] - Text alignment (default: 'center')
  * @param {number} [options.fontSize] - Explicit font size (auto-calc if not set)
- * @param {string} [options.color] - Text color (default: '#FFFFFF')
  * @param {number} [options.lineHeight] - Line height multiplier (default: 1.2)
  * @param {number} [options.padding] - Padding inside region (default: 2)
  */
@@ -132,10 +145,11 @@ export function drawTypesetHorizontal(ctx, region, translatedText, options = {})
     fontFamily,
     align = 'center',
     fontSize: explicitFontSize,
-    color = '#FFFFFF',
     lineHeight = 1.2,
     padding = 2,
   } = options
+
+  const { textColor: resolvedColor, bgColor: resolvedBg } = resolveTextColors(region)
 
   const { box } = region
   const contentWidth = box.width - padding * 2
@@ -156,41 +170,43 @@ export function drawTypesetHorizontal(ctx, region, translatedText, options = {})
     currentFontSize = calcFontSize(contentHeight, estimatedLines)
   }
 
-  // ── Fit text with size reduction tries ──────────────────────
-
-  let lines = []
-  const maxAttempts = 4 // initial + 3 reductions
-  for (let attempt = 0; attempt < maxAttempts; attempt++) {
-    const font = buildFontString(currentFontSize, fontFamily)
-    lines = fitTextToWidth(translatedText, contentWidth, font)
-
-    // Check if lines fit vertically
-    const totalTextHeight = lines.length * currentFontSize * lineHeight
-    if (totalTextHeight <= contentHeight || currentFontSize <= MIN_FONT_SIZE) break
-
-    // Reduce font size by 10% and retry
-    currentFontSize = Math.max(MIN_FONT_SIZE, Math.floor(currentFontSize * 0.9))
-  }
+  // ── Fit text with binary search font sizing ─────────────────
+  currentFontSize = binarySearchFontSize(
+    translatedText,
+    contentWidth,
+    contentHeight,
+    fontFamily,
+    { minSize: MIN_FONT_SIZE, maxSize: currentFontSize, lineHeight }
+  )
+  const font = buildFontString(currentFontSize, fontFamily)
+  const lines = fitTextToWidth(translatedText, contentWidth, font)
 
   if (currentFontSize < MIN_FONT_SIZE || lines.length === 0) return
 
   // ── Render ──────────────────────────────────────────────────
 
-  const font = buildFontString(currentFontSize, fontFamily)
   ctx.save()
   ctx.font = font
   ctx.textBaseline = 'top'
 
-  // Draw semi-transparent dark background for readability
-  ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
-  ctx.fillRect(box.x, box.y, box.width, box.height)
+  // Draw background for readability
+  if (resolvedBg) {
+    ctx.fillStyle = resolvedBg
+    ctx.fillRect(box.x, box.y, box.width, box.height)
+  }
 
   // Calculate vertical start position (centered)
   const totalTextHeight = lines.length * currentFontSize * lineHeight
   const startY = box.y + padding + (contentHeight - totalTextHeight) / 2
 
   // Draw each line
-  ctx.fillStyle = color
+  ctx.fillStyle = resolvedColor
+
+  // Setup stroke (outline) for readability — drawn before fill
+  ctx.strokeStyle = resolvedBg && isColorDark(resolvedBg) ? '#000000' : '#FFFFFF'
+  ctx.lineWidth = currentFontSize * 0.07
+  ctx.lineJoin = 'round'
+
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
     let x
@@ -202,75 +218,11 @@ export function drawTypesetHorizontal(ctx, region, translatedText, options = {})
       x = box.x + padding + (contentWidth - lineWidth) / 2
     }
     const y = startY + i * currentFontSize * lineHeight
+    ctx.strokeText(line, x, y)
     ctx.fillText(line, x, y)
   }
 
   ctx.restore()
-}
-
-/**
- * Sort text regions in manga reading order.
- *
- * Manga reading order: right-to-left (primary), top-to-bottom (secondary).
- * Handles both single-page and double-page spread layouts.
- *
- * @param {Array<import('./types').TextRegion>} regions
- * @param {number} imageWidth - Image width in px
- * @param {number} imageHeight - Image height in px
- * @returns {Array<import('./types').TextRegion>} Sorted regions
- */
-export function sortRegionsForRender(regions, imageWidth, imageHeight) {
-  if (!regions || regions.length === 0) return []
-  if (regions.length === 1) return [...regions]
-
-  const sorted = [...regions]
-
-  // Determine if this is a double-page spread (width significantly > height)
-  const isDoublePage = imageWidth > imageHeight * 1.3
-
-  if (isDoublePage) {
-    // Split into left and right halves
-    const midX = imageWidth / 2
-    const rightHalf = sorted.filter(r => r.box.x + r.box.width / 2 >= midX)
-    const leftHalf = sorted.filter(r => r.box.x + r.box.width / 2 < midX)
-
-    // Right page: right-to-left, top-to-bottom
-    rightHalf.sort((a, b) => {
-      const aCenterX = a.box.x + a.box.width / 2
-      const bCenterX = b.box.x + b.box.width / 2
-      if (Math.abs(aCenterX - bCenterX) > 20) {
-        return bCenterX - aCenterX // right-to-left
-      }
-      return a.box.y - b.box.y // top-to-bottom
-    })
-
-    // Left page: right-to-left, top-to-bottom
-    leftHalf.sort((a, b) => {
-      const aCenterX = a.box.x + a.box.width / 2
-      const bCenterX = b.box.x + b.box.width / 2
-      if (Math.abs(aCenterX - bCenterX) > 20) {
-        return bCenterX - aCenterX // right-to-left
-      }
-      return a.box.y - b.box.y // top-to-bottom
-    })
-
-    // Right page comes first in manga reading order
-    return [...rightHalf, ...leftHalf]
-  }
-
-  // Single page: sort by X descending (right-to-left), then Y ascending (top-to-bottom)
-  sorted.sort((a, b) => {
-    const aCenterX = a.box.x + a.box.width / 2
-    const bCenterX = b.box.x + b.box.width / 2
-
-    // Group regions in same "column" (similar X center within 30px)
-    if (Math.abs(aCenterX - bCenterX) > 30) {
-      return bCenterX - aCenterX // right-to-left
-    }
-    return a.box.y - b.box.y // top-to-bottom
-  })
-
-  return sorted
 }
 
 /**
@@ -290,7 +242,7 @@ export function resolveTextColors(region) {
     const isBgDark = isColorDark(bgColor)
     return {
       textColor: isBgDark ? '#FFFFFF' : '#000000',
-      bgColor: bgColor,
+      bgColor,
     }
   }
 
@@ -306,7 +258,7 @@ export function resolveTextColors(region) {
     const isBgDark = isColorDark(bgColor)
     return {
       textColor: isBgDark ? '#FFFFFF' : '#000000',
-      bgColor: bgColor,
+      bgColor,
     }
   }
 
@@ -328,7 +280,7 @@ export function resolveTextColors(region) {
 function isColorDark(color) {
   if (!color) return true
 
-  let r = 0, g = 0, b = 0
+  let r = 0; let g = 0; let b = 0
 
   if (color.startsWith('#')) {
     const hex = color.slice(1)
