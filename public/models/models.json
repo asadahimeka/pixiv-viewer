@@ -14,7 +14,7 @@
     "inpaint": {
       "name": "inpaint",
       "task": "inpainting",
-      "url": "inpaint.onnx",
+      "url": "aot_inpaint_512.onnx",
       "input": "image",
       "runtime": ["webgpu", "wasm"],
       "baseUrl": "/models/"
@@ -22,7 +22,7 @@
     "paddleocr_v6_medium_rec": {
       "name": "paddleocr_v6_medium_rec",
       "task": "ocr",
-      "url": "paddleocr_v6_medium_rec.onnx",
+      "url": "PP-OCRv6_medium_rec.onnx",
       "input": "image",
       "runtime": ["webgpu", "wasm"],
       "dictUrl": "paddleocr_v6_dict.txt",

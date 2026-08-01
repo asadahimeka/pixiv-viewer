@@ -1,22 +1,30 @@
 /**
  * ONNX Model Downloader
  *
- * Downloads ONNX model files from the DonutShinobu/ShinobuTranslator
- * GitHub Releases into public/models/.
+ * Downloads ShinobuTranslator.zip from the DonutShinobu/ShinobuTranslator
+ * GitHub Releases, then extracts model files into public/models/.
+ *
+ * Shinobu does not publish individual .onnx assets — only a single zip
+ * containing the full dist/ bundle (models/ directory included). This
+ * script downloads that zip and extracts only the model files we need.
  *
  * Usage:
  *   node scripts/download-models.mjs
- *   VUE_APP_MODEL_RELEASE_TAG=v0.1.0 node scripts/download-models.mjs
+ *   VUE_APP_MODEL_RELEASE_TAG=v0.8.1 node scripts/download-models.mjs
+ *   node scripts/download-models.mjs --tag v0.8.1
  */
 
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { readFile, mkdir, unlink } from 'node:fs/promises'
 import { existsSync } from 'node:fs'
 import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { execSync } from 'node:child_process'
+import { tmpdir } from 'node:os'
 import { DEFAULT_REPO, formatBytes, sha256File } from './model-release-assets.mjs'
 
 const MODELS_DIR = resolve(dirname(fileURLToPath(import.meta.url)), '..', 'public', 'models')
 const MANIFEST_PATH = resolve(MODELS_DIR, 'models.json')
+const ZIP_NAME = 'ShinobuTranslator.zip'
 
 /**
  * Fetch the latest release tag from GitHub.
@@ -32,22 +40,35 @@ async function getLatestReleaseTag() {
 }
 
 /**
- * Download a single model file from GitHub Releases.
- * @param {string} filename - Name of the file to download
- * @param {string} tag - Git tag of the release
- * @returns {Promise<{data: Buffer, size: number}>}
+ * Download a URL to a local file.
+ * @param {string} url
+ * @param {string} destPath
+ * @returns {Promise<number>} bytes written
  */
-async function downloadModel(filename, tag) {
-  const url = `https://github.com/${DEFAULT_REPO}/releases/download/${tag}/${filename}`
+async function downloadFile(url, destPath) {
   console.log(`  URL: ${url}`)
-
   const res = await fetch(url)
   if (!res.ok) {
     throw new Error(`Download failed: ${res.status} ${res.statusText}`)
   }
-
+  const contentLength = res.headers.get('content-length')
+  if (contentLength) {
+    console.log(`  Size: ${formatBytes(Number(contentLength))}`)
+  }
   const buffer = Buffer.from(await res.arrayBuffer())
-  return { data: buffer, size: buffer.length }
+  await writeFileTmp(destPath, buffer)
+  return buffer.length
+}
+
+/**
+ * Like writeFile but uses the node:fs/promises version.
+ * @param {string} path
+ * @param {Buffer} data
+ * @returns {Promise<void>}
+ */
+async function writeFileTmp(path, data) {
+  const { writeFile } = await import('node:fs/promises')
+  await writeFile(path, data)
 }
 
 /**
@@ -73,6 +94,19 @@ async function readManifest() {
   return JSON.parse(raw)
 }
 
+/**
+ * Parse CLI --tag argument (in addition to env var).
+ * @returns {string|undefined}
+ */
+function parseCliTag() {
+  const argv = process.argv.slice(2)
+  const tagIdx = argv.indexOf('--tag')
+  if (tagIdx !== -1 && tagIdx + 1 < argv.length) {
+    return argv[tagIdx + 1]
+  }
+  return undefined
+}
+
 async function main() {
   console.log('📦 ONNX Model Downloader')
   console.log('─'.repeat(50))
@@ -91,10 +125,10 @@ async function main() {
     return
   }
 
-  // Resolve release tag
-  let tag = process.env.VUE_APP_MODEL_RELEASE_TAG
+  // Resolve release tag (env > CLI > latest)
+  let tag = process.env.VUE_APP_MODEL_RELEASE_TAG || parseCliTag()
   if (tag) {
-    console.log(`Tag from env: ${tag}`)
+    console.log(`Tag: ${tag}`)
   } else {
     console.log('Fetching latest release tag...')
     tag = await getLatestReleaseTag()
@@ -105,60 +139,129 @@ async function main() {
   // Ensure target directory exists
   await mkdir(MODELS_DIR, { recursive: true })
 
-  // Track results
-  const results = { success: 0, skipped: 0, failed: 0 }
-
-  // Download each model
+  // Collect all files we need from the zip (model .onnx + dict files)
+  // Zip internal paths are "models/<filename>"
+  const filesToExtract = []
   for (const [name, model] of entries) {
-    const filename = model.url.split('/').pop()
-    const destPath = resolve(MODELS_DIR, filename)
-    const sha256 = model.sha256 || null
+    filesToExtract.push({ name, filename: model.url, sha256: model.sha256 || null })
+    if (model.dictUrl) {
+      filesToExtract.push({ name, filename: model.dictUrl, sha256: null, isDict: true })
+    }
+  }
 
-    console.log(`[${results.success + results.skipped + results.failed + 1}/${entries.length}] ${name}`)
+  // Check if all files already exist and pass integrity check
+  let allUpToDate = true
+  let skipped = 0
+  for (const entry of filesToExtract) {
+    const destPath = resolve(MODELS_DIR, entry.filename)
 
-    // Skip if file exists and SHA-256 matches
-    if (existsSync(destPath) && sha256) {
+    if (existsSync(destPath) && entry.sha256) {
       const existingData = await readFile(destPath)
-      const match = await verifyIntegrity(existingData, sha256)
+      const match = await verifyIntegrity(existingData, entry.sha256)
       if (match) {
         const size = formatBytes(existingData.length)
-        console.log(`  ✓ Already up-to-date (${size})\n`)
-        results.skipped++
+        console.log(`[✓] ${entry.name}: ${entry.filename} — up-to-date (${size})`)
+        skipped++
         continue
       }
     }
+    allUpToDate = false
+  }
+
+  if (allUpToDate) {
+    console.log('\nAll models already up-to-date. Nothing to download.')
+    console.log('─'.repeat(50))
+    console.log('Summary:')
+    console.log('  Downloaded: 0')
+    console.log(`  Skipped:    ${skipped}`)
+    console.log('  Failed:     0')
+    return
+  }
+
+  // Download the release zip
+  const tmpSuffix = Date.now().toString(36)
+  const zipPath = resolve(tmpdir(), `${ZIP_NAME.replace('.zip', '')}-${tmpSuffix}.zip`)
+  const zipUrl = `https://github.com/${DEFAULT_REPO}/releases/download/${tag}/${ZIP_NAME}`
+
+  let zipDownloaded = false
+  try {
+    console.log('Downloading release zip...')
+    const zipSize = await downloadFile(zipUrl, zipPath)
+    console.log(`  ✓ Downloaded: ${formatBytes(zipSize)}\n`)
+    zipDownloaded = true
+
+    // Extract model files from the zip in a single unzip pass
+    console.log('Extracting model files...')
+    const zipPaths = filesToExtract.map(f => `models/${f.filename}`)
+    const quote = s => `"${s}"`
+    const unzipCmd = `unzip -j -o ${quote(zipPath)} ${zipPaths.map(quote).join(' ')} -d ${quote(MODELS_DIR)}`
 
     try {
-      const { data, size } = await downloadModel(filename, tag)
+      const output = execSync(unzipCmd, { encoding: 'utf-8', stdio: 'pipe' })
+      // Print extraction output (except the standard "Archive:" and "inflating:" noise)
+      const lines = output.split('\n').filter(l => l.trim() && !l.startsWith('Archive:') && !l.startsWith('  inflating:'))
+      if (lines.length > 0) {
+        console.log(lines.join('\n'))
+      }
+    } catch (err) {
+      // unzip returns non-zero when some files are missing from the archive
+      // but still successfully extracts what it finds — log and continue
+      if (err.stdout) {
+        const lines = err.stdout.split('\n').filter(l => l.trim() && !l.startsWith('Archive:') && !l.startsWith('  inflating:'))
+        if (lines.length > 0) {
+          console.log(lines.join('\n'))
+        }
+      }
+      if (err.stderr) {
+        console.error(`  ⚠ unzip: ${err.stderr.trim()}`)
+      }
+    }
+
+    // Verify each extracted file
+    let success = 0
+    let failed = 0
+
+    for (const entry of filesToExtract) {
+      const destPath = resolve(MODELS_DIR, entry.filename)
+
+      if (!existsSync(destPath)) {
+        console.error(`  ✗ ${entry.filename} — not found in zip`)
+        failed++
+        continue
+      }
+
+      const fileData = await readFile(destPath)
+      const size = formatBytes(fileData.length)
 
       // Verify SHA-256 if manifest provides it
-      if (sha256) {
-        const valid = await verifyIntegrity(data, sha256)
+      if (entry.sha256) {
+        const valid = await verifyIntegrity(fileData, entry.sha256)
         if (!valid) {
-          throw new Error('SHA-256 mismatch — file may be corrupted')
+          console.error(`  ✗ ${entry.filename} — SHA-256 mismatch`)
+          failed++
+          continue
         }
       }
 
-      await writeFile(destPath, data)
-      console.log(`  ✓ Downloaded (${formatBytes(size)})`)
-      results.success++
-    } catch (err) {
-      console.error(`  ✗ Failed: ${err.message}`)
-      results.failed++
+      console.log(`  ✓ ${entry.filename} (${size})`)
+      success++
     }
 
-    console.log('')
-  }
+    // Summary
+    console.log('\n─'.repeat(50))
+    console.log('Summary:')
+    console.log(`  Downloaded (extracted): ${success}`)
+    console.log(`  Skipped:    ${skipped}`)
+    console.log(`  Failed:     ${failed}`)
 
-  // Summary
-  console.log('─'.repeat(50))
-  console.log('Summary:')
-  console.log(`  Downloaded: ${results.success}`)
-  console.log(`  Skipped:    ${results.skipped}`)
-  console.log(`  Failed:     ${results.failed}`)
-
-  if (results.failed > 0) {
-    process.exit(1)
+    if (failed > 0) {
+      process.exit(1)
+    }
+  } finally {
+    // Clean up temp zip
+    if (zipDownloaded) {
+      try { await unlink(zipPath) } catch { /* best-effort */ }
+    }
   }
 }
 
