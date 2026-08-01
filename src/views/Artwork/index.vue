@@ -57,10 +57,12 @@
       :page-count="pageCount"
       :current-page="currentTransPage"
       :error-count="translateErrorCount"
+      :engine="translationEngine"
       @translate-current="handleTranslate(currentTransPage)"
       @translate-all="handleTranslateAll"
       @toggle-view="showTranslated = !showTranslated"
       @open-settings="showTranslateSettings = true"
+      @cancel-translate="handleCancelTranslate"
     />
     <van-popup
       v-model="showTranslateSettings"
@@ -123,7 +125,7 @@ import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation } from '@/utils/translate/manga'
-import { runPipeline, clearArtworkError } from '@/utils/translate/pipeline/index.js'
+import { shinobuRunPipeline } from '@/utils/translate'
 import PicTranslatePanel from './components/PicTranslatePanel.vue'
 import TranslateToolbar from './components/TranslateToolbar'
 import TranslateSettings from './components/TranslateSettings'
@@ -253,6 +255,9 @@ export default {
     },
     translationProvider() {
       return store.state.translationProvider
+    },
+    translationEngine() {
+      return store.state.translationEngine
     },
     providerConfig() {
       const name = store.state.translationProvider
@@ -498,6 +503,106 @@ export default {
     async handleTranslate(pageIndex) {
       const engine = store.state.translationEngine
 
+      if (engine === 'shinobu') {
+        // SHINOBU PIPELINE path (canvas output, replaces old ONNX pipeline)
+        if (this.pipelineTranslating) {
+          this.$toast('正在翻译中，请稍候')
+          return
+        }
+
+        this.showTranslated = false
+        this.currentTransPage = pageIndex
+
+        const imageUrl = this.artwork.images[pageIndex]?.l || this.artwork.images[pageIndex]?.original
+        if (!imageUrl) {
+          this.$toast('无法获取图片 URL')
+          return
+        }
+
+        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}`
+        const cached = await getCache(cacheKey)
+        if (cached) {
+          this.$set(this.translatedCanvases, pageIndex, cached)
+          this.showTranslated = true
+          this.$toast('使用缓存的翻译结果')
+          return
+        }
+
+        this.pipelineTranslating = true
+        this.translateStatusText = '准备中…'
+        this.$set(this.pipelineProgress, pageIndex, { stage: 'starting', detail: '准备中…', percent: 0 })
+        this.$set(this.translatedCanvases, pageIndex, null)
+
+        const providerConfig = this.providerConfig || {}
+        const config = {
+          sourceLang: 'ja',
+          targetLang: 'zh-CN',
+          translator: 'llm',
+          llmProvider: this.translationProvider,
+          llmAuthMode: providerConfig.authMode || 'api_key',
+          llmBaseUrl: providerConfig.baseUrl || '',
+          llmApiKey: providerConfig.apiKey || '',
+          llmModel: providerConfig.model || '',
+          processMode: store.state.translationProcessMode || 'translate',
+          ocrEngine: 'paddleocr_v6_medium',
+          ocrPostFilter: 'balanced',
+          typesetDebug: false,
+          eraseDebug: false,
+          collectDebugLog: false,
+        }
+
+        const onProgress = progress => {
+          this.$set(this.pipelineProgress, pageIndex, progress)
+          this.translateStatusText = progress.detail || ''
+        }
+
+        const abortController = new AbortController()
+        this.pipelineAbort = abortController
+
+        try {
+          // Shinobu runPipeline consumes a File (not a URL string)
+          const imageBlob = await fetch(imageUrl).then(res => {
+            if (!res.ok) throw new Error(`图片下载失败 HTTP ${res.status}`)
+            return res.blob()
+          })
+          const imageFile = new File([imageBlob], `page-${pageIndex}.png`, { type: imageBlob.type || 'image/png' })
+
+          const artifacts = await shinobuRunPipeline(imageFile, config, onProgress, { signal: abortController.signal })
+
+          if (!this.isActive) {
+            console.log('[Artwork] Component deactivated during pipeline — discarding result')
+            return
+          }
+
+          if (artifacts.detectedRegions.length === 0) {
+            this.$toast('未检测到文字')
+            this.$set(this.translatedCanvases, pageIndex, null)
+            return
+          }
+
+          if (artifacts.resultCanvas) {
+            this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
+            await setCache(cacheKey, artifacts.resultCanvas)
+            this.showTranslated = true
+          }
+          this.$toast('翻译完成')
+        } catch (err) {
+          if (err.name === 'AbortError') {
+            this.$toast('已取消')
+          } else {
+            console.log('shinobu pipeline err:', err)
+            const stage = err.stage || ''
+            const detail = err.detail || err.message || ''
+            this.$toast(`翻译失败${stage ? `（${stage}）` : ''}: ${detail}`)
+          }
+        } finally {
+          this.pipelineTranslating = false
+          this.translateStatusText = ''
+          this.pipelineAbort = null
+        }
+        return
+      }
+
       if (engine === 'vl-api') {
         // EXISTING VL-API path — keep unchanged
         this.showPicTranslatePanel = true
@@ -532,116 +637,6 @@ export default {
           this.$toast('翻译出错: ' + err.message)
           this.$set(this.picTranslating, pageIndex, false)
         }
-      } else {
-        // ONNX PIPELINE path
-        // Guard: only one page at a time
-        if (this.pipelineTranslating) {
-          this.$toast('正在翻译中，请稍候')
-          return
-        }
-
-        this.showTranslated = false
-        this.currentTransPage = pageIndex
-
-        const imageUrl = this.artwork.images[pageIndex]?.l || this.artwork.images[pageIndex]?.original
-        if (!imageUrl) {
-          this.$toast('无法获取图片 URL')
-          return
-        }
-
-        // Check cache first
-        // NOTE: ONNX cache key includes 'onnx' prefix to avoid collision
-        // with VL-API engine's cache ('pic.translate.{id}.{page}').
-        // VL-API stores text strings, ONNX stores Canvas objects — incompatible data types.
-        const cacheKey = `pic.translate.onnx.${this.artwork.id}.${pageIndex}`
-        const cached = await getCache(cacheKey)
-        if (cached) {
-          this.$set(this.translatedCanvases, pageIndex, cached)
-          this.showTranslated = true
-          this.$toast('使用缓存的翻译结果')
-          return
-        }
-
-        this.pipelineTranslating = true
-        this.translateStatusText = '准备中…'
-        this.$set(this.pipelineProgress, pageIndex, { stage: 'starting', detail: '准备中…', percent: 0 })
-        this.$set(this.translatedCanvases, pageIndex, null)
-        clearArtworkError(imageUrl)
-
-        const config = {
-          processMode: store.state.translationProcessMode || 'translate',
-          targetLang: 'chi',
-          ocrEngine: 'paddleocr',
-          providers: {
-            name: this.translationProvider,
-            ...this.providerConfig,
-            fallback: [],
-          },
-        }
-
-        const onProgress = progress => {
-          this.$set(this.pipelineProgress, pageIndex, progress)
-          this.translateStatusText = progress.detail || ''
-        }
-
-        const abortController = new AbortController()
-        this.pipelineAbort = abortController
-
-        try {
-          const artifacts = await runPipeline(imageUrl, config, onProgress, abortController.signal)
-
-          // Check if component is still active (not deactivated/navigated away)
-          if (!this.isActive) {
-            console.log('[Artwork] Component deactivated during pipeline — discarding result')
-            return
-          }
-
-          // No text detected
-          if (artifacts.detectedRegions.length === 0) {
-            this.$toast('未检测到文字')
-            this.$set(this.translatedCanvases, pageIndex, null)
-            return
-          }
-
-          if (artifacts.resultCanvas) {
-            this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
-            // Cache the result
-            await setCache(cacheKey, artifacts.resultCanvas)
-            this.showTranslated = true
-          }
-          if (process.env.NODE_ENV !== 'production') {
-            const canvasCount = Object.keys(this.translatedCanvases).filter(k => this.translatedCanvases[k]).length
-            console.log(`[Artwork] Translation canvases retained: ${canvasCount}`)
-            if (canvasCount > 5) {
-              console.warn(`[Artwork] High canvas count (${canvasCount}) — possible memory pressure`)
-            }
-          }
-          if (artifacts.error) {
-            this.$toast(artifacts.error.message)
-          } else {
-            this.$toast('翻译完成')
-          }
-        } catch (err) {
-          if (err.name === 'AbortError') {
-            this.$toast('已取消')
-          } else {
-            console.log('ONNX pipeline err:', err)
-            const msg = err.message || ''
-            if (msg.includes('429') || msg.includes('rate limit') || msg.includes('RateLimit')) {
-              this.$toast('翻译服务频率限制，请稍后重试')
-            } else if (msg.includes('Failed to fetch') || msg.includes('NetworkError') || msg.includes('Network')) {
-              this.$toast('模型下载失败，请检查网络')
-            } else if (msg.includes('memory') || msg.includes('allocate') || msg.includes('Out of')) {
-              this.$toast('内存不足，请关闭其他标签页')
-            } else {
-              this.$toast('翻译失败: ' + err.message)
-            }
-          }
-        } finally {
-          this.pipelineTranslating = false
-          this.translateStatusText = ''
-          this.pipelineAbort = null
-        }
       }
     },
     handleClosePanel() {
@@ -661,8 +656,30 @@ export default {
       }
       this.pipelineTranslating = false
     },
+    handleCancelTranslate() {
+      // shinobu pipeline runs on the main thread via comlink worker —
+      // abort via the AbortController stored in pipelineAbort (T20)
+      if (this.pipelineAbort) {
+        this.pipelineAbort.abort()
+        this.pipelineAbort = null
+      }
+      this.pipelineTranslating = false
+      this.translateStatusText = ''
+    },
     async handleRetry(pageIndex) {
       const engine = store.state.translationEngine
+      if (engine === 'shinobu') {
+        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}`
+        try {
+          await setCache(cacheKey, null)
+        } catch (e) {
+          console.warn('Failed to clear shinobu translate cache', e)
+        }
+        this.$set(this.translatedCanvases, pageIndex, null)
+        this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
+        this.handleTranslate(pageIndex)
+        return
+      }
       if (engine === 'vl-api') {
         try {
           await setCache(`pic.translate.${this.artwork.id}.${pageIndex}`, null)
@@ -670,15 +687,6 @@ export default {
           console.warn('Failed to clear translate cache', e)
         }
         this.$set(this.picTranslations, pageIndex, '')
-      } else {
-        const cacheKey = `pic.translate.onnx.${this.artwork.id}.${pageIndex}`
-        try {
-          await setCache(cacheKey, null)
-        } catch (e) {
-          console.warn('Failed to clear ONNX translate cache', e)
-        }
-        this.$set(this.translatedCanvases, pageIndex, null)
-        this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
       }
       this.handleTranslate(pageIndex)
     },

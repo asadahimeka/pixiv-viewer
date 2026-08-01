@@ -45,6 +45,12 @@ export default new Vuex.Store({
     translationProcessMode: getSettingDef('PXV_TRANSLATION_PROCESS_MODE', 'translate'),
     /** @type {boolean} */
     translationAutoTranslate: getSettingDef('PXV_TRANSLATION_AUTO_TRANSLATE', false),
+    /** @type {boolean} */
+    translationBubble: getSettingDef('PXV_TRANSLATION_BUBBLE', true),
+    /** @type {string} */
+    translationSourceLang: getSettingDef('PXV_TRANSLATION_SOURCE_LANG', 'ja'),
+    /** @type {string} */
+    translationTargetLang: getSettingDef('PXV_TRANSLATION_TARGET_LANG', 'zh-CN'),
     /** @type {any[]|null} */
     seasonEffects: null,
     routeHistory: SessionStorage.get('PXV_ROUTE_HISTORY', []),
@@ -232,6 +238,18 @@ export default new Vuex.Store({
     SET_TRANSLATION_AUTO_TRANSLATE(state, val) {
       state.translationAutoTranslate = val
       LocalStorage.set('PXV_TRANSLATION_AUTO_TRANSLATE', val)
+    },
+    SET_TRANSLATION_BUBBLE(state, val) {
+      state.translationBubble = val
+      LocalStorage.set('PXV_TRANSLATION_BUBBLE', val)
+    },
+    SET_TRANSLATION_SOURCE_LANG(state, val) {
+      state.translationSourceLang = val
+      LocalStorage.set('PXV_TRANSLATION_SOURCE_LANG', val)
+    },
+    SET_TRANSLATION_TARGET_LANG(state, val) {
+      state.translationTargetLang = val
+      LocalStorage.set('PXV_TRANSLATION_TARGET_LANG', val)
     },
   },
   actions: {

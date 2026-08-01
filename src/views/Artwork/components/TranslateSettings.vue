@@ -8,9 +8,9 @@
               <van-radio name="vl-api">VL API（默认，快速，侧边栏显示）</van-radio>
             </template>
           </van-cell>
-          <van-cell clickable @click="onEngineChange('onnx-pipeline')">
+          <van-cell clickable @click="onEngineChange('shinobu')">
             <template #title>
-              <van-radio name="onnx-pipeline">ONNX 管线（高质量，需要下载模型）</van-radio>
+              <van-radio name="shinobu">Shinobu 管线（完整管线，画布输出）</van-radio>
             </template>
           </van-cell>
         </van-cell-group>
@@ -19,7 +19,7 @@
         <van-icon name="info-o" /> VL API: 使用云端视觉语言模型翻译，速度快，无需下载模型。文本在侧边栏面板显示，支持流式输出。
       </div>
       <div v-else class="engine-help">
-        <van-icon name="info-o" /> ONNX 管线: 完全在浏览器端运行，支持原文擦除和图像排版。首次使用需要下载约 50-75MB 模型文件。
+        <van-icon name="info-o" /> Shinobu 管线: 完整翻译管线（检测 → OCR → 翻译 → 去字 → 排版），结果直接输出到画布。首次使用需要下载模型文件。
       </div>
     </van-cell-group>
 
@@ -87,7 +87,7 @@
       </div>
     </van-cell-group>
 
-    <van-cell-group title="处理模式（ONNX 管线）">
+    <van-cell-group title="处理模式（Shinobu 管线）">
       <van-radio-group :value="translationProcessMode" @change="onProcessModeChange">
         <van-cell-group class="engine-options">
           <van-cell clickable @click="onProcessModeChange('translate')">
@@ -107,6 +107,29 @@
           </van-cell>
         </van-cell-group>
       </van-radio-group>
+    </van-cell-group>
+
+    <van-cell-group title="气泡检测">
+      <van-cell center title="气泡文字检测" label="检测漫画气泡区域，将翻译文本排版进气泡内">
+        <template #right-icon>
+          <van-switch :value="translationBubble" size="24" @change="onBubbleChange" />
+        </template>
+      </van-cell>
+    </van-cell-group>
+
+    <van-cell-group title="翻译语言（Shinobu 管线）">
+      <van-field
+        :value="translationSourceLang"
+        label="源语言"
+        placeholder="ja"
+        @change="onSourceLangChange"
+      />
+      <van-field
+        :value="translationTargetLang"
+        label="目标语言"
+        placeholder="zh-CN"
+        @change="onTargetLangChange"
+      />
     </van-cell-group>
 
     <van-cell-group>
@@ -132,45 +155,13 @@
         </template>
       </van-cell>
     </van-cell-group>
-
-    <van-cell-group title="模型诊断">
-      <van-cell center title="测试模型加载" label="从 CDN 加载检测模型并报告状态">
-        <template #right-icon>
-          <van-button
-            size="small"
-            plain
-            type="primary"
-            :loading="modelTestLoading"
-            @click="testModelLoading"
-          >
-            {{ modelTestLoading ? '测试中...' : '测试' }}
-          </van-button>
-        </template>
-      </van-cell>
-      <div v-if="modelTestResult" class="model-test-result">
-        <div>状态: {{ modelTestResult.success ? '成功' : '失败' }}</div>
-        <div v-if="modelTestResult.durationMs">用时: {{ modelTestResult.durationMs }}ms</div>
-        <div v-if="modelTestResult.modelSize">模型大小: {{ modelTestResult.modelSize }}</div>
-        <div v-if="modelTestResult.runtime">运行环境: {{ modelTestResult.runtime }}</div>
-        <div v-if="modelTestResult.error">错误: {{ modelTestResult.error }}</div>
-      </div>
-    </van-cell-group>
   </div>
 </template>
 
 <script>
 import { Toast } from 'vant'
 import store from '@/store'
-import { getAvailableProviders } from '@/utils/translate/providers'
 import localDb from '@/utils/storage/localDb'
-import { createWorker, loadModel, disposeWorker } from '@/utils/translate/onnx/index.js'
-import { getModelUrl } from '@/utils/translate/onnx/modelRegistry.js'
-
-// Import providers to ensure they are registered in the registry
-import '@/utils/translate/providers/siliconcloud'
-import '@/utils/translate/providers/openai'
-import '@/utils/translate/providers/deepseek'
-import '@/utils/translate/providers/glm'
 
 export default {
   name: 'TranslateSettings',
@@ -178,8 +169,6 @@ export default {
     return {
       testLoading: false,
       clearingCache: false,
-      modelTestLoading: false,
-      modelTestResult: null,
     }
   },
   computed: {
@@ -218,12 +207,33 @@ export default {
         store.commit('SET_TRANSLATION_AUTO_TRANSLATE', val)
       },
     },
+    translationBubble: {
+      get() {
+        return store.state.translationBubble
+      },
+      set(val) {
+        store.commit('SET_TRANSLATION_BUBBLE', val)
+      },
+    },
+    translationSourceLang: {
+      get() {
+        return store.state.translationSourceLang
+      },
+      set(val) {
+        store.commit('SET_TRANSLATION_SOURCE_LANG', val)
+      },
+    },
+    translationTargetLang: {
+      get() {
+        return store.state.translationTargetLang
+      },
+      set(val) {
+        store.commit('SET_TRANSLATION_TARGET_LANG', val)
+      },
+    },
     providerConfig() {
       const name = this.translationProvider
       return this.translationProviders[name] || {}
-    },
-    availableProviders() {
-      return getAvailableProviders()
     },
   },
   methods: {
@@ -260,6 +270,15 @@ export default {
     onAutoTranslateChange(val) {
       this.translationAutoTranslate = val
     },
+    onBubbleChange(val) {
+      this.translationBubble = val
+    },
+    onSourceLangChange(val) {
+      this.translationSourceLang = val
+    },
+    onTargetLangChange(val) {
+      this.translationTargetLang = val
+    },
     onAuthModeChange(val) {
       const name = this.translationProvider
       const current = this.translationProviders[name] || {}
@@ -290,32 +309,6 @@ export default {
         Toast('清除缓存失败: ' + err.message)
       } finally {
         this.clearingCache = false
-      }
-    },
-    async testModelLoading() {
-      this.modelTestLoading = true
-      this.modelTestResult = null
-      try {
-        const start = performance.now()
-        const worker = createWorker()
-        const modelUrl = await getModelUrl('detect')
-        const result = await loadModel(worker, modelUrl)
-        const durationMs = Math.round(performance.now() - start)
-        this.modelTestResult = {
-          success: true,
-          durationMs,
-          runtime: result.provider || 'unknown',
-        }
-        await disposeWorker(worker)
-        Toast.success('模型加载成功')
-      } catch (err) {
-        this.modelTestResult = {
-          success: false,
-          error: err.message,
-        }
-        Toast('模型加载失败: ' + err.message)
-      } finally {
-        this.modelTestLoading = false
       }
     },
     async testConnection() {

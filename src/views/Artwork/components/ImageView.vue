@@ -240,7 +240,7 @@ export default {
       return store.state.translationEngine
     },
     showOverlay() {
-      return this.translationEngine === 'onnx-pipeline'
+      return this.translationEngine === 'shinobu'
     },
   },
   watch: {

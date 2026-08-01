@@ -17,6 +17,7 @@
     "@vueuse/components": "11.3.0",
     "@vueuse/core": "11.3.0",
     "axios": "0.33.0",
+    "comlink": "^4.4.2",
     "core-js": "3.49.0",
     "crypto-js": "4.2.0",
     "dayjs": "1.11.21",

@@ -10,14 +10,37 @@
     @click="onToolbarClick"
     @touchstart="resetAutoHide"
   >
+    <!-- Engine Mode Badge -->
+    <span class="translate-toolbar__engine" :class="'translate-toolbar__engine--' + engine">
+      {{ engineLabel }}
+    </span>
+
     <!-- Progress / Status Area -->
     <div v-if="translating" class="translate-toolbar__status">
       <van-loading size="16px" />
       <span class="translate-toolbar__status-text">{{ statusText }}</span>
     </div>
 
+    <!-- Result Mode Indicator (canvas vs text overlay) -->
+    <div v-else-if="showTranslated" class="translate-toolbar__result">
+      <van-icon :name="engine === 'shinobu' ? 'photo' : 'records'" />
+      <span>{{ engine === 'shinobu' ? 'Canvas 结果' : '文本覆盖' }}</span>
+    </div>
+
     <!-- Action Buttons -->
     <div class="translate-toolbar__actions">
+      <!-- Cancel Translation (shinobu: AbortSignal) -->
+      <van-button
+        v-if="translating && engine === 'shinobu'"
+        size="small"
+        plain
+        type="danger"
+        icon="close"
+        @click.stop="$emit('cancel-translate')"
+      >
+        <span v-if="!isCompact">{{ '取消' }}</span>
+      </van-button>
+
       <!-- Translate Current Page -->
       <van-button
         v-if="!translating"
@@ -74,7 +97,7 @@
 </template>
 
 <script>
-import { selfCheck } from '../../../utils/translate/runtime/selfCheck.js'
+import { runRuntimeSelfCheck } from '@/utils/translate/shinobu/runtime/selfCheck.js'
 
 export default {
   name: 'TranslateToolbar',
@@ -86,6 +109,7 @@ export default {
     pageCount: { type: Number, default: 0 },
     currentPage: { type: Number, default: 0 },
     errorCount: { type: Number, default: 0 },
+    engine: { type: String, default: 'vl-api' },
   },
   data() {
     return {
@@ -98,6 +122,9 @@ export default {
     }
   },
   computed: {
+    engineLabel() {
+      return this.engine === 'shinobu' ? 'shinobu' : 'vl-api'
+    },
     runtimeDotClass() {
       if (this.runtimeChecking) return 'checking'
       if (!this.runtimeStatus) return 'unknown'
@@ -109,11 +136,17 @@ export default {
       if (this.runtimeChecking) return '检测运行环境中…'
       if (!this.runtimeStatus) return '运行时状态未知'
       const parts = []
+      parts.push('引擎: ' + this.engineLabel)
       parts.push('WebGPU: ' + this.runtimeStatus.webgpu)
       parts.push('WASM: ' + this.runtimeStatus.wasm)
       parts.push('WebNN: ' + this.runtimeStatus.webnn)
       parts.push('推荐: ' + this.runtimeStatus.recommended)
       return parts.join(' | ')
+    },
+  },
+  watch: {
+    engine() {
+      this.checkRuntime()
     },
   },
   mounted() {
@@ -145,10 +178,25 @@ export default {
       this.isCompact = window.innerWidth < 600
     },
     async checkRuntime() {
+      // ONNX runtime indicator is only meaningful for the shinobu engine.
+      // vl-api runs remotely — keep the dot unknown and do not probe.
+      if (this.engine !== 'shinobu') {
+        this.runtimeStatus = null
+        this.runtimeChecking = false
+        return
+      }
       try {
         this.runtimeChecking = true
-        const result = await selfCheck()
-        this.runtimeStatus = result
+        // Re-wired to shinobu runtime self-check (T8): runRuntimeSelfCheck
+        const report = await runRuntimeSelfCheck()
+        const byId = {}
+        for (const check of report.checks || []) byId[check.id] = check.status
+        this.runtimeStatus = {
+          webgpu: byId['webgpu.api'] === 'pass' ? 'available' : 'unavailable',
+          wasm: byId['wasm.api'] === 'pass' ? 'available' : 'unavailable',
+          webnn: byId['webnn.api'] === 'pass' ? 'available' : 'unavailable',
+          recommended: report.summary?.effectiveRuntime || 'wasm',
+        }
       } catch (err) {
         console.warn('[TranslateToolbar] Runtime check failed:', err.message)
         this.runtimeStatus = { webgpu: 'error', wasm: 'unknown', webnn: 'unknown', recommended: 'wasm' }
@@ -208,6 +256,35 @@ $breakpoint-compact = 600px
 
   &__status-text
     margin-left 0.06rem
+
+  &__engine
+    display inline-flex
+    align-items center
+    padding 0 0.1rem
+    height 0.32rem
+    border-radius 0.16rem
+    font-size 0.18rem
+    font-weight bold
+    letter-spacing 0.02rem
+    white-space nowrap
+    background rgba(255, 255, 255, 0.12)
+    color #ccc
+
+    &--shinobu
+      background rgba(76, 175, 80, 0.2)
+      color #4caf50
+
+    &--vl-api
+      background rgba(33, 150, 243, 0.2)
+      color #2196f3
+
+  &__result
+    display flex
+    align-items center
+    gap 0.06rem
+    color #8bc34a
+    font-size 0.2rem
+    white-space nowrap
 
   &__actions
     display flex

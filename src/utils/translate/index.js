@@ -245,3 +245,14 @@ export async function nativeTranslate(novelText = '', onRead = () => {}) {
     console.log('nativeTranslate err: ', err)
   }
 }
+
+// ---------------------------------------------------------------------------
+// Shinobu pipeline entry (new engine mode)
+// ---------------------------------------------------------------------------
+
+// Re-export the Shinobu runPipeline (T19 port) for the 'shinobu' engine mode.
+// Artwork/index.vue imports this via `@/utils/translate`.
+export {
+  runPipeline as shinobuRunPipeline,
+  PipelineStageError as ShinobuPipelineStageError,
+} from './shinobu/index.js'

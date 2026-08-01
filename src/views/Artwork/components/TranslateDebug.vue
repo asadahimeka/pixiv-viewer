@@ -72,6 +72,85 @@
         </div>
       </van-collapse-item>
 
+      <!-- Bubble Detection -->
+      <van-collapse-item title="Bubble Detection" name="bubble">
+        <div class="translate-debug__section">
+          <van-icon name="copy" class="translate-debug__copy" @click="copySection('bubble')" />
+
+          <div v-if="bubbleRuntime" class="translate-debug__grid">
+            <div class="translate-debug__row">
+              <span class="translate-debug__label">Model</span>
+              <span class="translate-debug__value">bubble</span>
+            </div>
+            <div class="translate-debug__row">
+              <span class="translate-debug__label">Enabled</span>
+              <span class="translate-debug__value">{{ bubbleRuntime.enabled }}</span>
+            </div>
+            <div class="translate-debug__row">
+              <span class="translate-debug__label">Provider</span>
+              <span class="translate-debug__value">{{ bubbleRuntime.provider || bubbleRuntime.engine || '—' }}</span>
+            </div>
+            <div class="translate-debug__row">
+              <span class="translate-debug__label">Detail</span>
+              <span class="translate-debug__value">{{ bubbleRuntime.detail || '—' }}</span>
+            </div>
+          </div>
+
+          <div v-if="bubbleStats" class="translate-debug__grid">
+            <div class="translate-debug__row">
+              <span class="translate-debug__label">Bubbles</span>
+              <span class="translate-debug__value">{{ bubbleStats.bubbleCount }}</span>
+            </div>
+            <div class="translate-debug__row">
+              <span class="translate-debug__label">Regions (in bubble)</span>
+              <span class="translate-debug__value">{{ bubbleStats.matchedRegionCount }}</span>
+            </div>
+            <div class="translate-debug__row">
+              <span class="translate-debug__label">Regions (unmatched)</span>
+              <span class="translate-debug__value">{{ bubbleStats.unmatchedRegionCount }}</span>
+            </div>
+          </div>
+
+          <div v-if="bubbles.length > 0">
+            <div
+              v-for="(bubble, idx) in bubbles"
+              :key="idx"
+              class="translate-debug__region"
+            >
+              <div class="translate-debug__region-header">
+                <span class="translate-debug__region-id">Bubble #{{ idx }}</span>
+                <span class="translate-debug__region-prob">score {{ (bubble.score * 100).toFixed(1) }}%</span>
+                <span class="translate-debug__region-dir">{{ bubble.matchedRegionIds.length }} regions</span>
+              </div>
+              <div class="translate-debug__region-box">Box: {{ formatBox(bubble.box) }}</div>
+              <div class="translate-debug__region-box">Mask: {{ bubble.maskDims }}</div>
+              <div class="translate-debug__region-text">
+                Regions: {{ bubble.matchedRegionIds.join(', ') || '—' }}
+              </div>
+            </div>
+            <div class="translate-debug__note">
+              score = mask 不透明度占比（原始 detector score 未包含在 artifacts 中）
+            </div>
+          </div>
+
+          <div v-if="bubbleOverlayUrl" class="translate-debug__overlay">
+            <div class="translate-debug__overlay-actions">
+              <label class="translate-debug__overlay-toggle">
+                <van-checkbox v-model="showBubbleMasks" @change="updateBubbleOverlay">show masks</van-checkbox>
+              </label>
+            </div>
+            <img :src="bubbleOverlayUrl" class="translate-debug__overlay-img" alt="bubble overlay">
+          </div>
+
+          <div
+            v-if="!bubbleRuntime && bubbles.length === 0"
+            class="translate-debug__empty"
+          >
+            No bubble data available
+          </div>
+        </div>
+      </van-collapse-item>
+
       <!-- OCR Results -->
       <van-collapse-item title="OCR Results" name="ocr">
         <div class="translate-debug__section">
@@ -136,6 +215,9 @@
 </template>
 
 <script>
+import { drawRegions } from '@/utils/translate/shinobu/pipeline/visualize.js'
+import { browserPlatform } from '@/utils/translate/shinobu/runtime/browserPlatform.js'
+
 export default {
   name: 'TranslateDebug',
   props: {
@@ -158,7 +240,9 @@ export default {
   },
   data() {
     return {
-      activeSections: ['model', 'timings'],
+      activeSections: ['model', 'timings', 'bubble'],
+      showBubbleMasks: false,
+      bubbleOverlayUrl: '',
     }
   },
   computed: {
@@ -174,6 +258,44 @@ export default {
     translatedRegions() {
       return this.artifacts?.translatedRegions || []
     },
+    bubbleRuntime() {
+      const stages = this.artifacts?.runtimeStages || []
+      return stages.find(s => s.model === 'bubble') || null
+    },
+    bubbleRegions() {
+      return this.detectedRegions.filter(r => r.bubbleBox)
+    },
+    unmatchedBubbleRegions() {
+      return this.detectedRegions.filter(r => !r.bubbleBox)
+    },
+    bubbles() {
+      const map = new Map()
+      this.bubbleRegions.forEach((region, idx) => {
+        const box = region.bubbleBox
+        const key = `${box.x},${box.y},${box.width},${box.height}`
+        let bubble = map.get(key)
+        if (!bubble) {
+          bubble = { box, score: 0, maskDims: '', matchedRegionIds: [] }
+          map.set(key, bubble)
+        }
+        bubble.matchedRegionIds.push(region.id || `#${idx}`)
+        if (region.bubbleMask) {
+          bubble.score = Math.max(bubble.score, this.maskCoverage(region.bubbleMask))
+          if (!bubble.maskDims) {
+            bubble.maskDims = `${region.bubbleMask.width}x${region.bubbleMask.height}`
+          }
+        }
+      })
+      return Array.from(map.values())
+    },
+    bubbleStats() {
+      if (!this.artifacts) return null
+      return {
+        bubbleCount: this.bubbles.length,
+        matchedRegionCount: this.bubbleRegions.length,
+        unmatchedRegionCount: this.unmatchedBubbleRegions.length,
+      }
+    },
     totalDuration() {
       return this.stageTimings.reduce((sum, t) => {
         return sum + (t.durationMs || t.duration || 0)
@@ -185,30 +307,137 @@ export default {
       return JSON.stringify(sanitized, null, 2)
     },
   },
+  watch: {
+    visible(val) {
+      if (val) this.updateBubbleOverlay()
+    },
+    artifacts: {
+      deep: true,
+      handler() {
+        this.updateBubbleOverlay()
+      },
+    },
+  },
   mounted() {
     const params = new URLSearchParams(window.location.search)
     if (params.get('translatedebug') === '1') {
       this.$emit('enable')
     }
+    this.updateBubbleOverlay()
   },
   methods: {
     formatBox(box) {
       if (!box) return 'N/A'
       return `[x:${box.x}, y:${box.y}, w:${box.width}, h:${box.height}]`
     },
+    maskCoverage(mask) {
+      if (!mask || !mask.data || !mask.width || !mask.height) return 0
+      const total = mask.width * mask.height
+      if (total === 0) return 0
+      const data = mask.data
+      let opaque = 0
+      for (let i = 3; i < data.length; i += 4) {
+        if (data[i] > 0) opaque += 1
+      }
+      return opaque / total
+    },
+    buildBubbleOverlay() {
+      const artifacts = this.artifacts
+      if (!artifacts) {
+        this.bubbleOverlayUrl = ''
+        return
+      }
+      if (this.detectedRegions.length === 0 && this.bubbles.length === 0) {
+        this.bubbleOverlayUrl = ''
+        return
+      }
+
+      // Base: pipeline's drawRegions output if present, else drawRegions on original
+      let base = artifacts.detectionCanvas || artifacts.ocrCanvas
+      if (!base) {
+        const img = artifacts.original
+        if (!img || !img.naturalWidth) {
+          this.bubbleOverlayUrl = ''
+          return
+        }
+        const canvas = browserPlatform.createCanvas(img.naturalWidth, img.naturalHeight)
+        canvas.getContext('2d')?.drawImage(img, 0, 0)
+        base = drawRegions(canvas, this.detectedRegions, '气泡调试', r => r.sourceText, browserPlatform)
+      }
+
+      const canvas = browserPlatform.createCanvas(base.width, base.height)
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        this.bubbleOverlayUrl = ''
+        return
+      }
+      ctx.drawImage(base, 0, 0)
+
+      // Bubble boxes (cyan dashed) — visualize.js drawRegions already colors
+      // region boxes red when matched to a bubble; the dashed boxes show the
+      // actual bubble bounds (which may extend beyond the region box).
+      if (this.bubbles.length > 0) {
+        ctx.save()
+        ctx.strokeStyle = '#00e5ff'
+        ctx.lineWidth = 2
+        ctx.setLineDash([6, 4])
+        for (const bubble of this.bubbles) {
+          const { x, y, width, height } = bubble.box
+          ctx.strokeRect(x, y, width, height)
+        }
+        ctx.restore()
+      }
+
+      // Bubble mask overlays (translucent green tint)
+      if (this.showBubbleMasks) {
+        ctx.save()
+        ctx.globalAlpha = 0.5
+        for (const region of this.bubbleRegions) {
+          const mask = region.bubbleMask
+          if (!mask) continue
+          const maskCanvas = browserPlatform.createCanvas(mask.width, mask.height)
+          const maskCtx = maskCanvas.getContext('2d')
+          if (!maskCtx) continue
+          maskCtx.putImageData(mask, 0, 0)
+
+          const tint = browserPlatform.createCanvas(mask.width, mask.height)
+          const tintCtx = tint.getContext('2d')
+          if (!tintCtx) continue
+          tintCtx.fillStyle = '#39ff14'
+          tintCtx.fillRect(0, 0, mask.width, mask.height)
+          tintCtx.globalCompositeOperation = 'source-in'
+          tintCtx.drawImage(maskCanvas, 0, 0)
+
+          ctx.drawImage(tint, 0, 0, canvas.width, canvas.height)
+        }
+        ctx.restore()
+      }
+
+      this.bubbleOverlayUrl = canvas.toDataURL('image/png')
+    },
+    updateBubbleOverlay() {
+      this.buildBubbleOverlay()
+    },
     sanitizeArtifacts(artifacts) {
       if (!artifacts) return {}
+      const sanitizeMask = mask => {
+        if (!mask) return undefined
+        if (mask.data) return `[Mask ${mask.width}x${mask.height}, ${mask.data.length} bytes]`
+        return '[Mask]'
+      }
       const result = {}
       for (const [key, val] of Object.entries(artifacts)) {
         if (val instanceof HTMLCanvasElement || val instanceof OffscreenCanvas) {
           result[key] = `[Canvas ${val.width}x${val.height}]`
         } else if (val instanceof Uint8Array) {
           result[key] = `[Uint8Array ${val.length} bytes]`
+        } else if (val && val.data && typeof val.data.length === 'number') {
+          result[key] = sanitizeMask(val)
         } else if (Array.isArray(val)) {
           result[key] = val.map(item => {
             if (typeof item === 'object' && item !== null) {
               const cleaned = { ...item }
-              if (cleaned.bubbleMask) cleaned.bubbleMask = `[Uint8Array ${cleaned.bubbleMask.length} bytes]`
+              if (cleaned.bubbleMask) cleaned.bubbleMask = sanitizeMask(cleaned.bubbleMask)
               return cleaned
             }
             return item
@@ -234,7 +463,20 @@ export default {
             box: r.box,
             prob: r.prob,
             direction: r.direction,
+            bubbleBox: r.bubbleBox,
           }))
+        case 'bubble':
+          return {
+            runtime: this.bubbleRuntime,
+            stats: this.bubbleStats,
+            bubbles: this.bubbles.map(b => ({
+              box: b.box,
+              score: b.score,
+              maskDims: b.maskDims,
+              matchedRegionIds: b.matchedRegionIds,
+            })),
+            unmatchedRegions: this.unmatchedBubbleRegions.map(r => r.id),
+          }
         case 'ocr':
           return this.ocrRegions.map(r => ({
             id: r.id,
@@ -487,6 +729,38 @@ $font-mono = 'SF Mono', 'Fira Code', 'Consolas', monospace
     font-size 0.18rem
     color $text-dim
     margin-right 0.04rem
+
+  // Bubble section extras
+  &__note
+    font-size 0.16rem
+    color $text-dim
+    font-style italic
+    padding 0.06rem 0
+
+  &__overlay
+    margin-top 0.08rem
+
+  &__overlay-actions
+    display flex
+    align-items center
+    margin-bottom 0.04rem
+
+  &__overlay-toggle
+    font-size 0.18rem
+    color $text-dim
+    display flex
+    align-items center
+
+    ::v-deep .van-checkbox__label
+      color $text-dim
+      font-size 0.18rem
+
+  &__overlay-img
+    display block
+    width 100%
+    border 1px solid $border
+    border-radius 0.04rem
+    background rgba(0, 0, 0, 0.3)
 
   // JSON viewer
   &__json

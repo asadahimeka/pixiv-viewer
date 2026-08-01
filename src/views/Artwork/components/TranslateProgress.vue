@@ -19,7 +19,7 @@
     <!-- Stage List (panel mode only) -->
     <div v-if="!inline" class="translate-progress__stages">
       <div
-        v-for="(stageDef, index) in stageDefs"
+        v-for="(stageDef, index) in activeStageDefs"
         :key="stageDef.key"
         class="translate-progress__stage"
         :class="getStageClass(stageDef.key)"
@@ -42,7 +42,7 @@
         </div>
 
         <!-- Stage Connector Line -->
-        <div v-if="index < stageDefs.length - 1" class="translate-progress__stage-line"></div>
+        <div v-if="index < activeStageDefs.length - 1" class="translate-progress__stage-line"></div>
 
         <!-- Label -->
         <span class="translate-progress__stage-label">{{ stageDef.label }}</span>
@@ -58,6 +58,25 @@
         </span>
       </div>
     </div>
+
+    <!-- Stage Timings (shinobu debug view, panel mode only) -->
+    <div
+      v-if="!inline && isShinobu && stageTimings.length > 0"
+      class="translate-progress__timings"
+    >
+      <div class="translate-progress__timings-title">
+        <van-icon name="clock-o" />
+        <span>阶段耗时</span>
+      </div>
+      <div
+        v-for="timing in stageTimings"
+        :key="timing.stage"
+        class="translate-progress__timing"
+      >
+        <span class="translate-progress__timing-label">{{ timing.label }}</span>
+        <span class="translate-progress__timing-duration">{{ Math.round(timing.durationMs) }}ms</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -71,7 +90,18 @@ export default {
     VanIcon: Icon,
   },
   props: {
+    // vl-api mode: array of { stage, status, durationMs, error }
     stages: {
+      type: Array,
+      default: () => [],
+    },
+    // shinobu mode: single { stage, detail, percent } from cb({stage, detail})
+    progress: {
+      type: Object,
+      default: null,
+    },
+    // shinobu mode (optional, debug view): array of { stage, label, durationMs }
+    stageTimings: {
       type: Array,
       default: () => [],
     },
@@ -94,10 +124,46 @@ export default {
         { key: 'inpaint', label: '去字' },
         { key: 'typeset', label: '排版' },
       ],
+      // Shinobu 12-stage pipeline stage keys → display labels.
+      // Mirrors the report()/stageTimings stage names in shinobu/index.js.
+      shinobuStageDefs: [
+        { key: 'load', label: '加载图片' },
+        { key: 'preload', label: '加载检测模型' },
+        { key: 'detect', label: '文本检测' },
+        { key: 'bubble', label: '气泡检测' },
+        { key: 'ocr', label: '文字识别' },
+        { key: 'merge', label: '合并文本行' },
+        { key: 'ocr_postfilter', label: '过滤误识别' },
+        { key: 'order', label: '文本顺序排序' },
+        { key: 'parallel', label: '翻译+去字' },
+        { key: 'typeset', label: '排版' },
+        { key: 'done', label: '完成' },
+      ],
     }
   },
   computed: {
+    // Shinobu mode: progress prop present with a non-empty stage.
+    isShinobu() {
+      return !!(this.progress && this.progress.stage)
+    },
+    // vl-api mode → original 6-stage list; shinobu mode → 12-stage list.
+    activeStageDefs() {
+      return this.isShinobu ? this.shinobuStageDefs : this.stageDefs
+    },
     overallPercent() {
+      if (this.isShinobu) {
+        // cb({stage, detail}) carries no percent — prefer explicit percent
+        // (e.g. from T20's starting-state seed), otherwise derive from stage order.
+        if (typeof this.progress.percent === 'number') {
+          return Math.min(Math.max(Math.round(this.progress.percent), 0), 100)
+        }
+        const total = this.shinobuStageDefs.length
+        const idx = this.shinobuStageDefs.findIndex(s => s.key === this.progress.stage)
+        if (this.progress.stage === 'done') return 100
+        if (idx < 0) return 0
+        const base = (idx / total) * 100
+        return Math.min(Math.round(base + (1 / total) * 50), 100)
+      }
       if (!this.stages || this.stages.length === 0) return 0
       const total = this.stageDefs.length
       const done = this.stages.filter(s => s.status === 'done' || s.status === 'error').length
@@ -108,15 +174,39 @@ export default {
     },
   },
   methods: {
+    // Order position of a shinobu stage (for status derivation).
+    shinobuStageIndex(key) {
+      return this.shinobuStageDefs.findIndex(s => s.key === key)
+    },
     getStageStatus(key) {
+      if (this.isShinobu) return this.getShinobuStatus(key)
       const stage = this.stages.find(s => s.stage === key)
       return stage ? stage.status : 'pending'
     },
+    // Derive status from cb() progress stream:
+    // stages before current → done, current → running, rest → pending.
+    getShinobuStatus(key) {
+      const current = this.progress.stage
+      if (current === 'done') return 'done'
+      const keyIdx = this.shinobuStageIndex(key)
+      if (keyIdx < 0) return 'pending'
+      const curIdx = this.shinobuStageIndex(current)
+      // current stage not in the stream (e.g. 'starting' seed) → nothing started
+      if (curIdx < 0) return 'pending'
+      if (keyIdx < curIdx) return 'done'
+      if (keyIdx === curIdx) return 'running'
+      return 'pending'
+    },
     getStageDuration(key) {
+      if (this.isShinobu) {
+        const timing = this.stageTimings.find(t => t.stage === key)
+        return timing ? timing.durationMs || 0 : 0
+      }
       const stage = this.stages.find(s => s.stage === key)
       return stage ? stage.durationMs || 0 : 0
     },
     getStageError(key) {
+      if (this.isShinobu) return ''
       const stage = this.stages.find(s => s.stage === key)
       return stage ? stage.error || '' : ''
     },
@@ -172,6 +262,37 @@ $border-radius = 0.08rem
     flex-direction column
     gap 0.02rem
     padding 0.04rem 0
+
+  &__timings
+    display flex
+    flex-direction column
+    gap 0.02rem
+    padding 0.04rem 0
+    margin-top 0.06rem
+    border-top 0.01rem solid rgba(255, 255, 255, 0.1)
+
+  &__timings-title
+    display flex
+    align-items center
+    gap 0.06rem
+    font-size 0.2rem
+    color $color-text-dark
+    padding 0.04rem 0.08rem
+
+  &__timing
+    display flex
+    justify-content space-between
+    align-items center
+    padding 0.04rem 0.08rem
+    font-size 0.2rem
+    color $color-text
+
+  &__timing-label
+    color $color-text-dark
+
+  &__timing-duration
+    font-variant-numeric tabular-nums
+    color $color-text
 
   &__stage
     display grid

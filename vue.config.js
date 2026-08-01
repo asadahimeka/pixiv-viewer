@@ -116,6 +116,20 @@ module.exports = {
         .splitChunks({
           chunks: 'all',
         })
+      // 模型不自托管：构建时排除 public/models/*.onnx（运行时从 CDN 加载）
+      config.plugin('copy').tap(args => {
+        // copy-webpack-plugin@9 构造器接收 { patterns: [...] }；旧版接收 patterns 数组，两种都兼容
+        const patterns = Array.isArray(args[0]) ? args[0] : args[0] && args[0].patterns
+        if (Array.isArray(patterns)) {
+          for (const pattern of patterns) {
+            if (!pattern.globOptions) pattern.globOptions = {}
+            const ignores = pattern.globOptions.ignore || []
+            ignores.push('**/models/*.onnx')
+            pattern.globOptions.ignore = ignores
+          }
+        }
+        return args
+      })
     }
   },
   css: {
