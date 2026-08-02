@@ -144,7 +144,9 @@ function toDiagnosticError(error) {
 }
 
 /**
- * Stub for `emitDiagnosticLog` (extension-only — no-op in pixiv-viewer webapp).
+ * Diagnostic log entry point — restores the user-added `console.table` output.
+ * Dev-only: terser `drop_console` (vue.config.js) strips all console.* calls in
+ * production builds, so this has zero production impact.
  * @param {Object} _entry
  * @param {string} _entry.runId
  * @param {string} _entry.level
@@ -155,8 +157,8 @@ function toDiagnosticError(error) {
  * @param {Object} [_entry.error]
  */
 function emitDiagnosticLog(_entry) {
-  // No-op in pixiv-viewer — diagnostic logging is an extension-only feature.
-  // Logs go to console.warn for development visibility.
+  // Diagnostic logging — dev-only (terser drop_console strips in production).
+  console.table(_entry)
 }
 
 /** @typedef {'pipeline.detect'|'pipeline.bubble'|'pipeline.ocr'|'pipeline.inpaint'|'pipeline.typeset'} DiagnosticLogCategory */
@@ -472,7 +474,8 @@ function buildEraseDebugCanvas(originalCanvas, debugLayers, platform, baseCanvas
  * @param {string} detail
  */
 function report(cb, stage, detail) {
-  cb({ stage, detail })
+  const progress = { stage, detail }
+  cb(progress)
 }
 
 /**

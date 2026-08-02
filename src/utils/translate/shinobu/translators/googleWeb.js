@@ -11,6 +11,8 @@
  * `fetch()` for standard environments.
  */
 
+import { COMMON_PROXY } from '@/consts'
+
 /**
  * @typedef {[string?, string?, unknown?, unknown?]} GoogleTranslateSegment
  */
@@ -84,6 +86,22 @@ export async function googleWebTranslate(text, from, to) {
       return parseGoogleTranslateResponse(resp.data)
     } catch (e) {
       // On failure, fall through to fetch
+    }
+  }
+
+  if (COMMON_PROXY) {
+    try {
+      const proxyRes = await fetch(COMMON_PROXY + endpoint, {
+        method: 'GET',
+        cache: 'no-store',
+      })
+      if (proxyRes.ok) {
+        const proxyPayload = await proxyRes.json()
+        return parseGoogleTranslateResponse(proxyPayload)
+      }
+      // Non-ok proxy response → fall through to direct fetch
+    } catch (e) {
+      // Proxy failure → intentional fall-through to direct fetch below
     }
   }
 

@@ -613,35 +613,37 @@ export function computeFullHorizontalTypeset(input) {
       return buildCandidate(fontSize)
     }
 
-    for (let attempt = 0; !sourceLineLayoutEnabled && attempt < 2; attempt += 1) {
-      const overflowing = lineBoxes.some(line => line.width > line.maxWidth + 0.5)
-      if (!overflowing || lineBoxes.length === 0) break
-      const safeWrapWidth = Math.max(20, Math.min(...lineBoxes.map(line => line.maxWidth)))
-      const nextWrapped = wrapLines(safeWrapWidth, fontSize, letterSpacingScale)
-      if (
-        nextWrapped.lines.length === wrapped.lines.length &&
-        nextWrapped.lines.every((line, index) => line.text === wrapped.lines[index]?.text)
-      ) {
-        break
+    if (!sourceLineLayoutEnabled) {
+      for (let attempt = 0; attempt < 2; attempt += 1) {
+        const overflowing = lineBoxes.some(line => line.width > line.maxWidth + 0.5)
+        if (!overflowing || lineBoxes.length === 0) break
+        const safeWrapWidth = Math.max(20, Math.min(...lineBoxes.map(line => line.maxWidth)))
+        const nextWrapped = wrapLines(safeWrapWidth, fontSize, letterSpacingScale)
+        if (
+          nextWrapped.lines.length === wrapped.lines.length &&
+          nextWrapped.lines.every((line, index) => line.text === wrapped.lines[index]?.text)
+        ) {
+          break
+        }
+        wrapped = nextWrapped
+        reflowed = true
+        candidateSourceLayouts = scaleSourceLineLayouts(fontSize, wrapped.lines)
+        lineBoxes = buildHorizontalLineBoxes({
+          ctx: measureCtx,
+          lines: wrapped.lines,
+          region: expandedRegion,
+          contentWidth,
+          contentHeight: horizontalContentHeight,
+          fontSize,
+          padding: 0,
+          alignment,
+          anchorContentCenterY: horizontalAnchor?.contentCenterY,
+          sourcePitch,
+          sourceLineLayouts: candidateSourceLayouts,
+          bubbleMask: inputRegion.bubbleMask,
+          boxPadding,
+        })
       }
-      wrapped = nextWrapped
-      reflowed = true
-      candidateSourceLayouts = scaleSourceLineLayouts(fontSize, wrapped.lines)
-      lineBoxes = buildHorizontalLineBoxes({
-        ctx: measureCtx,
-        lines: wrapped.lines,
-        region: expandedRegion,
-        contentWidth,
-        contentHeight: horizontalContentHeight,
-        fontSize,
-        padding: 0,
-        alignment,
-        anchorContentCenterY: horizontalAnchor?.contentCenterY,
-        sourcePitch,
-        sourceLineLayouts: candidateSourceLayouts,
-        bubbleMask: inputRegion.bubbleMask,
-        boxPadding,
-      })
     }
 
     const balancedLines = sourceLineLayoutEnabled

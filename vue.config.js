@@ -203,6 +203,17 @@ module.exports = {
             fetchOptions: { credentials: 'omit', mode: 'cors' },
           },
         },
+        {
+          // onnxruntime-web WASM — matches any domain/version (jsdelivr default or
+          // custom VUE_APP_ORT_WASM_PATH) via the ort-wasm- file prefix.
+          urlPattern: /(onnxruntime-web|ort-wasm-).*\.wasm(\?.*)?$/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'ort-wasm-cache',
+            cacheableResponse: { statuses: [200] },
+            fetchOptions: { credentials: 'omit', mode: 'cors' },
+          },
+        },
       ],
     },
   },
