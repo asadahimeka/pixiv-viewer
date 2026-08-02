@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import axios from 'axios'
 import dayjs from 'dayjs'
-import { Toast } from 'vant'
+import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import { isFsaSupported, saveFile } from './fsa'
 import { i18n, isCNLocale } from '@/i18n'

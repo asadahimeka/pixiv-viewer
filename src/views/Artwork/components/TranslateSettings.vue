@@ -216,7 +216,7 @@
 </template>
 
 <script>
-import { Toast } from 'vant'
+import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
 import { aiModelMap } from '@/utils/translate'

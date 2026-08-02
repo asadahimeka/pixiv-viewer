@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Toast } from 'vant'
+import { Toast } from '@/lib/vant-apis'
 import api from '@/api'
 import store from '@/store'
 import { i18n } from '@/i18n'

@@ -130,7 +130,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { Dialog, ImagePreview, Button } from 'vant'
+import { Dialog, ImagePreview } from '@/lib/vant-apis'
 import store from '@/store'
 import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 import { fancyboxShow, downloadFile } from '@/utils'
@@ -143,7 +143,6 @@ const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.
 export default {
   name: 'ImageView',
   components: {
-    VanButton: Button,
     TranslateOverlay,
   },
   props: {

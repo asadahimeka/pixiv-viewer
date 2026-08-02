@@ -252,7 +252,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import _ from '@/lib/lodash'
 import api, { localApi } from '@/api'
 import { getCache, setCache } from '@/utils/storage/siteCache'

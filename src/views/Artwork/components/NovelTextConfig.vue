@@ -107,7 +107,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
-import { Toast } from 'vant'
+import { Toast } from '@/lib/vant-apis'
 import { i18n } from '@/i18n'
 import { LocalStorage } from '@/utils/storage'
 import store, { novelTextConfig } from '@/store'

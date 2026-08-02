@@ -98,7 +98,7 @@
 <script>
 import nprogress from 'nprogress'
 import { mapGetters } from 'vuex'
-import { ImagePreview } from 'vant'
+import { ImagePreview } from '@/lib/vant-apis'
 import api, { localApi, imgProxy } from '@/api'
 import store from '@/store'
 import _ from '@/lib/lodash'

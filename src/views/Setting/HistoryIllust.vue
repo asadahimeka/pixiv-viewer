@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { filterCensoredIllusts } from '@/utils/filter'
 import VirtualWaterfall from '@/components/VirtualWaterfall.vue'

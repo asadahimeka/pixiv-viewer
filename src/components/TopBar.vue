@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import store from '@/store'
 
 export default {

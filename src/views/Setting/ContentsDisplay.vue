@@ -93,7 +93,7 @@
 
 <script>
 import _ from '@/lib/lodash'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { mapGetters, mapMutations } from 'vuex'
 import store from '@/store'
 import { localApi } from '@/api'

@@ -56,7 +56,7 @@ import { localApi } from '@/api'
 import { getLoginURL } from '@/api/client/login'
 import PixivAuth from '@/api/client/pixiv-auth'
 import { LocalStorage } from '@/utils/storage'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 
 export default {
   name: 'Login',

@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import { Dialog, Toast } from 'vant'
+import { Dialog, Toast } from '@/lib/vant-apis'
 import SyncManager from '@/utils/sync'
 
 export default {

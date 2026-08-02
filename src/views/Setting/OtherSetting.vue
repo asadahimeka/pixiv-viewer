@@ -544,7 +544,7 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import PixivAuth from '@/api/client/pixiv-auth'
 import localDb from '@/utils/storage/localDb'
 import store from '@/store'

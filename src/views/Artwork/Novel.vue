@@ -118,7 +118,7 @@
 <script>
 import _ from '@/lib/lodash'
 import { mapGetters } from 'vuex'
-import { ImagePreview } from 'vant'
+import { ImagePreview } from '@/lib/vant-apis'
 import api, { getBookmarkRestrictTags, localApi } from '@/api'
 import store, { novelTextConfig } from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'

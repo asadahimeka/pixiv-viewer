@@ -21,14 +21,8 @@
 </template>
 
 <script>
-import { Loading, Button } from 'vant'
-
 export default {
   name: 'PanelContent',
-  components: {
-    VanLoading: Loading,
-    VanButton: Button,
-  },
   props: {
     loading: {
       type: Boolean,

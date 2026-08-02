@@ -15,13 +15,8 @@
 </template>
 
 <script>
-import { Loading } from 'vant'
-
 export default {
   name: 'TranslateOverlay',
-  components: {
-    VanLoading: Loading,
-  },
   props: {
     artworkId: {
       type: [String, Number],

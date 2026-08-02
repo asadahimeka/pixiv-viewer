@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { get } from './http'
 import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'

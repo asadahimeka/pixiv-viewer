@@ -37,13 +37,11 @@
 </template>
 
 <script>
-import { Popup } from 'vant'
 import PanelContent from './PanelContent.vue'
 
 export default {
   name: 'PicTranslatePanel',
   components: {
-    VanPopup: Popup,
     PanelContent,
   },
   props: {

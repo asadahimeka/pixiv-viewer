@@ -36,7 +36,7 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import localDb from '@/utils/storage/localDb'
 import { i18n } from '@/i18n'

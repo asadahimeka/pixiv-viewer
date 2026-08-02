@@ -1,4 +1,4 @@
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { i18n } from '@/i18n'
 import { SILICON_CLOUD_API_KEY } from '@/consts'
 import { loadScript } from '@/utils'

@@ -62,7 +62,7 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { i18n } from '@/i18n'
 import { login, validateSessionId } from '@/api/user'
 

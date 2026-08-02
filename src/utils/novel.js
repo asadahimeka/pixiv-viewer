@@ -1,4 +1,4 @@
-import { Toast } from 'vant'
+import { Toast } from '@/lib/vant-apis'
 import { i18n } from '@/i18n'
 import { BASE_URL } from '@/consts'
 import { imgProxy } from '@/api'

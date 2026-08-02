@@ -76,6 +76,17 @@ App.vue
 - SVG icon system: custom component via `src/icons/`, SVGs loaded as XML
 - Layout components in `src/layouts/`, page views in `src/views/`, shared UI in `src/components/`
 
+### Vant UI (v2) — IMPORTANT import conventions
+- **DO NOT** `import { X } from 'vant'` — this triggers babel-plugin-import and pulls in the `vant/es/*` ESM build, duplicating the `vant/lib/*` CJS build already registered globally. All vant code must use ONE build (`vant/lib/*`).
+- **Template components**: already globally registered via `Vue.use()` in `src/lib/vant.js` (38 components: Button/Toast/Search/Tabs/List/Popup/Dialog/Icon/Loading/Progress NOT included, etc.) — use `<van-xxx>` directly, NO import needed.
+- **Imperative APIs** (Dialog.confirm, Toast.success, ImagePreview, Notify, Locale): import from the central facade `@/lib/vant-apis` (re-exports `vant/lib/*` + needed styles):
+  ```js
+  import { Dialog, Toast, ImagePreview, Notify, Locale } from '@/lib/vant-apis'
+  ```
+  NOT `from 'vant'`. `this.$toast`/`$dialog`/`$notify` prototypes exist (from lib registration) but prefer explicit imports for clarity.
+- **New components**: if a component is NOT in the `vant.js` global registration list (e.g. Progress), either register it there or import it directly via `vant/lib/xxx` (component) + ensure its style is in `src/lib/vant-style.js`.
+- **Styles**: component styles live in `src/lib/vant-style.js` (lib path, one per component) — add new components' styles there, not via babel-plugin-import.
+
 ### i18n
 - Default locale: `zh-CN`; lazy-loaded from `src/locales/*.json`
 - Translation keys are auto-generated hashes (e.g., `'sBmkLtGcrWIL7xsU-EdM9'`) — do NOT edit keys manually
@@ -107,6 +118,7 @@ VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
 - **Disallowed type suppressions**: `as any`, `@ts-ignore`, `@ts-expect-error`
 - **`console.log` calls are NOT stripped in dev** — only dropped in production via terser `drop_console: true`
 - **`dist/`, `.env.local`, `.sisyphus/`** are gitignored
+- **`.sisyphus/plans/` 计划文件命名**: 必须以日期开头（`YYYY-MM-DD-{name}.md`，如 `2026-08-02-shinobu-fixes3.md`）——同全局 AGENTS.md 约定，生成计划时严格执行
 - **Release flow**: `bumpp` bumps `package.json` + `src/consts/index.js`, then `git-cliff` updates CHANGELOG
 
 ## Directory Map

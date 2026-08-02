@@ -81,13 +81,12 @@
 </template>
 
 <script>
-import { Progress, Icon } from 'vant'
+import Progress from 'vant/lib/progress'
 
 export default {
   name: 'TranslateProgress',
   components: {
     VanProgress: Progress,
-    VanIcon: Icon,
   },
   props: {
     // vl-api mode: array of { stage, status, durationMs, error }
@@ -398,4 +397,5 @@ $border-radius = 0.08rem
   &__stage--done
     .translate-progress__stage-label
       color $color-done
+
 </style>

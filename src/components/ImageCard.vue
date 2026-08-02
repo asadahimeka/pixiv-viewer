@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import { Dialog, ImagePreview } from 'vant'
+import { Dialog, ImagePreview } from '@/lib/vant-apis'
 import { mapGetters } from 'vuex'
 import _ from '@/lib/lodash'
 import store from '@/store'

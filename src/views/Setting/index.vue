@@ -47,7 +47,7 @@
 
 <script>
 import { mapGetters, mapState } from 'vuex'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import PixivAuth from '@/api/client/pixiv-auth'
 import { localApi } from '@/api'
 import { logout } from '@/api/user'
