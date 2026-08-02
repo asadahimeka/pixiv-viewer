@@ -2,13 +2,35 @@ import { SILICON_CLOUD_API_KEY } from '@/consts'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 
 /**
+ * SiliconCloud VL models available for manga page translation
+ * key = display label, value = API model id
+ */
+export const VL_MODELS = {
+  'Nex-N2-Pro': 'nex-agi/Nex-N2-Pro',
+  'Kimi-K2.7-Code': 'moonshotai/Kimi-K2.7-Code',
+  'Kimi-K2.6': 'Pro/moonshotai/Kimi-K2.6',
+  'GLM-4.5V': 'zai-org/GLM-4.5V',
+  'Qwen3.6-35B-A3B': 'Qwen/Qwen3.6-35B-A3B',
+  'Qwen3.6-27B': 'Qwen/Qwen3.6-27B',
+  'Qwen3.5-122B-A10B': 'Qwen/Qwen3.5-122B-A10B',
+  'Qwen3.5-35B-A3B': 'Qwen/Qwen3.5-35B-A3B',
+  'Qwen3.5-27B': 'Qwen/Qwen3.5-27B',
+  'Qwen3-VL-32B': 'Qwen/Qwen3-VL-32B-Instruct',
+  'Qwen3-VL-8B': 'Qwen/Qwen3-VL-8B-Instruct',
+  'Qwen3-VL-30B': 'Qwen/Qwen3-VL-30B-A3B-Instruct',
+  'Qwen3.5-9B': 'Qwen/Qwen3.5-9B',
+  'Qwen3.5-4B': 'Qwen/Qwen3.5-4B',
+}
+
+/**
  * Get cached translation for a manga page
  * @param {string|number} artworkId
  * @param {number} pageIndex
+ * @param {string} model - SiliconCloud model id — key is model-scoped so switching VL models never serves stale results
  * @returns {Promise<string|null>}
  */
-export async function getCachedTranslation(artworkId, pageIndex) {
-  const key = `pic.translate.${artworkId}.${pageIndex}`
+export async function getCachedTranslation(artworkId, pageIndex, model) {
+  const key = `pic.translate.${artworkId}.${pageIndex}.${model}`
   const cached = await getCache(key, null)
   return cached
 }
@@ -17,8 +39,9 @@ export async function getCachedTranslation(artworkId, pageIndex) {
  * Call SiliconCloud multimodal API with SSE streaming
  * @param {string} imageSrc
  * @param {function} onRead - callback({ content: string, done: boolean })
+ * @param {string} [model] - SiliconCloud model id, defaults to Nex-N2-Pro
  */
-export async function callMultimodalAPIStream(imageSrc, onRead) {
+export async function callMultimodalAPIStream(imageSrc, onRead, model = 'nex-agi/Nex-N2-Pro') {
   const url = 'https://api.siliconflow.cn/v1/chat/completions'
   const imageUrl = new URL(imageSrc)
   imageUrl.protocol = 'https:'
@@ -27,20 +50,7 @@ export async function callMultimodalAPIStream(imageSrc, onRead) {
   const body = {
     enable_thinking: false,
     stream: true,
-    model: 'nex-agi/Nex-N2-Pro',
-    // model: 'moonshotai/Kimi-K2.7-Code',
-    // model: 'Pro/moonshotai/Kimi-K2.6',
-    // model: 'zai-org/GLM-4.5V',
-    // model: 'Qwen/Qwen3.6-35B-A3B',
-    // model: 'Qwen/Qwen3.6-27B',
-    // model: 'Qwen/Qwen3.5-122B-A10B',
-    // model: 'Qwen/Qwen3.5-35B-A3B',
-    // model: 'Qwen/Qwen3.5-27B',
-    // model: 'Qwen/Qwen3-VL-32B-Instruct',
-    // model: 'Qwen/Qwen3-VL-8B-Instruct',
-    // model: 'Qwen/Qwen3-VL-30B-A3B-Instruct',
-    // model: 'Qwen/Qwen3.5-9B',
-    // model: 'Qwen/Qwen3.5-4B',
+    model,
     messages: [{
       role: 'user',
       content: [
@@ -111,12 +121,13 @@ export async function callMultimodalAPIStream(imageSrc, onRead) {
  * @param {string|number} artworkId
  * @param {number} pageIndex
  * @param {function} onRead - callback({ content: string, done: boolean, error?: string })
+ * @param {string} [model] - SiliconCloud model id, defaults to Nex-N2-Pro
  * @returns {Promise<string|null>}
  */
-export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead) {
-  const key = `pic.translate.${artworkId}.${pageIndex}`
+export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead, model = 'nex-agi/Nex-N2-Pro') {
+  const key = `pic.translate.${artworkId}.${pageIndex}.${model}`
 
-  const cached = await getCachedTranslation(artworkId, pageIndex)
+  const cached = await getCachedTranslation(artworkId, pageIndex, model)
   if (cached) {
     onRead({ content: cached, done: true })
     return cached
@@ -128,7 +139,7 @@ export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead)
     try {
       await callMultimodalAPIStream(imageUrl, ({ content, done }) => {
         fullText += content
-      })
+      }, model)
     } catch (err) {
       console.warn('picTranslate: API call failed', err.message)
       return null
@@ -146,7 +157,7 @@ export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead)
     await callMultimodalAPIStream(imageUrl, ({ content, done }) => {
       fullText += content
       onRead({ content, done })
-    })
+    }, model)
   } catch (err) {
     console.warn('picTranslate: API call failed', err.message)
     onRead({ content: '', done: true, error: err.message })

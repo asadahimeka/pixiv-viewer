@@ -248,11 +248,7 @@ export async function nativeTranslate(novelText = '', onRead = () => {}) {
 
 // ---------------------------------------------------------------------------
 // Shinobu pipeline entry (new engine mode)
+//
+// Loaded on demand via dynamic import in Artwork/index.vue (webpack code-split)
+// so that vl-api users never download the ~20k-line pipeline.
 // ---------------------------------------------------------------------------
-
-// Re-export the Shinobu runPipeline (T19 port) for the 'shinobu' engine mode.
-// Artwork/index.vue imports this via `@/utils/translate`.
-export {
-  runPipeline as shinobuRunPipeline,
-  PipelineStageError as ShinobuPipelineStageError,
-} from './shinobu/index.js'

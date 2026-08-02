@@ -23,6 +23,30 @@
       </div>
     </van-cell-group>
 
+    <van-cell-group v-if="translationEngine === 'vl-api'" title="VL 模型">
+      <van-cell
+        title="视觉语言模型"
+        label="选择云端 VL 模型进行漫画翻译"
+        class="preset-model-cell"
+      >
+        <template #value>
+          <select
+            :value="translationVlModel"
+            class="preset-model-select"
+            @change="onVlModelChange($event.target.value)"
+          >
+            <option
+              v-for="(model, label) in vlModels"
+              :key="label"
+              :value="model"
+            >
+              {{ label }} · {{ model.split('/').pop() }}
+            </option>
+          </select>
+        </template>
+      </van-cell>
+    </van-cell-group>
+
     <van-cell-group title="翻译提供商">
       <van-field
         :value="translationProvider"
@@ -37,10 +61,34 @@
         placeholder="输入 API Key"
         @change="onApiKeyChange"
       />
+      <van-cell
+        v-if="isSiliconCloud && !hasCustomKey"
+        title="预设模型"
+        label="未自定义 API Key 时，模型从预设中选择"
+        class="preset-model-cell"
+      >
+        <template #value>
+          <select
+            :value="currentPresetKey"
+            class="preset-model-select"
+            @change="onPresetModelChange($event.target.value)"
+          >
+            <option value="" disabled>选择预设模型</option>
+            <option
+              v-for="(model, key) in presetModels"
+              :key="key"
+              :value="key"
+            >
+              {{ key }} · {{ model.split('/').pop() }}
+            </option>
+          </select>
+        </template>
+      </van-cell>
       <van-field
         :value="providerConfig.model"
         label="模型"
-        placeholder="默认模型"
+        :placeholder="isSiliconCloud ? '选择预设模型或输入自定义模型' : '默认模型'"
+        :disabled="isSiliconCloud && !hasCustomKey"
         @change="onModelChange"
       />
       <van-field
@@ -84,6 +132,15 @@
         >
           {{ testLoading ? '测试中...' : '测试连接' }}
         </van-button>
+      </div>
+      <div
+        v-if="testResult"
+        class="model-test-result"
+        :class="testResult.ok ? 'is-ok' : 'is-fail'"
+      >
+        <van-icon :name="testResult.ok ? 'success' : 'warning'" />
+        <span>{{ testResult.message }}</span>
+        <span v-if="testResult.durationMs != null" class="result-duration">{{ testResult.durationMs }}ms</span>
       </div>
     </van-cell-group>
 
@@ -162,6 +219,8 @@
 import { Toast } from 'vant'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
+import { aiModelMap } from '@/utils/translate'
+import { VL_MODELS } from '@/utils/translate/manga'
 
 export default {
   name: 'TranslateSettings',
@@ -169,71 +228,99 @@ export default {
     return {
       testLoading: false,
       clearingCache: false,
+      testResult: null,
     }
   },
   computed: {
     translationEngine: {
       get() {
-        return store.state.translationEngine
+        return store.state.mangaTrans.engine
       },
       set(val) {
-        store.commit('SET_TRANSLATION_ENGINE', val)
+        store.commit('SET_MANGA_TRANS', { engine: val })
       },
     },
     translationProvider: {
       get() {
-        return store.state.translationProvider
+        return store.state.mangaTrans.provider
       },
       set(val) {
-        store.commit('SET_TRANSLATION_PROVIDER', val)
+        store.commit('SET_MANGA_TRANS', { provider: val })
       },
     },
     translationProviders() {
-      return store.state.translationProviders
+      return store.state.mangaTrans.providers
     },
     translationProcessMode: {
       get() {
-        return store.state.translationProcessMode
+        return store.state.mangaTrans.processMode
       },
       set(val) {
-        store.commit('SET_TRANSLATION_PROCESS_MODE', val)
+        store.commit('SET_MANGA_TRANS', { processMode: val })
       },
     },
     translationAutoTranslate: {
       get() {
-        return store.state.translationAutoTranslate
+        return store.state.mangaTrans.autoTranslate
       },
       set(val) {
-        store.commit('SET_TRANSLATION_AUTO_TRANSLATE', val)
+        store.commit('SET_MANGA_TRANS', { autoTranslate: val })
       },
     },
     translationBubble: {
       get() {
-        return store.state.translationBubble
+        return store.state.mangaTrans.bubble
       },
       set(val) {
-        store.commit('SET_TRANSLATION_BUBBLE', val)
+        store.commit('SET_MANGA_TRANS', { bubble: val })
       },
     },
     translationSourceLang: {
       get() {
-        return store.state.translationSourceLang
+        return store.state.mangaTrans.sourceLang
       },
       set(val) {
-        store.commit('SET_TRANSLATION_SOURCE_LANG', val)
+        store.commit('SET_MANGA_TRANS', { sourceLang: val })
       },
     },
     translationTargetLang: {
       get() {
-        return store.state.translationTargetLang
+        return store.state.mangaTrans.targetLang
       },
       set(val) {
-        store.commit('SET_TRANSLATION_TARGET_LANG', val)
+        store.commit('SET_MANGA_TRANS', { targetLang: val })
       },
+    },
+    translationVlModel: {
+      get() {
+        return store.state.mangaTrans.vlModel
+      },
+      set(val) {
+        store.commit('SET_MANGA_TRANS', { vlModel: val })
+      },
+    },
+    vlModels() {
+      return VL_MODELS
     },
     providerConfig() {
       const name = this.translationProvider
       return this.translationProviders[name] || {}
+    },
+    isSiliconCloud() {
+      return this.translationProvider === 'siliconcloud'
+    },
+    hasCustomKey() {
+      const cfg = this.translationProviders.siliconcloud
+      return !!(cfg && cfg.apiKey)
+    },
+    presetModels() {
+      return aiModelMap
+    },
+    currentPresetKey() {
+      const model = this.providerConfig.model
+      if (!model) return ''
+      const entry = Object.entries(aiModelMap).find(([, m]) => m === model)
+      return entry ? entry[0] : ''
     },
   },
   methods: {
@@ -246,22 +333,42 @@ export default {
     onApiKeyChange(val) {
       const name = this.translationProvider
       const current = this.translationProviders[name] || {}
-      store.commit('SET_TRANSLATION_PROVIDERS', {
-        [name]: { ...current, apiKey: val },
+      store.commit('SET_MANGA_TRANS', {
+        providers: {
+          [name]: { ...current, apiKey: val },
+        },
+      })
+    },
+    onPresetModelChange(key) {
+      if (!aiModelMap[key]) return
+      const name = this.translationProvider
+      const current = this.translationProviders[name] || {}
+      const patch = { ...current, model: aiModelMap[key] }
+      if (!patch.baseUrl) {
+        patch.baseUrl = 'https://api.siliconflow.cn/v1/'
+      }
+      store.commit('SET_MANGA_TRANS', {
+        providers: {
+          [name]: patch,
+        },
       })
     },
     onModelChange(val) {
       const name = this.translationProvider
       const current = this.translationProviders[name] || {}
-      store.commit('SET_TRANSLATION_PROVIDERS', {
-        [name]: { ...current, model: val },
+      store.commit('SET_MANGA_TRANS', {
+        providers: {
+          [name]: { ...current, model: val },
+        },
       })
     },
     onBaseUrlChange(val) {
       const name = this.translationProvider
       const current = this.translationProviders[name] || {}
-      store.commit('SET_TRANSLATION_PROVIDERS', {
-        [name]: { ...current, baseUrl: val },
+      store.commit('SET_MANGA_TRANS', {
+        providers: {
+          [name]: { ...current, baseUrl: val },
+        },
       })
     },
     onProcessModeChange(val) {
@@ -279,25 +386,34 @@ export default {
     onTargetLangChange(val) {
       this.translationTargetLang = val
     },
+    onVlModelChange(val) {
+      this.translationVlModel = val
+    },
     onAuthModeChange(val) {
       const name = this.translationProvider
       const current = this.translationProviders[name] || {}
-      store.commit('SET_TRANSLATION_PROVIDERS', {
-        [name]: { ...current, authMode: val },
+      store.commit('SET_MANGA_TRANS', {
+        providers: {
+          [name]: { ...current, authMode: val },
+        },
       })
     },
     onCustomHeaderNameChange(val) {
       const name = this.translationProvider
       const current = this.translationProviders[name] || {}
-      store.commit('SET_TRANSLATION_PROVIDERS', {
-        [name]: { ...current, customHeaderName: val },
+      store.commit('SET_MANGA_TRANS', {
+        providers: {
+          [name]: { ...current, customHeaderName: val },
+        },
       })
     },
     onCustomHeaderValueChange(val) {
       const name = this.translationProvider
       const current = this.translationProviders[name] || {}
-      store.commit('SET_TRANSLATION_PROVIDERS', {
-        [name]: { ...current, customHeaderValue: val },
+      store.commit('SET_MANGA_TRANS', {
+        providers: {
+          [name]: { ...current, customHeaderValue: val },
+        },
       })
     },
     async clearTranslationCache() {
@@ -319,11 +435,13 @@ export default {
       const baseUrl = config.baseUrl || ''
 
       if (!apiKey) {
+        this.testResult = { ok: false, message: '请先输入 API Key' }
         Toast('请先输入 API Key')
         return
       }
 
       this.testLoading = true
+      const start = Date.now()
 
       try {
         // Determine endpoint from provider conventions
@@ -339,7 +457,7 @@ export default {
           : (endpoints[providerName] || `${baseUrl}/chat/completions`)
 
         const defaultModels = {
-          siliconcloud: 'Qwen/Qwen3-VL-32B-Instruct',
+          siliconcloud: 'Qwen/Qwen3-8B',
           openai: 'gpt-4o-mini',
           deepseek: 'deepseek-chat',
           glm: 'glm-4-plus',
@@ -370,9 +488,11 @@ export default {
           throw new Error(`${response.status} ${response.statusText}${errText ? ': ' + errText : ''}`)
         }
 
+        this.testResult = { ok: true, message: '连接成功', durationMs: Date.now() - start }
         Toast.success('连接成功')
       } catch (err) {
         console.log('testConnection err:', err)
+        this.testResult = { ok: false, message: `连接失败: ${err.message}`, durationMs: Date.now() - start }
         Toast(`连接失败: ${err.message}`)
       } finally {
         this.testLoading = false
@@ -425,6 +545,22 @@ export default {
     padding 0 0.3rem 0.1rem
     line-height 1.6
 
+  .preset-model-cell
+    ::v-deep .van-cell__value
+      display flex
+      align-items center
+      justify-content flex-end
+
+    .preset-model-select
+      max-width 4.5rem
+      padding 0.08rem 0.2rem
+      border 1px solid #ddd
+      border-radius 0.08rem
+      background #fff
+      font-size 0.24rem
+      color #333
+      text-align right
+
   .model-test-result
     margin 0.1rem 0.3rem 0.2rem
     padding 0.15rem 0.2rem
@@ -433,4 +569,23 @@ export default {
     font-size 0.24rem
     line-height 1.8
     color #555
+
+    .van-icon
+      vertical-align middle
+      margin-right 0.06rem
+
+    &.is-ok
+      border-color #07c160
+      color #07c160
+      background rgba(7, 193, 96, 0.08)
+
+    &.is-fail
+      border-color #ee0a24
+      color #ee0a24
+      background rgba(238, 10, 36, 0.08)
+
+    .result-duration
+      margin-left 0.1rem
+      font-size 0.22rem
+      color #999
 </style>

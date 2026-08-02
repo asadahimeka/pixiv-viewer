@@ -35,22 +35,19 @@ export default new Vuex.Store({
     isSafari: isSafari(),
     /** @type {any[]|null} */
     appNotice: null,
-    /** @type {string} */
-    translationEngine: getSettingDef('PXV_TRANSLATION_ENGINE', 'vl-api'),
-    /** @type {string} */
-    translationProvider: getSettingDef('PXV_TRANSLATION_PROVIDER', 'siliconcloud'),
-    /** @type {Object<string, {apiKey?: string, model?: string, baseUrl?: string}>} */
-    translationProviders: getSettingDef('PXV_TRANSLATION_PROVIDERS', {}),
-    /** @type {'translate'|'erase'|'original'} */
-    translationProcessMode: getSettingDef('PXV_TRANSLATION_PROCESS_MODE', 'translate'),
-    /** @type {boolean} */
-    translationAutoTranslate: getSettingDef('PXV_TRANSLATION_AUTO_TRANSLATE', false),
-    /** @type {boolean} */
-    translationBubble: getSettingDef('PXV_TRANSLATION_BUBBLE', true),
-    /** @type {string} */
-    translationSourceLang: getSettingDef('PXV_TRANSLATION_SOURCE_LANG', 'ja'),
-    /** @type {string} */
-    translationTargetLang: getSettingDef('PXV_TRANSLATION_TARGET_LANG', 'zh-CN'),
+    /** @type {{ engine: string, provider: string, providers: Object<string, {apiKey?: string, model?: string, baseUrl?: string, authMode?: string, customHeaderName?: string, customHeaderValue?: string}>, processMode: 'translate'|'erase'|'original', autoTranslate: boolean, bubble: boolean, sourceLang: string, targetLang: string, vlModel: string }} */
+    mangaTrans: {
+      engine: 'vl-api',
+      provider: 'siliconcloud',
+      providers: {},
+      processMode: 'translate',
+      autoTranslate: false,
+      bubble: true,
+      sourceLang: 'ja',
+      targetLang: 'zh-CN',
+      vlModel: 'nex-agi/Nex-N2-Pro',
+      ...getSettingDef('PXV_MANGA_TRANS', {}),
+    },
     /** @type {any[]|null} */
     seasonEffects: null,
     routeHistory: SessionStorage.get('PXV_ROUTE_HISTORY', []),
@@ -219,37 +216,16 @@ export default new Vuex.Store({
       state.routeHistory = val
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
     },
-    SET_TRANSLATION_ENGINE(state, val) {
-      state.translationEngine = val
-      LocalStorage.set('PXV_TRANSLATION_ENGINE', val)
-    },
-    SET_TRANSLATION_PROVIDER(state, val) {
-      state.translationProvider = val
-      LocalStorage.set('PXV_TRANSLATION_PROVIDER', val)
-    },
-    SET_TRANSLATION_PROVIDERS(state, val) {
-      state.translationProviders = { ...state.translationProviders, ...val }
-      LocalStorage.set('PXV_TRANSLATION_PROVIDERS', state.translationProviders)
-    },
-    SET_TRANSLATION_PROCESS_MODE(state, val) {
-      state.translationProcessMode = val
-      LocalStorage.set('PXV_TRANSLATION_PROCESS_MODE', val)
-    },
-    SET_TRANSLATION_AUTO_TRANSLATE(state, val) {
-      state.translationAutoTranslate = val
-      LocalStorage.set('PXV_TRANSLATION_AUTO_TRANSLATE', val)
-    },
-    SET_TRANSLATION_BUBBLE(state, val) {
-      state.translationBubble = val
-      LocalStorage.set('PXV_TRANSLATION_BUBBLE', val)
-    },
-    SET_TRANSLATION_SOURCE_LANG(state, val) {
-      state.translationSourceLang = val
-      LocalStorage.set('PXV_TRANSLATION_SOURCE_LANG', val)
-    },
-    SET_TRANSLATION_TARGET_LANG(state, val) {
-      state.translationTargetLang = val
-      LocalStorage.set('PXV_TRANSLATION_TARGET_LANG', val)
+    SET_MANGA_TRANS(state, patch) {
+      state.mangaTrans = {
+        ...state.mangaTrans,
+        ...patch,
+        providers: {
+          ...state.mangaTrans.providers,
+          ...(patch.providers || {}),
+        },
+      }
+      LocalStorage.set('PXV_MANGA_TRANS', state.mangaTrans)
     },
   },
   actions: {
