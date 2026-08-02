@@ -8,34 +8,56 @@
       "task": "detection",
       "url": "detector.onnx",
       "input": "image",
-      "runtime": ["webgpu", "wasm"],
-      "baseUrl": "/models/"
+      "runtime": [
+        "webgpu",
+        "wasm"
+      ],
+      "baseUrl": "/models/",
+      "sha256": "1a86ace74961413cbd650002e7bb4dcec4980ffa21b2f19b86933372071d718f"
     },
     "inpaint": {
       "name": "inpaint",
       "task": "inpainting",
       "url": "aot_inpaint_512.onnx",
       "input": "image",
-      "runtime": ["webgpu", "wasm"],
-      "baseUrl": "/models/"
+      "runtime": [
+        "webgpu",
+        "wasm"
+      ],
+      "baseUrl": "/models/",
+      "sha256": "acdddccfdc32780c8947946814e9eea6a8b0d5b1880fb46f3be8389510f11689"
     },
     "paddleocr_v6_medium_rec": {
       "name": "paddleocr_v6_medium_rec",
       "task": "ocr",
       "url": "PP-OCRv6_medium_rec.onnx",
       "input": "image",
-      "runtime": ["webgpu", "wasm"],
+      "runtime": [
+        "webgpu",
+        "wasm"
+      ],
       "dictUrl": "paddleocr_v6_dict.txt",
-      "baseUrl": "/models/"
+      "baseUrl": "/models/",
+      "sha256": "9c09abf0957f7968c7586464b7397b84ad2387a0497a351af40e9acc71b673ba",
+      "dictSha256": "b5f2bfe2bdd9448429e3e82b51c789775d9b42f2403d082b00662eb77e401c5d"
     },
     "bubble": {
       "name": "bubble",
       "task": "detection",
       "url": "bubble.onnx",
       "input": "image",
-      "runtime": ["webgpu", "wasm"],
-      "baseUrl": "/models/"
+      "runtime": [
+        "webgpu",
+        "wasm"
+      ],
+      "baseUrl": "/models/",
+      "sha256": "3da3317f6dffe27cf5c9396dc95d5324fb647e22adeb7bf304edbe921789f0a0"
     }
   },
-  "modelOrder": ["detector", "paddleocr_v6_medium_rec", "inpaint", "bubble"]
+  "modelOrder": [
+    "detector",
+    "paddleocr_v6_medium_rec",
+    "inpaint",
+    "bubble"
+  ]
 }
