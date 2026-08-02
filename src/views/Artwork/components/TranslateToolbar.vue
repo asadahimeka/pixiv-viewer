@@ -41,30 +41,6 @@
         <span v-if="!isCompact">{{ '取消' }}</span>
       </van-button>
 
-      <!-- Translate Current Page -->
-      <van-button
-        v-if="!translating"
-        size="small"
-        type="primary"
-        icon="scan"
-        :loading="translating"
-        @click.stop="$emit('translate-current')"
-      >
-        <span v-if="!isCompact">{{ '翻译当前' }}</span>
-      </van-button>
-
-      <!-- Translate All Pages (multi-page only) -->
-      <van-button
-        v-if="!translating && pageCount > 1"
-        size="small"
-        plain
-        type="primary"
-        icon="replay"
-        @click.stop="$emit('translate-all')"
-      >
-        <span v-if="!isCompact">{{ '全部翻译' }}</span>
-      </van-button>
-
       <!-- Toggle Original/Translated -->
       <van-button
         size="small"

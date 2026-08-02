@@ -58,8 +58,6 @@
       :current-page="currentTransPage"
       :error-count="translateErrorCount"
       :engine="translationEngine"
-      @translate-current="handleTranslate(currentTransPage)"
-      @translate-all="handleTranslateAll"
       @toggle-view="showTranslated = !showTranslated"
       @open-settings="showTranslateSettings = true"
       @cancel-translate="handleCancelTranslate"
@@ -101,7 +99,7 @@
 import nprogress from 'nprogress'
 import { mapGetters } from 'vuex'
 import { ImagePreview } from 'vant'
-import api, { localApi } from '@/api'
+import api, { localApi, imgProxy } from '@/api'
 import store from '@/store'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
@@ -125,7 +123,6 @@ import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation } from '@/utils/translate/manga'
-import { shinobuRunPipeline } from '@/utils/translate'
 import PicTranslatePanel from './components/PicTranslatePanel.vue'
 import TranslateToolbar from './components/TranslateToolbar'
 import TranslateSettings from './components/TranslateSettings'
@@ -237,7 +234,7 @@ export default {
         this.artwork.type === 'manga' &&
         this.artwork.x_restrict < 1 &&
         i18n.locale.includes('zh') &&
-        !/中文|中国语|Chinese|中國語|中国語/.test(JSON.stringify(this.artwork.tags || []))
+        !/中文|中国语|Chinese|中國語|中国語/i.test(JSON.stringify(this.artwork.tags || []))
       )
     },
     translatingIndex() {
@@ -250,18 +247,18 @@ export default {
       return this.artwork?.images?.length || 0
     },
     showTranslateToolbar() {
-      // return this.pageCount > 1 && store.state.translationEngine !== 'vl-api'
+      // return this.pageCount > 1 && store.state.mangaTrans.engine !== 'vl-api'
       return this.showPicTranslateBtn
     },
     translationProvider() {
-      return store.state.translationProvider
+      return store.state.mangaTrans.provider
     },
     translationEngine() {
-      return store.state.translationEngine
+      return store.state.mangaTrans.engine
     },
     providerConfig() {
-      const name = store.state.translationProvider
-      return store.state.translationProviders[name] || {}
+      const name = store.state.mangaTrans.provider
+      return store.state.mangaTrans.providers[name] || {}
     },
   },
   watch: {
@@ -500,8 +497,29 @@ export default {
         type: 'illust',
       }
     },
+    loadBlobAsImage(blob) {
+      // 带超时与 onerror 保护地加载 Blob 为 Image；失败 reject 而非永久挂起
+      return new Promise((resolve, reject) => {
+        const img = new Image()
+        const url = URL.createObjectURL(blob)
+        const timer = setTimeout(() => {
+          URL.revokeObjectURL(url)
+          reject(new Error('缓存图片加载超时'))
+        }, 5000)
+        img.onload = () => {
+          clearTimeout(timer)
+          resolve(img)
+        }
+        img.onerror = () => {
+          clearTimeout(timer)
+          URL.revokeObjectURL(url)
+          reject(new Error('缓存图片解码失败'))
+        }
+        img.src = url
+      })
+    },
     async handleTranslate(pageIndex) {
-      const engine = store.state.translationEngine
+      const engine = store.state.mangaTrans.engine
 
       if (engine === 'shinobu') {
         // SHINOBU PIPELINE path (canvas output, replaces old ONNX pipeline)
@@ -513,7 +531,7 @@ export default {
         this.showTranslated = false
         this.currentTransPage = pageIndex
 
-        const imageUrl = this.artwork.images[pageIndex]?.l || this.artwork.images[pageIndex]?.original
+        const imageUrl = this.artwork.images[pageIndex]?.l || this.artwork.images[pageIndex]?.o
         if (!imageUrl) {
           this.$toast('无法获取图片 URL')
           return
@@ -521,11 +539,23 @@ export default {
 
         const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}`
         const cached = await getCache(cacheKey)
-        if (cached) {
-          this.$set(this.translatedCanvases, pageIndex, cached)
-          this.showTranslated = true
-          this.$toast('使用缓存的翻译结果')
-          return
+        // 缓存以 Blob 存储；旧缓存（canvas 序列化成 {}）不满足 instanceof Blob → 当 miss 重新翻译
+        if (cached instanceof Blob) {
+          try {
+            const img = await this.loadBlobAsImage(cached)
+            const canvas = document.createElement('canvas')
+            canvas.width = img.naturalWidth
+            canvas.height = img.naturalHeight
+            canvas.getContext('2d').drawImage(img, 0, 0)
+            URL.revokeObjectURL(img.src)
+            this.$set(this.translatedCanvases, pageIndex, canvas)
+            this.showTranslated = true
+            this.$toast('使用缓存的翻译结果')
+            return
+          } catch (e) {
+            // 损坏/解码失败的 Blob：放弃缓存，降级为 miss 走正常翻译（不挂起）
+            console.warn('[shinobu] 缓存恢复失败，重新翻译:', e)
+          }
         }
 
         this.pipelineTranslating = true
@@ -543,7 +573,7 @@ export default {
           llmBaseUrl: providerConfig.baseUrl || '',
           llmApiKey: providerConfig.apiKey || '',
           llmModel: providerConfig.model || '',
-          processMode: store.state.translationProcessMode || 'translate',
+          processMode: store.state.mangaTrans.processMode || 'translate',
           ocrEngine: 'paddleocr_v6_medium',
           ocrPostFilter: 'balanced',
           typesetDebug: false,
@@ -560,14 +590,29 @@ export default {
         this.pipelineAbort = abortController
 
         try {
-          // Shinobu runPipeline consumes a File (not a URL string)
-          const imageBlob = await fetch(imageUrl).then(res => {
+          // Shinobu 图片获取降级链: 油猴 __httpRequest__ → imgProxy → fetch
+          let imageBlob = null
+          if (window.__httpRequest__) {
+            try {
+              const { data } = await window.__httpRequest__(imageUrl, JSON.stringify({
+                responseType: 'blob',
+                headers: { Referer: 'https://www.pixiv.net/' },
+              }))
+              if (data instanceof Blob) imageBlob = data
+            } catch (e) {
+              console.warn('[shinobu] 油猴图片获取失败，降级:', e)
+            }
+          }
+          if (!imageBlob) {
+            const fetchUrl = imgProxy(imageUrl)
+            const res = await fetch(fetchUrl)
             if (!res.ok) throw new Error(`图片下载失败 HTTP ${res.status}`)
-            return res.blob()
-          })
+            imageBlob = await res.blob()
+          }
           const imageFile = new File([imageBlob], `page-${pageIndex}.png`, { type: imageBlob.type || 'image/png' })
 
-          const artifacts = await shinobuRunPipeline(imageFile, config, onProgress, { signal: abortController.signal })
+          const { runPipeline } = await import('@/utils/translate/shinobu/index.js')
+          const artifacts = await runPipeline(imageFile, config, onProgress, { signal: abortController.signal })
 
           if (!this.isActive) {
             console.log('[Artwork] Component deactivated during pipeline — discarding result')
@@ -582,7 +627,9 @@ export default {
 
           if (artifacts.resultCanvas) {
             this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
-            await setCache(cacheKey, artifacts.resultCanvas)
+            // IndexedDB 无法结构化克隆 canvas，转存 Blob（PNG）保证缓存可序列化
+            const blob = await new Promise(resolve => artifacts.resultCanvas.toBlob(resolve, 'image/png'))
+            if (blob) await setCache(cacheKey, blob)
             this.showTranslated = true
           }
           this.$toast('翻译完成')
@@ -607,7 +654,7 @@ export default {
         // EXISTING VL-API path — keep unchanged
         this.showPicTranslatePanel = true
         this.currentTransPage = pageIndex
-        const cached = await getCachedTranslation(this.artwork.id, pageIndex)
+        const cached = await getCachedTranslation(this.artwork.id, pageIndex, store.state.mangaTrans.vlModel)
         if (cached) {
           this.$set(this.picTranslations, pageIndex, cached)
           return
@@ -631,7 +678,7 @@ export default {
                 this.$toast('翻译失败，请重试')
               }
             }
-          })
+          }, store.state.mangaTrans.vlModel)
         } catch (err) {
           console.log('translate err: ', err)
           this.$toast('翻译出错: ' + err.message)
@@ -640,21 +687,12 @@ export default {
       }
     },
     handleClosePanel() {
-      const engine = store.state.translationEngine
+      const engine = store.state.mangaTrans.engine
       if (engine === 'vl-api') {
         this.showPicTranslatePanel = false
       } else {
         this.showTranslated = false
       }
-    },
-    async handleTranslateAll() {
-      const count = this.pageCount
-      this.pipelineTranslating = true
-      for (let i = 0; i < count; i++) {
-        this.currentTransPage = i
-        await this.handleTranslate(i)
-      }
-      this.pipelineTranslating = false
     },
     handleCancelTranslate() {
       // shinobu pipeline runs on the main thread via comlink worker —
@@ -667,7 +705,7 @@ export default {
       this.translateStatusText = ''
     },
     async handleRetry(pageIndex) {
-      const engine = store.state.translationEngine
+      const engine = store.state.mangaTrans.engine
       if (engine === 'shinobu') {
         const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}`
         try {
@@ -682,7 +720,7 @@ export default {
       }
       if (engine === 'vl-api') {
         try {
-          await setCache(`pic.translate.${this.artwork.id}.${pageIndex}`, null)
+          await setCache(`pic.translate.${this.artwork.id}.${pageIndex}.${store.state.mangaTrans.vlModel}`, null)
         } catch (e) {
           console.warn('Failed to clear translate cache', e)
         }

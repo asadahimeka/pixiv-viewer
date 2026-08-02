@@ -398,3 +398,4 @@ $border-radius = 0.08rem
   &__stage--done
     .translate-progress__stage-label
       color $color-done
+</style>

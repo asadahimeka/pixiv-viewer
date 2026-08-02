@@ -237,7 +237,7 @@ export default {
         !store.state.appSetting.imgViewHorizonScroll
     },
     translationEngine() {
-      return store.state.translationEngine
+      return store.state.mangaTrans.engine
     },
     showOverlay() {
       return this.translationEngine === 'shinobu'
