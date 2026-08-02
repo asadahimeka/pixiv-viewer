@@ -13,6 +13,7 @@
 
 import * as ortAll from 'onnxruntime-web/all'
 import * as Comlink from 'comlink'
+import localforage from 'localforage'
 import { serializeOnnxSessionOptions } from '../runtime/onnxSessionOptions.js'
 import { isContextLostRuntimeError, isCreateTimeoutError } from '../runtime/onnxTypes.js'
 import { preprocessLetterboxGpu } from './gpuPreprocess.js'
@@ -31,6 +32,97 @@ function toErrorMessage(error) {
     return error.message
   }
   return String(error)
+}
+
+// ---------------------------------------------------------------------------
+// Model binary cache — IndexedDB via localforage (worker-safe, no rAF)
+// ---------------------------------------------------------------------------
+
+/**
+ * Dedicated IndexedDB store for model binaries.
+ *
+ * NOTE: we deliberately use localforage directly here instead of
+ * src/utils/storage/localDb.js — that wrapper's constructor touches
+ * `window.requestIdleCallback`, which is undefined inside a worker.
+ *
+ * @type {LocalForage}
+ */
+const modelCache = localforage.createInstance({
+  name: 'shinobu-models',
+  storeName: 'models',
+})
+
+/**
+ * Build a versioned cache key for a model URL.
+ *
+ * The key embeds the full resolved URL, which already contains the release tag
+ * (e.g. `.../releases/download/models-v0.7.0/detector.onnx`) or the local file
+ * name (`./models/detector.onnx`). Different sources → different keys, and a
+ * tag change → different URL → different key → the model is re-downloaded
+ * automatically instead of serving a stale binary.
+ *
+ * @param {string} modelUrl
+ * @returns {string}
+ */
+function cacheKeyFor(modelUrl) {
+  return `shinobu-model:${modelUrl}`
+}
+
+/**
+ * Look up a cached model binary. Returns `null` on miss or read error —
+ * callers fall back to a network download.
+ * @param {string} modelUrl
+ * @returns {Promise<ArrayBuffer | null>}
+ */
+async function getCachedModel(modelUrl) {
+  try {
+    const value = await modelCache.getItem(cacheKeyFor(modelUrl))
+    return value instanceof ArrayBuffer ? value : null
+  } catch (error) {
+    console.warn(`[onnx-worker] 读取模型缓存失败，将重新下载: ${toErrorMessage(error)}`)
+    return null
+  }
+}
+
+/**
+ * Write a model binary to the cache.
+ *
+ * Quota-exceeded (or any storage) failures degrade gracefully: warn and keep
+ * the already-downloaded ArrayBuffer so session creation is never blocked.
+ *
+ * @param {string} modelUrl
+ * @param {ArrayBuffer} buffer
+ * @returns {Promise<void>}
+ */
+async function setCachedModel(modelUrl, buffer) {
+  try {
+    await modelCache.setItem(cacheKeyFor(modelUrl), buffer)
+  } catch (error) {
+    console.warn(`[onnx-worker] 模型缓存写入失败（可能 quota 超限），继续使用已下载数据: ${toErrorMessage(error)}`)
+  }
+}
+
+/**
+ * Load a model binary, cache-first.
+ *
+ * Hit → return cached ArrayBuffer (no network). Miss → fetch the URL, write
+ * the bytes into the cache (best-effort), and return them.
+ *
+ * @param {string} modelUrl
+ * @returns {Promise<ArrayBuffer>}
+ */
+async function loadModelBuffer(modelUrl) {
+  const cached = await getCachedModel(modelUrl)
+  if (cached) {
+    return cached
+  }
+  const response = await fetch(modelUrl)
+  if (!response.ok) {
+    throw new Error(`模型下载失败: ${response.status} ${response.statusText}`)
+  }
+  const buffer = await response.arrayBuffer()
+  await setCachedModel(modelUrl, buffer)
+  return buffer
 }
 
 // ---------------------------------------------------------------------------
@@ -54,8 +146,10 @@ function ensureOrtEnv() {
   if (envInitialized) return
 
   // Blob URL Workers run in the page's origin and cannot access chrome.runtime.
-  // The ORT WASM path must be provided by the main thread via init().
-  const ortPath = ortPathOverride ?? 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.27.0/dist/'
+  // The ORT WASM path is provided by the main thread via init() (priority),
+  // falling back to VUE_APP_ORT_WASM_PATH, then the jsdelivr CDN default.
+  const envWasmPath = process.env.VUE_APP_ORT_WASM_PATH
+  const ortPath = ortPathOverride ?? (envWasmPath || 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.27.0/dist/')
 
   const hwThreads =
     typeof navigator !== 'undefined' && typeof navigator.hardwareConcurrency === 'number'
@@ -192,7 +286,10 @@ async function createSessionWithTimeout(modelUrl, options, timeoutMs) {
   let timer = null
   try {
     return await Promise.race([
-      ortAll.InferenceSession.create(modelUrl, options),
+      (async () => {
+        const buffer = await loadModelBuffer(modelUrl)
+        return ortAll.InferenceSession.create(buffer, options)
+      })(),
       new Promise((_resolve, reject) => {
         timer = setTimeout(() => reject(new Error(`Session 创建超时(${timeoutMs}ms)`)), timeoutMs)
       }),
@@ -467,10 +564,13 @@ async function verifyWasmSession(modelUrl) {
     /** @type {ReturnType<typeof setTimeout> | null} */
     let timer = null
     const session = await Promise.race([
-      ortAll.InferenceSession.create(modelUrl, {
-        executionProviders: ['wasm'],
-        graphOptimizationLevel: 'all',
-      }),
+      (async () => {
+        const buffer = await loadModelBuffer(modelUrl)
+        return ortAll.InferenceSession.create(buffer, {
+          executionProviders: ['wasm'],
+          graphOptimizationLevel: 'all',
+        })
+      })(),
       new Promise((_resolve, reject) => {
         timer = setTimeout(() => reject(new Error('Session 创建超时(12000ms)')), 12000)
       }),
@@ -502,10 +602,13 @@ async function verifyWebnnSession(modelUrl) {
       /** @type {ReturnType<typeof setTimeout> | null} */
       let timer = null
       const session = await Promise.race([
-        ortAll.InferenceSession.create(modelUrl, {
-          executionProviders: [ep],
-          graphOptimizationLevel: 'all',
-        }),
+        (async () => {
+          const buffer = await loadModelBuffer(modelUrl)
+          return ortAll.InferenceSession.create(buffer, {
+            executionProviders: [ep],
+            graphOptimizationLevel: 'all',
+          })
+        })(),
         new Promise((_resolve, reject) => {
           timer = setTimeout(() => reject(new Error('Session 创建超时(12000ms)')), 12000)
         }),

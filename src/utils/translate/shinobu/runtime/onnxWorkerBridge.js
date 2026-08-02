@@ -45,7 +45,9 @@ function recordPerfWorkerCall(_payload) {
 // ---------------------------------------------------------------------------
 
 /** CDN path for onnxruntime-web WASM assets (mirrors worker default). */
-const ORT_CDN_PATH = 'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.27.0/dist/'
+const ORT_CDN_PATH =
+  process.env.VUE_APP_ORT_WASM_PATH ||
+  'https://cdn.jsdelivr.net/npm/onnxruntime-web@1.27.0/dist/'
 
 /** Maximum wait for worker init() handshake. */
 const WORKER_INIT_TIMEOUT_MS = 10000

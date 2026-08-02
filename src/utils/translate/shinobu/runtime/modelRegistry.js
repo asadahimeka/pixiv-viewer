@@ -4,18 +4,26 @@
  * Mechanically converted from ShinobuTranslator `src/runtime/modelRegistry.ts`
  * (TS → JS). Types → JSDoc @typedef + placeholder exports; functions preserved.
  *
- * CDN dual-mode: When VUE_APP_MODEL_RELEASE_TAG is set, model URLs resolve to
- * GitHub Releases CDN. Otherwise, models are loaded from ./models/ (local dev
- * server — public/models/ directory).
+ * CDN triple-mode: VUE_APP_MODEL_URL_TEMPLATE (custom URL template with a
+ * {filename} placeholder) takes priority, then VUE_APP_MODEL_RELEASE_TAG
+ * (GitHub Releases CDN), then ./models/ (local dev server — public/models/
+ * directory).
  *
  * Session management (getModelSession / disposeModelSession /
- * disposeAllModelSessions) are skeleton implementations — the actual comlink
- * worker call (createSession from onnxBridge.js) will be connected in T6.
+ * disposeAllModelSessions) delegate to onnxBridge.js (T7 comlink worker
+ * bridge): session creation with main-thread cache dedup, and dispose
+ * forwarding to the worker.
+ *
+ * Cache key alignment: the main-thread key uses serializeOnnxSessionOptions
+ * (from onnxSessionOptions.js) — this MUST match the worker-side sessionId
+ * key construction in workers/onnx-worker.js, otherwise session cache hits
+ * never occur.
  *
  * Dependencies (all in ./runtime/):
  *   onnxTypes.js       — RuntimeProvider type (T3)
  *   onnxSessionOptions.js — OnnxSessionOptions type + serializeOnnxSessionOptions (T3)
  *   onnxWorkerTypes.js — WorkerSessionHandle type (T2)
+ *   onnxBridge.js      — comlink worker bridge (T7)
  */
 
 // ---------------------------------------------------------------------------
@@ -25,6 +33,14 @@
 /** @typedef {import('./onnxTypes.js').RuntimeProvider} RuntimeProvider */
 /** @typedef {import('./onnxSessionOptions.js').OnnxSessionOptions} OnnxSessionOptions */
 /** @typedef {import('./onnxWorkerTypes.js').WorkerSessionHandle} WorkerSessionHandle */
+
+// ---------------------------------------------------------------------------
+// Runtime imports — onnxBridge (T7 comlink worker bridge) + session option key
+// serializer. Both are real imports (not doc-only).
+// ---------------------------------------------------------------------------
+
+import { serializeOnnxSessionOptions } from './onnxSessionOptions.js'
+import { createSession, disposeSession, disposeAll } from './onnxBridge.js'
 
 // ---------------------------------------------------------------------------
 // Types — JSDoc @typedef + placeholder exports (T2/T3 convention)
@@ -74,30 +90,33 @@ let manifestPromise = null
  * @returns {string}
  */
 export function getDefaultManifestUrl() {
-  if (typeof process !== 'undefined' && process.env && process.env.VUE_APP_MODEL_MANIFEST_URL) {
+  if (process.env.VUE_APP_MODEL_MANIFEST_URL) {
     return process.env.VUE_APP_MODEL_MANIFEST_URL
   }
   return './models/models.json'
 }
 
 /**
- * Resolve a model asset URL — CDN dual-mode.
+ * Resolve a model asset URL — CDN triple-mode.
  *
- * When VUE_APP_MODEL_RELEASE_TAG is set (e.g., 'models-v1.0.0'), model files
- * are served from GitHub Releases CDN:
- *   https://github.com/DonutShinobu/ShinobuTranslator/releases/download/{tag}/{filename}
- *
- * Otherwise, models are served from the local dev server's public/models/
- * directory:
- *   ./models/{path}
+ * Priority (highest first):
+ *   1. VUE_APP_MODEL_URL_TEMPLATE — custom CDN URL template; the `{filename}`
+ *      placeholder is replaced with the model's basename (e.g.,
+ *      'https://cdn.example.com/models/{filename}').
+ *   2. VUE_APP_MODEL_RELEASE_TAG — GitHub Releases CDN (e.g., 'models-v1.0.0'):
+ *        https://github.com/DonutShinobu/ShinobuTranslator/releases/download/{tag}/{filename}
+ *   3. Local dev server's public/models/ directory:
+ *        ./models/{path}
  *
  * @param {string} path - Model file path from manifest (e.g., 'detector.onnx')
  * @returns {string} Resolved model URL
  */
 export function resolveModelUrl(path) {
-  const releaseTag = typeof process !== 'undefined' && process.env && process.env.VUE_APP_MODEL_RELEASE_TAG
+  const filename = path.split('/').pop()
+  const urlTemplate = process.env.VUE_APP_MODEL_URL_TEMPLATE
+  if (urlTemplate) return urlTemplate.replace('{filename}', filename)
+  const releaseTag = process.env.VUE_APP_MODEL_RELEASE_TAG
   if (releaseTag) {
-    const filename = path.split('/').pop()
     return `https://github.com/DonutShinobu/ShinobuTranslator/releases/download/${releaseTag}/${filename}`
   }
   return `./models/${path.replace(/^\//, '')}`
@@ -232,23 +251,17 @@ const sessionCache = new Map()
 const sessionPromiseCache = new Map()
 
 // ---------------------------------------------------------------------------
-// Session management (skeleton — T6 comlink worker bridge)
+// Session management — onnxBridge delegation with cache dedup
 // ---------------------------------------------------------------------------
 
 /**
  * Get or create an ONNX inference session for a model.
  *
- * SKELETON — the actual `createSession` call (comlink worker bridge from
- * `onnxBridge.js`) will be connected in T6. This function implements the full
- * cache-dedup and model-resolution pipeline; only the creation call is stubbed.
- *
- * Current behavior:
- *   1. Resolves model config + URL via getModel()
- *   2. Normalizes runtime providers
- *   3. Computes a cache key from (name, runtime, sessionOptions)
- *   4. Returns cached session if available
- *   5. Deduplicates concurrent calls to the same cache key
- *   6. TODO(T6): calls createSession(name, model.url, runtime, sessionOptions)
+ * Resolves model config + URL via getModel(), computes a cache key from
+ * (name, runtime, serializeOnnxSessionOptions(sessionOptions)), returns a
+ * cached session when available, deduplicates concurrent in-flight creations,
+ * and otherwise delegates session creation to onnxBridge.createSession
+ * (comlink worker bridge).
  *
  * @param {ModelName} name - Model name key
  * @param {Array<RuntimeProvider>} [preferred] - Preferred runtime providers
@@ -260,8 +273,10 @@ export async function getModelSession(name, preferred, sessionOptions) {
   // Resolve model config and runtime
   const model = await getModel(name)
   const runtime = preferred && preferred.length > 0 ? preferred : model.runtime
-  const sessionOptionsKey = sessionOptions ? JSON.stringify(sessionOptions) : 'default'
-  const cacheKey = `${name}:${runtime.join(',')}:${sessionOptionsKey}`
+  // Key alignment: must match worker-side sessionId in workers/onnx-worker.js
+  const sessionOptionsKey = serializeOnnxSessionOptions(sessionOptions)
+  const dedupedRuntime = runtime.filter((item, idx) => runtime.indexOf(item) === idx)
+  const cacheKey = `${name}:${dedupedRuntime.join(',')}:${sessionOptionsKey}`
 
   // Check resolved cache
   const cached = sessionCache.get(cacheKey)
@@ -271,41 +286,25 @@ export async function getModelSession(name, preferred, sessionOptions) {
   const pending = sessionPromiseCache.get(cacheKey)
   if (pending) return pending
 
-  // ---------------------------------------------------------------------------
-  // TODO(T6): Replace the throw below with comlink ONNX worker session creation.
-  //
-  // Import from onnxBridge.js (T6):
-  //   import { createSession } from './onnxBridge.js'
-  //
-  // Insertion point — replace this throw block with:
-  //
-  //   const creation = createSession(name, model.url, runtime, sessionOptions)
-  //     .then(handle => {
-  //       sessionCache.set(cacheKey, handle)
-  //       return handle
-  //     })
-  //     .finally(() => {
-  //       sessionPromiseCache.delete(cacheKey)
-  //     })
-  //   sessionPromiseCache.set(cacheKey, creation)
-  //   return creation
-  //
-  // The disposed-session and provider-fallback logic from the Shinobu source
-  // can also be added here (recordPerfRuntimeEvent from ../shared/perfTrace).
-  // ---------------------------------------------------------------------------
-
-  throw new Error(
-    `[shinobu/modelRegistry] getModelSession("${name}") — comlink worker not yet wired. ` +
-    `Model URL: ${model.url}. Runtime: ${runtime.join(',')}. ` +
-    'This will be connected in T6 (onnxBridge.js).'
-  )
+  // Create session via the comlink worker bridge; store on success
+  const creation = createSession(name, model.url, runtime, sessionOptions)
+    .then(handle => {
+      sessionCache.set(cacheKey, handle)
+      return handle
+    })
+    .finally(() => {
+      sessionPromiseCache.delete(cacheKey)
+    })
+  sessionPromiseCache.set(cacheKey, creation)
+  return creation
 }
 
 /**
- * Dispose cached sessions for a model.
+ * Dispose cached sessions for a model, then forward to the worker.
  *
- * SKELETON — clears local session cache. The actual `disposeSession` call via
- * the comlink worker will be connected in T6.
+ * Clears matching local cache entries, then delegates the actual ONNX session
+ * release to onnxBridge.disposeSession(name) — the worker disposes by exact
+ * sessionId match plus `${name}:` prefix match.
  *
  * @param {ModelName} name
  * @returns {Promise<void>}
@@ -316,18 +315,11 @@ export async function disposeModelSession(name) {
       sessionCache.delete(key)
     }
   }
-  // TODO(T6): await disposeSession(name) via onnxBridge.js
-  console.log(
-    `[shinobu/modelRegistry] disposeModelSession("${name}") — local cache cleared; ` +
-    'worker disposal pending T6'
-  )
+  await disposeSession(name)
 }
 
 /**
- * Dispose all cached sessions and clear manifest cache.
- *
- * SKELETON — clears all local caches. The actual `disposeAll` call via the
- * comlink worker will be connected in T6.
+ * Dispose all cached sessions, clear caches, and forward to the worker.
  *
  * @returns {Promise<void>}
  */
@@ -336,9 +328,5 @@ export async function disposeAllModelSessions() {
   sessionPromiseCache.clear()
   manifestCache = null
   manifestPromise = null
-  // TODO(T6): await disposeAll() via onnxBridge.js
-  console.log(
-    '[shinobu/modelRegistry] disposeAllModelSessions — all local caches cleared; ' +
-    'worker disposal pending T6'
-  )
+  await disposeAll()
 }
