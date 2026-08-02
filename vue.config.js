@@ -115,6 +115,14 @@ module.exports = {
       config.optimization
         .splitChunks({
           chunks: 'all',
+          cacheGroups: {
+            ort: {
+              test: /[\\/]node_modules[\\/]onnxruntime-web[\\/]/,
+              name: 'ort',
+              chunks: 'all',
+              priority: 20,
+            },
+          },
         })
       // 模型不自托管：构建时排除 public/models/*.onnx（运行时从 CDN 加载）
       config.plugin('copy').tap(args => {
@@ -176,7 +184,8 @@ module.exports = {
         /kiss-translator[\\/].*/,
         /static[\\/](js|css)[\\/](?!flexible\..*)/,
         /test[\\/].*/,
-        /\/models\/.*\.onnx$/, // ONNX models — too large for SW cache
+        /models\/.*\.(onnx|json|txt)$/, // models — too large for SW cache
+        /js\/ort\..*\.js$/,
       ],
       // navigateFallbackDenylist: [/^\/prks\//],
       runtimeCaching: [
