@@ -43,6 +43,7 @@
             :show-translated="showTranslated"
             :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
             :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+            :stage-timings="pipelineStageTimings[index] || []"
             @toggle="$emit('toggle-translate')"
           />
         </swiper-slide>
@@ -98,6 +99,7 @@
           :show-translated="showTranslated"
           :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
           :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+          :stage-timings="pipelineStageTimings[index] || []"
           @toggle="$emit('toggle-translate')"
         />
         <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
@@ -167,6 +169,10 @@ export default {
       default: false,
     },
     pipelineProgress: {
+      type: Object,
+      default: () => ({}),
+    },
+    pipelineStageTimings: {
       type: Object,
       default: () => ({}),
     },

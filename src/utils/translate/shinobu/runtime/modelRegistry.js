@@ -93,7 +93,7 @@ export function getDefaultManifestUrl() {
   if (process.env.VUE_APP_MODEL_MANIFEST_URL) {
     return process.env.VUE_APP_MODEL_MANIFEST_URL
   }
-  return './models/models.json'
+  return '/models/models.json'
 }
 
 /**
@@ -119,7 +119,7 @@ export function resolveModelUrl(path) {
   if (releaseTag) {
     return `https://github.com/DonutShinobu/ShinobuTranslator/releases/download/${releaseTag}/${filename}`
   }
-  return `./models/${path.replace(/^\//, '')}`
+  return `/models/${path.replace(/^\//, '')}`
 }
 
 // ---------------------------------------------------------------------------
@@ -222,11 +222,23 @@ export async function getModel(name) {
   if (!model) {
     throw new Error(`Model "${name}" not found in manifest`)
   }
+  // 归一化 input：管线消费者（paddleocrProvider/inpaint）读 model.input[0]/[1]，
+  // 旧 manifest 可能存 "image" 字符串导致 NaN 崩溃
+  const rawInput = model.input
+  let resolved = model
+  if (!Array.isArray(rawInput) || !rawInput.every(v => Number.isFinite(v))) {
+    const defaults = {
+      detection: [1024, 1024],
+      inpainting: [512, 512],
+      ocr: [48, 320],
+    }
+    resolved = { ...model, input: defaults[model.task] || [512, 512] }
+  }
   return {
-    ...model,
-    url: resolveModelUrl(model.url),
-    dictUrl: model.dictUrl ? resolveModelUrl(model.dictUrl) : undefined,
-    runtime: normalizeRuntime(model.runtime),
+    ...resolved,
+    url: resolveModelUrl(resolved.url),
+    dictUrl: resolved.dictUrl ? resolveModelUrl(resolved.dictUrl) : undefined,
+    runtime: normalizeRuntime(resolved.runtime),
   }
 }
 

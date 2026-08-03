@@ -21,6 +21,7 @@
             :translated-canvases="translatedCanvases"
             :show-translated="showTranslated"
             :pipeline-progress="pipelineProgress"
+            :pipeline-stage-timings="pipelineStageTimings"
             @open-download="ugoiraDownloadPanelShow = true"
             @translate="handleTranslate"
             @toggle-translate="showTranslated = !showTranslated"
@@ -65,6 +66,7 @@
     <van-popup
       v-model="showTranslateSettings"
       position="bottom"
+      class="translate-settings-popup"
       :style="{ maxHeight: '80%' }"
       closeable
       close-icon-position="top-right"
@@ -122,7 +124,7 @@ import IconTwitter from '@/assets/images/share-sheet-twi.png'
 import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
-import { translateMangaPage, getCachedTranslation } from '@/utils/translate/manga'
+import { translateMangaPage, getCachedTranslation, resolveVlModel } from '@/utils/translate/manga'
 import PicTranslatePanel from './components/PicTranslatePanel.vue'
 import TranslateToolbar from './components/TranslateToolbar'
 import TranslateSettings from './components/TranslateSettings'
@@ -191,6 +193,7 @@ export default {
       translatedCanvases: {},
       showTranslated: false,
       pipelineProgress: {},
+      pipelineStageTimings: {},
       pipelineTranslating: false,
       translateStatusText: '',
       translateErrorCount: 0,
@@ -250,15 +253,11 @@ export default {
       // return this.pageCount > 1 && store.state.mangaTrans.engine !== 'vl-api'
       return this.showPicTranslateBtn
     },
-    translationProvider() {
-      return store.state.mangaTrans.provider
-    },
     translationEngine() {
       return store.state.mangaTrans.engine
     },
     providerConfig() {
-      const name = store.state.mangaTrans.provider
-      return store.state.mangaTrans.providers[name] || {}
+      return store.state.mangaTrans.providers.siliconcloud || {}
     },
   },
   watch: {
@@ -306,6 +305,7 @@ export default {
     // Release translated canvas references (GC will handle cleanup)
     this.translatedCanvases = {}
     this.pipelineProgress = {}
+    this.pipelineStageTimings = {}
   },
   methods: {
     init() {
@@ -568,7 +568,7 @@ export default {
           sourceLang: 'ja',
           targetLang: 'zh-CN',
           translator: 'llm',
-          llmProvider: this.translationProvider,
+          llmProvider: 'siliconcloud',
           llmAuthMode: providerConfig.authMode || 'api_key',
           llmBaseUrl: providerConfig.baseUrl || '',
           llmApiKey: providerConfig.apiKey || '',
@@ -619,9 +619,12 @@ export default {
             return
           }
 
+          this.$set(this.pipelineStageTimings, pageIndex, artifacts.stageTimings || [])
+
           if (artifacts.detectedRegions.length === 0) {
             this.$toast('未检测到文字')
             this.$set(this.translatedCanvases, pageIndex, null)
+            this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
             return
           }
 
@@ -646,6 +649,7 @@ export default {
           this.pipelineTranslating = false
           this.translateStatusText = ''
           this.pipelineAbort = null
+          this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
         }
         return
       }
@@ -654,7 +658,7 @@ export default {
         // EXISTING VL-API path — keep unchanged
         this.showPicTranslatePanel = true
         this.currentTransPage = pageIndex
-        const cached = await getCachedTranslation(this.artwork.id, pageIndex, store.state.mangaTrans.vlModel)
+        const cached = await getCachedTranslation(this.artwork.id, pageIndex, resolveVlModel(store.state.mangaTrans.vlModel))
         if (cached) {
           this.$set(this.picTranslations, pageIndex, cached)
           return
@@ -678,7 +682,7 @@ export default {
                 this.$toast('翻译失败，请重试')
               }
             }
-          }, store.state.mangaTrans.vlModel)
+          }, resolveVlModel(store.state.mangaTrans.vlModel))
         } catch (err) {
           console.log('translate err: ', err)
           this.$toast('翻译出错: ' + err.message)
@@ -720,7 +724,7 @@ export default {
       }
       if (engine === 'vl-api') {
         try {
-          await setCache(`pic.translate.${this.artwork.id}.${pageIndex}.${store.state.mangaTrans.vlModel}`, null)
+          await setCache(`pic.translate.${this.artwork.id}.${pageIndex}.${resolveVlModel(store.state.mangaTrans.vlModel)}`, null)
         } catch (e) {
           console.warn('Failed to clear translate cache', e)
         }
@@ -747,6 +751,14 @@ img[src*="https://api.moedog.org/qr/?url="]
   .related
     padding-left 16px
     padding-right 16px
+
+// 翻译设置弹窗：随 get-container="body" 挂到 body，需全局样式（scoped 不生效）
+// 参照 base.styl .setting-page .van-popup--bottom 的 10rem 居中模式
+.van-popup--bottom.translate-settings-popup
+  width 10rem
+  max-width 90vw
+  left 50%
+  transform translateX(-50%)
 </style>
 <style lang="stylus" scoped>
 .artwork

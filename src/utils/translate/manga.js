@@ -22,6 +22,18 @@ export const VL_MODELS = {
   'Qwen3.5-4B': 'Qwen/Qwen3.5-4B',
 }
 
+const DEFAULT_VL_MODEL = 'nex-agi/Nex-N2-Pro'
+
+/**
+ * Resolve a stored VL model id — if it's not a known candidate (e.g. a stale
+ * localStorage value from a removed/renamed model), fall back to the default.
+ * @param {string} model
+ * @returns {string}
+ */
+export function resolveVlModel(model) {
+  return Object.values(VL_MODELS).includes(model) ? model : DEFAULT_VL_MODEL
+}
+
 /**
  * Get cached translation for a manga page
  * @param {string|number} artworkId

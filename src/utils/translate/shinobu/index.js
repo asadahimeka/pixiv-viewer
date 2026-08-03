@@ -469,12 +469,32 @@ function buildEraseDebugCanvas(originalCanvas, debugLayers, platform, baseCanvas
  */
 
 /**
+ * Fixed per-stage percentage anchors (11 pipeline stages).
+ * Mirrors the shinobuStageDefs stage keys consumed by TranslateProgress.
+ * Values approximate each stage's share of the whole pipeline.
+ */
+const STAGE_PERCENT = {
+  load: 5,
+  preload: 15,
+  detect: 25,
+  bubble: 35,
+  ocr: 45,
+  merge: 55,
+  ocr_postfilter: 62,
+  order: 70,
+  parallel: 85,
+  typeset: 95,
+  done: 100,
+}
+
+/**
  * @param {ProgressCallback} cb
  * @param {string} stage
  * @param {string} detail
  */
 function report(cb, stage, detail) {
-  const progress = { stage, detail }
+  const percent = STAGE_PERCENT[stage]
+  const progress = { stage, detail, ...(percent !== undefined ? { percent } : {}) }
   cb(progress)
 }
 

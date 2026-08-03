@@ -343,7 +343,8 @@ function isLikelyInvalidInpaintResult(sourceRgba, inpaintedRgba, maskBinary) {
 async function runInpaintByOnnx(originalCanvas, refinedMaskCanvas, platform) {
   const model = await getModel('inpaint')
   const primaryHandle = await getModelSession('inpaint', ['webgpu', 'webnn', 'wasm'])
-  const size = model.input?.[0] ?? 512
+  const rawSize = model.input?.[0]
+  const size = Number.isFinite(rawSize) ? rawSize : 512
   const normalize = model.normalize ?? 'zero_to_one'
   const outputNormalize = model.outputNormalize ?? normalize
   const maskFill = model.maskFill ?? 'zero_before_normalize'

@@ -31,7 +31,7 @@
       >
         <template #value>
           <select
-            :value="translationVlModel"
+            :value="resolvedVlModel"
             class="preset-model-select"
             @change="onVlModelChange($event.target.value)"
           >
@@ -48,12 +48,6 @@
     </van-cell-group>
 
     <van-cell-group title="翻译提供商">
-      <van-field
-        :value="translationProvider"
-        label="提供商"
-        placeholder="siliconcloud"
-        @change="onProviderChange"
-      />
       <van-field
         :value="providerConfig.apiKey"
         type="password"
@@ -88,7 +82,6 @@
         :value="providerConfig.model"
         label="模型"
         :placeholder="isSiliconCloud ? '选择预设模型或输入自定义模型' : '默认模型'"
-        :disabled="isSiliconCloud && !hasCustomKey"
         @change="onModelChange"
       />
       <van-field
@@ -97,12 +90,19 @@
         placeholder="自定义 API 地址"
         @change="onBaseUrlChange"
       />
-      <van-field
-        :value="providerConfig.authMode || 'api_key'"
-        label="认证方式"
-        placeholder="api_key"
-        @change="onAuthModeChange"
-      />
+      <van-field label="认证方式">
+        <template #input>
+          <van-radio-group
+            class="auth-mode-radios"
+            :value="providerConfig.authMode || 'api_key'"
+            @change="onAuthModeChange"
+          >
+            <van-radio name="api_key">API Key</van-radio>
+            <van-radio name="bearer_token">Bearer Token</van-radio>
+            <van-radio name="custom_header">自定义 Header</van-radio>
+          </van-radio-group>
+        </template>
+      </van-field>
       <div class="auth-helper">
         api_key: Authorization: Bearer &lt;key&gt;<br>
         bearer_token: 直接使用 key 作为 Authorization 头<br>
@@ -220,7 +220,7 @@ import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
 import { aiModelMap } from '@/utils/translate'
-import { VL_MODELS } from '@/utils/translate/manga'
+import { VL_MODELS, resolveVlModel } from '@/utils/translate/manga'
 
 export default {
   name: 'TranslateSettings',
@@ -238,14 +238,6 @@ export default {
       },
       set(val) {
         store.commit('SET_MANGA_TRANS', { engine: val })
-      },
-    },
-    translationProvider: {
-      get() {
-        return store.state.mangaTrans.provider
-      },
-      set(val) {
-        store.commit('SET_MANGA_TRANS', { provider: val })
       },
     },
     translationProviders() {
@@ -299,15 +291,17 @@ export default {
         store.commit('SET_MANGA_TRANS', { vlModel: val })
       },
     },
+    resolvedVlModel() {
+      return resolveVlModel(this.translationVlModel)
+    },
     vlModels() {
       return VL_MODELS
     },
     providerConfig() {
-      const name = this.translationProvider
-      return this.translationProviders[name] || {}
+      return this.translationProviders.siliconcloud || {}
     },
     isSiliconCloud() {
-      return this.translationProvider === 'siliconcloud'
+      return true
     },
     hasCustomKey() {
       const cfg = this.translationProviders.siliconcloud
@@ -327,11 +321,8 @@ export default {
     onEngineChange(val) {
       this.translationEngine = val
     },
-    onProviderChange(val) {
-      this.translationProvider = val
-    },
     onApiKeyChange(val) {
-      const name = this.translationProvider
+      const name = 'siliconcloud'
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -341,7 +332,7 @@ export default {
     },
     onPresetModelChange(key) {
       if (!aiModelMap[key]) return
-      const name = this.translationProvider
+      const name = 'siliconcloud'
       const current = this.translationProviders[name] || {}
       const patch = { ...current, model: aiModelMap[key] }
       if (!patch.baseUrl) {
@@ -354,7 +345,7 @@ export default {
       })
     },
     onModelChange(val) {
-      const name = this.translationProvider
+      const name = 'siliconcloud'
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -363,7 +354,7 @@ export default {
       })
     },
     onBaseUrlChange(val) {
-      const name = this.translationProvider
+      const name = 'siliconcloud'
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -390,7 +381,7 @@ export default {
       this.translationVlModel = val
     },
     onAuthModeChange(val) {
-      const name = this.translationProvider
+      const name = 'siliconcloud'
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -399,7 +390,7 @@ export default {
       })
     },
     onCustomHeaderNameChange(val) {
-      const name = this.translationProvider
+      const name = 'siliconcloud'
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -408,7 +399,7 @@ export default {
       })
     },
     onCustomHeaderValueChange(val) {
-      const name = this.translationProvider
+      const name = 'siliconcloud'
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -428,11 +419,9 @@ export default {
       }
     },
     async testConnection() {
-      const providerName = this.translationProvider
       const config = this.providerConfig
       const apiKey = config.apiKey || ''
       const model = config.model || ''
-      const baseUrl = config.baseUrl || ''
 
       if (!apiKey) {
         this.testResult = { ok: false, message: '请先输入 API Key' }
@@ -444,24 +433,20 @@ export default {
       const start = Date.now()
 
       try {
-        // Determine endpoint from provider conventions
-        const endpoints = {
-          siliconcloud: 'https://api.siliconflow.cn/v1/chat/completions',
-          openai: 'https://api.openai.com/v1/chat/completions',
-          deepseek: 'https://api.deepseek.com/v1/chat/completions',
-          glm: 'https://open.bigmodel.cn/api/paas/v4/chat/completions',
-        }
+        // BaseURL 识别：追加 /chat/completions（若未以该后缀结尾）
+        const baseUrl = (config.baseUrl || 'https://api.siliconflow.cn/v1/').replace(/\/$/, '')
+        const url = baseUrl.endsWith('/chat/completions')
+          ? baseUrl
+          : `${baseUrl}/chat/completions`
 
-        const url = baseUrl
-          ? `${baseUrl.replace(/\/+$/, '')}/chat/completions`
-          : (endpoints[providerName] || `${baseUrl}/chat/completions`)
-
-        const defaultModels = {
-          siliconcloud: 'Qwen/Qwen3-8B',
-          openai: 'gpt-4o-mini',
-          deepseek: 'deepseek-chat',
-          glm: 'glm-4-plus',
-        }
+        // 按域名模式推断默认模型，不匹配时兜底 gpt-4o-mini
+        const defaultModel = /siliconflow\.cn/.test(baseUrl)
+          ? 'Qwen/Qwen3-32B'
+          : /openai\.com/.test(baseUrl)
+            ? 'gpt-4o-mini'
+            : /deepseek\.com/.test(baseUrl)
+              ? 'deepseek-chat'
+              : 'gpt-4o-mini'
 
         const authMode = config.authMode || 'api_key'
         const headers = { 'Content-Type': 'application/json' }
@@ -477,7 +462,7 @@ export default {
           method: 'POST',
           headers,
           body: JSON.stringify({
-            model: model || defaultModels[providerName] || 'gpt-4o-mini',
+            model: model || defaultModel,
             messages: [{ role: 'user', content: 'Hi' }],
             max_tokens: 5,
           }),
@@ -544,6 +529,11 @@ export default {
     color #999
     padding 0 0.3rem 0.1rem
     line-height 1.6
+
+  .auth-mode-radios
+    display flex
+    flex-direction column
+    gap 0.12rem
 
   .preset-model-cell
     ::v-deep .van-cell__value

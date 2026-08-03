@@ -4,9 +4,7 @@
     <div v-if="loading" class="loading-overlay">
       <van-loading type="spinner" />
       <div class="progress-detail">{{ progress.detail }}</div>
-      <div class="progress-bar-wrap">
-        <div class="progress-bar-fill" :style="{ width: progress.percent + '%' }"></div>
-      </div>
+      <TranslateProgress :progress="progress" :stage-timings="stageTimings" class="translate-progress-embed" />
     </div>
     <div v-if="showToggleBtn" class="toggle-btn" @click.stop="$emit('toggle')">
       {{ showTranslated ? '原图' : '译图' }}
@@ -15,8 +13,13 @@
 </template>
 
 <script>
+import TranslateProgress from './TranslateProgress'
+
 export default {
   name: 'TranslateOverlay',
+  components: {
+    TranslateProgress,
+  },
   props: {
     artworkId: {
       type: [String, Number],
@@ -41,6 +44,10 @@ export default {
     progress: {
       type: Object,
       default: () => ({ stage: '', detail: '', percent: 0 }),
+    },
+    stageTimings: {
+      type: Array,
+      default: () => [],
     },
   },
   data() {
@@ -157,6 +164,8 @@ export default {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
     },
     handleKeydown(e) {
+      const tag = e.target && e.target.tagName
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
       if ((e.key === 't' || e.key === 'T') && !this.loading && !!this.translatedCanvas) {
         this.$emit('toggle')
       }
@@ -200,19 +209,12 @@ export default {
   font-size 0.26rem
   margin-top 0.2rem
 
-.progress-bar-wrap
-  width 60%
-  height 0.08rem
-  background rgba(255, 255, 255, 0.3)
-  border-radius 0.04rem
+.translate-progress-embed
+  width 72%
   margin-top 0.15rem
-  overflow hidden
-
-.progress-bar-fill
-  height 100%
-  background linear-gradient(90deg, #667eea, #764ba2)
-  border-radius 0.04rem
-  transition width 0.3s ease
+  max-height 72%
+  overflow-y auto
+  scrollbar-width thin
 
 .toggle-btn
   position absolute

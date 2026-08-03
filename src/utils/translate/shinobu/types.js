@@ -531,5 +531,6 @@ export const StageTiming = {}
  * @typedef {Object} PipelineProgress
  * @property {string} stage - Current stage key
  * @property {string} detail - Human-readable progress detail
+ * @property {number} [percent] - Overall progress percent (0–100), derived from stage anchor
  */
 export const PipelineProgress = {}

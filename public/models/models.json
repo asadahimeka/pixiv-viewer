@@ -7,7 +7,7 @@
       "name": "detector",
       "task": "detection",
       "url": "detector.onnx",
-      "input": "image",
+      "input": [1024, 1024],
       "runtime": [
         "webgpu",
         "wasm"
@@ -19,7 +19,7 @@
       "name": "inpaint",
       "task": "inpainting",
       "url": "aot_inpaint_512.onnx",
-      "input": "image",
+      "input": [512, 512],
       "runtime": [
         "webgpu",
         "wasm"
@@ -31,7 +31,7 @@
       "name": "paddleocr_v6_medium_rec",
       "task": "ocr",
       "url": "PP-OCRv6_medium_rec.onnx",
-      "input": "image",
+      "input": [48, 320],
       "runtime": [
         "webgpu",
         "wasm"
@@ -45,7 +45,7 @@
       "name": "bubble",
       "task": "detection",
       "url": "bubble.onnx",
-      "input": "image",
+      "input": [640, 640],
       "runtime": [
         "webgpu",
         "wasm"
