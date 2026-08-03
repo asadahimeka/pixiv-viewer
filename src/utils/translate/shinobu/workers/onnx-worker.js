@@ -87,18 +87,93 @@ async function getCachedModel(modelUrl) {
 /**
  * Write a model binary to the cache.
  *
- * Quota-exceeded (or any storage) failures degrade gracefully: warn and keep
- * the already-downloaded ArrayBuffer so session creation is never blocked.
+ * On `QuotaExceededError` the largest cached model is evicted and the write is
+ * retried once. If that still fails (or on any other storage error) we degrade
+ * gracefully: warn, notify the main thread, and keep the already-downloaded
+ * ArrayBuffer so session creation is never blocked.
  *
  * @param {string} modelUrl
  * @param {ArrayBuffer} buffer
- * @returns {Promise<void>}
+ * @returns {Promise<boolean>} `true` when the write succeeded, `false` otherwise
  */
 async function setCachedModel(modelUrl, buffer) {
   try {
     await modelCache.setItem(cacheKeyFor(modelUrl), buffer)
+    return true
   } catch (error) {
-    console.warn(`[onnx-worker] 模型缓存写入失败（可能 quota 超限），继续使用已下载数据: ${toErrorMessage(error)}`)
+    const isQuota =
+      (error && error.name === 'QuotaExceededError') ||
+      /quota/i.test((error && error.message) || '')
+    if (isQuota) {
+      console.warn(
+        `[onnx-worker] 模型缓存空间不足（${cacheKeyFor(modelUrl)}），清除最大缓存项后重试...`
+      )
+      await evictLargestModel()
+      try {
+        await modelCache.setItem(cacheKeyFor(modelUrl), buffer)
+        console.log(`[onnx-worker] 清除后模型缓存写入成功: ${cacheKeyFor(modelUrl)}`)
+        return true
+      } catch (retryError) {
+        console.warn(
+          `[onnx-worker] 清除后模型缓存仍写入失败，将每次重新下载: ${toErrorMessage(retryError)}`
+        )
+        notifyCacheQuotaWarning()
+        return false
+      }
+    }
+    console.warn(`[onnx-worker] 模型缓存写入失败，继续使用已下载数据: ${toErrorMessage(error)}`)
+    return false
+  }
+}
+
+/**
+ * Remove the single largest cached model binary to free up IndexedDB quota.
+ *
+ * Deliberately minimal (not a full LRU): only called on `QuotaExceededError`
+ * before one retry. Unreadable entries are skipped — they can't help anyway.
+ *
+ * @returns {Promise<void>}
+ */
+async function evictLargestModel() {
+  try {
+    const keys = await modelCache.keys()
+    let largestKey = null
+    let largestSize = -1
+    for (const key of keys) {
+      try {
+        const value = await modelCache.getItem(key)
+        const size = value instanceof ArrayBuffer ? value.byteLength : 0
+        if (size > largestSize) {
+          largestSize = size
+          largestKey = key
+        }
+      } catch (error) {
+        // Skip unreadable entries.
+      }
+    }
+    if (largestKey) {
+      await modelCache.removeItem(largestKey)
+      console.log(
+        `[onnx-worker] 已清除最大模型缓存项: ${largestKey} (${(largestSize / 1024 / 1024).toFixed(1)} MB)`
+      )
+    }
+  } catch (error) {
+    console.warn(`[onnx-worker] 清除模型缓存失败: ${toErrorMessage(error)}`)
+  }
+}
+
+/**
+ * Notify the main thread that model caching is permanently unavailable (quota
+ * still too small even after eviction), so it can surface a user-facing toast.
+ *
+ * Uses a plain `postMessage` — Comlink's message filter ignores payloads
+ * without an `id`, so this never interferes with the RPC protocol.
+ */
+function notifyCacheQuotaWarning() {
+  try {
+    self.postMessage({ type: 'shinobu-cache-quota-warning' })
+  } catch (error) {
+    console.warn(`[onnx-worker] 模型缓存空间不足，将每次重新下载: ${toErrorMessage(error)}`)
   }
 }
 

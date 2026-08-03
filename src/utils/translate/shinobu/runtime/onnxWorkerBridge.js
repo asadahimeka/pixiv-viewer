@@ -15,6 +15,7 @@
  */
 
 import * as Comlink from 'comlink'
+import { Toast } from '@/lib/vant-apis'
 
 // ---------------------------------------------------------------------------
 // Inline helpers (replacing src/shared/* imports — not yet ported)
@@ -51,6 +52,23 @@ const ORT_CDN_PATH =
 
 /** Maximum wait for worker init() handshake. */
 const WORKER_INIT_TIMEOUT_MS = 10000
+
+// ---------------------------------------------------------------------------
+// Model cache quota warning
+// ---------------------------------------------------------------------------
+
+/** True once a quota warning has been surfaced — avoid toast spam. */
+let cacheQuotaWarningShown = false
+
+/**
+ * Surface the worker's "model cache quota exceeded" notification as a toast.
+ * Shown at most once per session so a batch of model loads doesn't spam.
+ */
+function showCacheQuotaWarning() {
+  if (cacheQuotaWarningShown) return
+  cacheQuotaWarningShown = true
+  Toast({ message: '模型缓存空间不足，将每次重新下载', duration: 2500 })
+}
 
 // ---------------------------------------------------------------------------
 // Worker singleton — created once, reused across pipeline calls.
@@ -114,6 +132,14 @@ async function bootstrapWorker() {
     new URL('../workers/onnx-worker.js', import.meta.url),
     { type: 'module' }
   )
+
+  // Non-comlink message from the worker (payloads without an `id` are ignored
+  // by Comlink's message filter), forwarded to the user-facing toast.
+  candidate.addEventListener('message', event => {
+    if (event.data && event.data.type === 'shinobu-cache-quota-warning') {
+      showCacheQuotaWarning()
+    }
+  })
 
   /** @type {Comlink.Remote<import('./onnxWorkerTypes.js').OnnxWorkerApi>} */
   const candidateProxy = Comlink.wrap(candidate)
