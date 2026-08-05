@@ -81,13 +81,8 @@
 </template>
 
 <script>
-import Progress from 'vant/lib/progress'
-
 export default {
   name: 'TranslateProgress',
-  components: {
-    VanProgress: Progress,
-  },
   props: {
     // vl-api mode: array of { stage, status, durationMs, error }
     stages: {

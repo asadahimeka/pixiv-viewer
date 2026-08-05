@@ -218,17 +218,19 @@ export default {
 
 .toggle-btn
   position absolute
-  top 0.1rem
-  right 0.1rem
+  bottom 0.7rem
+  right 0.2rem
+  z-index 10
+  width 0.6rem
   padding 0.06rem 0.16rem
-  font-size 0.22rem
   color #fff
   background rgba(0, 0, 0, 0.55)
+  font-size 0.22rem
+  text-align center
   border-radius 0.06rem
   cursor pointer
   pointer-events auto
   user-select none
-  z-index 10
   transition background 0.15s ease
   &:active
     background rgba(0, 0, 0, 0.75)

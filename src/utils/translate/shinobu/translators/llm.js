@@ -491,7 +491,10 @@ function parseColumnsPayload(content) {
  * @returns {Promise<ChatCompletionResponse>}
  */
 async function requestChatCompletion(options, body) {
-  const endpoint = `${options.baseUrl.replace(/\/$/, '')}/chat/completions`
+  const baseUrl = options.baseUrl.replace(/\/$/, '')
+  const endpoint = baseUrl.endsWith('/chat/completions')
+    ? baseUrl
+    : `${baseUrl}/chat/completions`
   const headers = {
     'Content-Type': 'application/json',
     'Authorization': `Bearer ${options.apiKey}`,

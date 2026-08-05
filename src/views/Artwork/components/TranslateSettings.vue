@@ -1,14 +1,14 @@
 <template>
   <div class="translate-settings">
     <van-cell-group title="翻译引擎">
-      <van-radio-group :value="translationEngine" @change="onEngineChange">
+      <van-radio-group v-model="translationEngine">
         <van-cell-group class="engine-options">
-          <van-cell clickable @click="onEngineChange('vl-api')">
+          <van-cell>
             <template #title>
-              <van-radio name="vl-api">VL API（默认，快速，侧边栏显示）</van-radio>
+              <van-radio name="vl-api">VL API（默认，侧边栏显示翻译文本）</van-radio>
             </template>
           </van-cell>
-          <van-cell clickable @click="onEngineChange('shinobu')">
+          <van-cell>
             <template #title>
               <van-radio name="shinobu">Shinobu 管线（完整管线，画布输出）</van-radio>
             </template>
@@ -16,7 +16,7 @@
         </van-cell-group>
       </van-radio-group>
       <div v-if="translationEngine === 'vl-api'" class="engine-help">
-        <van-icon name="info-o" /> VL API: 使用云端视觉语言模型翻译，速度快，无需下载模型。文本在侧边栏面板显示，支持流式输出。
+        <van-icon name="info-o" /> VL API: 使用云端视觉语言模型翻译，文本在侧边栏面板显示，支持流式输出。
       </div>
       <div v-else class="engine-help">
         <van-icon name="info-o" /> Shinobu 管线: 完整翻译管线（检测 → OCR → 翻译 → 去字 → 排版），结果直接输出到画布。首次使用需要下载模型文件。
@@ -29,173 +29,106 @@
         label="选择云端 VL 模型进行漫画翻译"
         class="preset-model-cell"
       >
-        <template #value>
-          <select
-            :value="resolvedVlModel"
-            class="preset-model-select"
-            @change="onVlModelChange($event.target.value)"
-          >
-            <option
-              v-for="(model, label) in vlModels"
-              :key="label"
-              :value="model"
-            >
-              {{ label }} · {{ model.split('/').pop() }}
-            </option>
-          </select>
-        </template>
+        <select v-model="translationVlModel" class="preset-model-select">
+          <option v-for="(model, label) in vlModels" :key="label" :value="model">
+            {{ label }}
+          </option>
+        </select>
       </van-cell>
     </van-cell-group>
 
-    <van-cell-group title="翻译提供商">
-      <van-field
-        :value="providerConfig.apiKey"
-        type="password"
-        label="API Key"
-        placeholder="输入 API Key"
-        @change="onApiKeyChange"
-      />
-      <van-cell
-        v-if="isSiliconCloud && !hasCustomKey"
-        title="预设模型"
-        label="未自定义 API Key 时，模型从预设中选择"
-        class="preset-model-cell"
-      >
-        <template #value>
-          <select
-            :value="currentPresetKey"
-            class="preset-model-select"
-            @change="onPresetModelChange($event.target.value)"
-          >
-            <option value="" disabled>选择预设模型</option>
-            <option
-              v-for="(model, key) in presetModels"
-              :key="key"
-              :value="key"
-            >
-              {{ key }} · {{ model.split('/').pop() }}
-            </option>
-          </select>
-        </template>
-      </van-cell>
-      <van-field
-        :value="providerConfig.model"
-        label="模型"
-        :placeholder="isSiliconCloud ? '选择预设模型或输入自定义模型' : '默认模型'"
-        @change="onModelChange"
-      />
-      <van-field
-        :value="providerConfig.baseUrl"
-        label="Base URL"
-        placeholder="自定义 API 地址"
-        @change="onBaseUrlChange"
-      />
-      <van-field label="认证方式">
-        <template #input>
-          <van-radio-group
-            class="auth-mode-radios"
-            :value="providerConfig.authMode || 'api_key'"
-            @change="onAuthModeChange"
-          >
-            <van-radio name="api_key">API Key</van-radio>
-            <van-radio name="bearer_token">Bearer Token</van-radio>
-            <van-radio name="custom_header">自定义 Header</van-radio>
-          </van-radio-group>
-        </template>
-      </van-field>
-      <div class="auth-helper">
-        api_key: Authorization: Bearer &lt;key&gt;<br>
-        bearer_token: 直接使用 key 作为 Authorization 头<br>
-        custom_header: 自定义 Header 名称 + 值
-      </div>
-      <template v-if="(providerConfig.authMode || 'api_key') === 'custom_header'">
+    <template v-if="translationEngine === 'shinobu'">
+      <van-cell-group title="翻译提供商" style="padding-bottom: 1px">
         <van-field
-          :value="providerConfig.customHeaderName"
-          label="Header 名称"
-          placeholder="X-API-Key"
-          @change="onCustomHeaderNameChange"
+          :value="providerConfig.baseUrl"
+          label="Base URL"
+          placeholder="自定义 API 地址"
+          @change="onBaseUrlChange"
         />
         <van-field
-          :value="providerConfig.customHeaderValue"
+          :value="showPresetModelSel ? '' : providerConfig.apiKey"
           type="password"
-          label="Header 值"
-          placeholder="..."
-          @change="onCustomHeaderValueChange"
+          label="API Key"
+          placeholder="输入 API Key"
+          @change="onApiKeyChange"
         />
-      </template>
-      <div class="test-connection-wrap">
-        <van-button
-          size="small"
-          type="primary"
-          :loading="testLoading"
-          @click="testConnection"
+        <van-cell
+          v-if="showPresetModelSel"
+          title="模型"
+          label="请选择翻译模型"
+          class="preset-model-cell"
         >
-          {{ testLoading ? '测试中...' : '测试连接' }}
-        </van-button>
-      </div>
-      <div
-        v-if="testResult"
-        class="model-test-result"
-        :class="testResult.ok ? 'is-ok' : 'is-fail'"
-      >
-        <van-icon :name="testResult.ok ? 'success' : 'warning'" />
-        <span>{{ testResult.message }}</span>
-        <span v-if="testResult.durationMs != null" class="result-duration">{{ testResult.durationMs }}ms</span>
-      </div>
-    </van-cell-group>
+          <select :value="providerConfig.model" class="preset-model-select" @change="onPresetModelChange">
+            <option v-for="model in presetModels" :key="model" :value="model">
+              {{ model.split('/').pop() }}
+            </option>
+          </select>
+        </van-cell>
+        <van-field
+          v-else
+          :value="providerConfig.model"
+          label="模型"
+          placeholder="输入模型"
+          @change="onModelChange"
+        />
+        <div class="test-connection-wrap">
+          <van-button
+            size="small"
+            plain
+            round
+            :loading="testLoading"
+            loading-text="测试中..."
+            @click="testConnection"
+          >
+            测试连接
+          </van-button>
+        </div>
+        <div
+          v-if="testResult"
+          class="model-test-result"
+          :class="testResult.ok ? 'is-ok' : 'is-fail'"
+        >
+          <van-icon :name="testResult.ok ? 'success' : 'warning'" />
+          <span>{{ testResult.message }}</span>
+          <span v-if="testResult.durationMs != null" class="result-duration">{{ testResult.durationMs }}ms</span>
+        </div>
+      </van-cell-group>
 
-    <van-cell-group title="处理模式（Shinobu 管线）">
-      <van-radio-group :value="translationProcessMode" @change="onProcessModeChange">
-        <van-cell-group class="engine-options">
-          <van-cell clickable @click="onProcessModeChange('translate')">
-            <template #title>
-              <van-radio name="translate">翻译（完整管线）</van-radio>
-            </template>
-          </van-cell>
-          <van-cell clickable @click="onProcessModeChange('erase')">
-            <template #title>
-              <van-radio name="erase">擦除（调试）</van-radio>
-            </template>
-          </van-cell>
-          <van-cell clickable @click="onProcessModeChange('original')">
-            <template #title>
-              <van-radio name="original">原文（仅排版）</van-radio>
-            </template>
-          </van-cell>
-        </van-cell-group>
-      </van-radio-group>
-    </van-cell-group>
+      <van-cell-group title="处理模式">
+        <van-radio-group v-model="translationProcessMode">
+          <van-cell-group class="engine-options">
+            <van-cell>
+              <template #title>
+                <van-radio name="translate">翻译（完整管线）</van-radio>
+              </template>
+            </van-cell>
+            <van-cell>
+              <template #title>
+                <van-radio name="erase">擦除（调试）</van-radio>
+              </template>
+            </van-cell>
+            <van-cell>
+              <template #title>
+                <van-radio name="original">原文（仅排版）</van-radio>
+              </template>
+            </van-cell>
+          </van-cell-group>
+        </van-radio-group>
+      </van-cell-group>
 
-    <van-cell-group title="气泡检测">
-      <van-cell center title="气泡文字检测" label="检测漫画气泡区域，将翻译文本排版进气泡内">
-        <template #right-icon>
-          <van-switch :value="translationBubble" size="24" @change="onBubbleChange" />
-        </template>
-      </van-cell>
-    </van-cell-group>
+      <van-cell-group title="气泡检测">
+        <van-cell center title="气泡文字检测" label="检测漫画气泡区域，将翻译文本排版进气泡内">
+          <template #right-icon>
+            <van-switch v-model="translationBubble" size="24" />
+          </template>
+        </van-cell>
+      </van-cell-group>
 
-    <van-cell-group title="翻译语言（Shinobu 管线）">
-      <van-field
-        :value="translationSourceLang"
-        label="源语言"
-        placeholder="ja"
-        @change="onSourceLangChange"
-      />
-      <van-field
-        :value="translationTargetLang"
-        label="目标语言"
-        placeholder="zh-CN"
-        @change="onTargetLangChange"
-      />
-    </van-cell-group>
-
-    <van-cell-group>
-      <van-cell center title="自动翻译">
-        <template #right-icon>
-          <van-switch :value="translationAutoTranslate" size="24" @change="onAutoTranslateChange" />
-        </template>
-      </van-cell>
-    </van-cell-group>
+      <van-cell-group title="翻译语言">
+        <van-field v-model="translationSourceLang" label="源语言" placeholder="ja" />
+        <van-field v-model="translationTargetLang" label="目标语言" placeholder="zh-CN" />
+      </van-cell-group>
+    </template>
 
     <van-cell-group title="缓存管理">
       <van-cell center title="清除翻译缓存" label="清除所有已缓存的翻译结果">
@@ -203,11 +136,13 @@
           <van-button
             size="small"
             plain
-            type="danger"
+            round
             :loading="clearingCache"
+            loading-text="清除中..."
+            style="min-width: 1.2rem;"
             @click="clearTranslationCache"
           >
-            {{ clearingCache ? '清除中...' : '清除' }}
+            清除
           </van-button>
         </template>
       </van-cell>
@@ -216,11 +151,12 @@
 </template>
 
 <script>
+import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
 import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
 import { aiModelMap } from '@/utils/translate'
-import { VL_MODELS, resolveVlModel } from '@/utils/translate/manga'
+import { VL_MODELS } from '@/utils/translate/manga'
 
 export default {
   name: 'TranslateSettings',
@@ -229,6 +165,8 @@ export default {
       testLoading: false,
       clearingCache: false,
       testResult: null,
+      vlModels: VL_MODELS,
+      presetModels: Object.values(aiModelMap),
     }
   },
   computed: {
@@ -240,6 +178,9 @@ export default {
         store.commit('SET_MANGA_TRANS', { engine: val })
       },
     },
+    translationProvider() {
+      return store.state.mangaTrans.provider
+    },
     translationProviders() {
       return store.state.mangaTrans.providers
     },
@@ -249,14 +190,6 @@ export default {
       },
       set(val) {
         store.commit('SET_MANGA_TRANS', { processMode: val })
-      },
-    },
-    translationAutoTranslate: {
-      get() {
-        return store.state.mangaTrans.autoTranslate
-      },
-      set(val) {
-        store.commit('SET_MANGA_TRANS', { autoTranslate: val })
       },
     },
     translationBubble: {
@@ -291,38 +224,31 @@ export default {
         store.commit('SET_MANGA_TRANS', { vlModel: val })
       },
     },
-    resolvedVlModel() {
-      return resolveVlModel(this.translationVlModel)
-    },
-    vlModels() {
-      return VL_MODELS
-    },
     providerConfig() {
-      return this.translationProviders.siliconcloud || {}
+      return this.translationProviders[this.translationProvider] || {}
     },
-    isSiliconCloud() {
-      return true
-    },
-    hasCustomKey() {
-      const cfg = this.translationProviders.siliconcloud
-      return !!(cfg && cfg.apiKey)
-    },
-    presetModels() {
-      return aiModelMap
-    },
-    currentPresetKey() {
-      const model = this.providerConfig.model
-      if (!model) return ''
-      const entry = Object.entries(aiModelMap).find(([, m]) => m === model)
-      return entry ? entry[0] : ''
+    showPresetModelSel() {
+      return (
+        // this.translationProvider == SILICON_CLOUD_BASR_URL &&
+        this.providerConfig.apiKey == SILICON_CLOUD_API_KEY
+      )
     },
   },
   methods: {
-    onEngineChange(val) {
-      this.translationEngine = val
+    onBaseUrlChange(e) {
+      const name = e.target.value
+      const current = this.translationProviders[name] || {}
+      store.commit('SET_MANGA_TRANS', {
+        provider: name,
+        providers: {
+          [name]: { ...current, baseUrl: name },
+        },
+      })
     },
-    onApiKeyChange(val) {
-      const name = 'siliconcloud'
+    onApiKeyChange(e) {
+      const val = e.target.value
+      if (!val && this.showPresetModelSel) return
+      const name = this.providerConfig.baseUrl
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -330,22 +256,20 @@ export default {
         },
       })
     },
-    onPresetModelChange(key) {
-      if (!aiModelMap[key]) return
-      const name = 'siliconcloud'
+    onPresetModelChange(e) {
+      const model = e.target.value
+      const name = SILICON_CLOUD_BASR_URL
       const current = this.translationProviders[name] || {}
-      const patch = { ...current, model: aiModelMap[key] }
-      if (!patch.baseUrl) {
-        patch.baseUrl = 'https://api.siliconflow.cn/v1/'
-      }
+      const patch = { ...current, model }
       store.commit('SET_MANGA_TRANS', {
         providers: {
           [name]: patch,
         },
       })
     },
-    onModelChange(val) {
-      const name = 'siliconcloud'
+    onModelChange(e) {
+      const val = e.target.value
+      const name = this.providerConfig.baseUrl
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
@@ -353,63 +277,10 @@ export default {
         },
       })
     },
-    onBaseUrlChange(val) {
-      const name = 'siliconcloud'
-      const current = this.translationProviders[name] || {}
-      store.commit('SET_MANGA_TRANS', {
-        providers: {
-          [name]: { ...current, baseUrl: val },
-        },
-      })
-    },
-    onProcessModeChange(val) {
-      this.translationProcessMode = val
-    },
-    onAutoTranslateChange(val) {
-      this.translationAutoTranslate = val
-    },
-    onBubbleChange(val) {
-      this.translationBubble = val
-    },
-    onSourceLangChange(val) {
-      this.translationSourceLang = val
-    },
-    onTargetLangChange(val) {
-      this.translationTargetLang = val
-    },
-    onVlModelChange(val) {
-      this.translationVlModel = val
-    },
-    onAuthModeChange(val) {
-      const name = 'siliconcloud'
-      const current = this.translationProviders[name] || {}
-      store.commit('SET_MANGA_TRANS', {
-        providers: {
-          [name]: { ...current, authMode: val },
-        },
-      })
-    },
-    onCustomHeaderNameChange(val) {
-      const name = 'siliconcloud'
-      const current = this.translationProviders[name] || {}
-      store.commit('SET_MANGA_TRANS', {
-        providers: {
-          [name]: { ...current, customHeaderName: val },
-        },
-      })
-    },
-    onCustomHeaderValueChange(val) {
-      const name = 'siliconcloud'
-      const current = this.translationProviders[name] || {}
-      store.commit('SET_MANGA_TRANS', {
-        providers: {
-          [name]: { ...current, customHeaderValue: val },
-        },
-      })
-    },
     async clearTranslationCache() {
       this.clearingCache = true
       try {
+        // todo: 仅清除缓存的翻译结果
         await localDb.clear()
         Toast.success('缓存已清除')
       } catch (err) {
@@ -429,19 +300,21 @@ export default {
         return
       }
 
+      window.umami?.track('llm-test-connection', { val: config.baseUrl })
+
       this.testLoading = true
       const start = Date.now()
 
       try {
         // BaseURL 识别：追加 /chat/completions（若未以该后缀结尾）
-        const baseUrl = (config.baseUrl || 'https://api.siliconflow.cn/v1/').replace(/\/$/, '')
+        const baseUrl = (config.baseUrl || SILICON_CLOUD_BASR_URL).replace(/\/$/, '')
         const url = baseUrl.endsWith('/chat/completions')
           ? baseUrl
           : `${baseUrl}/chat/completions`
 
         // 按域名模式推断默认模型，不匹配时兜底 gpt-4o-mini
         const defaultModel = /siliconflow\.cn/.test(baseUrl)
-          ? 'Qwen/Qwen3-32B'
+          ? 'Qwen/Qwen3-8B'
           : /openai\.com/.test(baseUrl)
             ? 'gpt-4o-mini'
             : /deepseek\.com/.test(baseUrl)
@@ -458,23 +331,41 @@ export default {
           headers.Authorization = `Bearer ${apiKey}`
         }
 
-        const response = await fetch(url, {
-          method: 'POST',
-          headers,
-          body: JSON.stringify({
-            model: model || defaultModel,
-            messages: [{ role: 'user', content: 'Hi' }],
-            max_tokens: 5,
-          }),
+        const body = JSON.stringify({
+          model: model || defaultModel,
+          messages: [{ role: 'user', content: 'Hi' }],
+          max_tokens: 5,
         })
 
-        if (!response.ok) {
-          const errText = await response.text().catch(() => '')
-          throw new Error(`${response.status} ${response.statusText}${errText ? ': ' + errText : ''}`)
-        }
+        if (window.__httpRequest__) {
+          const resp = await window.__httpRequest__(url, JSON.stringify({
+            method: 'POST',
+            headers,
+            data: body,
+          }))
+          if (resp.data) {
+            this.testResult = { ok: true, message: '连接成功', durationMs: Date.now() - start }
+            Toast.success('连接成功')
+          }
+        } else {
+          const response = await fetch(url, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({
+              model: model || defaultModel,
+              messages: [{ role: 'user', content: 'Hi' }],
+              max_tokens: 5,
+            }),
+          })
 
-        this.testResult = { ok: true, message: '连接成功', durationMs: Date.now() - start }
-        Toast.success('连接成功')
+          if (!response.ok) {
+            const errText = await response.text().catch(() => '')
+            throw new Error(`${response.status} ${response.statusText}${errText ? ': ' + errText : ''}`)
+          }
+
+          this.testResult = { ok: true, message: '连接成功', durationMs: Date.now() - start }
+          Toast.success('连接成功')
+        }
       } catch (err) {
         console.log('testConnection err:', err)
         this.testResult = { ok: false, message: `连接失败: ${err.message}`, durationMs: Date.now() - start }
@@ -489,7 +380,10 @@ export default {
 
 <style lang="stylus" scoped>
 .translate-settings
+  height 100%
   padding 0.2rem 0
+  box-sizing border-box
+  overflow-y auto
 
   .engine-options
     .van-cell
@@ -524,17 +418,6 @@ export default {
       vertical-align middle
       margin-right 0.06rem
 
-  .auth-helper
-    font-size 0.22rem
-    color #999
-    padding 0 0.3rem 0.1rem
-    line-height 1.6
-
-  .auth-mode-radios
-    display flex
-    flex-direction column
-    gap 0.12rem
-
   .preset-model-cell
     ::v-deep .van-cell__value
       display flex
@@ -542,14 +425,13 @@ export default {
       justify-content flex-end
 
     .preset-model-select
-      max-width 4.5rem
+      width 3.5rem
       padding 0.08rem 0.2rem
       border 1px solid #ddd
       border-radius 0.08rem
       background #fff
       font-size 0.24rem
       color #333
-      text-align right
 
   .model-test-result
     margin 0.1rem 0.3rem 0.2rem

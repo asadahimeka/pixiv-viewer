@@ -31,6 +31,20 @@
           <van-skeleton class="skeleton" title avatar :row="5" row-width="200px" avatar-size="42px" :loading="loading">
             <ArtworkMeta ref="artworkMeta" :artwork="artwork" :maybe-ai-author="maybeAiAuthor" @ugoira-download="showUgPanelFromDlBtn" @update-author-follow="updateAuthorFollow" />
           </van-skeleton>
+          <TranslateToolbar
+            v-if="showPicTranslateBtn"
+            :visible="showPicTranslateBtn"
+            :translating="pipelineTranslating"
+            :show-translated="showTranslated"
+            :status-text="translateStatusText"
+            :page-count="pageCount"
+            :current-page="currentTransPage"
+            :error-count="translateErrorCount"
+            :engine="translationEngine"
+            @toggle-view="showTranslated = !showTranslated"
+            @open-settings="showTranslateSettings = true"
+            @cancel-translate="handleCancelTranslate"
+          />
           <keep-alive>
             <AuthorCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" @author-change="v => maybeAiAuthor = v" />
           </keep-alive>
@@ -43,6 +57,7 @@
       </template>
     </van-swipe-cell>
     <PicTranslatePanel
+      v-if="showPicTranslateBtn"
       :visible="showPicTranslatePanel"
       :translations="picTranslations[currentTransPage]"
       :current-page="currentTransPage"
@@ -50,24 +65,12 @@
       @close="handleClosePanel"
       @retry="handleRetry(currentTransPage)"
     />
-    <TranslateToolbar
-      :visible="showTranslateToolbar"
-      :translating="pipelineTranslating"
-      :show-translated="showTranslated"
-      :status-text="translateStatusText"
-      :page-count="pageCount"
-      :current-page="currentTransPage"
-      :error-count="translateErrorCount"
-      :engine="translationEngine"
-      @toggle-view="showTranslated = !showTranslated"
-      @open-settings="showTranslateSettings = true"
-      @cancel-translate="handleCancelTranslate"
-    />
     <van-popup
+      v-if="showPicTranslateBtn"
       v-model="showTranslateSettings"
       position="bottom"
       class="translate-settings-popup"
-      :style="{ maxHeight: '80%' }"
+      round
       closeable
       close-icon-position="top-right"
       get-container="body"
@@ -232,12 +235,13 @@ export default {
       )
     },
     showPicTranslateBtn() {
+      const tags = JSON.stringify(this.artwork.tags)
       return (
         this.isLoggedIn &&
-        this.artwork.type === 'manga' &&
-        this.artwork.x_restrict < 1 &&
         i18n.locale.includes('zh') &&
-        !/中文|中国语|Chinese|中國語|中国語/i.test(JSON.stringify(this.artwork.tags || []))
+        this.artwork.x_restrict < 1 &&
+        (this.artwork.type === 'manga' || /manga|漫画|漫畫|マンガ|まんが/i.test(tags)) &&
+        !/中文|中国语|Chinese|中國語|中国語/i.test(tags)
       )
     },
     translatingIndex() {
@@ -249,15 +253,12 @@ export default {
     pageCount() {
       return this.artwork?.images?.length || 0
     },
-    showTranslateToolbar() {
-      // return this.pageCount > 1 && store.state.mangaTrans.engine !== 'vl-api'
-      return this.showPicTranslateBtn
-    },
     translationEngine() {
       return store.state.mangaTrans.engine
     },
     providerConfig() {
-      return store.state.mangaTrans.providers.siliconcloud || {}
+      const { provider, providers } = store.state.mangaTrans
+      return providers[provider] || {}
     },
   },
   watch: {
@@ -520,6 +521,7 @@ export default {
     },
     async handleTranslate(pageIndex) {
       const engine = store.state.mangaTrans.engine
+      window.umami?.track('translate_manga', { engine })
 
       if (engine === 'shinobu') {
         // SHINOBU PIPELINE path (canvas output, replaces old ONNX pipeline)
@@ -568,7 +570,7 @@ export default {
           sourceLang: 'ja',
           targetLang: 'zh-CN',
           translator: 'llm',
-          llmProvider: 'siliconcloud',
+          llmProvider: 'custom',
           llmAuthMode: providerConfig.authMode || 'api_key',
           llmBaseUrl: providerConfig.baseUrl || '',
           llmApiKey: providerConfig.apiKey || '',
@@ -579,6 +581,7 @@ export default {
           typesetDebug: false,
           eraseDebug: false,
           collectDebugLog: false,
+          diagnosticRunId: Date.now().toString(),
         }
 
         const onProgress = progress => {
@@ -755,10 +758,11 @@ img[src*="https://api.moedog.org/qr/?url="]
 // 翻译设置弹窗：随 get-container="body" 挂到 body，需全局样式（scoped 不生效）
 // 参照 base.styl .setting-page .van-popup--bottom 的 10rem 居中模式
 .van-popup--bottom.translate-settings-popup
-  width 10rem
-  max-width 90vw
   left 50%
-  transform translateX(-50%)
+  width 10rem
+  height 80%
+  margin-left: -5rem
+  overflow hidden
 </style>
 <style lang="stylus" scoped>
 .artwork

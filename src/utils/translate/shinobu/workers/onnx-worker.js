@@ -53,31 +53,52 @@ const modelCache = localforage.createInstance({
 })
 
 /**
- * Build a versioned cache key for a model URL.
+/**
+ * Build a stable cache key for a model URL.
  *
- * The key embeds the full resolved URL, which already contains the release tag
- * (e.g. `.../releases/download/models-v0.7.0/detector.onnx`) or the local file
- * name (`./models/detector.onnx`). Different sources → different keys, and a
- * tag change → different URL → different key → the model is re-downloaded
- * automatically instead of serving a stale binary.
+ * Uses only the filename (not the full URL) so the same model binary is
+ * shared across sources: local `./models/detector.onnx` and the GitHub CDN
+ * release URL both resolve to `detector.onnx` → the same cache entry. This
+ * means switching between local dev and CDN keeps previously cached models.
  *
  * @param {string} modelUrl
  * @returns {string}
  */
 function cacheKeyFor(modelUrl) {
-  return `shinobu-model:${modelUrl}`
+  const filename = modelUrl.split('/').pop()
+  return `shinobu-model:${filename}`
 }
 
 /**
  * Look up a cached model binary. Returns `null` on miss or read error —
  * callers fall back to a network download.
+ *
+ * Reads the filename-based key first. On miss, falls back to the legacy
+ * full-URL key (used before cache keys were normalized to filenames) and
+ * migrates the hit to the new key so old caches survive the upgrade.
+ *
  * @param {string} modelUrl
  * @returns {Promise<ArrayBuffer | null>}
  */
 async function getCachedModel(modelUrl) {
   try {
-    const value = await modelCache.getItem(cacheKeyFor(modelUrl))
-    return value instanceof ArrayBuffer ? value : null
+    const key = cacheKeyFor(modelUrl)
+    const value = await modelCache.getItem(key)
+    if (value instanceof ArrayBuffer) return value
+    // 旧缓存 key 是完整 URL（可能是 GitHub URL 或本地 /models/ 路径），逐一回退并迁移
+    const legacyKeys = [
+      `shinobu-model:${modelUrl}`,
+      `shinobu-model:/models/${modelUrl.split('/').pop()}`,
+    ]
+    for (const legacyKey of legacyKeys) {
+      if (legacyKey === key) continue
+      const legacyValue = await modelCache.getItem(legacyKey)
+      if (legacyValue instanceof ArrayBuffer) {
+        await modelCache.setItem(key, legacyValue)
+        return legacyValue
+      }
+    }
+    return null
   } catch (error) {
     console.warn(`[onnx-worker] 读取模型缓存失败，将重新下载: ${toErrorMessage(error)}`)
     return null
@@ -178,6 +199,32 @@ function notifyCacheQuotaWarning() {
 }
 
 /**
+ * Fetch a model binary with CORS fallback via COMMON_PROXY.
+ *
+ * GitHub release URLs redirect to objects.githubusercontent.com which may fail
+ * CORS in the worker. When a direct fetch fails, retry through COMMON_PROXY
+ * by simply prefixing the URL (the proxy forwards the request server-side).
+ *
+ * @param {string} modelUrl
+ * @returns {Promise<Response>}
+ */
+async function fetchModelWithFallback(modelUrl) {
+  try {
+    const direct = await fetch(modelUrl)
+    if (direct.ok) return direct
+  } catch (e) {
+    // direct fetch failed (network/CORS) — fall through to proxy
+  }
+  const COMMON_PROXY = process.env.VUE_APP_COMMON_PROXY
+  const proxyUrl = COMMON_PROXY ? COMMON_PROXY + modelUrl : null
+  if (proxyUrl) {
+    const proxied = await fetch(proxyUrl)
+    if (proxied.ok) return proxied
+  }
+  throw new Error(`模型下载失败: ${modelUrl}`)
+}
+
+/**
  * Load a model binary, cache-first.
  *
  * Hit → return cached ArrayBuffer (no network). Miss → fetch the URL, write
@@ -191,10 +238,7 @@ async function loadModelBuffer(modelUrl) {
   if (cached) {
     return cached
   }
-  const response = await fetch(modelUrl)
-  if (!response.ok) {
-    throw new Error(`模型下载失败: ${response.status} ${response.statusText}`)
-  }
+  const response = await fetchModelWithFallback(modelUrl)
   const buffer = await response.arrayBuffer()
   await setCachedModel(modelUrl, buffer)
   return buffer

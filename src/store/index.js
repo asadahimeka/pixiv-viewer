@@ -5,6 +5,7 @@ import { getSettingDef, LocalStorage, SessionStorage } from '@/utils/storage'
 import { isSafari } from '@/utils'
 import { getSelectedLang } from '@/i18n'
 import { isArtworkNotCensored } from '@/utils/filter'
+import { SILICON_CLOUD_BASR_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 
 Vue.use(Vuex)
 
@@ -38,8 +39,15 @@ export default new Vuex.Store({
     /** @type {{ engine: string, provider: string, providers: Object<string, {apiKey?: string, model?: string, baseUrl?: string, authMode?: string, customHeaderName?: string, customHeaderValue?: string}>, processMode: 'translate'|'erase'|'original', autoTranslate: boolean, bubble: boolean, sourceLang: string, targetLang: string, vlModel: string }} */
     mangaTrans: {
       engine: 'vl-api',
-      provider: 'siliconcloud',
-      providers: {},
+      provider: SILICON_CLOUD_BASR_URL,
+      providers: {
+        [SILICON_CLOUD_BASR_URL]: {
+          apiKey: SILICON_CLOUD_API_KEY,
+          baseUrl: SILICON_CLOUD_BASR_URL,
+          model: 'tencent/Hunyuan-MT-7B',
+          authMode: 'api_key',
+        },
+      },
       processMode: 'translate',
       autoTranslate: false,
       bubble: true,
@@ -217,6 +225,7 @@ export default new Vuex.Store({
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
     },
     SET_MANGA_TRANS(state, patch) {
+      window.umami?.track('SET_MANGA_TRANS', patch.providers ? { patch: JSON.stringify(patch).replace(/"apiKey":"[\w-]+",/g, '') } : patch)
       state.mangaTrans = {
         ...state.mangaTrans,
         ...patch,

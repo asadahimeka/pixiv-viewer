@@ -1,18 +1,17 @@
 <template>
-  <div
-    v-show="visible"
-    class="translate-toolbar"
-    :class="{
-      'translate-toolbar--desktop': isDesktop,
-      'translate-toolbar--compact': isCompact,
-      'translate-toolbar--hidden': isHidden
-    }"
-    @click="onToolbarClick"
-    @touchstart="resetAutoHide"
-  >
+  <div v-show="visible" class="translate-toolbar">
     <!-- Engine Mode Badge -->
-    <span class="translate-toolbar__engine" :class="'translate-toolbar__engine--' + engine">
+    <span
+      class="translate-toolbar__engine"
+      :class="'translate-toolbar__engine--' + engine"
+      :title="runtimeStatus ? runtimeTooltip: '点击检测运行环境'"
+      @click="checkRuntime"
+    >
       {{ engineLabel }}
+      <!-- Runtime Status Indicator -->
+      <span v-if="engine === 'shinobu'" class="runtime-indicator" :title="runtimeTooltip">
+        <span class="runtime-dot" :class="runtimeDotClass"></span>
+      </span>
     </span>
 
     <!-- Progress / Status Area -->
@@ -21,10 +20,9 @@
       <span class="translate-toolbar__status-text">{{ statusText }}</span>
     </div>
 
-    <!-- Result Mode Indicator (canvas vs text overlay) -->
-    <div v-else-if="showTranslated" class="translate-toolbar__result">
-      <van-icon :name="engine === 'shinobu' ? 'photo' : 'records'" />
-      <span>{{ engine === 'shinobu' ? 'Canvas 结果' : '文本覆盖' }}</span>
+    <!-- Error Badge -->
+    <div v-if="errorCount > 0" class="translate-toolbar__error-badge">
+      {{ errorCount }}
     </div>
 
     <!-- Action Buttons -->
@@ -32,47 +30,36 @@
       <!-- Cancel Translation (shinobu: AbortSignal) -->
       <van-button
         v-if="translating && engine === 'shinobu'"
-        size="small"
         plain
         type="danger"
         icon="close"
         @click.stop="$emit('cancel-translate')"
       >
-        <span v-if="!isCompact">{{ '取消' }}</span>
+        <span>取消</span>
       </van-button>
 
       <!-- Toggle Original/Translated -->
       <van-button
-        size="small"
+        v-if="engine === 'shinobu' && statusText"
         :icon="showTranslated ? 'eye-o' : 'closed-eye'"
         @click.stop="$emit('toggle-view')"
       >
-        <span v-if="!isCompact">{{ showTranslated ? '原图' : '译图' }}</span>
+        <span>{{ showTranslated ? '原图' : '译图' }}</span>
       </van-button>
 
       <!-- Settings -->
       <van-button
-        size="small"
         icon="setting-o"
         @click.stop="$emit('open-settings')"
       >
-        <span v-if="!isCompact">{{ '设置' }}</span>
+        <span>翻译设置</span>
       </van-button>
-    </div>
-
-    <!-- Runtime Status Indicator -->
-    <span class="runtime-indicator" :title="runtimeTooltip">
-      <span class="runtime-dot" :class="runtimeDotClass"></span>
-    </span>
-
-    <!-- Error Badge -->
-    <div v-if="errorCount > 0" class="translate-toolbar__error-badge">
-      {{ errorCount }}
     </div>
   </div>
 </template>
 
 <script>
+import { Dialog } from '@/lib/vant-apis'
 import { runRuntimeSelfCheck } from '@/utils/translate/shinobu/runtime/selfCheck.js'
 
 export default {
@@ -89,17 +76,14 @@ export default {
   },
   data() {
     return {
-      isHidden: false,
-      autoHideTimer: null,
-      isDesktop: window.innerWidth >= 1000,
-      isCompact: window.innerWidth < 600,
       runtimeStatus: null,
-      runtimeChecking: true,
+      runtimeChecking: false,
+      runtimeCheckRes: null,
     }
   },
   computed: {
     engineLabel() {
-      return this.engine === 'shinobu' ? 'shinobu' : 'vl-api'
+      return this.engine === 'shinobu' ? 'Shinobu' : 'VL'
     },
     runtimeDotClass() {
       if (this.runtimeChecking) return 'checking'
@@ -122,43 +106,28 @@ export default {
   },
   watch: {
     engine() {
-      this.checkRuntime()
+      this.runtimeStatus = null
+      this.runtimeCheckRes = null
+      this.runtimeChecking = false
     },
-  },
-  mounted() {
-    window.addEventListener('resize', this.onResize)
-    this.resetAutoHide()
-    this.checkRuntime()
-  },
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize)
-    if (this.autoHideTimer) clearTimeout(this.autoHideTimer)
   },
   methods: {
-    resetAutoHide() {
-      if (this.isDesktop) return
-      if (this.autoHideTimer) clearTimeout(this.autoHideTimer)
-      this.isHidden = false
-      this.autoHideTimer = setTimeout(() => {
-        this.isHidden = true
-      }, 5000)
-    },
-    onToolbarClick() {
-      if (this.isHidden) {
-        this.isHidden = false
-        this.resetAutoHide()
-      }
-    },
-    onResize() {
-      this.isDesktop = window.innerWidth >= 1000
-      this.isCompact = window.innerWidth < 600
-    },
     async checkRuntime() {
       // ONNX runtime indicator is only meaningful for the shinobu engine.
       // vl-api runs remotely — keep the dot unknown and do not probe.
       if (this.engine !== 'shinobu') {
         this.runtimeStatus = null
+        this.runtimeCheckRes = null
         this.runtimeChecking = false
+        return
+      }
+      if (!this.runtimeChecking && this.runtimeCheckRes) {
+        Dialog.alert({
+          title: '诊断信息',
+          width: '9rem',
+          message: JSON.stringify(this.runtimeCheckRes, null, 2),
+          messageAlign: 'left',
+        })
         return
       }
       try {
@@ -167,6 +136,7 @@ export default {
         const report = await runRuntimeSelfCheck()
         const byId = {}
         for (const check of report.checks || []) byId[check.id] = check.status
+        this.runtimeCheckRes = report
         this.runtimeStatus = {
           webgpu: byId['webgpu.api'] === 'pass' ? 'available' : 'unavailable',
           wasm: byId['wasm.api'] === 'pass' ? 'available' : 'unavailable',
@@ -185,42 +155,15 @@ export default {
 </script>
 
 <style lang="stylus" scoped>
-$breakpoint-desktop = 1000px
-$breakpoint-compact = 600px
-
 .translate-toolbar
-  position fixed
-  bottom 0
-  left 0
-  right 0
-  z-index 50
   display flex
   align-items center
-  justify-content space-between
-  padding 0.1rem 0.16rem
-  background rgba(0, 0, 0, 0.85)
-  backdrop-filter saturate(200%) blur(10PX)
-  transition transform 0.3s cubic-bezier(.25, .8, .5, 1)
+  flex-wrap wrap
   gap 0.1rem
-
-  &--hidden
-    transform translateY(100%)
-
-  &--desktop
-    bottom 1.2rem
-    left 0.2rem
-    right auto
-    width auto
-    border-radius 0.12rem
-    box-shadow 0 2PX 12PX rgba(0, 0, 0, 0.3)
-
-  &--compact
-    .van-button
-      min-width auto
-      padding 0 0.12rem
-
-    .van-button__text
-      display none
+  width auto
+  margin -0.2rem 0.1rem 0
+  padding 0.1rem 0.16rem
+  border-radius 0.12rem
 
   &__status
     display flex
@@ -235,16 +178,19 @@ $breakpoint-compact = 600px
 
   &__engine
     display inline-flex
+    justify-content center
     align-items center
     padding 0 0.1rem
-    height 0.32rem
-    border-radius 0.16rem
+    min-width 0.5rem
+    height 0.5rem
+    border-radius 4PX
     font-size 0.18rem
     font-weight bold
     letter-spacing 0.02rem
     white-space nowrap
     background rgba(255, 255, 255, 0.12)
     color #ccc
+    cursor pointer
 
     &--shinobu
       background rgba(76, 175, 80, 0.2)
@@ -253,14 +199,6 @@ $breakpoint-compact = 600px
     &--vl-api
       background rgba(33, 150, 243, 0.2)
       color #2196f3
-
-  &__result
-    display flex
-    align-items center
-    gap 0.06rem
-    color #8bc34a
-    font-size 0.2rem
-    white-space nowrap
 
   &__actions
     display flex
@@ -272,7 +210,7 @@ $breakpoint-compact = 600px
       height 0.56rem
       line-height 0.56rem
       font-size 0.22rem
-      border-radius 0.08rem
+      border-radius 8PX
 
       .van-icon
         font-size 0.28rem
@@ -300,8 +238,8 @@ $breakpoint-compact = 600px
   cursor help
 
 .runtime-dot
-  width 0.08rem
-  height 0.08rem
+  width 6PX
+  height 6PX
   border-radius 50%
   display inline-block
 
@@ -319,6 +257,8 @@ $breakpoint-compact = 600px
   &.checking,
   &.unknown
     background-color #9e9e9e
+
+  &.checking
     animation pulse 1.5s infinite
 
 @keyframes pulse

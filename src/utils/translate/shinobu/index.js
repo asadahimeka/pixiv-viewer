@@ -158,7 +158,7 @@ function toDiagnosticError(error) {
  */
 function emitDiagnosticLog(_entry) {
   // Diagnostic logging — dev-only (terser drop_console strips in production).
-  console.table(_entry)
+  console.log(_entry)
 }
 
 /** @typedef {'pipeline.detect'|'pipeline.bubble'|'pipeline.ocr'|'pipeline.inpaint'|'pipeline.typeset'} DiagnosticLogCategory */

@@ -1,6 +1,6 @@
 import { Dialog } from '@/lib/vant-apis'
 import { i18n } from '@/i18n'
-import { SILICON_CLOUD_API_KEY } from '@/consts'
+import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
 import { loadScript } from '@/utils'
 
 export async function loadKISSTranslator(isAutoLoad = false) {
@@ -131,11 +131,23 @@ export function getNoTranslateWords(tags = []) {
 }
 
 export const aiModelMap = {
+  hy_mt: 'tencent/Hunyuan-MT-7B',
   glm: 'THUDM/GLM-4-9B-0414',
   qwen2_5: 'Qwen/Qwen2.5-7B-Instruct',
-  hy_mt: 'tencent/Hunyuan-MT-7B',
   qwen3: 'Qwen/Qwen3-8B',
   qwen3_5: 'Qwen/Qwen3.5-4B',
+  longcat2: 'meituan-longcat/LongCat-2.0',
+  glm5_2: 'zai-org/GLM-5.2',
+  kimi2_7: 'moonshotai/Kimi-K2.7-Code',
+  dpsk_v4p: 'deepseek-ai/DeepSeek-V4-Pro',
+  dpsk_v4f: 'deepseek-ai/DeepSeek-V4-Flash',
+  kimi2_6: 'Pro/moonshotai/Kimi-K2.6',
+  nex: 'nex-agi/Nex-N2-Pro',
+  minimax: 'MiniMaxAI/MiniMax-M2.5',
+  qwen3_6: 'Qwen/Qwen3.6-35B-A3B',
+  step3_5: 'stepfun-ai/Step-3.5-Flash',
+  ling2: 'inclusionAI/Ling-flash-2.0',
+  glm4_5: 'zai-org/GLM-4.5-Air',
 }
 export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd = 'glm', onRead = console.log) {
   try {
@@ -146,7 +158,7 @@ export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd =
         novelText = novelText.replaceAll(e, `[名字${i}]`)
       })
     }
-    const response = await fetch('https://api.siliconflow.cn/v1/chat/completions', {
+    const response = await fetch(`${SILICON_CLOUD_BASR_URL}/chat/completions`, {
       method: 'POST',
       headers: {
         'authorization': `Bearer ${SILICON_CLOUD_API_KEY}`,
@@ -245,10 +257,3 @@ export async function nativeTranslate(novelText = '', onRead = () => {}) {
     console.log('nativeTranslate err: ', err)
   }
 }
-
-// ---------------------------------------------------------------------------
-// Shinobu pipeline entry (new engine mode)
-//
-// Loaded on demand via dynamic import in Artwork/index.vue (webpack code-split)
-// so that vl-api users never download the ~20k-line pipeline.
-// ---------------------------------------------------------------------------

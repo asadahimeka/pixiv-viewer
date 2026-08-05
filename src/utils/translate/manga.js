@@ -1,4 +1,4 @@
-import { SILICON_CLOUD_API_KEY } from '@/consts'
+import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 
 /**
@@ -54,7 +54,7 @@ export async function getCachedTranslation(artworkId, pageIndex, model) {
  * @param {string} [model] - SiliconCloud model id, defaults to Nex-N2-Pro
  */
 export async function callMultimodalAPIStream(imageSrc, onRead, model = 'nex-agi/Nex-N2-Pro') {
-  const url = 'https://api.siliconflow.cn/v1/chat/completions'
+  const url = `${SILICON_CLOUD_BASR_URL}/chat/completions`
   const imageUrl = new URL(imageSrc)
   imageUrl.protocol = 'https:'
   imageUrl.hostname = 'img.rika.club'
@@ -67,7 +67,7 @@ export async function callMultimodalAPIStream(imageSrc, onRead, model = 'nex-agi
       role: 'user',
       content: [
         { type: 'image_url', image_url: { url: imageUrl } },
-        { type: 'text', text: '请把这张漫画翻译为中文，按照从右到左、从上到下的顺序输出文本位置(比如第几格左或右)、文本原文、文本翻译后的中文，不附加任何解释。' },
+        { type: 'text', text: '请把这张漫画翻译为中文，按照从右到左、从上到下的顺序输出文本位置(比如第几格左或右)、文本原文、文本翻译后的中文，不附加任何解释。被隔断的文本可能只是漫画竖排或横排的视觉断列，请把它当作同一段语义处理，不要逐行逐列直译' },
       ],
     }],
   }

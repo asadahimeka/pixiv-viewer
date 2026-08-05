@@ -48,10 +48,11 @@ export const RuntimeCheckItem = {}
  * WASM/WebGPU/WebNN API availability in the main thread; heavy ONNX
  * session verification is delegated to the worker via probeRuntime.
  *
- * @param {string} [modelUrl='/models/PP-OCRv6_medium_rec.onnx'] Diagnostic ONNX model URL
+ * @param {string} [modelUrl] Diagnostic ONNX model URL (defaults to the
+ *   resolved paddleocr model URL — same resolution the pipeline uses)
  * @returns {Promise<RuntimeSelfCheckReport>}
  */
-export async function runRuntimeSelfCheck(modelUrl = '/models/PP-OCRv6_medium_rec.onnx') {
+export async function runRuntimeSelfCheck(modelUrl) {
   /** @type {RuntimeCheckItem[]} */
   const checks = []
   const nav = typeof navigator === 'undefined' ? null : navigator
@@ -132,6 +133,11 @@ export async function runRuntimeSelfCheck(modelUrl = '/models/PP-OCRv6_medium_re
   /** @type {RuntimeSelfCheckReport | null} */
   let workerReport = null
   try {
+    if (!modelUrl) {
+      const { getModel } = await import('./modelRegistry.js')
+      const model = await getModel('bubble')
+      modelUrl = model.url
+    }
     const onnxBridge = await import('./onnxBridge.js')
     workerReport = await onnxBridge.probeRuntime(modelUrl)
     // Append worker checks (skip duplicates — worker checks have ort.* prefix)

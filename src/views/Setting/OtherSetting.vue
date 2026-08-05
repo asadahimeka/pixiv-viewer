@@ -115,7 +115,7 @@
         </van-cell>
       </template>
       <template v-if="!appSetting.useNovelWebview && showAutoLoadImtSwitch">
-        <van-cell center title="小说默认翻译服务" :label="novelTranslateLabel" is-link @click="novelTranslate.show = true" />
+        <van-cell v-if="clientConfig.useLocalAppApi" center title="小说默认翻译服务" :label="novelTranslateLabel" is-link @click="novelTranslate.show = true" />
         <van-cell center title="自动加载简约翻译(KISS Translator)脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载">
           <template #right-icon>
             <van-switch :value="appSetting.isAutoLoadKissT" size="24" @change="changeAutoLoadKissT" />
