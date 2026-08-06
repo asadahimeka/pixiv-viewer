@@ -36,10 +36,13 @@ export default new Vuex.Store({
     isSafari: isSafari(),
     /** @type {any[]|null} */
     appNotice: null,
-    /** @type {{ engine: string, provider: string, providers: Object<string, {apiKey?: string, model?: string, baseUrl?: string, authMode?: string, customHeaderName?: string, customHeaderValue?: string}>, processMode: 'translate'|'erase'|'original', autoTranslate: boolean, bubble: boolean, sourceLang: string, targetLang: string, vlModel: string }} */
     mangaTrans: {
+      /** @type {'shinobu'|'vl-api'} */
       engine: 'vl-api',
+      /** @type {'google_web'|'llm'} */
+      translator: 'llm',
       provider: SILICON_CLOUD_BASR_URL,
+      /** @type {Record<string, {apiKey?: string, model?: string, baseUrl?: string, authMode?: string}>} */
       providers: {
         [SILICON_CLOUD_BASR_URL]: {
           apiKey: SILICON_CLOUD_API_KEY,
@@ -48,6 +51,7 @@ export default new Vuex.Store({
           authMode: 'api_key',
         },
       },
+      /** @type {'translate'|'erase'|'original'} */
       processMode: 'translate',
       autoTranslate: false,
       bubble: true,

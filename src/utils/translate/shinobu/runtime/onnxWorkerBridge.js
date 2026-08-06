@@ -30,6 +30,7 @@ import { Toast } from '@/lib/vant-apis'
  */
 function recordPerfRuntimeEvent(_kind, _payload) {
   // Noop — shared/perfTrace not yet ported
+  console.log(`[${_kind}]`, _payload)
 }
 
 /**
@@ -39,6 +40,7 @@ function recordPerfRuntimeEvent(_kind, _payload) {
  */
 function recordPerfWorkerCall(_payload) {
   // Noop — shared/perfTrace not yet ported
+  console.log('_payload: ', _payload)
 }
 
 // ---------------------------------------------------------------------------

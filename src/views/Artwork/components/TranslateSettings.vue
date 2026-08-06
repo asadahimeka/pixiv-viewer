@@ -38,7 +38,21 @@
     </van-cell-group>
 
     <template v-if="translationEngine === 'shinobu'">
-      <van-cell-group title="翻译提供商" style="padding-bottom: 1px">
+      <van-cell-group title="翻译器">
+        <van-radio-group
+          v-model="translationTranslator"
+          direction="horizontal"
+          class="translator-options"
+        >
+          <van-radio name="llm">LLM（AI 翻译）</van-radio>
+          <van-radio name="google_web">Google 翻译</van-radio>
+        </van-radio-group>
+        <div v-if="translationTranslator === 'google_web'" class="engine-help">
+          <van-icon name="info-o" /> 使用 Google 翻译网页版接口，无需 API Key。需要能访问 translate.googleapis.com。
+        </div>
+      </van-cell-group>
+
+      <van-cell-group v-if="translationTranslator == 'llm'" title="翻译提供商" style="padding-bottom: 1px">
         <van-field
           :value="providerConfig.baseUrl"
           label="Base URL"
@@ -178,6 +192,14 @@ export default {
         store.commit('SET_MANGA_TRANS', { engine: val })
       },
     },
+    translationTranslator: {
+      get() {
+        return store.state.mangaTrans.translator || 'llm'
+      },
+      set(val) {
+        store.commit('SET_MANGA_TRANS', { translator: val })
+      },
+    },
     translationProvider() {
       return store.state.mangaTrans.provider
     },
@@ -280,8 +302,13 @@ export default {
     async clearTranslationCache() {
       this.clearingCache = true
       try {
-        // todo: 仅清除缓存的翻译结果
-        await localDb.clear()
+        const keys = await localDb.keys()
+        const translatePrefixes = ['pic.translate.', 'pic.translate.shinobu.']
+        for (const key of keys) {
+          if (translatePrefixes.some(p => key.startsWith(p))) {
+            await localDb.remove(key)
+          }
+        }
         Toast.success('缓存已清除')
       } catch (err) {
         Toast('清除缓存失败: ' + err.message)
@@ -388,6 +415,15 @@ export default {
   .engine-options
     .van-cell
       padding 0.2rem 0.3rem
+
+  .translator-options
+    padding 0.2rem 0.3rem
+
+    ::v-deep .van-radio--horizontal
+      margin-right 0.3rem
+
+    ::v-deep .van-radio--horizontal:last-child
+      margin-right 0
 
   .test-connection-wrap
     padding 0.2rem 0.3rem

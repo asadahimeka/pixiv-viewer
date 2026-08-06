@@ -58,6 +58,10 @@ class LocalDB {
     return this._drive.removeItem(key)
   }
 
+  async keys() {
+    return this._drive.keys()
+  }
+
   async clear() {
     return this._drive.clear()
   }

@@ -22,6 +22,7 @@
             :show-translated="showTranslated"
             :pipeline-progress="pipelineProgress"
             :pipeline-stage-timings="pipelineStageTimings"
+            :current-artifacts="currentArtifacts"
             @open-download="ugoiraDownloadPanelShow = true"
             @translate="handleTranslate"
             @toggle-translate="showTranslated = !showTranslated"
@@ -197,6 +198,7 @@ export default {
       showTranslated: false,
       pipelineProgress: {},
       pipelineStageTimings: {},
+      currentArtifacts: null,
       pipelineTranslating: false,
       translateStatusText: '',
       translateErrorCount: 0,
@@ -256,6 +258,9 @@ export default {
     translationEngine() {
       return store.state.mangaTrans.engine
     },
+    translationTranslator() {
+      return store.state.mangaTrans.translator || 'llm'
+    },
     providerConfig() {
       const { provider, providers } = store.state.mangaTrans
       return providers[provider] || {}
@@ -267,11 +272,13 @@ export default {
         this.$route.name === 'Artwork' &&
         this.$route.params.id != this.artwork.id
       ) {
+        this.resetTranslateState()
         this.init()
       }
     },
     popupArt(val) {
       if (val && val.id != this.artwork.id) {
+        this.resetTranslateState()
         this.init()
       }
     },
@@ -309,6 +316,25 @@ export default {
     this.pipelineStageTimings = {}
   },
   methods: {
+    resetTranslateState() {
+      this.showTranslated = false
+      this.translatedCanvases = {}
+      this.pipelineProgress = {}
+      this.pipelineStageTimings = {}
+      this.currentArtifacts = null
+      this.pipelineTranslating = false
+      this.translateStatusText = ''
+      this.translateErrorCount = 0
+      this.currentTransPage = 0
+      if (this.pipelineAbort) {
+        this.pipelineAbort.abort()
+        this.pipelineAbort = null
+      }
+      // vl-api 状态也一并重置
+      this.picTranslations = {}
+      this.picTranslating = {}
+      this.showPicTranslatePanel = false
+    },
     init() {
       this.loading = true
       this.artwork = {}
@@ -532,6 +558,7 @@ export default {
 
         this.showTranslated = false
         this.currentTransPage = pageIndex
+        this.currentArtifacts = null
 
         const imageUrl = this.artwork.images[pageIndex]?.l || this.artwork.images[pageIndex]?.o
         if (!imageUrl) {
@@ -539,7 +566,7 @@ export default {
           return
         }
 
-        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}`
+        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}.${this.translationTranslator}`
         const cached = await getCache(cacheKey)
         // 缓存以 Blob 存储；旧缓存（canvas 序列化成 {}）不满足 instanceof Blob → 当 miss 重新翻译
         if (cached instanceof Blob) {
@@ -569,7 +596,7 @@ export default {
         const config = {
           sourceLang: 'ja',
           targetLang: 'zh-CN',
-          translator: 'llm',
+          translator: this.translationTranslator,
           llmProvider: 'custom',
           llmAuthMode: providerConfig.authMode || 'api_key',
           llmBaseUrl: providerConfig.baseUrl || '',
@@ -617,11 +644,12 @@ export default {
           const { runPipeline } = await import('@/utils/translate/shinobu/index.js')
           const artifacts = await runPipeline(imageFile, config, onProgress, { signal: abortController.signal })
 
-          if (!this.isActive) {
-            console.log('[Artwork] Component deactivated during pipeline — discarding result')
+          if (!this.isActive || abortController.signal.aborted) {
+            console.log('[Artwork] Component deactivated or translation cancelled during pipeline — discarding result')
             return
           }
 
+          this.currentArtifacts = artifacts
           this.$set(this.pipelineStageTimings, pageIndex, artifacts.stageTimings || [])
 
           if (artifacts.detectedRegions.length === 0) {
@@ -631,7 +659,7 @@ export default {
             return
           }
 
-          if (artifacts.resultCanvas) {
+          if (artifacts.resultCanvas && !abortController.signal.aborted) {
             this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
             // IndexedDB 无法结构化克隆 canvas，转存 Blob（PNG）保证缓存可序列化
             const blob = await new Promise(resolve => artifacts.resultCanvas.toBlob(resolve, 'image/png'))
@@ -648,6 +676,9 @@ export default {
             const detail = err.detail || err.message || ''
             this.$toast(`翻译失败${stage ? `（${stage}）` : ''}: ${detail}`)
           }
+          // 失败/取消路径:不残留译图状态
+          this.showTranslated = false
+          this.$set(this.translatedCanvases, pageIndex, null)
         } finally {
           this.pipelineTranslating = false
           this.translateStatusText = ''
@@ -710,11 +741,16 @@ export default {
       }
       this.pipelineTranslating = false
       this.translateStatusText = ''
+      const pageIndex = this.currentTransPage
+      // 同步清除 overlay 驱动状态，防止取消后 loading/译图 overlay 残留
+      this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
+      this.$set(this.translatedCanvases, pageIndex, null)
+      this.showTranslated = false
     },
     async handleRetry(pageIndex) {
       const engine = store.state.mangaTrans.engine
       if (engine === 'shinobu') {
-        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}`
+        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}.${this.translationTranslator}`
         try {
           await setCache(cacheKey, null)
         } catch (e) {

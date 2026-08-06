@@ -114,6 +114,13 @@
         ></canvas>
       </div>
     </template>
+    <TranslateDebug
+      v-if="isDev && showOverlay && debugVisible"
+      :visible="debugVisible"
+      :artifacts="currentArtifacts"
+      :stage-timings="pipelineStageTimings[currentDebugPage] || []"
+      @close="debugVisible = false"
+    />
     <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
     <div v-if="showUgoiraControl" class="ugoira-controls">
       <div v-if="ugoiraPlaying" class="btn-pause" @click="drawCanvas('pause')">
@@ -139,6 +146,7 @@ import { fancyboxShow, downloadFile } from '@/utils'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { downloadUgoira, loadUgoira } from '@/utils/ugoira'
 import TranslateOverlay from './TranslateOverlay'
+import TranslateDebug from './TranslateDebug.vue'
 
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
 
@@ -146,6 +154,7 @@ export default {
   name: 'ImageView',
   components: {
     TranslateOverlay,
+    TranslateDebug,
   },
   props: {
     artwork: {
@@ -176,6 +185,10 @@ export default {
       type: Object,
       default: () => ({}),
     },
+    currentArtifacts: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
@@ -185,6 +198,8 @@ export default {
       curIndex: 0,
       progressShow: false,
       progress: 0,
+      debugVisible: false,
+      currentDebugPage: 0,
       isLongpressDL,
       isLargeWebp: imgReso == 'Large(WebP)',
       isUgoiraAvifSrc,
@@ -247,12 +262,24 @@ export default {
     showOverlay() {
       return this.translationEngine === 'shinobu'
     },
+    isDev() {
+      return process.env.NODE_ENV !== 'production'
+    },
   },
   watch: {
     artwork(val) {
       if (val.images && val.images.length > 0) {
         this.init()
       }
+    },
+    translatingIndex(val) {
+      if (val >= 0) this.currentDebugPage = val
+    },
+    '$route.query.translatedebug': {
+      handler(val) {
+        this.debugVisible = val === '1'
+      },
+      immediate: true,
     },
   },
   mounted() {

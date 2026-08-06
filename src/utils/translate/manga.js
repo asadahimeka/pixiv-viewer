@@ -53,7 +53,7 @@ export async function getCachedTranslation(artworkId, pageIndex, model) {
  * @param {function} onRead - callback({ content: string, done: boolean })
  * @param {string} [model] - SiliconCloud model id, defaults to Nex-N2-Pro
  */
-export async function callMultimodalAPIStream(imageSrc, onRead, model = 'nex-agi/Nex-N2-Pro') {
+export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_VL_MODEL) {
   const url = `${SILICON_CLOUD_BASR_URL}/chat/completions`
   const imageUrl = new URL(imageSrc)
   imageUrl.protocol = 'https:'
@@ -136,7 +136,7 @@ export async function callMultimodalAPIStream(imageSrc, onRead, model = 'nex-agi
  * @param {string} [model] - SiliconCloud model id, defaults to Nex-N2-Pro
  * @returns {Promise<string|null>}
  */
-export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead, model = 'nex-agi/Nex-N2-Pro') {
+export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead, model = DEFAULT_VL_MODEL) {
   const key = `pic.translate.${artworkId}.${pageIndex}.${model}`
 
   const cached = await getCachedTranslation(artworkId, pageIndex, model)
