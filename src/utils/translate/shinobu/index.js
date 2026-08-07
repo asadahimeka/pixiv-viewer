@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: GPL-3.0-only
+// Derived from ShinobuTranslator (https://github.com/DonutShinobu/ShinobuTranslator), GPL-3.0.
 /**
  * @file Shinobu translation pipeline orchestrator — 12-stage `runPipeline`.
  *
