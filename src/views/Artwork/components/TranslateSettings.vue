@@ -53,10 +53,10 @@
       </van-cell-group>
 
       <div class="engine-help">
-        <van-icon name="info-o" /> 如需在 Pixiv 原站阅读漫画，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>（Chrome/Edge，内置模型无需下载 199MB）
+        <van-icon name="info-o" /> 如需在 Pixiv 原站阅读漫画，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>
       </div>
       <div class="engine-help" style="font-size: 0.22rem">
-        <van-icon name="info-o" /> Firefox 用户可前往 <a href="https://github.com/DonutShinobu/ShinobuTranslator" target="_blank" rel="noreferrer">GitHub Releases</a> 手动安装（about:debugging）
+        <van-icon name="info-o" /> Firefox 用户可前往 <a href="https://github.com/DonutShinobu/ShinobuTranslator" target="_blank" rel="noreferrer">GitHub Releases</a> 手动安装
       </div>
 
       <van-cell-group v-if="translationTranslator == 'llm'" title="翻译提供商" style="padding-bottom: 1px">
@@ -160,16 +160,21 @@
             round
             :loading="clearingCache"
             loading-text="清除中..."
-            style="min-width: 1.2rem;"
+            style="min-width: 1.2rem"
             @click="clearTranslationCache"
           >
             清除
           </van-button>
         </template>
       </van-cell>
+      <van-cell title="清除模型缓存" label="删除已下载的检测/OCR/去字模型（约 199MB），下次翻译时重新下载">
+        <template #right-icon>
+          <van-button size="small" plain round style="min-width: 1.2rem" :loading="clearingModels" @click="clearModelCache">清除</van-button>
+        </template>
+      </van-cell>
       <van-cell title="重置模型下载提醒" label="清除已同意的模型下载标记，下次翻译时重新询问">
         <template #right-icon>
-          <van-button size="small" plain round @click="resetModelConsent">重置</van-button>
+          <van-button size="small" plain round style="min-width: 1.2rem" @click="resetModelConsent">重置</van-button>
         </template>
       </van-cell>
     </van-cell-group>
@@ -179,6 +184,7 @@
 <script>
 import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
 import { Toast } from '@/lib/vant-apis'
+import localforage from 'localforage'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
 import { aiModelMap } from '@/utils/translate'
@@ -190,6 +196,7 @@ export default {
     return {
       testLoading: false,
       clearingCache: false,
+      clearingModels: false,
       testResult: null,
       vlModels: VL_MODELS,
       presetModels: Object.values(aiModelMap),
@@ -315,9 +322,8 @@ export default {
       this.clearingCache = true
       try {
         const keys = await localDb.keys()
-        const translatePrefixes = ['pic.translate.', 'pic.translate.shinobu.']
         for (const key of keys) {
-          if (translatePrefixes.some(p => key.startsWith(p))) {
+          if (key.startsWith('pic.translate.')) {
             await localDb.remove(key)
           }
         }
@@ -331,6 +337,20 @@ export default {
     resetModelConsent() {
       store.commit('SET_MANGA_TRANS', { shinobuModelConsent: false })
       Toast.success('已重置，下次翻译将重新询问')
+    },
+    async clearModelCache() {
+      this.clearingModels = true
+      try {
+        const modelDb = localforage.createInstance({ name: 'shinobu-models', storeName: 'models' })
+        await modelDb.clear()
+        const { disposeAllModelSessions } = await import('@/utils/translate/shinobu/runtime/modelRegistry')
+        await disposeAllModelSessions().catch(() => {})
+        Toast.success('已清除模型缓存')
+      } catch (err) {
+        Toast('清除模型缓存失败: ' + err.message)
+      } finally {
+        this.clearingModels = false
+      }
     },
     async testConnection() {
       const config = this.providerConfig

@@ -215,9 +215,6 @@
 </template>
 
 <script>
-import { drawRegions } from '@/utils/translate/shinobu/pipeline/visualize.js'
-import { browserPlatform } from '@/utils/translate/shinobu/runtime/browserPlatform.js'
-
 export default {
   name: 'TranslateDebug',
   props: {
@@ -342,7 +339,7 @@ export default {
       }
       return opaque / total
     },
-    buildBubbleOverlay() {
+    async buildBubbleOverlay() {
       const artifacts = this.artifacts
       if (!artifacts) {
         this.bubbleOverlayUrl = ''
@@ -352,6 +349,8 @@ export default {
         this.bubbleOverlayUrl = ''
         return
       }
+
+      const { browserPlatform } = await import('@/utils/translate/shinobu/runtime/browserPlatform')
 
       // Base: pipeline's drawRegions output if present, else drawRegions on original
       let base = artifacts.detectionCanvas || artifacts.ocrCanvas
@@ -363,6 +362,7 @@ export default {
         }
         const canvas = browserPlatform.createCanvas(img.naturalWidth, img.naturalHeight)
         canvas.getContext('2d')?.drawImage(img, 0, 0)
+        const { drawRegions } = await import('@/utils/translate/shinobu/pipeline/visualize')
         base = drawRegions(canvas, this.detectedRegions, '气泡调试', r => r.sourceText, browserPlatform)
       }
 

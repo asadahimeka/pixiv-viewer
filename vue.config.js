@@ -185,7 +185,7 @@ module.exports = {
         /pxcl[\\/].*/,
         /static[\\/](js|css)[\\/](?!flexible\..*)/,
         /test[\\/].*/,
-        /models\/.*\.(onnx|json|txt)$/, // models — too large for SW cache
+        /\/models\/.*\.onnx$/, // models — too large for SW cache
         /js\/ort\..*\.js$/,
       ],
       // navigateFallbackDenylist: [/^\/prks\//],
@@ -212,6 +212,11 @@ module.exports = {
             cacheableResponse: { statuses: [200] },
             fetchOptions: { credentials: 'omit', mode: 'cors' },
           },
+        },
+        {
+          urlPattern: /.*\.(css|js|json|png|svg)$/,
+          handler: 'StaleWhileRevalidate',
+          options: { cacheName: 'static-cache', cacheableResponse: { statuses: [200] } },
         },
         {
           // onnxruntime-web WASM — matches any domain/version (jsdelivr default or

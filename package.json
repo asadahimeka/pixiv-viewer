@@ -10,7 +10,6 @@
     "changelog": "git-cliff -o CHANGELOG.md",
     "analyze": "vue-cli-service build --report",
     "lint": "eslint src --fix --ext .js,.vue",
-    "models:download": "node scripts/download-models.mjs",
     "prerelease": "npm run changelog && git add ."
   },
   "dependencies": {

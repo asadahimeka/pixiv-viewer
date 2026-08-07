@@ -446,12 +446,11 @@ Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) t
 ### Related Projects
 
 * [HibiAPI](https://github.com/mixmoe/HibiAPI): Provides most API support
-* [PxveAPI](https://github.com/asadahimeka/pxve-api): HibiAPI-compatible and additional API services
-* [PixivNow](https://github.com/FreeNowOrg/PixivNow): Provides partial Web API support
-* [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator): Manga translation engine (GPL-3.0)
-* [pxder](https://github.com/Tsuk1ko/pxder): OAuth login reference (GPL-3.0)
-* [PixEz](https://github.com/Notsfsssf/pixez-flutter): Pixiv client, UI/feature reference
-* [KISS Translator](https://github.com/fishjar/kiss-translator): Translation tool (GPL-3.0)
+* [PixivNow](https://github.com/FreeNowOrg/PixivNow): Provides partial Web API support.
+* [pxder](https://github.com/Tsuk1ko/pxder): OAuth login reference.
+* [PixEz](https://github.com/Notsfsssf/pixez-flutter): Direct connect mode logic reference.
+* [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator): Manga translation engine.
+* [KISS Translator](https://github.com/fishjar/kiss-translator): Translation tool.
 
 ### Services
 

@@ -444,15 +444,16 @@ pnpm build
 ### 相关项目
 
 - [HibiAPI](https://github.com/mixmoe/HibiAPI)：提供大部分接口支持
-- [PxveAPI](https://github.com/asadahimeka/pxve-api)：HibiAPI 兼容以及其他接口服务
 - [PixivNow](https://github.com/FreeNowOrg/PixivNow)：提供部分网页版接口支持
-- [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator)：漫画翻译引擎（GPL-3.0）
-- [pxder](https://github.com/Tsuk1ko/pxder)：OAuth 登录参考实现（GPL-3.0）
-- [PixEz](https://github.com/Notsfsssf/pixez-flutter)：Pixiv 客户端，UI/功能参考
-- [KISS Translator](https://github.com/fishjar/kiss-translator)：翻译工具（GPL-3.0）
+- [pxder](https://github.com/Tsuk1ko/pxder)：OAuth 登录参考实现
+- [PixEz](https://github.com/Notsfsssf/pixez-flutter)：直连模式参考
+- [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator)：漫画翻译引擎
+- [KISS Translator](https://github.com/fishjar/kiss-translator)：翻译工具
+- [ZeoSeven Fonts](https://fonts.zeoseven.com)：释放字体自由！
 
 ### 服务
 
+- [Yuki 妙妙屋](https://yuki.sh/)：图像反代服务
 - [Pixiv.cat](https://pixiv.re/)：图像反代服务
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务

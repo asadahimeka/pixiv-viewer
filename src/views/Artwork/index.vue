@@ -302,6 +302,12 @@ export default {
     this.translateStatusText = ''
     // Note: keep translatedCanvases for when component is reactivated (keep-alive)
     // canvases are released in beforeDestroy only
+    // Release debug artifacts (currentArtifacts) — full-size canvases, safe to GC
+    this.currentArtifacts = null
+    // Release ONNX sessions + terminate the Comlink worker (~200MB)
+    import('@/utils/translate/shinobu/runtime/modelRegistry').then(m => {
+      m.disposeAllModelSessions().catch(err => console.warn('dispose models failed:', err))
+    })
   },
   beforeDestroy() {
     console.log('[Artwork] beforeDestroy — releasing all translation canvases')
@@ -314,6 +320,8 @@ export default {
     this.translatedCanvases = {}
     this.pipelineProgress = {}
     this.pipelineStageTimings = {}
+    // Release debug artifacts (currentArtifacts) — full-size canvases, safe to GC
+    this.currentArtifacts = null
   },
   methods: {
     resetTranslateState() {
@@ -555,7 +563,7 @@ export default {
           const res = await Dialog.confirm({
             title: '模型下载确认',
             message: '首次使用 Shinobu 管线需要下载模型文件（检测/OCR/去字），约 199MB，可能需要较长时间，请耐心等待。',
-            confirmButtonText: '下载模型',
+            confirmButtonText: '确定',
             cancelButtonText: '取消',
           }).catch(() => 'cancel')
           if (res !== 'confirm') return
@@ -653,14 +661,14 @@ export default {
             }
           }
           if (!imageBlob) {
-            const fetchUrl = imgProxy(imageUrl)
+            const fetchUrl = COMMON_PROXY + imgProxy(imageUrl)
             const res = await fetch(fetchUrl)
             if (!res.ok) throw new Error(`图片下载失败 HTTP ${res.status}`)
             imageBlob = await res.blob()
           }
           const imageFile = new File([imageBlob], `page-${pageIndex}.png`, { type: imageBlob.type || 'image/png' })
 
-          const { runPipeline } = await import('@/utils/translate/shinobu/index.js')
+          const { runPipeline } = await import('@/utils/translate/shinobu')
           const artifacts = await runPipeline(imageFile, config, onProgress, { signal: abortController.signal })
 
           if (!this.isActive || abortController.signal.aborted) {
@@ -668,7 +676,13 @@ export default {
             return
           }
 
-          this.currentArtifacts = artifacts
+          this.currentArtifacts = {
+            detectedRegions: artifacts.detectedRegions,
+            stageRegions: artifacts.stageRegions,
+            stageTimings: artifacts.stageTimings,
+            resultCanvas: artifacts.resultCanvas,
+            runtimeStages: artifacts.runtimeStages,
+          }
           this.$set(this.pipelineStageTimings, pageIndex, artifacts.stageTimings || [])
 
           if (artifacts.detectedRegions.length === 0) {
@@ -690,6 +704,7 @@ export default {
           if (err.name === 'AbortError') {
             this.$toast('已取消')
           } else {
+            if (err.artifacts) err.artifacts = null
             console.log('shinobu pipeline err:', err)
             const stage = err.stage || ''
             const detail = err.detail || err.message || ''

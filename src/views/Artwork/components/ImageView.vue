@@ -24,6 +24,7 @@
           />
           <template v-if="showPicTranslateBtn">
             <van-button
+              v-longpress="() => debugVisible = true"
               class="translate-btn"
               size="mini"
               round
@@ -80,6 +81,7 @@
         />
         <template v-if="showPicTranslateBtn">
           <van-button
+            v-longpress="() => debugVisible = true"
             class="translate-btn"
             size="mini"
             round
@@ -115,7 +117,7 @@
       </div>
     </template>
     <TranslateDebug
-      v-if="isDev && showOverlay && debugVisible"
+      v-if="showOverlay && debugVisible"
       :visible="debugVisible"
       :artifacts="currentArtifacts"
       :stage-timings="pipelineStageTimings[currentDebugPage] || []"
@@ -146,7 +148,7 @@ import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 import { fancyboxShow, downloadFile } from '@/utils'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { downloadUgoira, loadUgoira } from '@/utils/ugoira'
-import TranslateOverlay from './TranslateOverlay'
+import TranslateOverlay from './TranslateOverlay.vue'
 import TranslateDebug from './TranslateDebug.vue'
 
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
@@ -263,9 +265,6 @@ export default {
     showOverlay() {
       return this.translationEngine === 'shinobu'
     },
-    isDev() {
-      return process.env.NODE_ENV !== 'production'
-    },
     debugModelInfo() {
       const stages = this.currentArtifacts?.runtimeStages || []
       const info = {}
@@ -283,12 +282,6 @@ export default {
     },
     translatingIndex(val) {
       if (val >= 0) this.currentDebugPage = val
-    },
-    '$route.query.translatedebug': {
-      handler(val) {
-        this.debugVisible = val === '1'
-      },
-      immediate: true,
     },
   },
   mounted() {

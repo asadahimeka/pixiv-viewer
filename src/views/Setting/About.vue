@@ -38,24 +38,17 @@
       />
       <van-cell
         center
+        title="Yuki 妙妙屋"
+        is-link
+        label="Pximg reverse proxy"
+        @click="openLink('https://yuki.sh/?ref=pixiv.pictures')"
+      />
+      <van-cell
+        center
         title="Pixiv.cat"
         is-link
         :label="$t('R7wR59U5tm8NR3Gn1FKAw')"
         @click="openLink('https://pixiv.re/?ref=pixiv.pictures')"
-      />
-      <van-cell
-        center
-        title="@Blueberryy"
-        is-link
-        :label="$t('PtZhgMV8k86Gmg96kKTCA')"
-        @click="openLink('https://github.com/Blueberryy')"
-      />
-      <van-cell
-        center
-        title="@olivertzeng"
-        is-link
-        :label="$t('FyTTJetQW2e3wVs2sOjif')"
-        @click="openLink('https://github.com/olivertzeng')"
       />
       <van-cell
         center
@@ -73,16 +66,38 @@
       />
       <van-cell
         center
-        title="pixivpy-async"
+        title="ShinobuTranslator"
         is-link
-        :label="$t('tQaYxaOwYjOgf1OAnQm4J')"
-        @click="openLink('https://github.com/Mikubill/pixivpy-async')"
-      /><van-cell
+        label="漫画翻译引擎"
+        @click="openLink('https://github.com/DonutShinobu/ShinobuTranslator')"
+      />
+      <van-cell
         center
         title="ZeoSeven Fonts (ZSFT)"
         is-link
         label="释放字体自由！"
         @click="openLink('https://fonts.zeoseven.com')"
+      />
+      <van-cell
+        center
+        title="THIRD PARTY NOTICES"
+        is-link
+        label="Third-party open-source components"
+        @click="openLink('https://github.com/asadahimeka/pixiv-viewer/blob/master/THIRD_PARTY_NOTICES')"
+      />
+      <van-cell
+        center
+        title="@Blueberryy"
+        is-link
+        :label="$t('PtZhgMV8k86Gmg96kKTCA')"
+        @click="openLink('https://github.com/Blueberryy')"
+      />
+      <van-cell
+        center
+        title="@olivertzeng"
+        is-link
+        :label="$t('FyTTJetQW2e3wVs2sOjif')"
+        @click="openLink('https://github.com/olivertzeng')"
       />
     </van-cell-group>
     <van-cell-group :title="$t('about.feedback')">
@@ -93,27 +108,20 @@
         label="Github:asadahimeka/pixiv-viewer"
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer/issues')"
       />
-      <!-- <van-cell
+      <van-cell
         center
         :title="$t('cIyLKP7_S_Wo0Y0908dnm')"
         is-link
         label="Github:asadahimeka/pixiv-viewer"
         @click="openLink('https://github.com/asadahimeka/pixiv-viewer/discussions')"
-      /> -->
-      <van-cell
-        center
-        title="E-mail"
-        is-link
-        label="i@nanoka.top"
-        @click="openLink('mailto:i@nanoka.top')"
       />
-      <!-- <van-cell
+      <van-cell
         center
         :title="$t('VhMNSWrg03-_ryN7nRBJ3')"
         is-link
         :label="$t('9H-9VJU67Fuabl8OgbhOr')"
         @click="openLink('https://www.nanoka.top/say/pxve_comments.html')"
-      /> -->
+      />
     </van-cell-group>
   </div>
 </template>

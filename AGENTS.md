@@ -121,9 +121,9 @@ VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
 - **`.sisyphus/plans/` 计划文件命名**: 必须以日期开头（`YYYY-MM-DD-{name}.md`，如 `2026-08-02-shinobu-fixes3.md`）——同全局 AGENTS.md 约定，生成计划时严格执行
 - **Release flow**: `bumpp` bumps `package.json` + `src/consts/index.js`, then `git-cliff` updates CHANGELOG
 
-## Playwright QA Test Notes (2026-08-06 retrospective)
+## Playwright QA Test Notes
 
-> Two F3 Real Manual QA sessions both exceeded the 30-min sync `task()` poll limit. Lessons learned:
+> Two Real Manual QA sessions both exceeded the 30-min sync `task()` poll limit. Lessons learned:
 
 ### Environment facts (no login needed for most features)
 - **No login required** to browse/test most features. Login state can be simulated via localStorage (`PXV_*` prefix).
@@ -143,16 +143,7 @@ VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
 - Page loads: use `waitUntil: 'domcontentloaded'`, NOT `'networkidle'` (lazy-loaded image pages never reach networkidle).
 - Full retrospective: `.sisyphus/notepads/shinobu-questions/playwright-qa-lessons.md`
 
-## Shinobu Manga Translation Notes (2026-08-07 QA v4)
-
-- **Real translation works**: all models run on `wasm` (CPU) — `modelInfo` shows detector/bubble/ocr/inpaint all `wasm`. Full page translation takes ~99-157s (first run downloads ~199MB models, cached in IndexedDB after). Budget >8 min per test.
-- **Consent dialog gates first translation**: `shinobuModelConsent` (default false, persisted in `PXV_MANGA_TRANS` via `SET_MANGA_TRANS` spread merge) is checked at the VERY START of the `engine === 'shinobu'` branch, before cache. To re-test the dialog, clear `PXV_MANGA_TRANS` or set `shinobuModelConsent: false`. Use `Dialog.confirm` from `@/lib/vant-apis`, not `this.$dialog` or `from 'vant'`.
-- **TranslateDebug data schema** (`?translatedebug=1`, dev-only): `buildArtifacts()` does NOT return `translatedRegions` — translated text lives in `detectedRegions[].translatedText`; OCR regions in `stageRegions.ocr` (Object `{detected,ocr,merged,ordered}`, not Array); model info needs `:model-info` prop (from `currentArtifacts.runtimeStages`). `getSectionData()` delegates to computeds — fix the computed, display + copy paths both auto-fix.
-- **KNOWN OOM: translation memory is never released.** All dispose APIs exist but have no call sites: `disposeModelSession`/`disposeAllModelSessions` (modelRegistry.js), → `onnxWorkerBridge.disposeAll` (terminates worker, onnxWorkerBridge.js:483), worker `disposeAll` (onnx-worker.js). ONNX sessions (~200MB) live forever; `currentArtifacts` holds 5 full-size canvases/page; `translatedCanvases` accumulates across keep-alive. Don't run repeated translations in one browser session during QA. Do NOT dispose per translation (models are cached/reused) — dispose on leaving the artwork page only.
-- **License is now AGPL-3.0** (was MIT → GPL-3.0; `package.json` `AGPL-3.0-only`) because shinobu is derived from GPL-3.0 ShinobuTranslator, and AGPL protects against closed-source SaaS forks. THIRD_PARTY_NOTICES carries component attribution. Don't revert.
-- **TranslateSettings** has an extension recommendation link (Chrome Web Store + GitHub Releases, Firefox via about:debugging).
-
-### QA v4 script techniques (supersedes parts of v3 notes)
+### QA script techniques
 - **Read Vue computed values via `__vue__`** (walk `$parent` to the component by `$options.name`) instead of expanding DOM — rendering 1000s of region nodes OOMs the page.
 - **van-dialog DOM lingers during close transition** — assert absence via `display:none` (`dialogReallyGone`), not `querySelector === null`, else false positives.
 - Reuse browser context across runs (models cached); single attempt is enough.

@@ -60,7 +60,6 @@
 
 <script>
 import { Dialog } from '@/lib/vant-apis'
-import { runRuntimeSelfCheck } from '@/utils/translate/shinobu/runtime/selfCheck.js'
 
 export default {
   name: 'TranslateToolbar',
@@ -133,6 +132,7 @@ export default {
       try {
         this.runtimeChecking = true
         // Re-wired to shinobu runtime self-check (T8): runRuntimeSelfCheck
+        const { runRuntimeSelfCheck } = await import('@/utils/translate/shinobu/runtime/selfCheck')
         const report = await runRuntimeSelfCheck()
         const byId = {}
         for (const check of report.checks || []) byId[check.id] = check.status
