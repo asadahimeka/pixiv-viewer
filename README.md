@@ -14,7 +14,7 @@
 
 <p align="center">
 <img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer"  alt="Version">
-<img src="https://img.shields.io/badge/license-GPL--3.0-blue"  alt="License" >
+<img src="https://img.shields.io/badge/license-AGPL--3.0-orange"  alt="License" >
 <img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages" alt="Pages" >
 <img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer-app/total?logo=github" alt="Downloads" >
 </p>
@@ -447,6 +447,9 @@ pnpm build
 - [PxveAPI](https://github.com/asadahimeka/pxve-api)：HibiAPI 兼容以及其他接口服务
 - [PixivNow](https://github.com/FreeNowOrg/PixivNow)：提供部分网页版接口支持
 - [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator)：漫画翻译引擎（GPL-3.0）
+- [pxder](https://github.com/Tsuk1ko/pxder)：OAuth 登录参考实现（GPL-3.0）
+- [PixEz](https://github.com/Notsfsssf/pixez-flutter)：Pixiv 客户端，UI/功能参考
+- [KISS Translator](https://github.com/fishjar/kiss-translator)：翻译工具（GPL-3.0）
 
 ### 服务
 
@@ -492,7 +495,7 @@ pnpm build
 
 ## 📄 许可证
 
-本项目基于 [GPL-3.0 License](LICENSE) 开源。
+本项目基于 [AGPL-3.0 License](LICENSE) 开源。
 
 ---
 

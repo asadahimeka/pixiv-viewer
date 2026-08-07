@@ -1,7 +1,7 @@
 {
   "name": "pixiv-viewer",
   "version": "1.35.5",
-  "license": "GPL-3.0-only",
+  "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

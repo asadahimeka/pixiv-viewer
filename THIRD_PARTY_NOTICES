@@ -1,0 +1,68 @@
+Pixiv Viewer — Third-Party Notices
+===================================
+
+Pixiv Viewer
+Copyright (c) 2020 Jad
+Copyright (c) 2022 Yumine Sakura
+Licensed under the GNU Affero General Public License v3.0 (AGPL-3.0).
+
+This project incorporates the following third-party open-source components.
+Each is licensed under its own license; see the links for details.
+
+GNU GPL-3.0 components (derived or vendored):
+- ShinobuTranslator (https://github.com/DonutShinobu/ShinobuTranslator)
+  Manga translation engine under src/utils/translate/shinobu/ (mechanically converted TS→JS). GPL-3.0.
+- pxder (https://github.com/Tsuk1ko/pxder)
+  OAuth/PKCE login flow derived in src/api/client/login.js. GPL-3.0.
+- Mapaler/PixivUserBatchDownload (https://github.com/Mapaler/PixivUserBatchDownload)
+  PKCE code verifier/challenge helpers in src/api/client/login.js. GPL-3.0.
+- KISS Translator (https://github.com/fishjar/kiss-translator)
+  Vendored userscript in public/kiss-translator/. GPL-3.0.
+- FancyBox 4 (https://fancyapps.com/fancybox/)
+  Vendored in public/static/js/fancybox.umd.min.js and public/pxcl/fancybox/. GPL-3.0 (dual with commercial).
+
+npm runtime dependencies (bundled into the browser build):
+- vue / vue-router / vuex / vue-i18n / vue-meta (https://github.com/vuejs/*) — MIT
+- @vueuse/core / @vueuse/components (https://github.com/vueuse/vueuse) — MIT
+- @vant/touch-emulator (https://github.com/youzan/vant) — MIT
+- axios (https://github.com/axios/axios) — MIT
+- comlink (https://github.com/GoogleChromeLabs/comlink) — Apache-2.0
+- core-js (https://github.com/zloirock/core-js) — MIT
+- crypto-js (https://github.com/brix/crypto-js) — MIT
+- dayjs (https://github.com/iamkun/dayjs) — MIT
+- localforage (https://github.com/localForage/localForage) — Apache-2.0
+- lodash (https://github.com/lodash/lodash) — MIT
+- modern-mp4 (https://github.com/oyuyuy/modern-mp4) — MIT
+- nprogress (https://github.com/rstacruz/nprogress) — MIT
+- onnxruntime-web (https://github.com/microsoft/onnxruntime) — MIT
+- register-service-worker (https://github.com/yyx990803/register-service-worker) — MIT
+- swiper / vue-awesome-swiper (https://github.com/nolimits4web/swiper) — MIT
+- ts-whammy (https://github.com/oyuyuy/ts-whammy) — MIT
+- vant (https://github.com/youzan/vant) — MIT
+- gif.js (https://github.com/jnordberg/gif.js) — MIT
+- jszip (https://github.com/Stuk/jszip) — MIT (dual MIT/GPL, MIT chosen)
+
+Vendored static files (public/):
+- better-justified-layout (https://github.com/nk-o/better-justified-layout) — MIT (src/lib/justified.js)
+- pako (https://github.com/nodeca/pako) — MIT+Zlib (public/static/js/pako_deflate.min.js)
+- ejs (https://github.com/mde/ejs) — Apache-2.0 (public/static/js/ejs.min.js)
+- jepub (https://github.com/lelinhtinh/jepub) — ISC (public/static/js/jepub.js)
+- UPNG.js (https://github.com/photopea/UPNG.js) — MIT (public/static/js/UPNG.min.js)
+- gif.worker.js (part of gif.js, https://github.com/jnordberg/gif.js) — MIT
+- DPlayer (https://github.com/DIYgod/DPlayer) — MIT (public/static/js/DPlayer.min.js)
+- hls.js (https://github.com/video-dev/hls.js) — Apache-2.0 (public/static/js/hls.min.js)
+- html2pdf.js bundle (https://github.com/eKoopmans/html2pdf.js) — MIT (public/static/js/html2pdf.bundle.min.js)
+- lib-flexible (https://github.com/amfe/lib-flexible) — MIT (public/static/js/flexible.js, flexible.min.js, public/static/css/flexible.css)
+- normalize.css (https://github.com/necolas/normalize.css) — MIT (public/static/css/normalize.css)
+- FancyBox 4 (https://fancyapps.com/fancybox/) — GPL-3.0 (dual with commercial) (public/static/js/fancybox.umd.min.js, public/static/css/fancybox.min.css)
+- Dosis font (https://fonts.google.com/specimen/Dosis) — SIL Open Font License 1.1 (src/assets/fonts/dosis-v7-latin-ext_latin-regular.woff)
+
+Derived / referenced projects (not vendored code, but credited):
+- journey-ad/pixiv-viewer (https://github.com/journey-ad/pixiv-viewer) — MIT (ancestor project)
+- alphasp/pixiv-api-client (https://github.com/alphasp/pixiv-api-client) — MIT (AppAPI wrapper base)
+
+Models:
+- ONNX models under public/models/ are sourced from ShinobuTranslator releases
+  (detector/bubble/PP-OCRv6/AOT-inpaint). Model origins: PaddleOCR / manga-image-translator (Apache-2.0).
+
+Full license texts: see LICENSE (project), and the respective project repositories.

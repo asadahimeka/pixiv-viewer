@@ -14,7 +14,7 @@
 
 <p align="center">
 <img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer"  alt="Version">
-<img src="https://img.shields.io/badge/license-MIT-green"  alt="License" >
+<img src="https://img.shields.io/badge/license-AGPL--3.0-orange"  alt="License" >
 <img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages" alt="Pages" >
 <img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer/total?logo=github" alt="Downloads" >
 </p>
@@ -448,6 +448,10 @@ Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) t
 * [HibiAPI](https://github.com/mixmoe/HibiAPI): Provides most API support
 * [PxveAPI](https://github.com/asadahimeka/pxve-api): HibiAPI-compatible and additional API services
 * [PixivNow](https://github.com/FreeNowOrg/PixivNow): Provides partial Web API support
+* [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator): Manga translation engine (GPL-3.0)
+* [pxder](https://github.com/Tsuk1ko/pxder): OAuth login reference (GPL-3.0)
+* [PixEz](https://github.com/Notsfsssf/pixez-flutter): Pixiv client, UI/feature reference
+* [KISS Translator](https://github.com/fishjar/kiss-translator): Translation tool (GPL-3.0)
 
 ### Services
 
@@ -493,7 +497,7 @@ This project is for communication and learning purposes only and must not be use
 
 ## 📄 License
 
-This project is open-sourced under the [MIT License](LICENSE).
+This project is open-sourced under the [AGPL-3.0 License](LICENSE).
 
 ---
 
