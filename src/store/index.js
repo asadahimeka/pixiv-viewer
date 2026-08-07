@@ -39,6 +39,8 @@ export default new Vuex.Store({
     mangaTrans: {
       /** @type {'shinobu'|'vl-api'} */
       engine: 'vl-api',
+      /** @type {boolean} 用户是否已同意首次下载 Shinobu 模型 */
+      shinobuModelConsent: false,
       /** @type {'google_web'|'llm'} */
       translator: 'llm',
       provider: SILICON_CLOUD_BASR_URL,

@@ -119,6 +119,7 @@
       :visible="debugVisible"
       :artifacts="currentArtifacts"
       :stage-timings="pipelineStageTimings[currentDebugPage] || []"
+      :model-info="debugModelInfo"
       @close="debugVisible = false"
     />
     <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
@@ -264,6 +265,14 @@ export default {
     },
     isDev() {
       return process.env.NODE_ENV !== 'production'
+    },
+    debugModelInfo() {
+      const stages = this.currentArtifacts?.runtimeStages || []
+      const info = {}
+      stages.forEach(s => {
+        if (s && s.model) info[s.model] = s.provider || s.engine || s.status || 'ok'
+      })
+      return Object.keys(info).length ? info : {}
     },
   },
   watch: {

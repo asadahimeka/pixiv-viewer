@@ -104,7 +104,7 @@
 <script>
 import nprogress from 'nprogress'
 import { mapGetters } from 'vuex'
-import { ImagePreview } from '@/lib/vant-apis'
+import { Dialog, ImagePreview } from '@/lib/vant-apis'
 import api, { localApi, imgProxy } from '@/api'
 import store from '@/store'
 import _ from '@/lib/lodash'
@@ -550,6 +550,17 @@ export default {
       window.umami?.track('translate_manga', { engine })
 
       if (engine === 'shinobu') {
+        // 首次使用需确认下载模型（检测/OCR/去字，约 199MB）
+        if (!store.state.mangaTrans.shinobuModelConsent) {
+          const res = await Dialog.confirm({
+            title: '模型下载确认',
+            message: '首次使用 Shinobu 管线需要下载模型文件（检测/OCR/去字），约 199MB，可能需要较长时间，请耐心等待。',
+            confirmButtonText: '下载模型',
+            cancelButtonText: '取消',
+          }).catch(() => 'cancel')
+          if (res !== 'confirm') return
+          store.commit('SET_MANGA_TRANS', { shinobuModelConsent: true })
+        }
         // SHINOBU PIPELINE path (canvas output, replaces old ONNX pipeline)
         if (this.pipelineTranslating) {
           this.$toast('正在翻译中，请稍候')
@@ -579,6 +590,13 @@ export default {
             URL.revokeObjectURL(img.src)
             this.$set(this.translatedCanvases, pageIndex, canvas)
             this.showTranslated = true
+            this.currentArtifacts = {
+              detectedRegions: [],
+              stageRegions: { detected: [], ocr: [], merged: [], ordered: [] },
+              stageTimings: this.pipelineStageTimings[pageIndex] || [],
+              resultCanvas: canvas,
+              runtimeStages: [],
+            }
             this.$toast('使用缓存的翻译结果')
             return
           } catch (e) {
@@ -624,6 +642,7 @@ export default {
           let imageBlob = null
           if (window.__httpRequest__) {
             try {
+              // todo: i1.pximg.net
               const { data } = await window.__httpRequest__(imageUrl, JSON.stringify({
                 responseType: 'blob',
                 headers: { Referer: 'https://www.pixiv.net/' },

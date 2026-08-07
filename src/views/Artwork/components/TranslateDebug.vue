@@ -253,10 +253,11 @@ export default {
       return this.artifacts?.detectedRegions || []
     },
     ocrRegions() {
-      return this.artifacts?.stageRegions || []
+      return this.artifacts?.stageRegions?.ocr || []
     },
     translatedRegions() {
-      return this.artifacts?.translatedRegions || []
+      // buildArtifacts() 不返回 translatedRegions；翻译后的文本在 detectedRegions 的 translatedText 字段上
+      return (this.artifacts?.detectedRegions || []).filter(r => r.translatedText) || []
     },
     bubbleRuntime() {
       const stages = this.artifacts?.runtimeStages || []

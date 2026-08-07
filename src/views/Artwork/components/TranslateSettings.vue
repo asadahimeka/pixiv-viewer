@@ -52,6 +52,13 @@
         </div>
       </van-cell-group>
 
+      <div class="engine-help">
+        <van-icon name="info-o" /> 如需在 Pixiv 原站阅读漫画，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>（Chrome/Edge，内置模型无需下载 199MB）
+      </div>
+      <div class="engine-help" style="font-size: 0.22rem">
+        <van-icon name="info-o" /> Firefox 用户可前往 <a href="https://github.com/DonutShinobu/ShinobuTranslator" target="_blank" rel="noreferrer">GitHub Releases</a> 手动安装（about:debugging）
+      </div>
+
       <van-cell-group v-if="translationTranslator == 'llm'" title="翻译提供商" style="padding-bottom: 1px">
         <van-field
           :value="providerConfig.baseUrl"
@@ -158,6 +165,11 @@
           >
             清除
           </van-button>
+        </template>
+      </van-cell>
+      <van-cell title="重置模型下载提醒" label="清除已同意的模型下载标记，下次翻译时重新询问">
+        <template #right-icon>
+          <van-button size="small" plain round @click="resetModelConsent">重置</van-button>
         </template>
       </van-cell>
     </van-cell-group>
@@ -315,6 +327,10 @@ export default {
       } finally {
         this.clearingCache = false
       }
+    },
+    resetModelConsent() {
+      store.commit('SET_MANGA_TRANS', { shinobuModelConsent: false })
+      Toast.success('已重置，下次翻译将重新询问')
     },
     async testConnection() {
       const config = this.providerConfig
