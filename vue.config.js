@@ -182,6 +182,7 @@ module.exports = {
         /img[\\/]icons[\\/].*/,
         /img[\\/]font_preview[\\/].*/,
         /kiss-translator[\\/].*/,
+        /pxcl[\\/].*/,
         /static[\\/](js|css)[\\/](?!flexible\..*)/,
         /test[\\/].*/,
         /models\/.*\.(onnx|json|txt)$/, // models — too large for SW cache
