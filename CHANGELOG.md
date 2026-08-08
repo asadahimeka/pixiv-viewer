@@ -19,6 +19,41 @@
 - Integrate manga image translation into artwork page
 - Manga image translation — streaming, raw text, desktop panel
 - Improve search UX — editable cursor and numeric ID navigation
+- *(translate)* Define pipeline types and data structures
+- *(translate)* Add multi-provider LLM translation with prompt engineering
+- *(translate)* Add Canvas horizontal and vertical typesetting engine
+- *(translate)* Add translation settings store and config UI
+- *(translate)* Add Canvas overlay component for translated images
+- *(translate)* Add original/translated image toggle
+- *(translate)* Wire new translation pipeline into artwork view
+- *(translate)* Add ONNX Runtime Web worker architecture
+- *(translate)* Add model manifest and CDN loading
+- *(translate)* Implement Worker inference bridge with provider fallback
+- *(translate)* Add sequential model loading with progress
+- *(translate)* Add ONNX text detection module with heuristic fallback
+- *(translate)* Add PaddleOCR recognition module with preprocess and CTC decode
+- *(translate)* Add text line merging and reading order sorting
+- *(translate)* Add ONNX inpainting module for text removal
+- *(translate)* Add mask refinement from OCR regions
+- *(translate)* Implement pipeline orchestrator connecting all stages
+- *(translate)* Add per-stage error handling and fallback
+- *(translate)* Add reading mode bottom toolbar
+- *(translate)* Add translation progress visualization
+- *(translate)* Add dev-only debug panel
+- *(translate)* Add advanced settings (auth modes, cache mgmt, model diagnostics)
+- *(translate)* Wire pipeline to Artwork page with dual-engine dispatch
+- *(translate)* Rework onnx runtime with CDN dual-mode
+- *(translate)* Rework pipeline core stages
+- *(translate)* Add typeset kinsoku engine
+- *(translate)* Rework LLM providers with auth modes
+- *(translate)* Adapt artwork UI components
+- *(translate)* Port shinobu runtime and workers
+- *(translate)* Port shinobu pipeline modules
+- *(translate)* Port shinobu typeset orchestrator and translators
+- *(translate)* Adapt UI for shinobu engine and update config
+- *(translate)* Models from prerelease CDN with sha256 + URL template env
+- *(translate)* LLM preset dropdown, VL model selector, mangaTrans store nesting
+- *(translate)* Crop bubble masks to single-channel to fix OOM
 
 ### 🐛 Bug Fixes
 
@@ -44,14 +79,37 @@
 - *(Users)* Remove conflicting loading guard in FavoriteNovels pagination
 - *(api)* Add max_bookmark_id=0 cleanup for novel bookmarks endpoint
 - *(Account)* Remove conflicting loading guard in MyBookmarksNovel pagination
+- *(translate)* Add memory management, SW exclude, integrity checks, CDN config
+- *(translate)* Edge case handling, memory cleanup, and worker build config
+- *(translate)* Wire modelRegistry to onnxBridge with session cache and model binary cache
+- *(translate)* Blob result cache, image CORS fallback, dynamic import, remove toolbar buttons
+- *(translate)* Remove env guard, restore diagnostics, google proxy, wasm SW cache
+- *(translate)* Shinobu UX 修复（9 项问题 + 3 项 Metis 发现）
+- *(translate)* Onnx-worker 模型缓存 quota 错误处理
+- Manga translate bug fixes
+- Manga translate bug fixes
+- *(translate)* TranslateDebug data + consent dialog + extension links
+- *(translate)* Release shinobu model memory + clear model cache + misc cleanup
+- *(translate)* Helper script prompt + live stage timings + misc UI
+
+### 💼 Other
+
+- *(translate)* Switch to CDN model loading
 
 ### 🚜 Refactor
 
 - Extract PanelContent to eliminate template duplication
+- *(translate)* Remove legacy onnx pipeline and providers
 
 ### 📚 Documentation
 
 - Update readme
+- *(agents)* Playwright QA notes + Shinobu translation operational notes
+
+### ⚡ Performance
+
+- *(vant)* Unify to lib build via vant-apis facade
+- *(ort)* Isolate onnxruntime-web chunk and exclude from SW precache
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -71,6 +129,14 @@
 - Ignore docs/superpowers
 - Release v1.35.3
 - Release v1.35.4
+- Release v1.35.5
+- *(translate)* Add model download scripts and manifest assets
+- *(translate)* Update model manifest and download script
+- *(translate)* Pin comlink to exact version
+- 启用模型 CDN env 配置 + 油猴域名白名单
+- *(license)* MIT → GPL-3.0 due to ShinobuTranslator derivation
+- *(license)* GPL-3.0 → AGPL-3.0 + THIRD_PARTY_NOTICES
+- Disable model CDN env defaults + pxcl SW cache exclusion
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
