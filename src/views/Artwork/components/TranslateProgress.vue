@@ -60,7 +60,7 @@
     </div>
 
     <!-- Stage Timings (shinobu debug view, panel mode only) -->
-    <div
+    <!-- <div
       v-if="!inline && isShinobu && stageTimings.length > 0"
       class="translate-progress__timings"
     >
@@ -76,7 +76,7 @@
         <span class="translate-progress__timing-label">{{ timing.label }}</span>
         <span class="translate-progress__timing-duration">{{ Math.round(timing.durationMs) }}ms</span>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -295,6 +295,7 @@ $border-radius = 0.08rem
     column-gap 0.1rem
     align-items center
     padding 0.06rem 0.08rem
+    position relative
     border-radius $border-radius
     transition background 0.3s ease, opacity 0.3s ease
 
@@ -324,10 +325,10 @@ $border-radius = 0.08rem
   // Connector line between stages
   &__stage-line
     position absolute
-    left 0.15rem
-    top 0.32rem
+    left 0.24rem
+    top 0.24rem
     width 0.02rem
-    height 0.32rem
+    height 0.4rem
     background rgba(255, 255, 255, 0.1)
     border-radius 0.01rem
     pointer-events none
@@ -368,6 +369,7 @@ $border-radius = 0.08rem
 .status-pulse
   width 0.12rem
   height 0.12rem
+  margin-top -0.15rem
   background var(--accent-color, #1989fa)
   border-radius 50%
   animation translate-progress-pulse 1.4s ease-in-out infinite

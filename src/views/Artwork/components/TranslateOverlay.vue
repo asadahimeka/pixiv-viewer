@@ -200,7 +200,7 @@ export default {
   flex-direction column
   align-items center
   justify-content center
-  background rgba(0, 0, 0, 0.4)
+  background rgba(0, 0, 0, 0.6)
   pointer-events auto
   z-index 1
 

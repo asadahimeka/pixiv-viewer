@@ -41,6 +41,8 @@ export default new Vuex.Store({
       engine: 'vl-api',
       /** @type {boolean} 用户是否已同意首次下载 Shinobu 模型 */
       shinobuModelConsent: false,
+      /** @type {boolean} 用户是否已知晓 HTTP Helper 用户脚本提示 */
+      helperConsent: false,
       /** @type {'google_web'|'llm'} */
       translator: 'llm',
       provider: SILICON_CLOUD_BASR_URL,

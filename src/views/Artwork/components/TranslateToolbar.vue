@@ -39,13 +39,13 @@
       </van-button>
 
       <!-- Toggle Original/Translated -->
-      <van-button
-        v-if="engine === 'shinobu' && statusText"
+      <!-- <van-button
+        v-if="engine === 'shinobu'"
         :icon="showTranslated ? 'eye-o' : 'closed-eye'"
         @click.stop="$emit('toggle-view')"
       >
         <span>{{ showTranslated ? '原图' : '译图' }}</span>
-      </van-button>
+      </van-button> -->
 
       <!-- Settings -->
       <van-button

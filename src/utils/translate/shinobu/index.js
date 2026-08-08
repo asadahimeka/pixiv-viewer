@@ -217,21 +217,7 @@ function cloneRegionQuad(quad) {
  * @returns {Array<TextRegion>}
  */
 function cloneTextRegions(regions) {
-  const clonedMasks = new Map()
   return regions.map(region => {
-    let bubbleMask
-    if (region.bubbleMask) {
-      bubbleMask = clonedMasks.get(region.bubbleMask)
-      if (!bubbleMask) {
-        bubbleMask = {
-          width: region.bubbleMask.width,
-          height: region.bubbleMask.height,
-          data: new Uint8ClampedArray(region.bubbleMask.data),
-        }
-        clonedMasks.set(region.bubbleMask, bubbleMask)
-      }
-    }
-
     return {
       ...region,
       box: { ...region.box },
@@ -245,7 +231,9 @@ function cloneTextRegions(regions) {
         quad: geometry.quad ? cloneRegionQuad(geometry.quad) : undefined,
       })),
       bubbleBox: region.bubbleBox ? { ...region.bubbleBox } : undefined,
-      bubbleMask,
+      // Stage snapshots are diagnostics, not render inputs. Retaining masks here
+      // multiplies memory without adding useful inspection data.
+      bubbleMask: undefined,
     }
   })
 }
@@ -493,10 +481,13 @@ const STAGE_PERCENT = {
  * @param {ProgressCallback} cb
  * @param {string} stage
  * @param {string} detail
+ * @param {Array<StageTiming>} [timings]
  */
-function report(cb, stage, detail) {
+function report(cb, stage, detail, timings) {
   const percent = STAGE_PERCENT[stage]
   const progress = { stage, detail, ...(percent !== undefined ? { percent } : {}) }
+  // 附带已累计的阶段耗时，供 UI 实时渲染（TranslateProgress "阶段耗时" 块）
+  if (timings && timings.length) progress.timings = timings
   cb(progress)
 }
 
@@ -526,12 +517,13 @@ export async function runPipeline(file, config, onProgress, options = {}) {
   const platform = browserPlatform
   /** @type {Array<StageTiming>} */
   const stageTimings = []
+  const reportStage = (stage, detail) => report(onProgress, stage, detail, stageTimings)
   const signal = options.signal
   const stopAfterOrder = options.stopAfter === 'order'
 
   // ---- load ----
   throwIfCancelled(signal)
-  report(onProgress, 'load', '加载图片')
+  reportStage('load', '加载图片')
   const loadT0 = performance.now()
   const image = await fileToImage(file, platform)
   throwIfCancelled(signal)
@@ -616,7 +608,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
 
   // ---- preload (detector) ----
   throwIfCancelled(signal)
-  report(onProgress, 'preload', '加载检测模型')
+  reportStage('preload', '加载检测模型')
   const preloadT0 = performance.now()
   setRuntimeStage(await probeRuntime('detector'))
   throwIfCancelled(signal)
@@ -659,7 +651,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
 
   // ---- detect ----
   throwIfCancelled(signal)
-  report(onProgress, 'detect', '文本检测')
+  reportStage('detect', '文本检测')
   try {
     if (ocrRuntimeProbeSchedule === 'detect-start') {
       startOcrRuntimeProbe()
@@ -714,6 +706,12 @@ export async function runPipeline(file, config, onProgress, options = {}) {
       regionCount: detected.regions.length,
       durationMs,
     })
+    if (detected.regions.length === 0) {
+      cleanedCanvas = originalCanvas
+      resultCanvas = originalCanvas
+      reportStage('done', '完成')
+      return buildArtifacts()
+    }
     if (ocrRuntimeProbeSchedule === 'after-detect') {
       startOcrRuntimeProbe()
     }
@@ -739,7 +737,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
     if (!stopAfterOrder && inpaintRuntimeProbeSchedule === 'bubble-start') {
       startInpaintRuntimeProbe()
     }
-    report(onProgress, 'bubble', '气泡检测')
+    reportStage('bubble', '气泡检测')
     if (bubbleRuntimeProbeSchedule !== 'current') {
       const bubblePreloadT0 = performance.now()
       setRuntimeStage(await startBubbleRuntimeProbe())
@@ -787,7 +785,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
 
   // ---- ocr ----
   throwIfCancelled(signal)
-  report(onProgress, 'ocr', 'OCR 日文识别')
+  reportStage('ocr', 'OCR 日文识别')
   try {
     if (!stopAfterOrder && inpaintRuntimeProbeSchedule === 'ocr-start') {
       startInpaintRuntimeProbe()
@@ -848,7 +846,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
 
   // ---- merge ----
   throwIfCancelled(signal)
-  report(onProgress, 'merge', '合并文本行')
+  reportStage('merge', '合并文本行')
   try {
     const t0 = performance.now()
     latestRegions = mergeTextLines(latestRegions, image.naturalWidth, image.naturalHeight)
@@ -868,6 +866,9 @@ export async function runPipeline(file, config, onProgress, options = {}) {
       )
     }
   }
+  // Matched masks remain reachable through their regions; unmatched masks can
+  // be reclaimed before the remaining stages allocate render canvases.
+  detectedBubbles = []
 
   // ---- ocr_postfilter ----
   if ((config.ocrPostFilter ?? 'balanced') === 'off') {
@@ -894,7 +895,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
     }
   } else {
     throwIfCancelled(signal)
-    report(onProgress, 'ocr_postfilter', '过滤 OCR 误识别')
+    reportStage('ocr_postfilter', '过滤 OCR 误识别')
     const t0 = performance.now()
     try {
       const result = await filterOcrRegions(
@@ -949,7 +950,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
 
   // ---- order ----
   throwIfCancelled(signal)
-  report(onProgress, 'order', '文本顺序排序')
+  reportStage('order', '文本顺序排序')
   try {
     const t0 = performance.now()
     latestRegions = sortRegionsForRender(latestRegions, originalCanvas, platform)
@@ -961,9 +962,20 @@ export async function runPipeline(file, config, onProgress, options = {}) {
 
   const orderedRegions = latestRegions
 
+  if (!orderedRegions.some(region => region.sourceText.trim().length > 0)) {
+    latestRegions = []
+    stageRegions.ocr = []
+    stageRegions.merged = []
+    stageRegions.ordered = []
+    cleanedCanvas = originalCanvas
+    resultCanvas = originalCanvas
+    reportStage('done', '完成')
+    return buildArtifacts()
+  }
+
   // ---- stopAfterOrder early-exit (Shinobu L757-761) ----
   if (stopAfterOrder) {
-    report(onProgress, 'done', '完成')
+    reportStage('done', '完成')
     return buildArtifacts()
   }
 
@@ -1023,7 +1035,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
   }
 
   const reportParallel = () => {
-    report(onProgress, 'parallel', `${getTranslateDetail()} | ${getEraseDetail()}`)
+    reportStage('parallel', `${getTranslateDetail()} | ${getEraseDetail()}`)
   }
 
   reportParallel()
@@ -1155,7 +1167,7 @@ export async function runPipeline(file, config, onProgress, options = {}) {
   } else {
     throwIfCancelled(signal)
     const typesetLabel = config.processMode === 'original' ? '排版原文' : '排版和嵌字'
-    report(onProgress, 'typeset', typesetLabel)
+    reportStage('typeset', typesetLabel)
     try {
       const t0 = performance.now()
       const typesetResult = await drawTypeset(cleanedCanvas, latestRegions, config.targetLang, {
@@ -1199,6 +1211,6 @@ export async function runPipeline(file, config, onProgress, options = {}) {
 
   // ---- done ----
   throwIfCancelled(signal)
-  report(onProgress, 'done', '完成')
+  reportStage('done', '完成')
   return buildArtifacts()
 }

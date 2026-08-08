@@ -105,7 +105,7 @@
 import nprogress from 'nprogress'
 import { mapGetters } from 'vuex'
 import { Dialog, ImagePreview } from '@/lib/vant-apis'
-import api, { localApi, imgProxy } from '@/api'
+import api, { localApi } from '@/api'
 import store from '@/store'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
@@ -558,6 +558,18 @@ export default {
       window.umami?.track('translate_manga', { engine })
 
       if (engine === 'shinobu') {
+        // 提示安装 HTTP Helper 用户脚本（一次性，仅未安装时）
+        if (!window.__httpRequest__ && !store.state.mangaTrans.helperConsent) {
+          const helperRes = await Dialog.confirm({
+            title: '提示',
+            message: '建议安装 Tampermonkey 浏览器扩展并安装 HTTP Helper 用户脚本，否则可能无法进行翻译。<br><br><p>Tampermonkey 扩展: <a href="https://www.tampermonkey.net/" target="_blank" rel="noreferrer">前往安装</a></p><p>HTTP Helper 用户脚本: <a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank" rel="noreferrer">点击安装</a></p>',
+            messageAlign: 'left',
+            confirmButtonText: '知道了',
+            cancelButtonText: '取消',
+          }).catch(() => 'cancel')
+          if (helperRes === 'confirm') store.commit('SET_MANGA_TRANS', { helperConsent: true })
+          // 无论确认与否，都不阻断翻译
+        }
         // 首次使用需确认下载模型（检测/OCR/去字，约 199MB）
         if (!store.state.mangaTrans.shinobuModelConsent) {
           const res = await Dialog.confirm({
@@ -640,6 +652,10 @@ export default {
         const onProgress = progress => {
           this.$set(this.pipelineProgress, pageIndex, progress)
           this.translateStatusText = progress.detail || ''
+          // 流式 stageTimings：让 TranslateProgress "阶段耗时" 块实时显示
+          if (progress.timings && progress.timings.length) {
+            this.$set(this.pipelineStageTimings, pageIndex, progress.timings)
+          }
         }
 
         const abortController = new AbortController()
@@ -650,7 +666,6 @@ export default {
           let imageBlob = null
           if (window.__httpRequest__) {
             try {
-              // todo: i1.pximg.net
               const { data } = await window.__httpRequest__(imageUrl, JSON.stringify({
                 responseType: 'blob',
                 headers: { Referer: 'https://www.pixiv.net/' },
@@ -661,7 +676,7 @@ export default {
             }
           }
           if (!imageBlob) {
-            const fetchUrl = COMMON_PROXY + imgProxy(imageUrl)
+            const fetchUrl = COMMON_PROXY + imageUrl
             const res = await fetch(fetchUrl)
             if (!res.ok) throw new Error(`图片下载失败 HTTP ${res.status}`)
             imageBlob = await res.blob()

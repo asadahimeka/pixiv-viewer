@@ -317,10 +317,6 @@ export default {
     },
   },
   mounted() {
-    const params = new URLSearchParams(window.location.search)
-    if (params.get('translatedebug') === '1') {
-      this.$emit('enable')
-    }
     this.updateBubbleOverlay()
   },
   methods: {
@@ -334,7 +330,7 @@ export default {
       if (total === 0) return 0
       const data = mask.data
       let opaque = 0
-      for (let i = 3; i < data.length; i += 4) {
+      for (let i = 0; i < data.length; i++) {
         if (data[i] > 0) opaque += 1
       }
       return opaque / total
@@ -395,11 +391,20 @@ export default {
         ctx.globalAlpha = 0.5
         for (const region of this.bubbleRegions) {
           const mask = region.bubbleMask
-          if (!mask) continue
+          if (!mask || !mask.width || !mask.height) continue
           const maskCanvas = browserPlatform.createCanvas(mask.width, mask.height)
           const maskCtx = maskCanvas.getContext('2d')
           if (!maskCtx) continue
-          maskCtx.putImageData(mask, 0, 0)
+          // Build an ImageData from the cropped single-channel mask
+          const imgData = maskCtx.createImageData(mask.width, mask.height)
+          for (let i = 0; i < mask.data.length; i++) {
+            const v = mask.data[i] > 0 ? 255 : 0
+            imgData.data[i * 4] = v
+            imgData.data[i * 4 + 1] = v
+            imgData.data[i * 4 + 2] = v
+            imgData.data[i * 4 + 3] = v
+          }
+          maskCtx.putImageData(imgData, 0, 0)
 
           const tint = browserPlatform.createCanvas(mask.width, mask.height)
           const tintCtx = tint.getContext('2d')
@@ -409,7 +414,8 @@ export default {
           tintCtx.globalCompositeOperation = 'source-in'
           tintCtx.drawImage(maskCanvas, 0, 0)
 
-          ctx.drawImage(tint, 0, 0, canvas.width, canvas.height)
+          // Place the tint at the mask's crop offset (not stretched to full canvas)
+          ctx.drawImage(tint, mask.x, mask.y, mask.width, mask.height)
         }
         ctx.restore()
       }

@@ -167,12 +167,12 @@
           </van-button>
         </template>
       </van-cell>
-      <van-cell title="清除模型缓存" label="删除已下载的检测/OCR/去字模型（约 199MB），下次翻译时重新下载">
+      <van-cell v-if="translationEngine === 'shinobu'" title="清除模型缓存" label="删除已下载的检测/OCR/去字模型（约 199MB），下次翻译时重新下载">
         <template #right-icon>
           <van-button size="small" plain round style="min-width: 1.2rem" :loading="clearingModels" @click="clearModelCache">清除</van-button>
         </template>
       </van-cell>
-      <van-cell title="重置模型下载提醒" label="清除已同意的模型下载标记，下次翻译时重新询问">
+      <van-cell v-if="translationEngine === 'shinobu'" title="重置模型下载提醒" label="清除已同意的模型下载标记，下次翻译时重新询问">
         <template #right-icon>
           <van-button size="small" plain round style="min-width: 1.2rem" @click="resetModelConsent">重置</van-button>
         </template>

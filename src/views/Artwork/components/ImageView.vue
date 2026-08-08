@@ -24,7 +24,6 @@
           />
           <template v-if="showPicTranslateBtn">
             <van-button
-              v-longpress="() => debugVisible = true"
               class="translate-btn"
               size="mini"
               round
@@ -81,7 +80,6 @@
         />
         <template v-if="showPicTranslateBtn">
           <van-button
-            v-longpress="() => debugVisible = true"
             class="translate-btn"
             size="mini"
             round
@@ -286,6 +284,7 @@ export default {
   },
   mounted() {
     this.init()
+    if (this.$route.query.debug === '1') this.debugVisible = true
   },
   deactivated() {
     this.resetUgoira()
