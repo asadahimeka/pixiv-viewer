@@ -6,7 +6,7 @@
 // @description  HTTP helper for Pixiv-Viewer.
 // @description:ru HTTP-помощник для Pixiv-Viewer.
 // @author       asadahimeka
-// @license      MIT
+// @license      AGPL-3.0
 // @match        https://pixiv.pictures/*
 // @match        https://www.pixiv.pictures/*
 // @match        https://pxve.cc/*

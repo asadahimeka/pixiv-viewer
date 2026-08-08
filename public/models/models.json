@@ -1,6 +1,6 @@
 {
   "source": "ShinobuTranslator",
-  "note": "ONNX models for manga image translation pipeline. Downloaded via pnpm models:download.",
+  "note": "ONNX models for manga image translation pipeline. Downloaded via https://github.com/DonutShinobu/ShinobuTranslator/releases",
   "baseUrl": "/models/",
   "models": {
     "detector": {

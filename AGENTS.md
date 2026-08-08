@@ -78,7 +78,7 @@ App.vue
 
 ### Vant UI (v2) — IMPORTANT import conventions
 - **DO NOT** `import { X } from 'vant'` — this triggers babel-plugin-import and pulls in the `vant/es/*` ESM build, duplicating the `vant/lib/*` CJS build already registered globally. All vant code must use ONE build (`vant/lib/*`).
-- **Template components**: already globally registered via `Vue.use()` in `src/lib/vant.js` (38 components: Button/Toast/Search/Tabs/List/Popup/Dialog/Icon/Loading/Progress NOT included, etc.) — use `<van-xxx>` directly, NO import needed.
+- **Template components**: already globally registered via `Vue.use()` in `src/lib/vant.js` (39 components: Button/Toast/Search/Tabs/List/Popup/Dialog/Icon/Loading/Progress etc. — use `<van-xxx>` directly, NO import needed.
 - **Imperative APIs** (Dialog.confirm, Toast.success, ImagePreview, Notify, Locale): import from the central facade `@/lib/vant-apis` (re-exports `vant/lib/*` + needed styles):
   ```js
   import { Dialog, Toast, ImagePreview, Notify, Locale } from '@/lib/vant-apis'
@@ -100,15 +100,27 @@ App.vue
 
 ### API Config (via .env)
 ```
-VUE_APP_PXVEAPI_MAIN     — PxveAPI instance (also serves PixivNow)
-VUE_APP_DEF_HIBIAPI_MAIN — Default HibiAPI endpoint
-VUE_APP_DEF_PXIMG_MAIN   — Default pximg proxy
-VUE_APP_DEF_APP_API_PROXY— AppAPI proxy host
+VUE_APP_PXVEAPI_MAIN        — PxveAPI instance (also serves PixivNow)
+VUE_APP_DEF_HIBIAPI_MAIN    — Default HibiAPI endpoint
+VUE_APP_DEF_PXIMG_MAIN      — Default pximg proxy
+VUE_APP_DEF_APP_API_PROXY   — AppAPI proxy host
+VUE_APP_COMMON_PROXY        — Generic proxy (https://proxy.example.com/https://url)
+VUE_APP_COMMON_IMAGE_PROXY  — Generic image proxy (falls back to COMMON_PROXY)
 VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
+VUE_APP_MODEL_RELEASE_TAG   — ONNX model CDN release tag (rewrites manifest URLs)
+VUE_APP_MODEL_URL_TEMPLATE  — Custom model CDN URL template (priority over release tag)
+VUE_APP_ORT_WASM_PATH       — ONNX Runtime WASM path (default: jsdelivr CDN)
 ```
+
+### Manga Translation (ONNX pipeline)
+- `src/utils/translate/` — manga image translation: `index.js` (pipeline orchestrator), `manga.js`, `shinobu/` (ONNX workers, OCR, inpainting, typesetting, LLM translators)
+- **Models live in `public/models/`** — manifest `models.json` + dict tracked in git; `*.onnx` binaries gitignored (fetched at deploy time; do NOT commit them)
+- Pipeline stages: text detection → OCR recognition → text removal (inpainting) → LLM translation → Canvas typesetting
+- Runs in Worker threads via Comlink (onnxruntime-web, WebGPU/WASM)
 
 ## Gotchas & Constraints
 
+- **License**: AGPL-3.0 (`package.json` → `AGPL-3.0-only`). History: MIT → GPL-3.0 → AGPL-3.0 (ShinobuTranslator derivation). Third-party MIT code keeps its original headers (e.g. `src/lib/justified.js`, `src/api/client/pixiv-api.js`) — do NOT strip them; `THIRD_PARTY_NOTICES` documents third-party licenses
 - **`lintOnSave: false`** — ESLint errors won't show in dev overlay
 - **Browser blocking** in `main.js`: blocks WeChat/QQ and ~12 Chinese browsers at startup via user-agent check
 - **R18 age gate** for zh-CN users: redirects to a blocking page unless `PXV_NSFW_ON` is set
@@ -138,7 +150,6 @@ VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
 
 ### Execution rules
 - **QA/UI automation tasks MUST use `run_in_background=true`** — sync `task()` has a hard 1800000ms (30 min) poll limit; serial UI scenarios will hit it.
-- After hitting the limit, in-session conclusions are lost — evidence files are the only recovery path. **F3 must write its verdict to `.sisyphus/evidence/f3-verdict.txt` before finishing.**
 - Bash checks (files/grep/license) take seconds; **each UI scenario takes ~3 min** — keep scenario count low, split as needed.
 - Page loads: use `waitUntil: 'domcontentloaded'`, NOT `'networkidle'` (lazy-loaded image pages never reach networkidle).
 - Full retrospective: `.sisyphus/notepads/shinobu-questions/playwright-qa-lessons.md`
@@ -164,5 +175,9 @@ VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
 | `src/router/` | Vue Router config + routes |
 | `src/store/` | Vuex store + actions (check-login, fetch-notice, filename) |
 | `src/utils/` | Utilities (download, storage, ugoira, novel, filter, font) |
+| `src/utils/translate/` | Manga image translation pipeline (ONNX workers, OCR, inpainting, typesetting) |
+| `src/utils/sync.js` | Cloud sync (PBKDF2 + AES, conflict detection) |
 | `src/views/` | Page components (Artwork, Home, Search, Rank, Users, etc.) |
 | `public/` | Static assets, PWA manifest, helper scripts |
+| `public/models/` | ONNX translation models — manifest + dict tracked, `*.onnx` gitignored |
+| `public/pxcl/` | Pre-built Pixiv bookmark page (independent Vue 3 bundle) |

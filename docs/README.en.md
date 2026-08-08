@@ -66,6 +66,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 * **Search Filters**: Filter by bookmarks count, submission time, etc.
 * **Popular Preview**: Non-member preview of popular works (first 30 items)
 * **Search by Image**: Upload images to search for similar works
+* **Direct ID Navigation**: Enter a work/user ID directly in the search box to jump quickly
 
 ### 📊 Rankings
 
@@ -92,7 +93,18 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
 * **Novel Download**: Download novel text, supports TXT, HTML, Markdown, DOC, PDF, EPUB formats
 * **Reading Settings**: Customize fonts, colors, reading direction, etc.
+* **Rich Text Rendering**: Support for novel rich text formatting
+* **Reading Progress Memory**: Auto-saves novel scroll position for continued reading
+* **Native Reader**: Immersive WebView novel reading experience
 * **Novel Translation**: Integrated online translation
+
+#### Manga Translation
+
+* **One-Click Translation**: Built-in manga image translation engine, no external services required
+* **Local Inference**: Text detection, OCR, and image inpainting via ONNX Runtime Web, all processed locally in the browser
+* **Typesetting Engine**: Horizontal/vertical text layout, automatic bubble matching and reading order
+* **Multiple Model Providers**: Supports SiliconCloud and other LLM providers for translation
+* **Original/Translated Toggle**: One-click comparison between original and translated images
 
 ### 👤 Author Page
 
@@ -115,7 +127,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
 * **R18 Toggle**: Control whether adult content is displayed
 * **AI Works Toggle**: Control whether AI-generated works are displayed
-* **Local Blacklist**: Block works from specific tags or users
+* **Local Blacklist**: Block works from specific tags or users, with tag-based UI management and individual removal
 
 #### Browsing Experience
 
@@ -150,6 +162,7 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
 * **Settings Backup**: Backup current app settings to a file and restore later
 * **History Backup**: Backup browsing history to a file and restore later
+* **Cloud Sync**: Multi-device data sync with PBKDF2 key derivation + AES encryption, conflict detection and smart merge
 * **Export RefreshToken**: Export RefreshToken for use in other applications
 
 #### Client Support
@@ -255,6 +268,20 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
   * IndexedDB via LocalForage
   * Supports LocalStorage and SessionStorage
+
+* **Manga Translation Engine**:
+
+  * ONNX Runtime Web (WebGPU/WASM) local inference
+  * Worker thread inference (Comlink), non-blocking to the main thread
+  * Text detection + PaddleOCR recognition + image inpainting pipeline
+  * Multi-provider LLM translation (SiliconCloud / DeepSeek / OpenAI, etc.)
+  * Canvas horizontal/vertical text typesetting
+
+* **Cloud Sync**:
+
+  * PBKDF2 key derivation + AES encryption
+  * Dual-input auth and scope selection
+  * Conflict detection (409) and smart merge
 
 ---
 
@@ -451,9 +478,11 @@ Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) t
 * [PixEz](https://github.com/Notsfsssf/pixez-flutter): Direct connect mode logic reference.
 * [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator): Manga translation engine.
 * [KISS Translator](https://github.com/fishjar/kiss-translator): Translation tool.
+* [ZeoSeven Fonts](https://fonts.zeoseven.com): Free fonts for everyone!
 
 ### Services
 
+- [Yuki 妙妙屋](https://yuki.sh/): Image proxy service
 * [Pixiv.cat](https://pixiv.re/): Image proxy service
 * [SauceNAO](https://saucenao.com/): Image search API
 * [Cloudflare Workers](https://workers.cloudflare.com/): Image proxy service
@@ -497,6 +526,10 @@ This project is for communication and learning purposes only and must not be use
 ## 📄 License
 
 This project is open-sourced under the [AGPL-3.0 License](LICENSE).
+
+Copyright © 2020 Jad
+
+Copyright © 2022 Sakura Yumine
 
 ---
 
