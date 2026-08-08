@@ -9,6 +9,7 @@
  */
 
 import { clamp } from '../utils.js'
+import { hasBubbleMaskPixel } from '../bubbleMask.js'
 import {
   KINSOKU_NSTART,
   KINSOKU_NEND,
@@ -2087,27 +2088,31 @@ export function countNeededColumnsAtFontSize(measureCtx, text, contentHeight, fo
  * resolveHorizontalMaskHeight to determine how much vertical space the
  * bubble provides.
  *
- * @param {Object} mask — pixel data with .width, .height, .data (RGBA Uint8)
+ * The mask is a cropped, single-channel bitmap whose origin is at
+ * `{x, y}` in source-image coordinates; xStart/xEnd/yStart are
+ * full-image coordinates and are translated internally.
+ *
+ * @param {import('../../types.js').BubbleMask} mask
  * @param {number} xStart
  * @param {number} xEnd
  * @param {number} yStart
  * @returns {number}
  */
 export function queryMaskMaxY(mask, xStart, xEnd, yStart) {
-  const clampedXStart = Math.max(0, Math.round(xStart))
-  const clampedXEnd = Math.min(mask.width - 1, Math.round(xEnd))
-  const maxY = mask.height - 1
+  const clampedXStart = Math.max(mask.x, Math.round(xStart))
+  const clampedXEnd = Math.min(mask.x + mask.width - 1, Math.round(xEnd))
+  const firstY = Math.round(yStart)
+  const maxY = mask.y + mask.height - 1
 
-  if (clampedXStart > clampedXEnd || yStart > maxY) {
-    return Math.round(yStart)
+  if (clampedXStart > clampedXEnd || firstY < mask.y || firstY > maxY) {
+    return firstY
   }
 
-  let lastValidY = Math.round(yStart)
-  for (let y = Math.round(yStart); y <= maxY; y++) {
+  let lastValidY = firstY
+  for (let y = firstY; y <= maxY; y++) {
     let allOutside = true
     for (let x = clampedXStart; x <= clampedXEnd; x++) {
-      const idx = (y * mask.width + x) * 4
-      if (mask.data[idx + 3] > 0) {
+      if (hasBubbleMaskPixel(mask, x, y)) {
         allOutside = false
         break
       }

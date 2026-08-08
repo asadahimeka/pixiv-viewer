@@ -91,6 +91,16 @@ export const GeminiAppModel = {}
 export const TranslationReferenceContext = {}
 
 /**
+ * @typedef {Object} BubbleMask
+ * @property {number} x - Crop offset from the left edge of the source image
+ * @property {number} y - Crop offset from the top edge of the source image
+ * @property {number} width - Cropped mask width in pixels
+ * @property {number} height - Cropped mask height in pixels
+ * @property {Uint8Array} data - Single-channel binary mask (0/1), row-major
+ */
+export const BubbleMask = {}
+
+/**
  * @typedef {Object} TextRegion
  * @property {string} id - Unique region identifier
  * @property {Rect} box - Bounding box in original image coordinates
@@ -106,7 +116,7 @@ export const TranslationReferenceContext = {}
  * @property {Array<string>} [translatedColumns] - Optional LLM-provided vertical columns, ordered right-to-left
  * @property {Array<SourceTextLineGeometry>} [sourceLineGeometries] - Pre-merge source line/column geometries in reading order
  * @property {Rect} [bubbleBox] - Speech bubble bounding box (optional, may extend beyond text)
- * @property {PipelineImageData} [bubbleMask] - Binary mask of speech bubble area
+ * @property {BubbleMask} [bubbleMask] - Cropped binary mask of speech bubble area (single-channel, offset by x/y)
  */
 export const TextRegion = {}
 
@@ -114,7 +124,7 @@ export const TextRegion = {}
  * @typedef {Object} BubbleDetection
  * @property {Rect} box - Detected speech bubble bounding box
  * @property {number} score - Detection confidence (0-1)
- * @property {PipelineImageData} mask - Binary mask of the bubble area
+ * @property {BubbleMask} mask - Cropped binary mask of the bubble area
  */
 export const BubbleDetection = {}
 

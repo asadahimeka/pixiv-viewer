@@ -19,12 +19,12 @@
 // ---------------------------------------------------------------------------
 
 /** @typedef {import('../types.js').BubbleDetection} BubbleDetection */
+/** @typedef {import('../types.js').BubbleMask} BubbleMask */
 /** @typedef {import('../types.js').Rect} Rect */
 /** @typedef {import('../types.js').TextRegion} TextRegion */
 
 /** @typedef {import('../runtime/platform.js').PlatformProvider} PlatformProvider */
 /** @typedef {import('../runtime/platform.js').PipelineImage} PipelineImage */
-/** @typedef {import('../runtime/platform.js').PipelineImageData} PipelineImageData */
 
 /** @typedef {import('../runtime/onnxTypes.js').RuntimeProvider} RuntimeProvider */
 /** @typedef {import('../runtime/onnxTypes.js').WebNnDeviceType} WebNnDeviceType */
@@ -35,6 +35,7 @@
 // ---------------------------------------------------------------------------
 
 import { nmsBoxes } from './utils.js'
+import { hasBubbleMaskPixel } from './bubbleMask.js'
 import { getModelSession } from '../runtime/modelRegistry.js'
 import { runInference } from '../runtime/onnxBridge.js'
 
@@ -221,7 +222,7 @@ function decodeDetections(
 }
 
 // ---------------------------------------------------------------------------
-// Decode proto masks → per-instance PipelineImageData
+// Decode proto masks → cropped single-channel BubbleMask
 // ---------------------------------------------------------------------------
 
 /**
@@ -231,23 +232,14 @@ function decodeDetections(
  * @param {LetterboxResult} prep
  * @param {number} imgW
  * @param {number} imgH
- * @param {PlatformProvider} platform
- * @returns {Array<PipelineImageData>}
+ * @returns {Array<BubbleMask>}
  */
-function decodeMasks(
-  detections,
-  output1,
-  output1Shape,
-  prep,
-  imgW,
-  imgH,
-  platform
-) {
+function decodeBubbleMasks(detections, output1, output1Shape, prep, imgW, imgH) {
   const numProtos = output1Shape[1]
   const maskH = output1Shape[2]
   const maskW = output1Shape[3]
 
-  /** @type {Array<PipelineImageData>} */
+  /** @type {Array<BubbleMask>} */
   const masks = []
 
   for (const det of detections) {
@@ -276,31 +268,74 @@ function decodeMasks(
     const mx2 = Math.min(maskW, Math.ceil(lbx2 * scaleX))
     const my2 = Math.min(maskH, Math.ceil(lby2 * scaleY))
 
-    const imageData = platform.createImageData(imgW, imgH)
-    const pixels = imageData.data
+    // Project the cropped proto-mask range back into source-image coordinates.
+    // Proto cells are coarse, so their effective source pixels may extend past
+    // the fractional detection box. Scan that complete support and trim only
+    // after thresholding to preserve the old full-image mask semantics.
+    const projectedX1 = (mx1 / scaleX - prep.padX) / prep.ratio
+    const projectedY1 = (my1 / scaleY - prep.padY) / prep.ratio
+    const projectedX2 = (mx2 / scaleX - prep.padX) / prep.ratio
+    const projectedY2 = (my2 / scaleY - prep.padY) / prep.ratio
+    const scanX1 = Math.max(0, Math.floor(projectedX1) - 1)
+    const scanY1 = Math.max(0, Math.floor(projectedY1) - 1)
+    const scanX2 = Math.min(imgW, Math.ceil(projectedX2) + 1)
+    const scanY2 = Math.min(imgH, Math.ceil(projectedY2) + 1)
+    const scanWidth = Math.max(0, scanX2 - scanX1)
+    const scanHeight = Math.max(0, scanY2 - scanY1)
+    const sampledPixels = new Uint8Array(scanWidth * scanHeight)
+    let nonzeroX1 = scanX2
+    let nonzeroY1 = scanY2
+    let nonzeroX2 = scanX1
+    let nonzeroY2 = scanY1
 
-    for (let iy = 0; iy < imgH; iy++) {
+    for (let iy = scanY1; iy < scanY2; iy++) {
       const mfy = (iy * prep.ratio + prep.padY) * scaleY
       const miy = Math.floor(mfy)
       if (miy < my1 || miy >= my2) continue
 
-      for (let ix = 0; ix < imgW; ix++) {
+      for (let ix = scanX1; ix < scanX2; ix++) {
         const mfx = (ix * prep.ratio + prep.padX) * scaleX
         const mix = Math.floor(mfx)
         if (mix < mx1 || mix >= mx2) continue
 
         const val = combined[miy * maskW + mix]
         if (val > 0.5) {
-          const idx = (iy * imgW + ix) * 4
-          pixels[idx] = 255
-          pixels[idx + 1] = 255
-          pixels[idx + 2] = 255
-          pixels[idx + 3] = 255
+          sampledPixels[(iy - scanY1) * scanWidth + (ix - scanX1)] = 1
+          nonzeroX1 = Math.min(nonzeroX1, ix)
+          nonzeroY1 = Math.min(nonzeroY1, iy)
+          nonzeroX2 = Math.max(nonzeroX2, ix + 1)
+          nonzeroY2 = Math.max(nonzeroY2, iy + 1)
         }
       }
     }
 
-    masks.push(imageData)
+    if (nonzeroX2 <= nonzeroX1 || nonzeroY2 <= nonzeroY1) {
+      masks.push({
+        x: scanX1,
+        y: scanY1,
+        width: 0,
+        height: 0,
+        data: new Uint8Array(),
+      })
+      continue
+    }
+
+    const width = nonzeroX2 - nonzeroX1
+    const height = nonzeroY2 - nonzeroY1
+    const pixels = new Uint8Array(width * height)
+    const localX1 = nonzeroX1 - scanX1
+    for (let row = 0; row < height; row++) {
+      const sourceStart = (nonzeroY1 - scanY1 + row) * scanWidth + localX1
+      pixels.set(sampledPixels.subarray(sourceStart, sourceStart + width), row * width)
+    }
+
+    masks.push({
+      x: nonzeroX1,
+      y: nonzeroY1,
+      width,
+      height,
+      data: pixels,
+    })
   }
 
   return masks
@@ -323,7 +358,7 @@ export async function detectBubbles(image, platform) {
   const imgH = image.naturalHeight
 
   const detections = decodeDetections(output0, output0Shape, prep, imgW, imgH)
-  const masks = decodeMasks(detections, output1, output1Shape, prep, imgW, imgH, platform)
+  const masks = decodeBubbleMasks(detections, output1, output1Shape, prep, imgW, imgH)
 
   const bubbles = detections.map((det, i) => ({
     box: det.box,
@@ -367,14 +402,7 @@ export function matchRegionsToBubbles(
       const area = bubble.box.width * bubble.box.height
       if (area >= bestArea) continue
 
-      const px = Math.round(cx)
-      const py = Math.round(cy)
-      const maskW = bubble.mask.width
-      const maskH = bubble.mask.height
-      if (px < 0 || px >= maskW || py < 0 || py >= maskH) continue
-
-      const idx = (py * maskW + px) * 4
-      if (bubble.mask.data[idx + 3] > 0) {
+      if (hasBubbleMaskPixel(bubble.mask, Math.round(cx), Math.round(cy))) {
         bestBubble = bubble
         bestArea = area
       }

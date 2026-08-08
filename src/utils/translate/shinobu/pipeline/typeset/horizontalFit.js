@@ -10,6 +10,7 @@
 
 import { getRegionQuad, quadAngle } from './geometry.js'
 import { maxSourceGeometryAnchorAngleRad } from './fontFitCore.js'
+import { hasBubbleMaskPixel } from '../bubbleMask.js'
 
 // ---- Re-exports from fontFitCore.js ----
 
@@ -96,7 +97,11 @@ function contentInterval(contentWidth) {
  * Scans the mask row-by-row to find where the bubble is opaque (safe), then
  * selects the run closest to the preferred x position.
  *
- * @param {{ mask?: Object, region: Object, contentWidth: number, localTopY: number, localBottomY: number, preferredContentX: number, safetyMargin: number, boxPadding?: number }} input
+ * The mask is a cropped single-channel bitmap (`{x, y, width, height, data}`
+ * with 0/1 values), but all coordinates here are full-image coordinates;
+ * `hasBubbleMaskPixel` performs the offset translation.
+ *
+ * @param {{ mask?: import('../../types.js').BubbleMask, region: Object, contentWidth: number, localTopY: number, localBottomY: number, preferredContentX: number, safetyMargin: number, boxPadding?: number }} input
  * @returns {{left: number, right: number, width: number, source: string}}
  */
 export function resolveHorizontalSafeInterval(input) {
@@ -115,10 +120,13 @@ export function resolveHorizontalSafeInterval(input) {
     return fallback
   }
 
-  const imageXStart = Math.max(0, Math.round(region.box.x + boxPadding))
-  const imageXEnd = Math.min(mask.width - 1, Math.round(imageXStart + contentWidth))
-  const imageYStart = Math.max(0, Math.floor(region.box.y + boxPadding + localTopY))
-  const imageYEnd = Math.min(mask.height - 1, Math.ceil(region.box.y + boxPadding + localBottomY) - 1)
+  const contentImageX = Math.round(region.box.x + boxPadding)
+  const imageXStart = Math.max(mask.x, contentImageX)
+  const imageXEnd = Math.min(mask.x + mask.width - 1, Math.round(contentImageX + contentWidth))
+  const imageYStart = Math.floor(region.box.y + boxPadding + localTopY)
+  const imageYEnd = Math.ceil(region.box.y + boxPadding + localBottomY) - 1
+  const maskYEnd = mask.y + mask.height - 1
+  if (imageYStart < mask.y || imageYEnd > maskYEnd) return fallback
   if (imageXStart > imageXEnd || imageYStart > imageYEnd) return fallback
 
   /** @type {Array<{left: number, right: number}>} */
@@ -127,7 +135,7 @@ export function resolveHorizontalSafeInterval(input) {
   for (let x = imageXStart; x <= imageXEnd; x += 1) {
     let safe = true
     for (let y = imageYStart; y <= imageYEnd; y += 1) {
-      if (mask.data[(y * mask.width + x) * 4 + 3] === 0) {
+      if (!hasBubbleMaskPixel(mask, x, y)) {
         safe = false
         break
       }
@@ -141,13 +149,13 @@ export function resolveHorizontalSafeInterval(input) {
   if (runStart !== undefined) runs.push({ left: runStart, right: imageXEnd })
   if (runs.length === 0) return fallback
 
-  const preferredImageX = imageXStart + preferredContentX
+  const preferredImageX = contentImageX + preferredContentX
   const selected = runs.find(run => preferredImageX >= run.left && preferredImageX <= run.right) ??
     [...runs].sort((a, b) => (b.right - b.left) - (a.right - a.left))[0]
   if (!selected) return fallback
 
-  const left = selected.left - imageXStart + safetyMargin
-  const right = selected.right - imageXStart - safetyMargin
+  const left = selected.left - contentImageX + safetyMargin
+  const right = selected.right - contentImageX - safetyMargin
   if (!Number.isFinite(left) || !Number.isFinite(right) || right <= left) return fallback
   return { left, right, width: right - left, source: 'mask' }
 }
