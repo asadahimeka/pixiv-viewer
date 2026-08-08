@@ -40,7 +40,7 @@
         center
         title="Yuki 妙妙屋"
         is-link
-        label="Pximg reverse proxy"
+        label="图像反代服务"
         @click="openLink('https://yuki.sh/?ref=pixiv.pictures')"
       />
       <van-cell

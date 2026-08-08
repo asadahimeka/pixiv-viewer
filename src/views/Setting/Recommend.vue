@@ -6,10 +6,24 @@
       <div class="setting-page">
         <van-cell
           center
+          title="Sakuria"
+          is-link
+          label="https://sakuria.syarolia.com"
+          @click="openLink('https://sakuria.syarolia.com/?ref=pixiv.pictures')"
+        />
+        <van-cell
+          center
+          title="PixivFun"
+          is-link
+          label="https://pxfun.cocomi.eu.org"
+          @click="openLink('https://pxfun.cocomi.eu.org/')"
+        />
+        <van-cell
+          center
           title="PixivNow"
           is-link
           label="https://pixiv.js.org"
-          @click="openLink('https://pixiv.js.org/?ref=pixiv.pictures')"
+          @click="openLink('https://pixiv.yumetsuki.moe/?ref=pixiv.pictures')"
         />
         <van-cell
           center
@@ -41,7 +55,7 @@
         />
         <van-cell
           center
-          title="pixiv萌え改"
+          title="pixiv萌え"
           is-link
           label="https://pixivmoe.cocomi.eu.org"
           @click="openLink('https://pixivmoe.cocomi.eu.org')"

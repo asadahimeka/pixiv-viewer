@@ -5,6 +5,7 @@
     <van-cell-group :title="$t('GS0J0mAbmiqPGKw20ORPi')">
       <van-cell center :title="$t('setting.other.lang')" is-link :label="selLangLabel" @click="lang.show = true" />
       <van-cell center :title="$t('psoXLFqv51j1SeKjTbnms')" is-link :label="`${accentColor} ${actTheme}`" to="/setting/accent_color" />
+      <van-cell center title="视觉主题" is-link :label="$t('setting.lab.title')" @click="visualTheme.show = true" />
       <van-cell center :title="$t('setting.dark.title')" :label="$t('setting.lab.title')">
         <template #right-icon>
           <van-switch :value="isDark" size="24" @change="onDarkChange" />
@@ -442,6 +443,14 @@
       @select="changeLang"
     />
     <van-action-sheet
+      v-model="visualTheme.show"
+      :actions="visualTheme.actions"
+      :cancel-text="$t('common.cancel')"
+      description="选择视觉主题"
+      close-on-click-action
+      @select="changeVisualTheme"
+    />
+    <van-action-sheet
       v-model="pximgBed_.show"
       :actions="pximgBed_.actions"
       :cancel-text="$t('common.cancel')"
@@ -550,6 +559,7 @@ import localDb from '@/utils/storage/localDb'
 import store from '@/store'
 import { APP_API_PROXYS, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, HIBIAPI_ALTS, PXIMG_PROXYS } from '@/consts'
 import { i18n } from '@/i18n'
+import { getVisualTheme, applyVisualTheme } from '@/utils/theme'
 import { getSampleFileName } from '@/store/actions/filename'
 import { localApi } from '@/api'
 import { checkImgAvailable, checkUrlAvailable, copyText, downloadURL, isURL, readTextFile } from '@/utils'
@@ -763,6 +773,16 @@ export default {
         { name: '小说ID', value: 'novel' },
         { name: '用户ID', value: 'user' },
       ],
+      visualTheme: {
+        show: false,
+        actions: [
+          { name: 'D', _value: 'default' },
+          { name: 'S', _value: 'sakuria' },
+          { name: 'M', _value: 'md' },
+          { name: 'I', _value: 'ios26' },
+        ],
+      },
+      visualThemeValue: getVisualTheme(),
     }
   },
   head() {
@@ -1037,6 +1057,11 @@ export default {
       window.umami?.track('set_lang', { lang: _value })
       localStorage.setItem('PXV_LANG', _value)
       this.reloadPage()
+    },
+    changeVisualTheme({ _value }) {
+      this.visualThemeValue = _value
+      applyVisualTheme(_value)
+      window.umami?.track('set_visual_theme', { _value })
     },
     onAnalyticsChange(val) {
       window.umami?.track('AnalyticsChange', { val })

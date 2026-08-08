@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@material/material-color-utilities':
+        specifier: 0.4.0
+        version: 0.4.0
       '@vant/touch-emulator':
         specifier: 1.5.0
         version: 1.5.0
@@ -754,6 +757,9 @@ packages:
 
   '@leichtgewicht/ip-codec@2.0.5':
     resolution: {integrity: sha512-Vo+PSpZG2/fmgmiNzYK9qWRh8h/CHrwD0mo1h1DzL4yzHNSfWYujGTYsWGreD000gcgmZ7K4Ys6Tx9TxtsKdDw==}
+
+  '@material/material-color-utilities@0.4.0':
+    resolution: {integrity: sha512-dlq6VExJReb8dhjj3a/yTigr3ncNwoFmL5Iy2ENtbDX03EmNeOEdZ+vsaGrj7RTuO+mB7L58II4LCsl4NpM8uw==}
 
   '@node-ipc/js-queue@2.0.3':
     resolution: {integrity: sha512-fL1wpr8hhD5gT2dA1qifeVaoDFlQR5es8tFuKqjHX+kdOtdNHnxkVZbtIrR2rxnMFvehkjaZRNV2H/gPXlb0hw==}
@@ -5559,6 +5565,8 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.5
 
   '@leichtgewicht/ip-codec@2.0.5': {}
+
+  '@material/material-color-utilities@0.4.0': {}
 
   '@node-ipc/js-queue@2.0.3':
     dependencies:

@@ -1,0 +1,123 @@
+// ios26 视觉主题（iOS 26 Liquid Glass token 级近似）
+// 选择器方向（Metis 验证）：.dark 在 <body>，custom_theme 在 <html>
+// 暗色覆盖需用 .custom_theme.t_ios26-visual .dark 或 html.custom_theme.t_ios26-visual body.dark
+// 策略：全面玻璃（用户确认）——导航/弹层 blur 40px，卡片 blur ≤24px（性能约束）
+// 精确 px 值用大写 PX 绕过 pxtorem；不覆盖 Novel 阅读器（.novel_view / .novel_text）
+
+// ============ 正常态（custom_theme + standalone 双路径） ============
+// standalone：resetColor 会移除 custom_theme，.t_ios26-visual 保证主题仍生效
+.custom_theme.t_ios26-visual, .t_ios26-visual
+  // ---- 颜色 token（--ios-* 命名空间，暗色在下方 .dark 块覆盖） ----
+  // unquote 保留 #0088FF 原样（stylus 默认会把可缩写的 hex 压缩成 #08f）
+  // 非 !important：用户自选 accent（inline）优先，iOS 蓝仅为主题默认（正交原则）
+  --accent-color: unquote('#0088FF')
+  --ios-bg-primary: #FFFFFF                    // 卡片/表面
+  --ios-bg-secondary: #F2F2F7                  // 分组背景
+  --ios-bg-grouped: #F2F2F7                    // 分组列表底
+  --ios-label-primary: #000000
+  --ios-label-secondary: rgba(60, 60, 67, 0.6)
+  --ios-label-tertiary: rgba(60, 60, 67, 0.3)
+  --ios-fill-primary: rgba(120, 120, 128, 0.2)
+  --ios-fill-secondary: rgba(120, 120, 128, 0.16)
+  --ios-fill-tertiary: rgba(118, 118, 128, 0.12)
+  --ios-separator: rgba(0, 0, 0, 0.12)
+
+  // ---- 字体：SF Pro 栈 + 负字距（iOS 排版签名） ----
+  --font-family: -apple-system, BlinkMacSystemFont, 'SF Pro', system-ui, sans-serif
+  body
+    letter-spacing: -0.43PX
+    color: #000
+    background: #F2F2F7
+
+  // ---- 背景：分组灰 #F2F2F7（覆盖 theme-bg 的 body::before） ----
+  body::before
+    background: #F2F2F7 !important
+
+  // ---- 玻璃配方（全面玻璃） ----
+  // 导航/底部栏/弹层：blur 40px（iOS 26 大玻璃）
+  .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog
+    background: rgba(250, 250, 250, 0.7) !important
+    backdrop-filter: blur(40PX) saturate(180%)
+    -webkit-backdrop-filter: blur(40PX) saturate(180%)
+    box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.3)
+  // 卡片/分组列表：blur ≤24px（全面玻璃的高性能风险点，低于导航 40px）
+  .image-card, .van-cell-group, .rank-card
+    background: rgba(250, 250, 250, 0.75) !important
+    backdrop-filter: blur(24PX) saturate(180%)
+    -webkit-backdrop-filter: blur(24PX) saturate(180%)
+    box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.3)
+  // 玻璃容器内 cell 透明化，让 blur 透出来
+  .van-popup .van-cell, .van-dialog .van-cell, .van-action-sheet .van-cell,
+  .van-cell-group .van-cell
+    background: transparent !important
+
+  // ---- 降级：不支持 backdrop-filter 时纯色不透明 ----
+  @supports not (backdrop-filter: blur(1px))
+    .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
+    .image-card, .van-cell-group, .rank-card
+      background: rgba(250, 250, 250, 0.85) !important
+
+  // ---- 圆角（iOS 26） ----
+  // 卡片 10px（保留 .image-card-no-radius 的 !important 优先生效）
+  .image-card, .image-card .image, .image-card-wrapper, .rank-card .spec_wp, .van-cell-group
+    border-radius: 10PX
+  // 按钮 pill（弹层在 body 顶层，需单独覆盖）
+  #app .van-button, .van-dialog .van-button, .van-popup .van-button
+    border-radius: 999PX !important
+  // 弹层 28-32px
+  .van-dialog, .van-popup--center
+    border-radius: 28PX !important
+  .van-popup--bottom, .van-action-sheet
+    border-radius: 32PX 32PX 0 0 !important
+
+  // ---- 搜索框：fill 底 + pill ----
+  .van-search__content
+    background: var(--ios-fill-primary) !important
+    border-radius: 999PX
+
+  // 压制 theme-bg `.with-body-bg body.dark::before`（specificity (0,2,2)+!important）
+  // 等特异性 + 源码顺序（ios26.styl 在 theme-bg.styl 之后）取胜 —— 覆盖 standalone 暗色可见背景层
+  body.dark::before
+    background: #000 !important
+
+// ============ 暗色块 ============
+// 方向铁律：.custom_theme.t_ios26-visual .dark（dark 在 body，custom_theme 在 html）
+.custom_theme.t_ios26-visual .dark, .t_ios26-visual .dark
+  // ---- 暗色 token（--ios-* 覆盖） ----
+  --ios-bg-primary: #000000
+  --ios-bg-secondary: #1C1C1E
+  --ios-bg-grouped: #000000
+  --ios-label-primary: #FFFFFF
+  --ios-label-secondary: rgba(235, 235, 245, 0.6)
+  --ios-label-tertiary: rgba(235, 235, 245, 0.3)
+  --ios-fill-primary: rgba(120, 120, 128, 0.36)
+  --ios-fill-secondary: rgba(120, 120, 128, 0.28)
+  --ios-fill-tertiary: rgba(120, 120, 128, 0.22)
+  --ios-separator: rgba(84, 84, 88, 0.65)
+
+  // 背景 #000 / 文字 #FFF（.dark 即 body）
+  background: #000 !important
+  color: #FFF
+  &::before
+    background: #000 !important
+  #app
+    background: #000
+
+  // ---- 暗色玻璃：背景 rgba(0,0,0,.6) + 边缘高光变亮 ----
+  .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
+  .image-card, .van-cell-group, .rank-card
+    background: rgba(0, 0, 0, 0.6) !important
+    box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.12) !important
+  // 暗色玻璃容器内 cell 透明化（弹层在 body 顶层，#app 变体兼容两种挂载）
+  .van-popup .van-cell, #app .van-popup .van-cell,
+  .van-dialog .van-cell, #app .van-dialog .van-cell,
+  .van-action-sheet .van-cell, #app .van-action-sheet .van-cell,
+  .van-cell-group .van-cell, #app .van-cell-group .van-cell,
+  .van-action-sheet__item
+    background: transparent !important
+
+  // 暗色降级
+  @supports not (backdrop-filter: blur(1px))
+    .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
+    .image-card, .van-cell-group, .rank-card
+      background: rgba(0, 0, 0, 0.8) !important

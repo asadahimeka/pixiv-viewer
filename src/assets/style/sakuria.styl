@@ -1,0 +1,162 @@
+// sakuria 视觉主题
+// 奶油粉 / 珊瑚色 / 圆角 / 粉系微阴影 —— 正交于现有 accent-color 角色主题与暗色模式
+// ------------------------------------------------------------------
+// 选择器方向（Metis 验证）：.dark 在 <body>，custom_theme + t_sakuria-visual 在 <html>
+// 暗色覆盖必须是 .custom_theme.t_sakuria-visual .dark（html 是祖先），绝不是反方向
+// pxtorem 约定：精确 px 用大写 PX 绕过 rootValue 75（与 base.styl 一致）
+// Novel 阅读器豁免：不写任何覆盖 .novel_view / .novel_text 的规则
+// ------------------------------------------------------------------
+
+// html 背景（浅色 + 暗色，:has(.dark) 放文件末尾保证同特异性后胜出）
+html.t_sakuria-visual
+  background: #FFF8F9
+
+sakuria-light()
+  // ---- token（--sakuria-* 命名空间，避免与 md/ios26 冲突） ----
+  --sakuria-bg: #FFF8F9
+  --sakuria-surface: #FFFFFF
+  --sakuria-ink: #2b1f2a
+  --sakuria-ink-2: #6b5870
+  --sakuria-border: #f4e1e8
+  --sakuria-divider: #fbe9ef
+  --sakuria-r-lg: 16PX
+  --sakuria-r-xl: 28PX
+  --sakuria-r-pill: 999PX
+  --sakuria-shadow: 0 4PX 14PX -4PX rgba(255, 111, 159, .18), 0 2PX 6PX -2PX rgba(43, 31, 42, .06)
+
+  // ---- 全局背景 / 主文字（覆盖 base.styl 的 #f7f8fa / #333） ----
+  body
+    background: var(--sakuria-bg)
+    color: var(--sakuria-ink)
+  body::before
+    background: var(--sakuria-bg)
+
+  // ---- 次级文字（仅浅色，暗色由 base .dark 白字接管） ----
+  body:not(.dark)
+    .image-card .outer-meta .content .author,
+    .novel-card .author,
+    .rank-card .author,
+    .van-cell__label
+      color: var(--sakuria-ink-2)
+
+  // ---- 卡片：16px 圆角 + 粉系微阴影（替代 Material 三层阴影） ----
+  .image-card,
+  .image-card .image,
+  .image-card-wrapper,
+  .rank-card .spec_wp,
+  .rank-card .spec_wp .sp_info::before,
+  .card-box .swipe-item .image-card,
+  .card-box .swipe-item .image-card .outer-meta::before,
+  .Spotlights .image-card,
+  .Spotlight .image-card .outer-meta::before,
+  .illusts .user_info
+    border-radius: var(--sakuria-r-lg)
+
+  .van-list .image-card,
+  .justified-container .image-card.isOuterMeta
+    box-shadow: var(--sakuria-shadow)
+
+  .justified-container .image-card.isOuterMeta
+    background: var(--sakuria-surface)
+
+  // ---- 按钮 / 搜索框 / 分类 tab：药丸形 ----
+  #app .van-button
+    border-radius: var(--sakuria-r-pill)
+
+  .van-search__content,
+  .com_sel_tab
+    border-radius: var(--sakuria-r-pill)
+
+  // ---- 弹层 / 对话框：28px 圆角 ----
+  .van-dialog,
+  .van-popup--round
+    border-radius: var(--sakuria-r-xl)
+  .van-action-sheet
+    border-radius: var(--sakuria-r-xl) var(--sakuria-r-xl) 0 0
+
+  // ---- 边框 / 分隔线（仅浅色） ----
+  body:not(.dark)
+    .van-cell::after,
+    .van-action-sheet__description::after
+      border-bottom-color: var(--sakuria-divider)
+    .van-hairline::after
+      border-color: var(--sakuria-border)
+
+  // ---- 标签：点缀色系区分类型（原标签珊瑚深字 / 译名标签 mint） ----
+  #app .artwork-meta .tag-list .tag.name
+    color: #b23b6b !important
+  #app .artwork-meta .tag-list .tag.translated
+    margin-top 1PX
+    margin-bottom 1PX
+    padding 0 4PX
+    color: #1f7a56 !important
+    background: linear-gradient(rgba(255, 255, 255, .89)), #7bd4b0 !important
+    border-radius 4PX
+
+sakuria-dark()
+  // ---- 暗色 token（暖黑紫调，替代冷黑 #16161a） ----
+  --sakuria-bg: #1b1218
+  --sakuria-surface: #271b23
+  --sakuria-ink: #fbeef3
+  --sakuria-primary: #ff8ab5
+
+  background: var(--sakuria-bg)
+  color: var(--sakuria-ink)
+
+  &::before
+    background: var(--sakuria-bg) !important
+
+  #app
+    background: var(--sakuria-bg)
+    color: var(--sakuria-ink)
+    .image-card,
+    .van-popup,
+    .van-cell,
+    .van-tabs__nav,
+    .van-tab,
+    .van-button,
+    .van-collapse-item__content,
+    .van-share-sheet__cancel,
+    .van-action-sheet__cancel,
+    .van-action-sheet__item
+      background: var(--sakuria-surface)
+
+  .van-dialog,
+  .novel-card,
+  .series-cont,
+  .search .keyword,
+  .van-search__content,
+  .search-dropdown,
+  .rank .top,
+  .nav-container .nav-bar
+    background: var(--sakuria-surface)
+
+// ---------- 正常态（custom_theme 存在） ----------
+.custom_theme.t_sakuria-visual
+  // 强调色：主题默认色（非 !important——用户自选 accent 为 inline style，天然优先）
+  // 正交原则：用户可同时选 sakuria 视觉 + 任意主题色
+  --accent-color: #ff6f9f
+
+  sakuria-light()
+
+  .dark
+    sakuria-dark()
+
+// ---------- standalone fallback（resetColor 移除 custom_theme 后仍生效） ----------
+// 只写不依赖 accent 的规则（背景/卡片/文字色）
+.t_sakuria-visual
+  sakuria-light()
+
+  .dark
+    sakuria-dark()
+
+  // 压制 theme-bg `.with-body-bg body.dark::before`（specificity (0,2,2)+!important）
+  // 等特异性 + 源码顺序（sakuria.styl 在 theme-bg.styl 之后）取胜 —— 覆盖 standalone 暗色可见背景层
+  body.dark::before
+    background: var(--sakuria-bg) !important
+
+// 暗色 html 背景（须在浅色 html 规则之后）
+html.t_sakuria-visual:has(.dark)
+  background: #1b1218
+  // 暗色默认强调色（非 !important——用户自选 accent inline 优先，暗色同样正交）
+  --accent-color: #ff8ab5

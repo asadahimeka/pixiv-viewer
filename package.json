@@ -13,6 +13,7 @@
     "prerelease": "npm run changelog && git add ."
   },
   "dependencies": {
+    "@material/material-color-utilities": "0.4.0",
     "@vant/touch-emulator": "1.5.0",
     "@vueuse/components": "11.3.0",
     "@vueuse/core": "11.3.0",

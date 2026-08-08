@@ -495,15 +495,15 @@ pnpm build
 - [Pixivel](https://pxelk.cocomi.eu.org/)
 - [Pixiviz](https://pixiviz.cocomi.eu.org/)
 - [PixivNow](https://pxnow.cocomi.eu.org/)
+- [PixivFun](https://pxfun.cocomi.eu.org/)
 - [PixivMoe](https://pixivmoe.cocomi.eu.org/)
 - [PixivLxns](https://pixivlxns.cocomi.eu.org/)
 - [MixPiv](https://mixpiv.cocomi.eu.org/)
-- [PixiviFE](https://pixiv.perennialte.ch/)
+- [PixivFE](https://pixiv.perennialte.ch/)
 - [pixivic](https://pixivic.com)
-- [vilipix](https://www.vilipix.com/ranking)
 - [moeview](https://moeview.cocomi.eu.org/)
 - [booruwf](https://booru.cocomi.eu.org/)
-- [PixivRanking](https://www.nanoka.top/illust/pixiv/)
+- [Ranking](https://www.nanoka.top/illust/pixiv/)
 
 ---
 

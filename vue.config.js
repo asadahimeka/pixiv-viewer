@@ -46,7 +46,7 @@ module.exports = {
   //     },
   //   },
   // },
-  // transpileDependencies: ['mint-filter'],
+  transpileDependencies: ['@material/material-color-utilities'],
   configureWebpack: config => {
     if (isProduction) {
       config.optimization.minimizer[0].options.minimizer.options.compress.drop_console = true
@@ -196,7 +196,7 @@ module.exports = {
           options: { cacheName: 'html-cache', cacheableResponse: { statuses: [200] } },
         },
         {
-          urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/.*\.(css|js)$/,
+          urlPattern: /^https:\/\/(cdnjs\.cloudflare\.com|lib\.baomitu\.com|npm\.webcache\.cn)\/.*$/,
           handler: 'CacheFirst',
           options: {
             cacheName: 'cdn-cache',
@@ -205,23 +205,14 @@ module.exports = {
           },
         },
         {
-          urlPattern: /^https:\/\/lib\.baomitu\.com\/.*$/,
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'font-cache',
-            cacheableResponse: { statuses: [200] },
-            fetchOptions: { credentials: 'omit', mode: 'cors' },
-          },
-        },
-        {
-          urlPattern: /.*\.(css|js|json|png|svg)$/,
+          urlPattern: /.*\.(css|js|json|png|svg|txt)$/,
           handler: 'StaleWhileRevalidate',
           options: { cacheName: 'static-cache', cacheableResponse: { statuses: [200] } },
         },
         {
           // onnxruntime-web WASM — matches any domain/version (jsdelivr default or
           // custom VUE_APP_ORT_WASM_PATH) via the ort-wasm- file prefix.
-          urlPattern: /(onnxruntime-web|ort-wasm-).*\.wasm(\?.*)?$/,
+          urlPattern: /onnxruntime-web|ort-wasm-/,
           handler: 'CacheFirst',
           options: {
             cacheName: 'ort-wasm-cache',

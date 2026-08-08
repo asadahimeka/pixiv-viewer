@@ -70,6 +70,7 @@ App.vue
 ### Work Rules
 - **Do NOT commit, push, or create PRs unless explicitly asked** — all changes must be presented for user review and manual commit only
 - **Do NOT create branches** — work on current branch and present changes via `git diff`
+- **Continuation 触发时可自行结束计划** — 当系统反复触发 continuation（boulder/todo-continuation）时，若所有实现任务与终验（Final Wave）均已 APPROVE，可直接标记计划完成并收官，**不必每次等待用户明确确认**；用户确认仅用于"验收发现需修复/调整"的情形。完成时确保：计划 checkbox 全部勾选、证据/notepad 已沉淀、改动以 `git diff` 呈现未提交
 
 ### Component Patterns
 - Global components registered in `main.js`: `WfCont` (ImageLayout), `TopBar`, `Pximg` (DirectPximg)

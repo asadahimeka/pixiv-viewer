@@ -27,7 +27,7 @@
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Pixiv Viewer","alternateName":"Pxve","url":"https://pixiv.pictures/"}</script>
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","url":"https://pixiv.pictures/","potentialAction":{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://pixiv.pictures/search/{search_term_string}"},"query-input":"required name=search_term_string"}}</script>
   <script src="<%= BASE_URL %>static/js/flexible.min.js"></script>
-  <script>if(localStorage.PXV_THEME){document.documentElement.classList.add('custom_theme','t_'+localStorage.PXV_THEME);document.documentElement.style.setProperty('--accent-color',localStorage.PXV_ACT_COLOR);}</script>
+  <script>if(localStorage.PXV_THEME){document.documentElement.classList.add('custom_theme','t_'+localStorage.PXV_THEME);document.documentElement.style.setProperty('--accent-color',localStorage.PXV_ACT_COLOR);}var _vt=localStorage.PXV_VISUAL_THEME;if(_vt&&_vt!=='default'){var _de=document.documentElement;if(!_de.classList.contains('custom_theme'))_de.classList.add('custom_theme');_de.classList.add('t_'+_vt+'-visual');}</script>
   <% if (process.env.NODE_ENV === 'production' && process.env.VUE_APP_GA_ID) { %>
   <script async src="https://www.googletagmanager.com/gtag/js?id=<%= process.env.VUE_APP_GA_ID %>"></script>
   <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','<%= process.env.VUE_APP_GA_ID %>',{transport_type:'beacon'});</script>
