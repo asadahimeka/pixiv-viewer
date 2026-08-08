@@ -23,7 +23,7 @@
 
 <script>
 import api from '@/api'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 
 export default {
   components: {

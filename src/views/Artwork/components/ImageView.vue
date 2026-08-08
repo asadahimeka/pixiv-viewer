@@ -32,9 +32,20 @@
               :disabled="translatingIndex === index"
               @click.stop="$emit('translate', index)"
             >
-              🌐{{ translatingIndex === index ? '' : '翻' }}
+              🌐{{ translatingIndex === index ? '' : '译' }}
             </van-button>
           </template>
+          <TranslateOverlay
+            v-if="showOverlay"
+            :artwork-id="artwork.id"
+            :page-index="index"
+            :translated-canvas="translatedCanvases[index]"
+            :show-translated="showTranslated"
+            :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
+            :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+            :stage-timings="pipelineStageTimings[index] || []"
+            @toggle="$emit('toggle-translate')"
+          />
         </swiper-slide>
         <div slot="pagination" class="swiper-pagination"></div>
         <div slot="button-prev" class="swiper-button-prev"></div>
@@ -80,6 +91,17 @@
             🌐{{ translatingIndex === index ? '' : '译' }}
           </van-button>
         </template>
+        <TranslateOverlay
+          v-if="showOverlay"
+          :artwork-id="artwork.id"
+          :page-index="index"
+          :translated-canvas="translatedCanvases[index]"
+          :show-translated="showTranslated"
+          :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
+          :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+          :stage-timings="pipelineStageTimings[index] || []"
+          @toggle="$emit('toggle-translate')"
+        />
         <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
         <canvas
           v-if="showUgoiraControl"
@@ -92,6 +114,14 @@
         ></canvas>
       </div>
     </template>
+    <TranslateDebug
+      v-if="showOverlay && debugVisible"
+      :visible="debugVisible"
+      :artifacts="currentArtifacts"
+      :stage-timings="pipelineStageTimings[currentDebugPage] || []"
+      :model-info="debugModelInfo"
+      @close="debugVisible = false"
+    />
     <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
     <div v-if="showUgoiraControl" class="ugoira-controls">
       <div v-if="ugoiraPlaying" class="btn-pause" @click="drawCanvas('pause')">
@@ -110,19 +140,22 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { Dialog, ImagePreview, Button } from 'vant'
+import { Dialog, ImagePreview } from '@/lib/vant-apis'
 import store from '@/store'
 import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 import { fancyboxShow, downloadFile } from '@/utils'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { downloadUgoira, loadUgoira } from '@/utils/ugoira'
+import TranslateOverlay from './TranslateOverlay.vue'
+import TranslateDebug from './TranslateDebug.vue'
 
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
 
 export default {
   name: 'ImageView',
   components: {
-    VanButton: Button,
+    TranslateOverlay,
+    TranslateDebug,
   },
   props: {
     artwork: {
@@ -137,6 +170,26 @@ export default {
       type: Number,
       default: -1,
     },
+    translatedCanvases: {
+      type: Object,
+      default: () => ({}),
+    },
+    showTranslated: {
+      type: Boolean,
+      default: false,
+    },
+    pipelineProgress: {
+      type: Object,
+      default: () => ({}),
+    },
+    pipelineStageTimings: {
+      type: Object,
+      default: () => ({}),
+    },
+    currentArtifacts: {
+      type: Object,
+      default: null,
+    },
   },
   data() {
     return {
@@ -146,6 +199,8 @@ export default {
       curIndex: 0,
       progressShow: false,
       progress: 0,
+      debugVisible: false,
+      currentDebugPage: 0,
       isLongpressDL,
       isLargeWebp: imgReso == 'Large(WebP)',
       isUgoiraAvifSrc,
@@ -202,6 +257,20 @@ export default {
         store.state.appSetting.imgViewHorizonSwiper &&
         !store.state.appSetting.imgViewHorizonScroll
     },
+    translationEngine() {
+      return store.state.mangaTrans.engine
+    },
+    showOverlay() {
+      return this.translationEngine === 'shinobu'
+    },
+    debugModelInfo() {
+      const stages = this.currentArtifacts?.runtimeStages || []
+      const info = {}
+      stages.forEach(s => {
+        if (s && s.model) info[s.model] = s.provider || s.engine || s.status || 'ok'
+      })
+      return Object.keys(info).length ? info : {}
+    },
   },
   watch: {
     artwork(val) {
@@ -209,9 +278,13 @@ export default {
         this.init()
       }
     },
+    translatingIndex(val) {
+      if (val >= 0) this.currentDebugPage = val
+    },
   },
   mounted() {
     this.init()
+    if (this.$route.query.debug === '1') this.debugVisible = true
   },
   deactivated() {
     this.resetUgoira()

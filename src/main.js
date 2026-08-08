@@ -12,7 +12,7 @@ import '@/lib/registerServiceWorker'
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
 import VueMeta from 'vue-meta'
-import { Dialog, Notify } from 'vant'
+import { Dialog, Notify } from '@/lib/vant-apis'
 import { vOnLongPress } from '@vueuse/components'
 
 import setupVant from '@/lib/vant'

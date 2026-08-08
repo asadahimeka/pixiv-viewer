@@ -14,7 +14,7 @@
 
 <p align="center">
 <img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer"  alt="Version">
-<img src="https://img.shields.io/badge/license-MIT-green"  alt="License" >
+<img src="https://img.shields.io/badge/license-AGPL--3.0-orange"  alt="License" >
 <img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages" alt="Pages" >
 <img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer-app/total?logo=github" alt="Downloads" >
 </p>
@@ -444,11 +444,16 @@ pnpm build
 ### 相关项目
 
 - [HibiAPI](https://github.com/mixmoe/HibiAPI)：提供大部分接口支持
-- [PxveAPI](https://github.com/asadahimeka/pxve-api)：HibiAPI 兼容以及其他接口服务
 - [PixivNow](https://github.com/FreeNowOrg/PixivNow)：提供部分网页版接口支持
+- [pxder](https://github.com/Tsuk1ko/pxder)：OAuth 登录参考实现
+- [PixEz](https://github.com/Notsfsssf/pixez-flutter)：直连模式参考
+- [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator)：漫画翻译引擎
+- [KISS Translator](https://github.com/fishjar/kiss-translator)：翻译工具
+- [ZeoSeven Fonts](https://fonts.zeoseven.com)：释放字体自由！
 
 ### 服务
 
+- [Yuki 妙妙屋](https://yuki.sh/)：图像反代服务
 - [Pixiv.cat](https://pixiv.re/)：图像反代服务
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务
@@ -491,7 +496,7 @@ pnpm build
 
 ## 📄 许可证
 
-本项目基于 [MIT License](LICENSE) 开源。
+本项目基于 [AGPL-3.0 License](LICENSE) 开源。
 
 ---
 

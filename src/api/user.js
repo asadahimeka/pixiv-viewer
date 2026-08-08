@@ -1,5 +1,5 @@
 import nprogress from 'nprogress'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { i18n } from '@/i18n'
 import { objectToQueryString } from '@/utils'
 import { imgProxy, parseWebApiIllust } from '.'

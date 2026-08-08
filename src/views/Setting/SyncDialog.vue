@@ -154,7 +154,7 @@
 </template>
 
 <script>
-import { Dialog, Toast } from 'vant'
+import { Dialog, Toast } from '@/lib/vant-apis'
 import SyncManager from '@/utils/sync'
 
 export default {
@@ -205,6 +205,7 @@ export default {
       }
     },
     async onUpload() {
+      window.umami?.track('settings-sync-upload')
       const scopeLabel = this.syncScope.includes('all')
         ? '全部数据'
         : [this.syncScope.includes('history') ? '历史记录' : '',
@@ -244,6 +245,7 @@ export default {
       this.action = ''
     },
     async onDownload() {
+      window.umami?.track('settings-sync-download')
       this.savePasswordIfNeeded()
       this.saveConfig()
 
@@ -312,6 +314,7 @@ export default {
       this.action = ''
     },
     async onCheckInfo() {
+      window.umami?.track('settings-sync-checkInfo')
       this.saveConfig()
       this.loading = true
       this.action = 'info'

@@ -1,4 +1,4 @@
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
 import store from '@/store'

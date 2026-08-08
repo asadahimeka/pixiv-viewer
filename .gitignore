@@ -25,3 +25,10 @@ yarn-error.log*
 .sisyphus
 .superpowers
 docs/superpowers
+
+# ONNX model files
+*.onnx
+
+# But keep manifest and dict tracked
+!public/models/models.json
+!public/models/paddleocr_v6_dict.txt

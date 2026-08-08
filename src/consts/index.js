@@ -16,6 +16,7 @@ export const BASE_API_URL = LocalStorage.get('HIBIAPI_BASE', DEF_HIBIAPI_MAIN)
 export const notSelfHibiApi = !/cocomi\.eu\.org|pixiv\.pictures|169889\.xyz|pxve\.cc|hibiapi\.getloli\.com/.test(BASE_API_URL) && !`${BASE_API_URL}`.includes(process.env.VUE_APP_PXVEAPI_MAIN)
 export const PIXIV_NEXT_URL = process.env.VUE_APP_PXVEAPI_MAIN || 'https://api.cocomi.eu.org'
 export const PIXIV_NOW_URL = `${PIXIV_NEXT_URL}/api/pixiv-now/http`
+export const SILICON_CLOUD_BASR_URL = 'https://api.siliconflow.cn/v1'
 export const SILICON_CLOUD_API_KEY = process.env.VUE_APP_SILICON_CLOUD_API_KEY
 export const ugoiraAvifSrc = id => `https://ugoira.perennialte.ch/ugoira/${id}`
 export const PXIMG_PID_BASE = 'https://i.loli.best/'

@@ -46,7 +46,7 @@ module.exports = {
   //     },
   //   },
   // },
-  transpileDependencies: ['mint-filter'],
+  // transpileDependencies: ['mint-filter'],
   configureWebpack: config => {
     if (isProduction) {
       config.optimization.minimizer[0].options.minimizer.options.compress.drop_console = true
@@ -88,6 +88,21 @@ module.exports = {
       .loader('xml-loader')
       .end()
 
+    // Handle .wasm files for ONNX Runtime Web
+    config.module
+      .rule('wasm')
+      .test(/\.wasm$/)
+      .type('javascript/auto')
+      .exclude
+      .add(/node_modules/)
+      .end()
+
+    // Prevent webpack from auto-extracting ONNX Runtime WASM files (loaded from CDN at runtime)
+    config.module
+      .rule('ort-js')
+      .test(/onnxruntime-web/)
+      .parser({ url: false })
+
     config.plugin('html')
       .tap(args => {
         args[0].cdn = cdn
@@ -100,7 +115,29 @@ module.exports = {
       config.optimization
         .splitChunks({
           chunks: 'all',
+          cacheGroups: {
+            ort: {
+              test: /[\\/]node_modules[\\/]onnxruntime-web[\\/]/,
+              name: 'ort',
+              chunks: 'all',
+              priority: 20,
+            },
+          },
         })
+      // 模型不自托管：构建时排除 public/models/*.onnx（运行时从 CDN 加载）
+      config.plugin('copy').tap(args => {
+        // copy-webpack-plugin@9 构造器接收 { patterns: [...] }；旧版接收 patterns 数组，两种都兼容
+        const patterns = Array.isArray(args[0]) ? args[0] : args[0] && args[0].patterns
+        if (Array.isArray(patterns)) {
+          for (const pattern of patterns) {
+            if (!pattern.globOptions) pattern.globOptions = {}
+            const ignores = pattern.globOptions.ignore || []
+            ignores.push('**/models/*.onnx')
+            pattern.globOptions.ignore = ignores
+          }
+        }
+        return args
+      })
     }
   },
   css: {
@@ -145,8 +182,11 @@ module.exports = {
         /img[\\/]icons[\\/].*/,
         /img[\\/]font_preview[\\/].*/,
         /kiss-translator[\\/].*/,
+        /pxcl[\\/].*/,
         /static[\\/](js|css)[\\/](?!flexible\..*)/,
         /test[\\/].*/,
+        /\/models\/.*\.onnx$/, // models — too large for SW cache
+        /js\/ort\..*\.js$/,
       ],
       // navigateFallbackDenylist: [/^\/prks\//],
       runtimeCaching: [
@@ -169,6 +209,22 @@ module.exports = {
           handler: 'CacheFirst',
           options: {
             cacheName: 'font-cache',
+            cacheableResponse: { statuses: [200] },
+            fetchOptions: { credentials: 'omit', mode: 'cors' },
+          },
+        },
+        {
+          urlPattern: /.*\.(css|js|json|png|svg)$/,
+          handler: 'StaleWhileRevalidate',
+          options: { cacheName: 'static-cache', cacheableResponse: { statuses: [200] } },
+        },
+        {
+          // onnxruntime-web WASM — matches any domain/version (jsdelivr default or
+          // custom VUE_APP_ORT_WASM_PATH) via the ort-wasm- file prefix.
+          urlPattern: /(onnxruntime-web|ort-wasm-).*\.wasm(\?.*)?$/,
+          handler: 'CacheFirst',
+          options: {
+            cacheName: 'ort-wasm-cache',
             cacheableResponse: { statuses: [200] },
             fetchOptions: { credentials: 'omit', mode: 'cors' },
           },

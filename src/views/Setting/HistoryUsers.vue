@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 
 export default {

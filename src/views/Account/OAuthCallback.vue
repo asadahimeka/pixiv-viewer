@@ -8,7 +8,7 @@
 <script>
 import { login } from '@/api/client/login'
 import { LocalStorage } from '@/utils/storage'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 
 export default {
   name: 'OAuthCallback',

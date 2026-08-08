@@ -37,13 +37,11 @@
 </template>
 
 <script>
-import { Popup } from 'vant'
 import PanelContent from './PanelContent.vue'
 
 export default {
   name: 'PicTranslatePanel',
   components: {
-    VanPopup: Popup,
     PanelContent,
   },
   props: {
@@ -80,6 +78,8 @@ $breakpoint-mobile = 1120px
   width 28vw
   min-width 4rem
   max-width 7rem
+  box-shadow 0 2PX 12PX rgba(0, 0, 0, 0.3)
+  border-radius 4PX
 
 @media (max-width: $breakpoint-mobile)
   .pic-translate-popup

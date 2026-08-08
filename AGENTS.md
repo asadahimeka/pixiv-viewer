@@ -76,6 +76,17 @@ App.vue
 - SVG icon system: custom component via `src/icons/`, SVGs loaded as XML
 - Layout components in `src/layouts/`, page views in `src/views/`, shared UI in `src/components/`
 
+### Vant UI (v2) — IMPORTANT import conventions
+- **DO NOT** `import { X } from 'vant'` — this triggers babel-plugin-import and pulls in the `vant/es/*` ESM build, duplicating the `vant/lib/*` CJS build already registered globally. All vant code must use ONE build (`vant/lib/*`).
+- **Template components**: already globally registered via `Vue.use()` in `src/lib/vant.js` (38 components: Button/Toast/Search/Tabs/List/Popup/Dialog/Icon/Loading/Progress NOT included, etc.) — use `<van-xxx>` directly, NO import needed.
+- **Imperative APIs** (Dialog.confirm, Toast.success, ImagePreview, Notify, Locale): import from the central facade `@/lib/vant-apis` (re-exports `vant/lib/*` + needed styles):
+  ```js
+  import { Dialog, Toast, ImagePreview, Notify, Locale } from '@/lib/vant-apis'
+  ```
+  NOT `from 'vant'`. `this.$toast`/`$dialog`/`$notify` prototypes exist (from lib registration) but prefer explicit imports for clarity.
+- **New components**: if a component is NOT in the `vant.js` global registration list (e.g. Progress), either register it there or import it directly via `vant/lib/xxx` (component) + ensure its style is in `src/lib/vant-style.js`.
+- **Styles**: component styles live in `src/lib/vant-style.js` (lib path, one per component) — add new components' styles there, not via babel-plugin-import.
+
 ### i18n
 - Default locale: `zh-CN`; lazy-loaded from `src/locales/*.json`
 - Translation keys are auto-generated hashes (e.g., `'sBmkLtGcrWIL7xsU-EdM9'`) — do NOT edit keys manually
@@ -107,7 +118,35 @@ VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
 - **Disallowed type suppressions**: `as any`, `@ts-ignore`, `@ts-expect-error`
 - **`console.log` calls are NOT stripped in dev** — only dropped in production via terser `drop_console: true`
 - **`dist/`, `.env.local`, `.sisyphus/`** are gitignored
+- **`.sisyphus/plans/` 计划文件命名**: 必须以日期开头（`YYYY-MM-DD-{name}.md`，如 `2026-08-02-shinobu-fixes3.md`）——同全局 AGENTS.md 约定，生成计划时严格执行
 - **Release flow**: `bumpp` bumps `package.json` + `src/consts/index.js`, then `git-cliff` updates CHANGELOG
+
+## Playwright QA Test Notes
+
+> Two Real Manual QA sessions both exceeded the 30-min sync `task()` poll limit. Lessons learned:
+
+### Environment facts (no login needed for most features)
+- **No login required** to browse/test most features. Login state can be simulated via localStorage (`PXV_*` prefix).
+- **Bypassing login**: `Nav.vue` checks `localApi.isLoggedIn() || existsSessionId()`. `existsSessionId()` = presence of `localStorage.PXV_NOW_COOKIE` (format `PHPSESSID=<token>`, token must match `/^\d{2,}_[0-9A-Za-z]{32}$/`). `isLoggedIn()` = `APP_CONFIG.useLocalAppApi` flag.
+- **Bypassing R18 gate** (zh-CN): `main.js` blocks when `!LocalStorage.get('PXV_NSFW_ON')` is falsy AND locale is zh. To bypass, set BOTH:
+  - `localStorage.setItem('PXV_CNT_SHOW', ...)` — content settings (r18/r18g/ai flags)
+  - `localStorage.setItem('PXV_NSFW_ON', '{"data":0,"expires":-1}')` — **value MUST be 0** (falsy → `!isOn()` = true → no block). Do NOT set it to truthy (1) — that triggers the blocking page in zh locale.
+- **API Key is in `.env.local`** (gitignored): `VUE_APP_SILICON_CLOUD_API_KEY` is applied automatically to API calls — real translation tests can run directly, no mocking needed.
+- **dev server reuse**: before dispatching QA, `curl localhost:8080` — if listening, reuse it (`pnpm serve` compile takes 90s+, re-starting wastes ~10 min).
+- **Playwright is globally installed** (`npm i -g playwright`) with browsers already downloaded (`~/.cache/ms-playwright/`, chromium-1234). Do NOT check MCP servers — invoke Playwright directly.
+- **hibiapi.cocomi.eu.org rejects automation**: it returns "Not Accepted" for requests with `HeadlessChrome` in the User-Agent or without a proper referer. In QA scripts, headless mode is fine but you MUST set a normal UA (no `HeadlessChrome` substring) and a `localhost` referer. Browser (real user) requests are unaffected — the app cannot and does not set UA/Referer for hibiapi (forbidden headers).
+
+### Execution rules
+- **QA/UI automation tasks MUST use `run_in_background=true`** — sync `task()` has a hard 1800000ms (30 min) poll limit; serial UI scenarios will hit it.
+- After hitting the limit, in-session conclusions are lost — evidence files are the only recovery path. **F3 must write its verdict to `.sisyphus/evidence/f3-verdict.txt` before finishing.**
+- Bash checks (files/grep/license) take seconds; **each UI scenario takes ~3 min** — keep scenario count low, split as needed.
+- Page loads: use `waitUntil: 'domcontentloaded'`, NOT `'networkidle'` (lazy-loaded image pages never reach networkidle).
+- Full retrospective: `.sisyphus/notepads/shinobu-questions/playwright-qa-lessons.md`
+
+### QA script techniques
+- **Read Vue computed values via `__vue__`** (walk `$parent` to the component by `$options.name`) instead of expanding DOM — rendering 1000s of region nodes OOMs the page.
+- **van-dialog DOM lingers during close transition** — assert absence via `display:none` (`dialogReallyGone`), not `querySelector === null`, else false positives.
+- Reuse browser context across runs (models cached); single attempt is enough.
 
 ## Directory Map
 

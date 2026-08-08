@@ -5,6 +5,7 @@ import { getSettingDef, LocalStorage, SessionStorage } from '@/utils/storage'
 import { isSafari } from '@/utils'
 import { getSelectedLang } from '@/i18n'
 import { isArtworkNotCensored } from '@/utils/filter'
+import { SILICON_CLOUD_BASR_URL, SILICON_CLOUD_API_KEY } from '@/consts'
 
 Vue.use(Vuex)
 
@@ -35,6 +36,34 @@ export default new Vuex.Store({
     isSafari: isSafari(),
     /** @type {any[]|null} */
     appNotice: null,
+    mangaTrans: {
+      /** @type {'shinobu'|'vl-api'} */
+      engine: 'vl-api',
+      /** @type {boolean} 用户是否已同意首次下载 Shinobu 模型 */
+      shinobuModelConsent: false,
+      /** @type {boolean} 用户是否已知晓 HTTP Helper 用户脚本提示 */
+      helperConsent: false,
+      /** @type {'google_web'|'llm'} */
+      translator: 'llm',
+      provider: SILICON_CLOUD_BASR_URL,
+      /** @type {Record<string, {apiKey?: string, model?: string, baseUrl?: string, authMode?: string}>} */
+      providers: {
+        [SILICON_CLOUD_BASR_URL]: {
+          apiKey: SILICON_CLOUD_API_KEY,
+          baseUrl: SILICON_CLOUD_BASR_URL,
+          model: 'tencent/Hunyuan-MT-7B',
+          authMode: 'api_key',
+        },
+      },
+      /** @type {'translate'|'erase'|'original'} */
+      processMode: 'translate',
+      autoTranslate: false,
+      bubble: true,
+      sourceLang: 'ja',
+      targetLang: 'zh-CN',
+      vlModel: 'nex-agi/Nex-N2-Pro',
+      ...getSettingDef('PXV_MANGA_TRANS', {}),
+    },
     /** @type {any[]|null} */
     seasonEffects: null,
     routeHistory: SessionStorage.get('PXV_ROUTE_HISTORY', []),
@@ -202,6 +231,18 @@ export default new Vuex.Store({
     setRouteHistory(state, val) {
       state.routeHistory = val
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
+    },
+    SET_MANGA_TRANS(state, patch) {
+      window.umami?.track('SET_MANGA_TRANS', patch.providers ? { patch: JSON.stringify(patch).replace(/"apiKey":"[\w-]+",/g, '') } : patch)
+      state.mangaTrans = {
+        ...state.mangaTrans,
+        ...patch,
+        providers: {
+          ...state.mangaTrans.providers,
+          ...(patch.providers || {}),
+        },
+      }
+      LocalStorage.set('PXV_MANGA_TRANS', state.mangaTrans)
     },
   },
   actions: {

@@ -162,7 +162,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { Dialog } from 'vant'
+import { Dialog } from '@/lib/vant-apis'
 import _ from '@/lib/lodash'
 import store from '@/store'
 import { copyText, downloadFile, formatIntlDate, formatIntlNumber } from '@/utils'

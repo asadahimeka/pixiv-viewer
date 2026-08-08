@@ -37,6 +37,7 @@ import Checkbox from 'vant/lib/checkbox'
 import CheckboxGroup from 'vant/lib/checkbox-group'
 import NoticeBar from 'vant/lib/notice-bar'
 import Pagination from 'vant/lib/pagination'
+import Progress from 'vant/lib/progress'
 
 export default function setupVant() {
   Vue.use(Button)
@@ -77,4 +78,5 @@ export default function setupVant() {
   Vue.use(CheckboxGroup)
   Vue.use(NoticeBar)
   Vue.use(Pagination)
+  Vue.use(Progress)
 }

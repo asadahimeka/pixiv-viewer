@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import defaultMessages from './locales/zh-CN.json'
-import { Locale } from 'vant'
+import { Locale } from '@/lib/vant-apis'
 
 Vue.use(VueI18n)
 
