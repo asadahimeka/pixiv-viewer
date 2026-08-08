@@ -54,6 +54,7 @@
 - *(translate)* Models from prerelease CDN with sha256 + URL template env
 - *(translate)* LLM preset dropdown, VL model selector, mangaTrans store nesting
 - *(translate)* Crop bubble masks to single-channel to fix OOM
+- *(theme)* Switchable visual theme system (sakuria/MD3/iOS26)
 
 ### 🐛 Bug Fixes
 
@@ -105,6 +106,7 @@
 
 - Update readme
 - *(agents)* Playwright QA notes + Shinobu translation operational notes
+- Update docs
 
 ### ⚡ Performance
 
@@ -137,6 +139,7 @@
 - *(license)* MIT → GPL-3.0 due to ShinobuTranslator derivation
 - *(license)* GPL-3.0 → AGPL-3.0 + THIRD_PARTY_NOTICES
 - Disable model CDN env defaults + pxcl SW cache exclusion
+- Release v1.36.0
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
