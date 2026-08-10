@@ -13,13 +13,21 @@
               <van-radio name="shinobu">Shinobu 管线（完整管线，画布输出）</van-radio>
             </template>
           </van-cell>
+          <van-cell>
+            <template #title>
+              <van-radio name="server">服务端翻译（自建服务，画布输出）</van-radio>
+            </template>
+          </van-cell>
         </van-cell-group>
       </van-radio-group>
       <div v-if="translationEngine === 'vl-api'" class="engine-help">
         <van-icon name="info-o" /> VL API: 使用云端视觉语言模型翻译，文本在侧边栏面板显示，支持流式输出。
       </div>
-      <div v-else class="engine-help">
+      <div v-else-if="translationEngine === 'shinobu'" class="engine-help">
         <van-icon name="info-o" /> Shinobu 管线: 完整翻译管线（检测 → OCR → 翻译 → 去字 → 排版），结果直接输出到画布。首次使用需要下载模型文件。
+      </div>
+      <div v-else-if="translationEngine === 'server'" class="engine-help">
+        <van-icon name="info-o" /> 服务端翻译: 由自建服务端完成完整翻译管线（检测 → OCR → 翻译 → 去字 → 排版），结果输出到画布。每次翻译可能需要较长时间，请耐心等待。
       </div>
     </van-cell-group>
 

@@ -64,7 +64,7 @@
       :current-page="currentTransPage"
       :loading="picTranslating[currentTransPage]"
       @close="handleClosePanel"
-      @retry="handleRetry(currentTransPage)"
+      @retry="handleVLRetry(currentTransPage)"
     />
     <van-popup
       v-if="showPicTranslateBtn"
@@ -110,8 +110,8 @@ import store from '@/store'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
-import { copyText } from '@/utils'
-import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE } from '@/consts'
+import { copyText, loadBlobAsImage } from '@/utils'
+import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
 import TopBar from '@/components/TopBar'
 import ImageView from './components/ImageView'
 import Meta from './components/Meta'
@@ -532,245 +532,22 @@ export default {
         type: 'illust',
       }
     },
-    loadBlobAsImage(blob) {
-      // 带超时与 onerror 保护地加载 Blob 为 Image；失败 reject 而非永久挂起
-      return new Promise((resolve, reject) => {
-        const img = new Image()
-        const url = URL.createObjectURL(blob)
-        const timer = setTimeout(() => {
-          URL.revokeObjectURL(url)
-          reject(new Error('缓存图片加载超时'))
-        }, 5000)
-        img.onload = () => {
-          clearTimeout(timer)
-          resolve(img)
-        }
-        img.onerror = () => {
-          clearTimeout(timer)
-          URL.revokeObjectURL(url)
-          reject(new Error('缓存图片解码失败'))
-        }
-        img.src = url
-      })
-    },
     async handleTranslate(pageIndex) {
       const engine = store.state.mangaTrans.engine
       window.umami?.track('translate_manga', { engine })
 
-      if (engine === 'shinobu') {
-        // 提示安装 HTTP Helper 用户脚本（一次性，仅未安装时）
-        if (!window.__httpRequest__ && !store.state.mangaTrans.helperConsent) {
-          const helperRes = await Dialog.confirm({
-            title: '提示',
-            message: '建议安装 Tampermonkey 浏览器扩展并安装 HTTP Helper 用户脚本，否则可能无法进行翻译。<br><br><p>Tampermonkey 扩展: <a href="https://www.tampermonkey.net/" target="_blank" rel="noreferrer">前往安装</a></p><p>HTTP Helper 用户脚本: <a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank" rel="noreferrer">点击安装</a></p>',
-            messageAlign: 'left',
-            confirmButtonText: '知道了',
-            cancelButtonText: '取消',
-          }).catch(() => 'cancel')
-          if (helperRes === 'confirm') store.commit('SET_MANGA_TRANS', { helperConsent: true })
-          // 无论确认与否，都不阻断翻译
-        }
-        // 首次使用需确认下载模型（检测/OCR/去字，约 199MB）
-        if (!store.state.mangaTrans.shinobuModelConsent) {
-          const res = await Dialog.confirm({
-            title: '模型下载确认',
-            message: '首次使用 Shinobu 管线需要下载模型文件（检测/OCR/去字），约 199MB，可能需要较长时间，请耐心等待。',
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-          }).catch(() => 'cancel')
-          if (res !== 'confirm') return
-          store.commit('SET_MANGA_TRANS', { shinobuModelConsent: true })
-        }
-        // SHINOBU PIPELINE path (canvas output, replaces old ONNX pipeline)
-        if (this.pipelineTranslating) {
-          this.$toast('正在翻译中，请稍候')
-          return
-        }
-
-        this.showTranslated = false
-        this.currentTransPage = pageIndex
-        this.currentArtifacts = null
-
-        const imageUrl = this.artwork.images[pageIndex]?.l || this.artwork.images[pageIndex]?.o
-        if (!imageUrl) {
-          this.$toast('无法获取图片 URL')
-          return
-        }
-
-        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}.${this.translationTranslator}`
-        const cached = await getCache(cacheKey)
-        // 缓存以 Blob 存储；旧缓存（canvas 序列化成 {}）不满足 instanceof Blob → 当 miss 重新翻译
-        if (cached instanceof Blob) {
-          try {
-            const img = await this.loadBlobAsImage(cached)
-            const canvas = document.createElement('canvas')
-            canvas.width = img.naturalWidth
-            canvas.height = img.naturalHeight
-            canvas.getContext('2d').drawImage(img, 0, 0)
-            URL.revokeObjectURL(img.src)
-            this.$set(this.translatedCanvases, pageIndex, canvas)
-            this.showTranslated = true
-            this.currentArtifacts = {
-              detectedRegions: [],
-              stageRegions: { detected: [], ocr: [], merged: [], ordered: [] },
-              stageTimings: this.pipelineStageTimings[pageIndex] || [],
-              resultCanvas: canvas,
-              runtimeStages: [],
-            }
-            this.$toast('使用缓存的翻译结果')
-            return
-          } catch (e) {
-            // 损坏/解码失败的 Blob：放弃缓存，降级为 miss 走正常翻译（不挂起）
-            console.warn('[shinobu] 缓存恢复失败，重新翻译:', e)
-          }
-        }
-
-        this.pipelineTranslating = true
-        this.translateStatusText = '准备中…'
-        this.$set(this.pipelineProgress, pageIndex, { stage: 'starting', detail: '准备中…', percent: 0 })
-        this.$set(this.translatedCanvases, pageIndex, null)
-
-        const providerConfig = this.providerConfig || {}
-        const config = {
-          sourceLang: 'ja',
-          targetLang: 'zh-CN',
-          translator: this.translationTranslator,
-          llmProvider: 'custom',
-          llmAuthMode: providerConfig.authMode || 'api_key',
-          llmBaseUrl: providerConfig.baseUrl || '',
-          llmApiKey: providerConfig.apiKey || '',
-          llmModel: providerConfig.model || '',
-          processMode: store.state.mangaTrans.processMode || 'translate',
-          ocrEngine: 'paddleocr_v6_medium',
-          ocrPostFilter: 'balanced',
-          typesetDebug: false,
-          eraseDebug: false,
-          collectDebugLog: false,
-          diagnosticRunId: Date.now().toString(),
-        }
-
-        const onProgress = progress => {
-          this.$set(this.pipelineProgress, pageIndex, progress)
-          this.translateStatusText = progress.detail || ''
-          // 流式 stageTimings：让 TranslateProgress "阶段耗时" 块实时显示
-          if (progress.timings && progress.timings.length) {
-            this.$set(this.pipelineStageTimings, pageIndex, progress.timings)
-          }
-        }
-
-        const abortController = new AbortController()
-        this.pipelineAbort = abortController
-
-        try {
-          // Shinobu 图片获取降级链: 油猴 __httpRequest__ → imgProxy → fetch
-          let imageBlob = null
-          if (window.__httpRequest__) {
-            try {
-              const { data } = await window.__httpRequest__(imageUrl, JSON.stringify({
-                responseType: 'blob',
-                headers: { Referer: 'https://www.pixiv.net/' },
-              }))
-              if (data instanceof Blob) imageBlob = data
-            } catch (e) {
-              console.warn('[shinobu] 油猴图片获取失败，降级:', e)
-            }
-          }
-          if (!imageBlob) {
-            const fetchUrl = COMMON_PROXY + imageUrl
-            const res = await fetch(fetchUrl)
-            if (!res.ok) throw new Error(`图片下载失败 HTTP ${res.status}`)
-            imageBlob = await res.blob()
-          }
-          const imageFile = new File([imageBlob], `page-${pageIndex}.png`, { type: imageBlob.type || 'image/png' })
-
-          const { runPipeline } = await import('@/utils/translate/shinobu')
-          const artifacts = await runPipeline(imageFile, config, onProgress, { signal: abortController.signal })
-
-          if (!this.isActive || abortController.signal.aborted) {
-            console.log('[Artwork] Component deactivated or translation cancelled during pipeline — discarding result')
-            return
-          }
-
-          this.currentArtifacts = {
-            detectedRegions: artifacts.detectedRegions,
-            stageRegions: artifacts.stageRegions,
-            stageTimings: artifacts.stageTimings,
-            resultCanvas: artifacts.resultCanvas,
-            runtimeStages: artifacts.runtimeStages,
-          }
-          this.$set(this.pipelineStageTimings, pageIndex, artifacts.stageTimings || [])
-
-          if (artifacts.detectedRegions.length === 0) {
-            this.$toast('未检测到文字')
-            this.$set(this.translatedCanvases, pageIndex, null)
-            this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
-            return
-          }
-
-          if (artifacts.resultCanvas && !abortController.signal.aborted) {
-            this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
-            // IndexedDB 无法结构化克隆 canvas，转存 Blob（PNG）保证缓存可序列化
-            const blob = await new Promise(resolve => artifacts.resultCanvas.toBlob(resolve, 'image/png'))
-            if (blob) await setCache(cacheKey, blob)
-            this.showTranslated = true
-          }
-          this.$toast('翻译完成')
-        } catch (err) {
-          if (err.name === 'AbortError') {
-            this.$toast('已取消')
-          } else {
-            if (err.artifacts) err.artifacts = null
-            console.log('shinobu pipeline err:', err)
-            const stage = err.stage || ''
-            const detail = err.detail || err.message || ''
-            this.$toast(`翻译失败${stage ? `（${stage}）` : ''}: ${detail}`)
-          }
-          // 失败/取消路径:不残留译图状态
-          this.showTranslated = false
-          this.$set(this.translatedCanvases, pageIndex, null)
-        } finally {
-          this.pipelineTranslating = false
-          this.translateStatusText = ''
-          this.pipelineAbort = null
-          this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
-        }
-        return
-      }
-
-      if (engine === 'vl-api') {
-        // EXISTING VL-API path — keep unchanged
-        this.showPicTranslatePanel = true
-        this.currentTransPage = pageIndex
-        const cached = await getCachedTranslation(this.artwork.id, pageIndex, resolveVlModel(store.state.mangaTrans.vlModel))
-        if (cached) {
-          this.$set(this.picTranslations, pageIndex, cached)
-          return
-        }
-
-        this.$set(this.picTranslations, pageIndex, '')
-        this.$set(this.picTranslating, pageIndex, true)
-
-        const imageUrl = this.artwork.images[pageIndex].l
-        try {
-          await translateMangaPage(imageUrl, this.artwork.id, pageIndex, ({ content, done, error }) => {
-            if (content) {
-              const prev = this.picTranslations[pageIndex] || ''
-              this.$set(this.picTranslations, pageIndex, prev + content)
-            }
-            if (done) {
-              this.$set(this.picTranslating, pageIndex, false)
-              if (error) {
-                this.$toast('翻译出错: ' + error)
-              } else if (!this.picTranslations[pageIndex]) {
-                this.$toast('翻译失败，请重试')
-              }
-            }
-          }, resolveVlModel(store.state.mangaTrans.vlModel))
-        } catch (err) {
-          console.log('translate err: ', err)
-          this.$toast('翻译出错: ' + err.message)
-          this.$set(this.picTranslating, pageIndex, false)
-        }
+      switch (engine) {
+        case 'shinobu':
+          this.translateByShinobu(pageIndex)
+          break
+        case 'server':
+          this.translateByServer(pageIndex)
+          break
+        case 'vl-api':
+          this.translateByVLApi(pageIndex)
+          break
+        default:
+          break
       }
     },
     handleClosePanel() {
@@ -796,29 +573,385 @@ export default {
       this.$set(this.translatedCanvases, pageIndex, null)
       this.showTranslated = false
     },
-    async handleRetry(pageIndex) {
-      const engine = store.state.mangaTrans.engine
-      if (engine === 'shinobu') {
-        const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}.${this.translationTranslator}`
-        try {
-          await setCache(cacheKey, null)
-        } catch (e) {
-          console.warn('Failed to clear shinobu translate cache', e)
-        }
-        this.$set(this.translatedCanvases, pageIndex, null)
-        this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
-        this.handleTranslate(pageIndex)
+    async handleVLRetry(pageIndex) {
+      try {
+        await setCache(`pic.translate.${this.artwork.id}.${pageIndex}.${resolveVlModel(store.state.mangaTrans.vlModel)}`, null)
+      } catch (e) {
+        console.warn('Failed to clear translate cache', e)
+      }
+      this.$set(this.picTranslations, pageIndex, '')
+
+      this.handleTranslate(pageIndex)
+    },
+    async translateByShinobu(pageIndex) {
+      // 提示安装 HTTP Helper 用户脚本（一次性，仅未安装时）
+      if (!window.__httpRequest__ && !store.state.mangaTrans.helperConsent) {
+        const helperRes = await Dialog.confirm({
+          title: '提示',
+          message: '建议安装 Tampermonkey 浏览器扩展并安装 HTTP Helper 用户脚本，否则可能无法进行翻译。<br><br><p>Tampermonkey 扩展: <a href="https://www.tampermonkey.net/" target="_blank" rel="noreferrer">前往安装</a></p><p>HTTP Helper 用户脚本: <a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank" rel="noreferrer">点击安装</a></p>',
+          messageAlign: 'left',
+          confirmButtonText: '知道了',
+          cancelButtonText: '取消',
+        }).catch(() => 'cancel')
+        if (helperRes === 'confirm') store.commit('SET_MANGA_TRANS', { helperConsent: true })
+        // 无论确认与否，都不阻断翻译
+      }
+      // 首次使用需确认下载模型（检测/OCR/去字，约 199MB）
+      if (!store.state.mangaTrans.shinobuModelConsent) {
+        const res = await Dialog.confirm({
+          title: '模型下载确认',
+          message: '首次使用 Shinobu 管线需要下载模型文件（检测/OCR/去字），约 199MB，可能需要较长时间，请耐心等待。',
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+        }).catch(() => 'cancel')
+        if (res !== 'confirm') return
+        store.commit('SET_MANGA_TRANS', { shinobuModelConsent: true })
+      }
+      // SHINOBU PIPELINE path (canvas output, replaces old ONNX pipeline)
+      if (this.pipelineTranslating) {
+        this.$toast('正在翻译中，请稍候')
         return
       }
-      if (engine === 'vl-api') {
-        try {
-          await setCache(`pic.translate.${this.artwork.id}.${pageIndex}.${resolveVlModel(store.state.mangaTrans.vlModel)}`, null)
-        } catch (e) {
-          console.warn('Failed to clear translate cache', e)
-        }
-        this.$set(this.picTranslations, pageIndex, '')
+
+      this.showTranslated = false
+      this.currentTransPage = pageIndex
+      this.currentArtifacts = null
+
+      const imageUrl = this.artwork.images[pageIndex]?.l?.replace(/\/c\/\d+x\d+\w*\//g, '/') || this.artwork.images[pageIndex]?.o
+      if (!imageUrl) {
+        this.$toast('无法获取图片 URL')
+        return
       }
-      this.handleTranslate(pageIndex)
+
+      const cacheKey = `pic.translate.shinobu.${this.artwork.id}.${pageIndex}.${this.translationTranslator}`
+      const cached = await getCache(cacheKey)
+      // 缓存以 Blob 存储；旧缓存（canvas 序列化成 {}）不满足 instanceof Blob → 当 miss 重新翻译
+      if (cached instanceof Blob) {
+        try {
+          const img = await loadBlobAsImage(cached)
+          const canvas = document.createElement('canvas')
+          canvas.width = img.naturalWidth
+          canvas.height = img.naturalHeight
+          canvas.getContext('2d').drawImage(img, 0, 0)
+          URL.revokeObjectURL(img.src)
+          this.$set(this.translatedCanvases, pageIndex, canvas)
+          this.showTranslated = true
+          this.currentArtifacts = {
+            detectedRegions: [],
+            stageRegions: { detected: [], ocr: [], merged: [], ordered: [] },
+            stageTimings: this.pipelineStageTimings[pageIndex] || [],
+            resultCanvas: canvas,
+            runtimeStages: [],
+          }
+          this.$toast('使用缓存的翻译结果')
+          return
+        } catch (e) {
+          // 损坏/解码失败的 Blob：放弃缓存，降级为 miss 走正常翻译（不挂起）
+          console.warn('[shinobu] 缓存恢复失败，重新翻译:', e)
+        }
+      }
+
+      this.pipelineTranslating = true
+      this.translateStatusText = '准备中…'
+      this.$set(this.pipelineProgress, pageIndex, { stage: 'starting', detail: '准备中…', percent: 0 })
+      this.$set(this.translatedCanvases, pageIndex, null)
+
+      const providerConfig = this.providerConfig || {}
+      const config = {
+        sourceLang: 'ja',
+        targetLang: 'zh-CN',
+        translator: this.translationTranslator,
+        llmProvider: 'custom',
+        llmAuthMode: providerConfig.authMode || 'api_key',
+        llmBaseUrl: providerConfig.baseUrl || '',
+        llmApiKey: providerConfig.apiKey || '',
+        llmModel: providerConfig.model || '',
+        processMode: store.state.mangaTrans.processMode || 'translate',
+        ocrEngine: 'paddleocr_v6_medium',
+        ocrPostFilter: 'balanced',
+        typesetDebug: false,
+        eraseDebug: false,
+        collectDebugLog: false,
+        diagnosticRunId: Date.now().toString(),
+      }
+
+      const onProgress = progress => {
+        this.$set(this.pipelineProgress, pageIndex, progress)
+        this.translateStatusText = progress.detail || ''
+        // 流式 stageTimings：让 TranslateProgress "阶段耗时" 块实时显示
+        if (progress.timings && progress.timings.length) {
+          this.$set(this.pipelineStageTimings, pageIndex, progress.timings)
+        }
+      }
+
+      const abortController = new AbortController()
+      this.pipelineAbort = abortController
+
+      try {
+        // Shinobu 图片获取降级链: 油猴 __httpRequest__ → imgProxy → fetch
+        let imageBlob = null
+        if (window.__httpRequest__) {
+          try {
+            const { data } = await window.__httpRequest__(imageUrl, JSON.stringify({
+              responseType: 'blob',
+              headers: { Referer: 'https://www.pixiv.net/' },
+            }))
+            if (data instanceof Blob) imageBlob = data
+          } catch (e) {
+            console.warn('[shinobu] 油猴图片获取失败，降级:', e)
+          }
+        }
+        if (!imageBlob) {
+          const fetchUrl = COMMON_PROXY + imageUrl
+          const res = await fetch(fetchUrl)
+          if (!res.ok) throw new Error(`图片下载失败 HTTP ${res.status}`)
+          imageBlob = await res.blob()
+        }
+        const imageFile = new File([imageBlob], `page-${pageIndex}.png`, { type: imageBlob.type || 'image/png' })
+
+        const { runPipeline } = await import('@/utils/translate/shinobu')
+        const artifacts = await runPipeline(imageFile, config, onProgress, { signal: abortController.signal })
+
+        if (!this.isActive || abortController.signal.aborted) {
+          console.log('[Artwork] Component deactivated or translation cancelled during pipeline — discarding result')
+          return
+        }
+
+        this.currentArtifacts = {
+          detectedRegions: artifacts.detectedRegions,
+          stageRegions: artifacts.stageRegions,
+          stageTimings: artifacts.stageTimings,
+          resultCanvas: artifacts.resultCanvas,
+          runtimeStages: artifacts.runtimeStages,
+        }
+        this.$set(this.pipelineStageTimings, pageIndex, artifacts.stageTimings || [])
+
+        if (artifacts.detectedRegions.length === 0) {
+          this.$toast('未检测到文字')
+          this.$set(this.translatedCanvases, pageIndex, null)
+          this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
+          return
+        }
+
+        if (artifacts.resultCanvas && !abortController.signal.aborted) {
+          this.$set(this.translatedCanvases, pageIndex, artifacts.resultCanvas)
+          // IndexedDB 无法结构化克隆 canvas，转存 Blob（PNG）保证缓存可序列化
+          const blob = await new Promise(resolve => artifacts.resultCanvas.toBlob(resolve, 'image/png'))
+          if (blob) await setCache(cacheKey, blob)
+          this.showTranslated = true
+        }
+        this.$toast('翻译完成')
+      } catch (err) {
+        if (err.name === 'AbortError') {
+          this.$toast('已取消')
+        } else {
+          if (err.artifacts) err.artifacts = null
+          console.log('shinobu pipeline err:', err)
+          const stage = err.stage || ''
+          const detail = err.detail || err.message || ''
+          this.$toast(`翻译失败${stage ? `（${stage}）` : ''}: ${detail}`)
+        }
+        // 失败/取消路径:不残留译图状态
+        this.showTranslated = false
+        this.$set(this.translatedCanvases, pageIndex, null)
+      } finally {
+        this.pipelineTranslating = false
+        this.translateStatusText = ''
+        this.pipelineAbort = null
+        this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
+      }
+    },
+    async translateByServer(pageIndex) {
+      // 服务端翻译引擎（T11）：前端只发当前页图片 URL → 服务端返回翻译后 PNG → 画布 overlay
+      if (!SERVER_TRANSLATE_URL) {
+        this.$toast('未配置服务端翻译地址')
+        return
+      }
+
+      this.showTranslated = false
+      this.currentTransPage = pageIndex
+      this.currentArtifacts = null
+
+      console.log('this.artwork.images[pageIndex]: ', this.artwork.images[pageIndex])
+      const imageUrl = this.artwork.images[pageIndex]?.l?.replace(/\/c\/\d+x\d+\w*\//g, '/') || this.artwork.images[pageIndex]?.o
+      if (!imageUrl) {
+        this.$toast('无法获取图片 URL')
+        return
+      }
+
+      // 前端缓存：命中直接恢复画布，不请求服务端
+      const cacheKey = `pic.translate.server.${this.artwork.id}.${pageIndex}.${'llm'}`
+      const cached = await getCache(cacheKey)
+      if (cached instanceof Blob) {
+        try {
+          const img = await loadBlobAsImage(cached)
+          const canvas = document.createElement('canvas')
+          canvas.width = img.naturalWidth
+          canvas.height = img.naturalHeight
+          canvas.getContext('2d').drawImage(img, 0, 0)
+          URL.revokeObjectURL(img.src)
+          this.$set(this.translatedCanvases, pageIndex, canvas)
+          this.showTranslated = true
+          this.$toast('使用缓存的翻译结果')
+          return
+        } catch (e) {
+          console.warn('[server] 缓存恢复失败，重新翻译:', e)
+        }
+      }
+
+      // 简单 loading（无 SSE/WebSocket 进度，计划内）
+      this.pipelineTranslating = true
+      this.translateStatusText = '请求服务端翻译…'
+      this.$set(this.pipelineProgress, pageIndex, { stage: 'server', detail: '请求服务端翻译…', percent: 0 })
+      this.$set(this.translatedCanvases, pageIndex, null)
+
+      const body = {
+        imageUrl,
+        sourceLang: 'ja',
+        targetLang: 'zh-CN',
+        translator: 'llm',
+        processMode: 'translate',
+      }
+
+      const abortController = new AbortController()
+      this.pipelineAbort = abortController
+
+      try {
+        let res
+        try {
+          res = await fetch(`${SERVER_TRANSLATE_URL}/translate`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${SERVER_TRANSLATE_TOKEN}`,
+            },
+            body: JSON.stringify(body),
+            signal: abortController.signal,
+          })
+        } catch (err) {
+          if (err.name === 'AbortError') {
+            const abortErr = new Error('已取消')
+            abortErr.error = 'ABORT'
+            throw abortErr
+          }
+          // fetch 抛错（网络不可达/服务端未启动），不泄露 token/堆栈
+          const netErr = new Error('无法连接翻译服务')
+          netErr.error = 'NETWORK'
+          throw netErr
+        }
+
+        if (!res.ok) {
+          // 结构化错误 {error, message}（服务端契约见 server/src/http/app.js sendError）
+          let code = null
+          let message = ''
+          try {
+            const data = await res.json()
+            code = data.error
+            message = data.message || ''
+          } catch (e) {
+            // 非 JSON 错误体，仅用 HTTP 状态兜底
+          }
+          if (res.status === 401 || code === 'UNAUTHORIZED') {
+            this.$toast('服务端鉴权失败')
+          } else {
+            // 服务端翻译结构化错误码
+            const SERVER_ERROR_TOAST = {
+              UNAUTHORIZED: '服务端鉴权失败',
+              IMAGE_FETCH_FAILED: '图片下载失败',
+              IMAGE_TOO_LARGE: '图片过大',
+              LLM_RATE_LIMITED: 'LLM 限流，请稍后重试',
+              PIPELINE_FAILED: '翻译失败',
+            }
+            const mapped = SERVER_ERROR_TOAST[code]
+            if (mapped) {
+              this.$toast(mapped)
+            } else {
+              this.$toast(message ? `翻译失败: ${message}` : `翻译失败 (HTTP ${res.status})`)
+            }
+          }
+          return
+        }
+
+        if (res.headers.get('X-Translate-NoText') === '1') {
+          // 服务端未检测到文字（返回原图透传）→ 显示原图，不开启译图 overlay
+          this.$toast('未检测到文字')
+          return
+        }
+
+        let blob
+        try {
+          blob = await res.blob()
+        } catch (err) {
+          // 响应体读取中途断网 → 同 fetch 失败，映射为网络错误而非原始 TypeError
+          const netErr = new Error('无法连接翻译服务')
+          netErr.error = 'NETWORK'
+          throw netErr
+        }
+        const img = await loadBlobAsImage(blob)
+        const canvas = document.createElement('canvas')
+        canvas.width = img.naturalWidth
+        canvas.height = img.naturalHeight
+        canvas.getContext('2d').drawImage(img, 0, 0)
+        URL.revokeObjectURL(img.src)
+
+        if (!this.isActive) return
+
+        this.$set(this.translatedCanvases, pageIndex, canvas)
+        await setCache(cacheKey, blob)
+        this.showTranslated = true
+        this.$toast('翻译完成')
+      } catch (err) {
+        if (err && err.error === 'ABORT') {
+          this.$toast('已取消')
+        } else {
+          console.log('[server] translate error:', err)
+          const msg = (err && err.error === 'NETWORK') ? '无法连接翻译服务' : (err && err.message ? `翻译失败: ${err.message}` : '翻译失败')
+          this.$toast(msg)
+        }
+        // 失败/取消路径不残留译图状态
+        this.showTranslated = false
+        this.$set(this.translatedCanvases, pageIndex, null)
+      } finally {
+        this.pipelineTranslating = false
+        this.translateStatusText = ''
+        this.pipelineAbort = null
+        this.$set(this.pipelineProgress, pageIndex, { stage: '', detail: '', percent: 0 })
+      }
+    },
+    async translateByVLApi(pageIndex) {
+      // EXISTING VL-API path — keep unchanged
+      this.showPicTranslatePanel = true
+      this.currentTransPage = pageIndex
+      const cached = await getCachedTranslation(this.artwork.id, pageIndex, resolveVlModel(store.state.mangaTrans.vlModel))
+      if (cached) {
+        this.$set(this.picTranslations, pageIndex, cached)
+        return
+      }
+
+      this.$set(this.picTranslations, pageIndex, '')
+      this.$set(this.picTranslating, pageIndex, true)
+
+      const imageUrl = this.artwork.images[pageIndex]?.l?.replace(/\/c\/\d+x\d+\w*\//g, '/') || this.artwork.images[pageIndex]?.o
+      try {
+        await translateMangaPage(imageUrl, this.artwork.id, pageIndex, ({ content, done, error }) => {
+          if (content) {
+            const prev = this.picTranslations[pageIndex] || ''
+            this.$set(this.picTranslations, pageIndex, prev + content)
+          }
+          if (done) {
+            this.$set(this.picTranslating, pageIndex, false)
+            if (error) {
+              this.$toast('翻译出错: ' + error)
+            } else if (!this.picTranslations[pageIndex]) {
+              this.$toast('翻译失败，请重试')
+            }
+          }
+        }, resolveVlModel(store.state.mangaTrans.vlModel))
+      } catch (err) {
+        console.log('translate err: ', err)
+        this.$toast('翻译出错: ' + err.message)
+        this.$set(this.picTranslating, pageIndex, false)
+      }
     },
   },
 }

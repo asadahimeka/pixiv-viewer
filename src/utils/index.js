@@ -493,3 +493,29 @@ export async function calculateFileHash(file, algorithm = 'SHA-256') {
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
   return hashHex
 }
+
+/**
+ * 带超时与 onerror 保护地加载 Blob 为 Image；失败 reject 而非永久挂起
+ * @param {Blob} blob
+ * @returns {Promise<Image>}
+ */
+export function loadBlobAsImage(blob) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    const url = URL.createObjectURL(blob)
+    const timer = setTimeout(() => {
+      URL.revokeObjectURL(url)
+      reject(new Error('缓存图片加载超时'))
+    }, 5000)
+    img.onload = () => {
+      clearTimeout(timer)
+      resolve(img)
+    }
+    img.onerror = () => {
+      clearTimeout(timer)
+      URL.revokeObjectURL(url)
+      reject(new Error('缓存图片解码失败'))
+    }
+    img.src = url
+  })
+}

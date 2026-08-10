@@ -261,7 +261,9 @@ export default {
       return store.state.mangaTrans.engine
     },
     showOverlay() {
-      return this.translationEngine === 'shinobu'
+      // 画布 overlay 的消费引擎：shinobu（本地管线）与 server（服务端管线）都输出
+      // translatedCanvases[index] 画布，由 TranslateOverlay 统一渲染；vl-api 走文本面板
+      return this.translationEngine === 'shinobu' || this.translationEngine === 'server'
     },
     debugModelInfo() {
       const stages = this.currentArtifacts?.runtimeStages || []

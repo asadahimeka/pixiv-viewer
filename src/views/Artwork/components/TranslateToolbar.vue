@@ -4,7 +4,7 @@
     <span
       class="translate-toolbar__engine"
       :class="'translate-toolbar__engine--' + engine"
-      :title="runtimeStatus ? runtimeTooltip: '点击检测运行环境'"
+      :title="engine != 'shinobu' ? '' : (runtimeStatus ? runtimeTooltip: '点击检测运行环境')"
       @click="checkRuntime"
     >
       {{ engineLabel }}
@@ -27,9 +27,9 @@
 
     <!-- Action Buttons -->
     <div class="translate-toolbar__actions">
-      <!-- Cancel Translation (shinobu: AbortSignal) -->
+      <!-- Cancel Translation (shinobu & server: AbortController/fetch signal) -->
       <van-button
-        v-if="translating && engine === 'shinobu'"
+        v-if="translating && (engine === 'shinobu' || engine === 'server')"
         plain
         type="danger"
         icon="close"
@@ -82,7 +82,9 @@ export default {
   },
   computed: {
     engineLabel() {
-      return this.engine === 'shinobu' ? 'Shinobu' : 'VL'
+      if (this.engine === 'shinobu') return 'Shinobu'
+      if (this.engine === 'server') return 'Server'
+      return 'VL'
     },
     runtimeDotClass() {
       if (this.runtimeChecking) return 'checking'
@@ -199,6 +201,10 @@ export default {
     &--vl-api
       background rgba(33, 150, 243, 0.2)
       color #2196f3
+
+    &--server
+      background rgba(156, 39, 176, 0.2)
+      color #9c27b0
 
   &__actions
     display flex
