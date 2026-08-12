@@ -4,7 +4,12 @@
     <div v-if="loading" class="loading-overlay">
       <van-loading type="spinner" />
       <div class="progress-detail">{{ progress.detail }}</div>
-      <TranslateProgress v-if="translationEngine == 'shinobu'" :progress="progress" :stage-timings="stageTimings" class="translate-progress-embed" />
+      <TranslateProgress
+        v-if="translationEngine == 'shinobu' || translationEngine == 'server'"
+        :progress="progress"
+        :stage-timings="stageTimings"
+        class="translate-progress-embed"
+      />
     </div>
     <div v-if="showToggleBtn" class="toggle-btn" @click.stop="$emit('toggle')">
       {{ showTranslated ? '原图' : '译图' }}

@@ -136,6 +136,12 @@ VUE_APP_ORT_WASM_PATH       — ONNX Runtime WASM path (default: jsdelivr CDN)
 
 ## Playwright QA Test Notes
 
+> **总原则（2026-08-11 起）**：**默认不进行 Playwright 浏览器模拟测试**。浏览器 UI 的最终验收由用户**手动**进行——agent 跑浏览器模拟既耗时（每场景 ~3 分钟 + dev server 90s+ 启动）又低效（用户反正会自己实测）。agent 允许的验证方式：
+> - **脚本级测试**（优先）：bash/curl、node 脚本、node:test 单元测试——验证逻辑正确性足够
+> - **不跑浏览器模拟**，除非用户**显式**要求"帮我用浏览器测一下 X"（如跨域/CORS、真实点击流等必须真实浏览器行为的场景）
+> - 需要验证用户可见效果时，产出**清晰的改动说明 + 预期行为清单**，由用户手动确认，而非 agent 截图代劳
+> - 以下环境事实与技巧保留备用（万一用户显式要求浏览器测试时仍需要）
+
 > Two Real Manual QA sessions both exceeded the 30-min sync `task()` poll limit. Lessons learned:
 
 ### Environment facts (no login needed for most features)

@@ -110,7 +110,7 @@ import store from '@/store'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
-import { copyText, loadBlobAsImage } from '@/utils'
+import { copyText, loadBlobAsImage, sleep } from '@/utils'
 import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
 import TopBar from '@/components/TopBar'
 import ImageView from './components/ImageView'
@@ -133,6 +133,16 @@ import PicTranslatePanel from './components/PicTranslatePanel.vue'
 import TranslateToolbar from './components/TranslateToolbar'
 import TranslateSettings from './components/TranslateSettings'
 // import { mintFilter } from '@/utils/filter'
+
+// 服务端翻译结构化错误码 → 中文 toast（shinobu-server 契约，见其 app.js ERROR_STATUS）
+const SERVER_ERROR_TOAST = {
+  UNAUTHORIZED: '服务端鉴权失败',
+  IMAGE_FETCH_FAILED: '图片下载失败',
+  IMAGE_TOO_LARGE: '图片过大',
+  LLM_RATE_LIMITED: 'LLM 限流，请稍后重试',
+  PIPELINE_FAILED: '翻译失败',
+  JOB_FAILED: '翻译失败',
+}
 
 export default {
   name: 'Artwork',
@@ -762,7 +772,8 @@ export default {
       }
     },
     async translateByServer(pageIndex) {
-      // 服务端翻译引擎（T11）：前端只发当前页图片 URL → 服务端返回翻译后 PNG → 画布 overlay
+      // 服务端翻译引擎（异步 job）：POST /translate 提交 → 轮询
+      // GET /translate/jobs/:id → done 后 GET .../result 取翻译 PNG → 画布 overlay
       if (!SERVER_TRANSLATE_URL) {
         this.$toast('未配置服务端翻译地址')
         return
@@ -799,7 +810,7 @@ export default {
         }
       }
 
-      // 简单 loading（无 SSE/WebSocket 进度，计划内）
+      // 简单 loading（异步 job 轮询进度，无 SSE/WebSocket，计划内）
       this.pipelineTranslating = true
       this.translateStatusText = '请求服务端翻译…'
       this.$set(this.pipelineProgress, pageIndex, { stage: 'server', detail: '请求服务端翻译…', percent: 0 })
@@ -816,7 +827,38 @@ export default {
       const abortController = new AbortController()
       this.pipelineAbort = abortController
 
+      const abortError = () => {
+        const err = new Error('已取消')
+        err.error = 'ABORT'
+        return err
+      }
+      const parseErrorBody = async response => {
+        let code = null
+        let message = ''
+        let detail = null
+        try {
+          const data = await response.json()
+          code = data && data.error
+          message = (data && data.message) || ''
+          detail = (data && data.detail) || null
+        } catch (e) {
+          // 非 JSON 错误体，仅用 HTTP 状态兜底
+        }
+        return { code, message, detail }
+      }
+      const failedJobToast = (errorCode, message) => {
+        if (SERVER_ERROR_TOAST[errorCode]) return SERVER_ERROR_TOAST[errorCode]
+        return message ? `翻译失败: ${message}` : SERVER_ERROR_TOAST.JOB_FAILED
+      }
+      const errorToast = (code, message, httpStatus) => {
+        if (code === 'UNAUTHORIZED' || httpStatus === 401) return '服务端鉴权失败'
+        const mapped = SERVER_ERROR_TOAST[code]
+        if (mapped) return mapped
+        return message ? `翻译失败: ${message}` : `翻译失败 (HTTP ${httpStatus})`
+      }
+
       try {
+        // ---- 1. 提交异步 job → 202 {id, status:'queued'} ----
         let res
         try {
           res = await fetch(`${SERVER_TRANSLATE_URL}/translate`, {
@@ -829,11 +871,7 @@ export default {
             signal: abortController.signal,
           })
         } catch (err) {
-          if (err.name === 'AbortError') {
-            const abortErr = new Error('已取消')
-            abortErr.error = 'ABORT'
-            throw abortErr
-          }
+          if (err.name === 'AbortError') throw abortError()
           // fetch 抛错（网络不可达/服务端未启动），不泄露 token/堆栈
           const netErr = new Error('无法连接翻译服务')
           netErr.error = 'NETWORK'
@@ -841,52 +879,204 @@ export default {
         }
 
         if (!res.ok) {
-          // 结构化错误 {error, message}（服务端契约见 server/src/http/app.js sendError）
-          let code = null
-          let message = ''
-          try {
-            const data = await res.json()
-            code = data.error
-            message = data.message || ''
-          } catch (e) {
-            // 非 JSON 错误体，仅用 HTTP 状态兜底
-          }
-          if (res.status === 401 || code === 'UNAUTHORIZED') {
-            this.$toast('服务端鉴权失败')
-          } else {
-            // 服务端翻译结构化错误码
-            const SERVER_ERROR_TOAST = {
-              UNAUTHORIZED: '服务端鉴权失败',
-              IMAGE_FETCH_FAILED: '图片下载失败',
-              IMAGE_TOO_LARGE: '图片过大',
-              LLM_RATE_LIMITED: 'LLM 限流，请稍后重试',
-              PIPELINE_FAILED: '翻译失败',
-            }
-            const mapped = SERVER_ERROR_TOAST[code]
-            if (mapped) {
-              this.$toast(mapped)
-            } else {
-              this.$toast(message ? `翻译失败: ${message}` : `翻译失败 (HTTP ${res.status})`)
-            }
-          }
+          // 结构化错误 {error, message}（服务端契约见 shinobu-server app.js sendError）
+          const { code, message } = await parseErrorBody(res)
+          this.$toast(errorToast(code, message, res.status))
           return
         }
 
-        if (res.headers.get('X-Translate-NoText') === '1') {
-          // 服务端未检测到文字（返回原图透传）→ 显示原图，不开启译图 overlay
+        // 202 应返回 JSON {id}；旧同步契约（直接 PNG）已下线
+        let jobId = null
+        try {
+          const data = await res.json()
+          jobId = data && data.id
+        } catch (e) {
+          // 202 但响应体非 JSON → 服务端异常，走兜底
+        }
+        if (!jobId) {
+          this.$toast('翻译请求失败，请重试')
+          return
+        }
+
+        this.translateStatusText = '翻译中…'
+
+        // ---- 2. 轮询 job 状态（1.5s 间隔，10 分钟超时兜底） ----
+        const POLL_INTERVAL = 1500
+        const POLL_TIMEOUT = 10 * 60 * 1000
+        const POLL_MAX_FAILURES = 3
+        const RESULT_RETRY_LIMIT = 3
+        const pollStartAt = Date.now()
+        let pollFailures = 0
+
+        let jobDone = false
+        while (!jobDone) {
+          // 取消：后端 job 继续跑，30 分钟自清，可接受
+          if (abortController.signal.aborted) throw abortError()
+          if (Date.now() - pollStartAt > POLL_TIMEOUT) {
+            this.$toast('翻译超时，请重试')
+            return
+          }
+
+          let jobRes
+          try {
+            jobRes = await fetch(`${SERVER_TRANSLATE_URL}/translate/jobs/${jobId}`, {
+              headers: { Authorization: `Bearer ${SERVER_TRANSLATE_TOKEN}` },
+              signal: abortController.signal,
+            })
+          } catch (err) {
+            if (err.name === 'AbortError') throw abortError()
+            // 网络抖动：连续失败达阈值才判定 NETWORK，避免一次断连就中断
+            pollFailures += 1
+            if (pollFailures >= POLL_MAX_FAILURES) {
+              this.$toast('无法连接翻译服务')
+              return
+            }
+            await sleep(POLL_INTERVAL)
+            continue
+          }
+
+          if (jobRes.status === 404) {
+            // job 过期（30min TTL）或服务端重启后内存 job 丢失
+            this.$toast('翻译任务已过期，请重试')
+            return
+          }
+          if (!jobRes.ok) {
+            // 非 404 错误（401/500 等）：有限重试后按错误映射提示
+            pollFailures += 1
+            if (pollFailures >= POLL_MAX_FAILURES) {
+              const { code, message } = await parseErrorBody(jobRes)
+              this.$toast(errorToast(code, message, jobRes.status))
+              return
+            }
+            await sleep(POLL_INTERVAL)
+            continue
+          }
+
+          pollFailures = 0
+
+          let data
+          try {
+            data = await jobRes.json()
+          } catch (e) {
+            // 轮询响应非 JSON：视为瞬时异常，有限重试
+            pollFailures += 1
+            if (pollFailures >= POLL_MAX_FAILURES) {
+              this.$toast('翻译失败，请重试')
+              return
+            }
+            await sleep(POLL_INTERVAL)
+            continue
+          }
+
+          const status = data && data.status
+          if (status === 'queued' || status === 'running') {
+            // running 带 stage/percent —— 与 TranslateProgress 的
+            // shinobuStageDefs 阶段名 1:1 对应，直接透传自动渲染
+            if (status === 'running' && data.stage) {
+              this.$set(this.pipelineProgress, pageIndex, {
+                stage: data.stage,
+                detail: '',
+                percent: typeof data.percent === 'number' ? data.percent : 0,
+              })
+            }
+            await sleep(POLL_INTERVAL)
+            continue
+          }
+          if (status === 'failed') {
+            // 结构化失败：job.error 映射中文 toast（JOB_FAILED 兜底）
+            this.$toast(failedJobToast(data && data.error, data && data.message))
+            return
+          }
+          if (status === 'done') {
+            jobDone = true
+          } else {
+            // 未知状态：继续轮询
+            await sleep(POLL_INTERVAL)
+          }
+        }
+
+        if (abortController.signal.aborted) throw abortError()
+
+        // ---- 3. 取结果 PNG（done 后与 result 之间可能存在竞态 → 短重试） ----
+        let blob = null
+        let noText = false
+        for (let i = 0; i < RESULT_RETRY_LIMIT && !blob; i++) {
+          if (abortController.signal.aborted) throw abortError()
+          let resultRes
+          try {
+            resultRes = await fetch(`${SERVER_TRANSLATE_URL}/translate/jobs/${jobId}/result`, {
+              headers: { Authorization: `Bearer ${SERVER_TRANSLATE_TOKEN}` },
+              signal: abortController.signal,
+            })
+          } catch (err) {
+            if (err.name === 'AbortError') throw abortError()
+            // 取结果时断网：短重试，仍失败则映射网络错误
+            if (i < RESULT_RETRY_LIMIT - 1) {
+              await sleep(500)
+              continue
+            }
+            const netErr = new Error('无法连接翻译服务')
+            netErr.error = 'NETWORK'
+            throw netErr
+          }
+
+          if (resultRes.status === 404) {
+            this.$toast('翻译任务已过期，请重试')
+            return
+          }
+          if (resultRes.status === 409) {
+            // JOB_FAILED 已失败；JOB_NOT_READY 为 done 竞态 → 短重试
+            const { code, message, detail } = await parseErrorBody(resultRes)
+            if (code === 'JOB_FAILED') {
+              // detail 携带原始错误码（如 IMAGE_FETCH_FAILED）
+              this.$toast(failedJobToast(detail || code, message))
+              return
+            }
+            if (code === 'JOB_NOT_FOUND') {
+              this.$toast('翻译任务已过期，请重试')
+              return
+            }
+            // JOB_NOT_READY 竞态：短暂重试后放弃
+            if (i < RESULT_RETRY_LIMIT - 1) {
+              await sleep(500)
+              continue
+            }
+            this.$toast('翻译失败，请重试')
+            return
+          }
+          if (!resultRes.ok) {
+            const { code, message } = await parseErrorBody(resultRes)
+            this.$toast(errorToast(code, message, resultRes.status))
+            return
+          }
+
+          if (resultRes.headers.get('X-Translate-NoText') === '1') {
+            // 服务端未检测到文字（原图透传）→ 显示原图，不开启译图 overlay
+            noText = true
+          }
+          try {
+            blob = await resultRes.blob()
+          } catch (err) {
+            // 响应体读取中途断网 → 同 fetch 失败，映射为网络错误而非原始 TypeError
+            if (i < RESULT_RETRY_LIMIT - 1) {
+              await sleep(500)
+              continue
+            }
+            const netErr = new Error('无法连接翻译服务')
+            netErr.error = 'NETWORK'
+            throw netErr
+          }
+        }
+
+        if (!blob) {
+          this.$toast('翻译失败，请重试')
+          return
+        }
+        if (noText) {
           this.$toast('未检测到文字')
           return
         }
 
-        let blob
-        try {
-          blob = await res.blob()
-        } catch (err) {
-          // 响应体读取中途断网 → 同 fetch 失败，映射为网络错误而非原始 TypeError
-          const netErr = new Error('无法连接翻译服务')
-          netErr.error = 'NETWORK'
-          throw netErr
-        }
         const img = await loadBlobAsImage(blob)
         const canvas = document.createElement('canvas')
         canvas.width = img.naturalWidth
@@ -897,7 +1087,11 @@ export default {
         if (!this.isActive) return
 
         this.$set(this.translatedCanvases, pageIndex, canvas)
-        await setCache(cacheKey, blob)
+        try {
+          await setCache(cacheKey, blob)
+        } catch (e) {
+          console.warn('[server] 翻译结果缓存失败:', e)
+        }
         this.showTranslated = true
         this.$toast('翻译完成')
       } catch (err) {
