@@ -95,6 +95,7 @@ export default new Vuex.Store({
       novelDefDlFormat: '',
       novelDlRmStyle: false,
       novelDefTranslate: '',
+      novelDefAiModel: 'hy_mt',
       pageFont: /zh-|ja/.test(getSelectedLang()) ? 'LXGW WenKai Screen' : '',
       hideNavBarOnScroll: true,
       manualLoadRelated: true,
