@@ -55,6 +55,11 @@
 - *(translate)* LLM preset dropdown, VL model selector, mangaTrans store nesting
 - *(translate)* Crop bubble masks to single-channel to fix OOM
 - *(theme)* Switchable visual theme system (sakuria/MD3/iOS26)
+- Manga translate by shinobu server
+- *(server)* Adapt translate engine to shinobu-server async job API
+- *(store)* Add novelDefAiModel appSetting default
+- *(translate)* Add novel translation settings panel component
+- *(translate)* Wire novel translation settings into Novel page
 
 ### 🐛 Bug Fixes
 
@@ -101,6 +106,10 @@
 
 - Extract PanelContent to eliminate template duplication
 - *(translate)* Remove legacy onnx pipeline and providers
+- *(translate)* Rename manga translate components with Manga prefix
+- *(translate)* Decouple isAutoTrigger in loadKISSTranslator
+- *(setting)* Remove novel default translate service, relocate KISS setting
+- *(feed)* Persist feeds last-seen id via LocalStorage
 
 ### 📚 Documentation
 
@@ -140,6 +149,7 @@
 - *(license)* GPL-3.0 → AGPL-3.0 + THIRD_PARTY_NOTICES
 - Disable model CDN env defaults + pxcl SW cache exclusion
 - Release v1.36.0
+- Release v1.36.1
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features

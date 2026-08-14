@@ -1,6 +1,6 @@
 {
   "name": "pixiv-viewer",
-  "version": "1.36.1",
+  "version": "1.36.2",
   "license": "AGPL-3.0-only",
   "private": true,
   "scripts": {
