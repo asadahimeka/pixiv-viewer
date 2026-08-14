@@ -96,7 +96,7 @@
           :value="showPresetModelSel ? '' : providerConfig.apiKey"
           type="password"
           label="API Key"
-          placeholder="输入 API Key"
+          placeholder="输入 API Key，留空使用预设"
           @change="onApiKeyChange"
         />
         <van-cell
@@ -217,7 +217,7 @@ import { aiModelMap } from '@/utils/translate'
 import { VL_MODELS } from '@/utils/translate/manga'
 
 export default {
-  name: 'TranslateSettings',
+  name: 'MangaTranslateSettings',
   data() {
     return {
       testLoading: false,

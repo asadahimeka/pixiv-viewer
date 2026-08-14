@@ -10,7 +10,7 @@
       get-container="body"
       @close="$emit('close')"
     >
-      <PanelContent
+      <MangaTranslatePanelContent
         :loading="loading"
         :translations="translations"
         @close="$emit('close')"
@@ -25,7 +25,7 @@
     >
       <div class="ptm-handle"></div>
       <div class="ptm-body">
-        <PanelContent
+        <MangaTranslatePanelContent
           :loading="loading"
           :translations="translations"
           @close="$emit('close')"
@@ -37,12 +37,12 @@
 </template>
 
 <script>
-import PanelContent from './PanelContent.vue'
+import MangaTranslatePanelContent from './MangaTranslatePanelContent.vue'
 
 export default {
-  name: 'PicTranslatePanel',
+  name: 'MangaTranslatePanel',
   components: {
-    PanelContent,
+    MangaTranslatePanelContent,
   },
   props: {
     visible: {

@@ -4,7 +4,7 @@
     <div v-if="loading" class="loading-overlay">
       <van-loading type="spinner" />
       <div class="progress-detail">{{ progress.detail }}</div>
-      <TranslateProgress
+      <MangaTranslateProgress
         v-if="translationEngine == 'shinobu' || translationEngine == 'server'"
         :progress="progress"
         :stage-timings="stageTimings"
@@ -18,12 +18,12 @@
 </template>
 
 <script>
-import TranslateProgress from './TranslateProgress'
+import MangaTranslateProgress from './MangaTranslateProgress'
 
 export default {
-  name: 'TranslateOverlay',
+  name: 'MangaTranslateOverlay',
   components: {
-    TranslateProgress,
+    MangaTranslateProgress,
   },
   props: {
     artworkId: {

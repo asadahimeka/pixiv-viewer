@@ -32,7 +32,7 @@
           <van-skeleton class="skeleton" title avatar :row="5" row-width="200px" avatar-size="42px" :loading="loading">
             <ArtworkMeta ref="artworkMeta" :artwork="artwork" :maybe-ai-author="maybeAiAuthor" @ugoira-download="showUgPanelFromDlBtn" @update-author-follow="updateAuthorFollow" />
           </van-skeleton>
-          <TranslateToolbar
+          <MangaTranslateToolbar
             v-if="showPicTranslateBtn"
             :visible="showPicTranslateBtn"
             :translating="pipelineTranslating"
@@ -57,7 +57,7 @@
         </div>
       </template>
     </van-swipe-cell>
-    <PicTranslatePanel
+    <MangaTranslatePanel
       v-if="showPicTranslateBtn"
       :visible="showPicTranslatePanel"
       :translations="picTranslations[currentTransPage]"
@@ -76,7 +76,7 @@
       close-icon-position="top-right"
       get-container="body"
     >
-      <TranslateSettings />
+      <MangaTranslateSettings />
     </van-popup>
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
@@ -129,9 +129,9 @@ import IconFacebook from '@/assets/images/share-sheet-facebook.png'
 import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation, resolveVlModel } from '@/utils/translate/manga'
-import PicTranslatePanel from './components/PicTranslatePanel.vue'
-import TranslateToolbar from './components/TranslateToolbar'
-import TranslateSettings from './components/TranslateSettings'
+import MangaTranslatePanel from './components/MangaTranslatePanel.vue'
+import MangaTranslateToolbar from './components/MangaTranslateToolbar'
+import MangaTranslateSettings from './components/MangaTranslateSettings'
 // import { mintFilter } from '@/utils/filter'
 
 // 服务端翻译结构化错误码 → 中文 toast（shinobu-server 契约，见其 app.js ERROR_STATUS）
@@ -152,9 +152,9 @@ export default {
     ArtworkMeta: Meta,
     AuthorCard,
     Related,
-    PicTranslatePanel,
-    TranslateToolbar,
-    TranslateSettings,
+    MangaTranslatePanel,
+    MangaTranslateToolbar,
+    MangaTranslateSettings,
   },
   beforeRouteUpdate(to, from, next) {
     if (this.$refs.artworkMeta?.showComments) {
@@ -688,7 +688,7 @@ export default {
       const onProgress = progress => {
         this.$set(this.pipelineProgress, pageIndex, progress)
         this.translateStatusText = progress.detail || ''
-        // 流式 stageTimings：让 TranslateProgress "阶段耗时" 块实时显示
+        // 流式 stageTimings：让 MangaTranslateProgress "阶段耗时" 块实时显示
         if (progress.timings && progress.timings.length) {
           this.$set(this.pipelineStageTimings, pageIndex, progress.timings)
         }
@@ -973,7 +973,7 @@ export default {
 
           const status = data && data.status
           if (status === 'queued' || status === 'running') {
-            // running 带 stage/percent —— 与 TranslateProgress 的
+            // running 带 stage/percent —— 与 MangaTranslateProgress 的
             // shinobuStageDefs 阶段名 1:1 对应，直接透传自动渲染
             if (status === 'running' && data.stage) {
               this.$set(this.pipelineProgress, pageIndex, {

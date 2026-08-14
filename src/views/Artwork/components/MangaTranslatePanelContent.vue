@@ -22,7 +22,7 @@
 
 <script>
 export default {
-  name: 'PanelContent',
+  name: 'MangaTranslatePanelContent',
   props: {
     loading: {
       type: Boolean,

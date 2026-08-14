@@ -216,7 +216,7 @@
 
 <script>
 export default {
-  name: 'TranslateDebug',
+  name: 'MangaTranslateDebug',
   props: {
     visible: {
       type: Boolean,

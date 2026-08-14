@@ -35,7 +35,7 @@
               🌐{{ translatingIndex === index ? '' : '译' }}
             </van-button>
           </template>
-          <TranslateOverlay
+          <MangaTranslateOverlay
             v-if="showOverlay"
             :artwork-id="artwork.id"
             :page-index="index"
@@ -91,7 +91,7 @@
             🌐{{ translatingIndex === index ? '' : '译' }}
           </van-button>
         </template>
-        <TranslateOverlay
+        <MangaTranslateOverlay
           v-if="showOverlay"
           :artwork-id="artwork.id"
           :page-index="index"
@@ -114,7 +114,7 @@
         ></canvas>
       </div>
     </template>
-    <TranslateDebug
+    <MangaTranslateDebug
       v-if="showOverlay && debugVisible"
       :visible="debugVisible"
       :artifacts="currentArtifacts"
@@ -146,16 +146,16 @@ import { COMMON_IMAGE_PROXY, ugoiraAvifSrc } from '@/consts'
 import { fancyboxShow, downloadFile } from '@/utils'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { downloadUgoira, loadUgoira } from '@/utils/ugoira'
-import TranslateOverlay from './TranslateOverlay.vue'
-import TranslateDebug from './TranslateDebug.vue'
+import MangaTranslateOverlay from './MangaTranslateOverlay.vue'
+import MangaTranslateDebug from './MangaTranslateDebug.vue'
 
 const { isLongpressDL, imgReso, autoPlayUgoira, isUgoiraAvifSrc } = store.state.appSetting
 
 export default {
   name: 'ImageView',
   components: {
-    TranslateOverlay,
-    TranslateDebug,
+    MangaTranslateOverlay,
+    MangaTranslateDebug,
   },
   props: {
     artwork: {
@@ -262,7 +262,7 @@ export default {
     },
     showOverlay() {
       // 画布 overlay 的消费引擎：shinobu（本地管线）与 server（服务端管线）都输出
-      // translatedCanvases[index] 画布，由 TranslateOverlay 统一渲染；vl-api 走文本面板
+      // translatedCanvases[index] 画布，由 MangaTranslateOverlay 统一渲染；vl-api 走文本面板
       return this.translationEngine === 'shinobu' || this.translationEngine === 'server'
     },
     debugModelInfo() {

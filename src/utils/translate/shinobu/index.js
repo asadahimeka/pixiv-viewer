@@ -460,7 +460,7 @@ function buildEraseDebugCanvas(originalCanvas, debugLayers, platform, baseCanvas
 
 /**
  * Fixed per-stage percentage anchors (11 pipeline stages).
- * Mirrors the shinobuStageDefs stage keys consumed by TranslateProgress.
+ * Mirrors the shinobuStageDefs stage keys consumed by MangaTranslateProgress.
  * Values approximate each stage's share of the whole pipeline.
  */
 const STAGE_PERCENT = {
@@ -486,7 +486,7 @@ const STAGE_PERCENT = {
 function report(cb, stage, detail, timings) {
   const percent = STAGE_PERCENT[stage]
   const progress = { stage, detail, ...(percent !== undefined ? { percent } : {}) }
-  // 附带已累计的阶段耗时，供 UI 实时渲染（TranslateProgress "阶段耗时" 块）
+  // 附带已累计的阶段耗时，供 UI 实时渲染（MangaTranslateProgress "阶段耗时" 块）
   if (timings && timings.length) progress.timings = timings
   cb(progress)
 }

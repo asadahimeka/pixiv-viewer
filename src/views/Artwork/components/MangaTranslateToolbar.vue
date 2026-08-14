@@ -62,7 +62,7 @@
 import { Dialog } from '@/lib/vant-apis'
 
 export default {
-  name: 'TranslateToolbar',
+  name: 'MangaTranslateToolbar',
   props: {
     visible: { type: Boolean, default: false },
     translating: { type: Boolean, default: false },

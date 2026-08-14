@@ -82,7 +82,7 @@
 
 <script>
 export default {
-  name: 'TranslateProgress',
+  name: 'MangaTranslateProgress',
   props: {
     // vl-api mode: array of { stage, status, durationMs, error }
     stages: {
