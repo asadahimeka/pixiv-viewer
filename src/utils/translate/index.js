@@ -3,7 +3,7 @@ import { i18n } from '@/i18n'
 import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
 import { loadScript } from '@/utils'
 
-export async function loadKISSTranslator(isAutoLoad = false) {
+export async function loadKISSTranslator(isAutoLoad = false, isAutoTrigger = isAutoLoad) {
   if (!isAutoLoad && !localStorage.getItem('PXV_KISST_CFMED')) {
     const res = await Dialog.confirm({
       title: '加载 KISS Translator 脚本',
@@ -13,18 +13,19 @@ export async function loadKISSTranslator(isAutoLoad = false) {
       cancelButtonText: '取消',
       confirmButtonText: '加载',
     }).catch(() => 'cancel')
-    if (res != 'confirm') return
+    if (res != 'confirm') return false
     localStorage.setItem('PXV_KISST_CFMED', '1')
   }
   if (document.querySelector('#kiss-translator')) {
-    return
+    return false
   }
   await loadScript('/kiss-translator/KISS-Translator.min.js')
-  if (isAutoLoad) {
+  if (isAutoTrigger) {
     setTimeout(() => {
       window._GM_menuCommands?.find(e => e.name == '开启翻译')?.callback()
     }, 1000)
   }
+  return true
 }
 
 // export async function loadImtSdk(isAutoLoadImt = false) {
@@ -228,7 +229,7 @@ function replaceNovelMark(text) {
     .replace(/\[uploadedimage:(\d+)\]/g, '')
 }
 
-export const isNativeTranslatorSupported = 'Translator' in self && !navigator.userAgent.includes('Edg/')
+export const isNativeTranslatorSupported = 'Translator' in self && !/EdgA?\//i.test(navigator.userAgent)
 let translator
 async function ensureTranslator() {
   if (translator) return
