@@ -60,6 +60,11 @@
         is-link
         @click="showSearchDefaultTypePicker"
       />
+      <van-cell v-if="!appSetting.useNovelWebview && showAutoLoadImtSwitch" center title="自动加载简约翻译(KISS Translator)脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载。翻译范围：小说正文、作品标题与简介、作品评论、用户简介">
+        <template #right-icon>
+          <van-switch :value="appSetting.isAutoLoadKissT" size="24" @change="changeAutoLoadKissT" />
+        </template>
+      </van-cell>
     </van-cell-group>
 
     <van-cell-group v-if="clientConfig.useLocalAppApi" :title="$t('YEPi_dV_gdvw9NzE4iBEu')">
@@ -112,14 +117,6 @@
         <van-cell v-if="appSetting.novelDefDlFormat == 'epub'" center :title="$t('sJimI61fn8ruloG-3ObJs')">
           <template #right-icon>
             <van-switch :value="appSetting.novelDlRmStyle" size="24" @change="v => saveAppSetting('novelDlRmStyle', v)" />
-          </template>
-        </van-cell>
-      </template>
-      <template v-if="!appSetting.useNovelWebview && showAutoLoadImtSwitch">
-        <van-cell v-if="clientConfig.useLocalAppApi" center title="小说默认翻译服务" :label="novelTranslateLabel" is-link @click="novelTranslate.show = true" />
-        <van-cell center title="自动加载简约翻译(KISS Translator)脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载">
-          <template #right-icon>
-            <van-switch :value="appSetting.isAutoLoadKissT" size="24" @change="changeAutoLoadKissT" />
           </template>
         </van-cell>
       </template>
@@ -419,14 +416,6 @@
       @select="e => saveAppSetting('novelDefDlFormat', e._value)"
     />
     <van-action-sheet
-      v-model="novelTranslate.show"
-      :actions="novelTranslate.actions"
-      :cancel-text="$t('common.cancel')"
-      description="小说默认翻译服务"
-      close-on-click-action
-      @select="e => saveAppSetting('novelDefTranslate', e._value)"
-    />
-    <van-action-sheet
       v-model="appStartPage.show"
       :actions="appStartPage.actions"
       :cancel-text="$t('common.cancel')"
@@ -567,7 +556,6 @@ import { mintVerify } from '@/utils/filter'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import { isFsaSupported, getMainDirHandle, setMainDirHandle } from '@/utils/fsa'
 import { getCache, setCache } from '@/utils/storage/siteCache'
-import { aiModelMap } from '@/utils/translate'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import NovelTextConfig from '../Artwork/components/NovelTextConfig.vue'
 import PageFontSelect from '../Artwork/components/PageFontSelect.vue'
@@ -701,19 +689,6 @@ export default {
           { name: 'MD', _value: 'md' },
         ].filter(Boolean),
       },
-      novelTranslate: {
-        show: false,
-        actions: [
-          { name: '不设置', _value: '' },
-          { name: '微软翻译', _value: 'ms' },
-          { name: '谷歌翻译', _value: 'gg' },
-          ...Object.keys(aiModelMap).map(k => ({
-            name: `AI 翻译(${aiModelMap[k].split('/').pop()})`,
-            _value: `sc_${k}`,
-          })),
-          { name: '有道翻译', _value: 'yd' },
-        ],
-      },
       appStartPage: {
         show: false,
         actions: [
@@ -812,9 +787,6 @@ export default {
     },
     novelDlFmtLabel() {
       return this.novelDlFmt.actions.find(e => e._value == store.state.appSetting.novelDefDlFormat)?.name || ''
-    },
-    novelTranslateLabel() {
-      return this.novelTranslate.actions.find(e => e._value == store.state.appSetting.novelDefTranslate)?.name || ''
     },
     sampleArtFileName() {
       return getSampleFileName(this.dlFileNameTpl)
