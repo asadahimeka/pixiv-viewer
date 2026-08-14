@@ -46,7 +46,7 @@ import _ from '@/lib/lodash'
 import store from '@/store'
 import { localApi } from '@/api'
 import { getFollowingIllusts } from '@/api/user'
-import { getCache, setCache } from '@/utils/storage/siteCache'
+import { LocalStorage } from '@/utils/storage'
 import ImageList from '@/components/ImageList.vue'
 
 export default {
@@ -73,12 +73,12 @@ export default {
       return store.state.appSetting.isExpandMultiPArtwork
     },
   },
-  async created() {
-    this.lastId = await getCache('feeds.last.seen.id')
+  created() {
+    this.lastId = LocalStorage.get('feeds.last.seen.id', null)
     this.getRankList()
   },
   beforeDestroy() {
-    setCache('feeds.last.seen.id', this.artList[0]?.id)
+    LocalStorage.set('feeds.last.seen.id', this.artList[0]?.id, -1)
   },
   methods: {
     isLastSeen(id) {
@@ -138,7 +138,7 @@ export default {
         ], '_key')
 
         if (this.curPage == 1) {
-          setCache('feeds.last.seen.id', this.artList[0]?.id)
+          LocalStorage.set('feeds.last.seen.id', this.artList[0]?.id, -1)
         }
 
         this.loading = false
