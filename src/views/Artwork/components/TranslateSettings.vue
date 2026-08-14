@@ -31,6 +31,24 @@
       </div>
     </van-cell-group>
 
+    <van-cell-group v-if="translationEngine === 'server'" title="服务端配置">
+      <van-field
+        v-model="serverUrlInput"
+        label="服务端地址"
+        placeholder="https://hibiapi.cocomi.eu.org/manga"
+        clearable
+      />
+      <van-field
+        v-model="serverTokenInput"
+        label="鉴权 Token"
+        type="password"
+        clearable
+      />
+      <div class="engine-help" style="padding: 8px 16px; font-size: 12px; color: #969799">
+        <van-icon name="info-o" /> 留空使用构建时默认配置，<a href="https://github.com/asadahimeka/shinobu-server" target="_blank" rel="noopener">点击前往 GitHub 查看部署与自建说明</a>
+      </div>
+    </van-cell-group>
+
     <van-cell-group v-if="translationEngine === 'vl-api'" title="VL 模型">
       <van-cell
         title="视觉语言模型"
@@ -271,6 +289,22 @@ export default {
       },
       set(val) {
         store.commit('SET_MANGA_TRANS', { vlModel: val })
+      },
+    },
+    serverUrlInput: {
+      get() {
+        return store.state.mangaTrans.serverUrl
+      },
+      set(value) {
+        store.commit('SET_MANGA_TRANS', { serverUrl: value })
+      },
+    },
+    serverTokenInput: {
+      get() {
+        return store.state.mangaTrans.serverToken
+      },
+      set(value) {
+        store.commit('SET_MANGA_TRANS', { serverToken: value })
       },
     },
     providerConfig() {

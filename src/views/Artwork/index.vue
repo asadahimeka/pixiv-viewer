@@ -111,7 +111,7 @@ import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { copyText, loadBlobAsImage, sleep } from '@/utils'
-import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
+import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE } from '@/consts'
 import TopBar from '@/components/TopBar'
 import ImageView from './components/ImageView'
 import Meta from './components/Meta'
@@ -774,7 +774,8 @@ export default {
     async translateByServer(pageIndex) {
       // 服务端翻译引擎（异步 job）：POST /translate 提交 → 轮询
       // GET /translate/jobs/:id → done 后 GET .../result 取翻译 PNG → 画布 overlay
-      if (!SERVER_TRANSLATE_URL) {
+      const { serverUrl, serverToken } = store.state.mangaTrans
+      if (!serverUrl) {
         this.$toast('未配置服务端翻译地址')
         return
       }
@@ -857,15 +858,17 @@ export default {
         return message ? `翻译失败: ${message}` : `翻译失败 (HTTP ${httpStatus})`
       }
 
+      const authHeader = serverToken ? { Authorization: `Bearer ${serverToken}` } : {}
+
       try {
         // ---- 1. 提交异步 job → 202 {id, status:'queued'} ----
         let res
         try {
-          res = await fetch(`${SERVER_TRANSLATE_URL}/translate`, {
+          res = await fetch(`${serverUrl}/translate`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': `Bearer ${SERVER_TRANSLATE_TOKEN}`,
+              ...authHeader,
             },
             body: JSON.stringify(body),
             signal: abortController.signal,
@@ -900,8 +903,8 @@ export default {
 
         this.translateStatusText = '翻译中…'
 
-        // ---- 2. 轮询 job 状态（1.5s 间隔，10 分钟超时兜底） ----
-        const POLL_INTERVAL = 1500
+        // ---- 2. 轮询 job 状态（3s 间隔，10 分钟超时兜底） ----
+        const POLL_INTERVAL = 3000
         const POLL_TIMEOUT = 10 * 60 * 1000
         const POLL_MAX_FAILURES = 3
         const RESULT_RETRY_LIMIT = 3
@@ -919,8 +922,8 @@ export default {
 
           let jobRes
           try {
-            jobRes = await fetch(`${SERVER_TRANSLATE_URL}/translate/jobs/${jobId}`, {
-              headers: { Authorization: `Bearer ${SERVER_TRANSLATE_TOKEN}` },
+            jobRes = await fetch(`${serverUrl}/translate/jobs/${jobId}`, {
+              headers: authHeader,
               signal: abortController.signal,
             })
           } catch (err) {
@@ -1004,8 +1007,8 @@ export default {
           if (abortController.signal.aborted) throw abortError()
           let resultRes
           try {
-            resultRes = await fetch(`${SERVER_TRANSLATE_URL}/translate/jobs/${jobId}/result`, {
-              headers: { Authorization: `Bearer ${SERVER_TRANSLATE_TOKEN}` },
+            resultRes = await fetch(`${serverUrl}/translate/jobs/${jobId}/result`, {
+              headers: authHeader,
               signal: abortController.signal,
             })
           } catch (err) {

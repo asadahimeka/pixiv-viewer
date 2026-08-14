@@ -141,13 +141,13 @@ export const aiModelMap = {
   kimi2_7: 'moonshotai/Kimi-K2.7-Code',
   dpsk_v4p: 'deepseek-ai/DeepSeek-V4-Pro',
   dpsk_v4f: 'deepseek-ai/DeepSeek-V4-Flash',
-  kimi2_6: 'Pro/moonshotai/Kimi-K2.6',
   nex: 'nex-agi/Nex-N2-Pro',
   minimax: 'MiniMaxAI/MiniMax-M2.5',
   qwen3_6: 'Qwen/Qwen3.6-35B-A3B',
   step3_5: 'stepfun-ai/Step-3.5-Flash',
   ling2: 'inclusionAI/Ling-flash-2.0',
   glm4_5: 'zai-org/GLM-4.5-Air',
+  hy: 'tencent/Hunyuan-A13B-Instruct',
 }
 export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd = 'glm', onRead = console.log) {
   try {

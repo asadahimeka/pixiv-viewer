@@ -5,7 +5,7 @@ import { getSettingDef, LocalStorage, SessionStorage } from '@/utils/storage'
 import { isSafari } from '@/utils'
 import { getSelectedLang } from '@/i18n'
 import { isArtworkNotCensored } from '@/utils/filter'
-import { SILICON_CLOUD_BASR_URL, SILICON_CLOUD_API_KEY } from '@/consts'
+import { SILICON_CLOUD_BASR_URL, SILICON_CLOUD_API_KEY, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
 
 Vue.use(Vuex)
 
@@ -62,6 +62,8 @@ export default new Vuex.Store({
       sourceLang: 'ja',
       targetLang: 'zh-CN',
       vlModel: 'nex-agi/Nex-N2-Pro',
+      serverUrl: SERVER_TRANSLATE_URL,
+      serverToken: SERVER_TRANSLATE_TOKEN,
       ...getSettingDef('PXV_MANGA_TRANS', {}),
     },
     /** @type {any[]|null} */
@@ -233,7 +235,9 @@ export default new Vuex.Store({
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
     },
     SET_MANGA_TRANS(state, patch) {
-      window.umami?.track('SET_MANGA_TRANS', patch.providers ? { patch: JSON.stringify(patch).replace(/"apiKey":"[\w-]+",/g, '') } : patch)
+      const pKeys = Object.keys(patch)
+      const dontTrack = ['sourceLang', 'targetLang', 'serverToken'].some(k => pKeys.includes(k))
+      if (!dontTrack) window.umami?.track('SET_MANGA_TRANS', patch.providers ? { patch: JSON.stringify(patch).replace(/"apiKey":"[\w-]+",/g, '') } : patch)
       state.mangaTrans = {
         ...state.mangaTrans,
         ...patch,
