@@ -87,7 +87,10 @@
               </van-popover>
             </template>
           </div>
-          <van-button v-if="!useNovelWebview" type="info" size="small" plain @click="toggleNovelConfigShow">⚙{{ $t('novel.settings.title') }}</van-button>
+          <div class="series-btns-group">
+            <van-button v-if="!useNovelWebview" type="info" size="small" plain @click="toggleNovelConfigShow">⚙{{ $t('novel.settings.title') }}</van-button>
+            <van-button v-if="showPntBtn" type="info" size="small" plain @click="showNovelTransSettings = true">⚙翻译设置</van-button>
+          </div>
         </div>
         <keep-alive>
           <AuthorNovelCard v-if="artwork.author" :id="artwork.author.id" :key="artwork.id" />
@@ -100,6 +103,17 @@
     </keep-alive>
     <van-share-sheet v-model="showShare" :title="$t('artwork.share.title')" :cancel-text="$t('common.cancel')" :options="shareOptions" @select="onShareSel" />
     <NovelTextConfig ref="novelConfigRef" />
+    <van-popup
+      v-model="showNovelTransSettings"
+      position="bottom"
+      class="translate-settings-popup"
+      round
+      closeable
+      close-icon-position="top-right"
+      get-container="body"
+    >
+      <NovelTranslateSettings />
+    </van-popup>
     <van-popup
       v-model="showComments"
       class="comments-popup"
@@ -132,6 +146,7 @@ import TopBar from '@/components/TopBar'
 import NovelView from './components/NovelView.vue'
 import NovelEmbedView from './components/NovelEmbedView.vue'
 import NovelTextConfig from './components/NovelTextConfig.vue'
+import NovelTranslateSettings from './components/NovelTranslateSettings.vue'
 import Meta from './components/Meta'
 import AuthorNovelCard from './components/AuthorNovelCard.vue'
 import RelatedNovel from './components/RelatedNovel.vue'
@@ -168,6 +183,7 @@ export default {
     RelatedNovel,
     CommentsArea,
     NovelTextConfig,
+    NovelTranslateSettings,
   },
   beforeRouteUpdate(_to, _from, next) {
     this.recordScrollPosition()
@@ -198,7 +214,8 @@ export default {
       isCollapseMeta: false,
       showComments: false,
       showPntPopover: false,
-      pntActions: [],
+      kissLoaded: !!document.querySelector('#kiss-translator'),
+      showNovelTransSettings: false,
       showDlPopover: false,
       novelDlOptions: [
         { text: 'TXT', val: 'txt' },
@@ -224,6 +241,19 @@ export default {
   },
   computed: {
     ...mapGetters(['isCensored']),
+    pntActions() {
+      const model = store.state.appSetting.novelDefAiModel || 'hy_mt'
+      const modelKey = aiModelMap[model] ? model : 'hy_mt'
+      const modelName = aiModelMap[modelKey].split('/').pop()
+      return [
+        !this.kissLoaded && ({ text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' }),
+        isNativeTranslatorSupported && ({ text: 'Chrome 内置翻译', className: 'sc', key: 'native' }),
+        { text: `AI 翻译(${modelName})`, className: 'sc', key: `sc_${modelKey}` },
+        { text: '微软翻译', className: 'ms', key: 'ms' },
+        { text: '谷歌翻译', className: 'gg', key: 'gg' },
+        { text: '有道翻译', className: 'yd', key: 'yd' },
+      ].filter(Boolean)
+    },
     showPntBtn() {
       if (store.state.appSetting.isAutoLoadKissT || store.state.appSetting.useNovelWebview) {
         return false
@@ -257,18 +287,6 @@ export default {
     },
   },
   mounted() {
-    this.pntActions = [
-      !document.querySelector('#kiss-translator') && ({ text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' }),
-      isNativeTranslatorSupported && ({ text: 'Chrome 内置翻译', className: 'sc', key: 'native' }),
-      { text: 'AI 翻译(GLM-4-9B)', className: 'sc', key: 'sc_glm' },
-      // { text: 'AI 翻译(Qwen2.5-7B)', className: 'sc', key: 'sc_qwen2_5' },
-      { text: 'AI 翻译(Qwen3-8B)', className: 'sc', key: 'sc_qwen3' },
-      // { text: 'AI 翻译(Qwen3.5-4B)', className: 'sc', key: 'sc_qwen3_5' },
-      { text: 'AI 翻译(Hunyuan-MT-7B)', className: 'sc', key: 'sc_hy_mt' },
-      { text: '微软翻译', className: 'ms', key: 'ms' },
-      { text: '谷歌翻译', className: 'gg', key: 'gg' },
-      { text: '有道翻译', className: 'yd', key: 'yd' },
-    ].filter(Boolean)
     this.init()
   },
   methods: {
@@ -559,7 +577,10 @@ export default {
         ms: async () => this.fanyi('ms', await getNoTranslateWords(this.artwork.tags)),
         gg: () => this.fanyi('gg'),
         yd: () => this.fanyi('yd'),
-        kiss_t: () => loadKISSTranslator(),
+        kiss_t: async () => {
+          await loadKISSTranslator(false, true)
+          this.kissLoaded = !!document.querySelector('#kiss-translator')
+        },
         native: () => this.aiTranslate('', '', true),
       }
       const fn = fns[action.key]
@@ -661,6 +682,15 @@ img[src*="https://api.moedog.org/qr/?url="]
   .related
     padding-left 16px
     padding-right 16px
+
+// 翻译设置弹窗：随 get-container="body" 挂到 body，需全局样式（scoped 不生效）
+// 参照 base.styl .setting-page .van-popup--bottom 的 10rem 居中模式
+.van-popup--bottom.translate-settings-popup
+  left 50%
+  width 10rem
+  height 80%
+  margin-left -5rem
+  overflow hidden
 </style>
 <style lang="stylus" scoped>
 .comments-title
