@@ -75,6 +75,23 @@ export const ManifestData = {}
 export const ModelName = {}
 
 // ---------------------------------------------------------------------------
+// Mobile detection — force CPU (WASM) inference on mobile devices
+// ---------------------------------------------------------------------------
+
+/**
+ * 移动端检测（Android / iOS / iPadOS）。
+ *
+ * 背景：manifest 的 runtime 为 ["webgpu", "wasm"]，安卓 Chrome/Edge 均有 WebGPU，
+ * 会话会优先建在 WebGPU EP 上。onnxruntime-web 的 WebGPU EP 在移动 GPU（Adreno/Mali）
+ * 上存在算子支持缺口与 fp16 精度问题，文本检测模型"成功"推理但输出空概率图（不抛异常）
+ * → 后处理过滤出 0 区域 → 误报"未找到文本"（detect/index.js L63-67）。
+ * 移动端强制 WASM（纯 CPU）推理以绕开该问题，代价仅为推理速度变慢。
+ */
+const IS_MOBILE =
+  typeof navigator !== 'undefined' &&
+  (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || /Mobile/i.test(navigator.userAgent))
+
+// ---------------------------------------------------------------------------
 // Manifest cache & URL resolution (CDN dual-mode)
 // ---------------------------------------------------------------------------
 
@@ -284,7 +301,11 @@ const sessionPromiseCache = new Map()
 export async function getModelSession(name, preferred, sessionOptions) {
   // Resolve model config and runtime
   const model = await getModel(name)
-  const runtime = preferred && preferred.length > 0 ? preferred : model.runtime
+  let runtime = preferred && preferred.length > 0 ? preferred : model.runtime
+  if (IS_MOBILE) {
+    runtime = runtime.filter(p => p === 'wasm')
+    if (runtime.length === 0) runtime = ['wasm']
+  }
   // Key alignment: must match worker-side sessionId in workers/onnx-worker.js
   const sessionOptionsKey = serializeOnnxSessionOptions(sessionOptions)
   const dedupedRuntime = runtime.filter((item, idx) => runtime.indexOf(item) === idx)
