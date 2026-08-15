@@ -44,7 +44,7 @@
         type="password"
         clearable
       />
-      <div class="engine-help" style="padding: 8px 16px; font-size: 12px; color: #969799">
+      <div class="engine-help">
         <van-icon name="info-o" /> 留空使用构建时默认配置，<a href="https://github.com/asadahimeka/shinobu-server" target="_blank" rel="noopener">点击前往 GitHub 查看部署与自建说明</a>
       </div>
     </van-cell-group>
@@ -74,14 +74,14 @@
           <van-radio name="google_web">Google 翻译</van-radio>
         </van-radio-group>
         <div v-if="translationTranslator === 'google_web'" class="engine-help">
-          <van-icon name="info-o" /> 使用 Google 翻译网页版接口，无需 API Key。需要能访问 translate.googleapis.com。
+          <van-icon name="info-o" /> 使用 Google 翻译网页版接口，无需 API Key。<br><span style="margin-left:1.5em">需要能访问 translate.googleapis.com</span>
         </div>
       </van-cell-group>
 
       <div class="engine-help">
         <van-icon name="info-o" /> 如需在 Pixiv 原站阅读漫画，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>
       </div>
-      <div class="engine-help" style="font-size: 0.22rem">
+      <div class="engine-help">
         <van-icon name="info-o" /> Firefox 用户可前往 <a href="https://github.com/DonutShinobu/ShinobuTranslator" target="_blank" rel="noreferrer">GitHub Releases</a> 手动安装
       </div>
 
@@ -486,7 +486,7 @@ export default {
 <style lang="stylus" scoped>
 .translate-settings
   height 100%
-  padding 0.2rem 0
+  padding 0.8rem 0
   box-sizing border-box
   overflow-y auto
 
@@ -513,17 +513,17 @@ export default {
     align-items center
 
   ::v-deep .van-radio__label
-    font-size 0.26rem
+    font-size 14PX
     color #333
 
   ::v-deep .van-cell-group__title
-    font-size 0.28rem
+    font-size 13PX
     font-weight bold
     padding 0.3rem 0.3rem 0.1rem
     color #555
 
   .engine-help
-    font-size 0.24rem
+    font-size 12PX
     color #666
     padding 0.1rem 0.3rem 0.2rem
     line-height 1.5
@@ -544,7 +544,7 @@ export default {
       border 1px solid #ddd
       border-radius 0.08rem
       background #fff
-      font-size 0.24rem
+      font-size 13PX
       color #333
 
   .model-test-result
@@ -552,7 +552,7 @@ export default {
     padding 0.15rem 0.2rem
     border 1px solid #eee
     border-radius 0.08rem
-    font-size 0.24rem
+    font-size 13PX
     line-height 1.8
     color #555
 
@@ -572,6 +572,6 @@ export default {
 
     .result-duration
       margin-left 0.1rem
-      font-size 0.22rem
+      font-size 12PX
       color #999
 </style>

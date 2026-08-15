@@ -20,7 +20,7 @@
           </van-cell>
           <van-cell>
             <template #title>
-              <van-radio name="sc">AI翻译</van-radio>
+              <van-radio name="sc">AI 翻译</van-radio>
             </template>
           </van-cell>
           <van-cell v-if="isNativeTranslatorSupported">
@@ -38,11 +38,7 @@
     </van-cell-group>
 
     <van-cell-group title="AI 翻译模型">
-      <van-cell
-        title="AI 翻译模型"
-        label="选择 AI 翻译模型"
-        class="preset-model-cell"
-      >
+      <van-cell title="选择 AI 翻译模型" class="preset-model-cell">
         <select v-model="aiModel" class="preset-model-select">
           <option v-for="(model, key) in aiModelMap" :key="key" :value="key">
             {{ model.split('/').pop() }}
@@ -161,11 +157,11 @@ export default {
     align-items center
 
   ::v-deep .van-radio__label
-    font-size 0.26rem
+    font-size 14PX
     color #333
 
   ::v-deep .van-cell-group__title
-    font-size 0.28rem
+    font-size 13PX
     font-weight bold
     padding 0.3rem 0.3rem 0.1rem
     color #555
@@ -182,6 +178,6 @@ export default {
       border 1px solid #ddd
       border-radius 0.08rem
       background #fff
-      font-size 0.24rem
+      font-size 13PX
       color #333
 </style>
