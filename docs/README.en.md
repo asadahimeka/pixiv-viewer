@@ -16,7 +16,7 @@
 <img src="https://img.shields.io/github/package-json/v/asadahimeka/pixiv-viewer"  alt="Version">
 <img src="https://img.shields.io/badge/license-AGPL--3.0-orange"  alt="License" >
 <img src="https://img.shields.io/website?url=https%3A%2F%2Fpixiv.pictures&logo=cloudflare&label=Pages" alt="Pages" >
-<img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer/total?logo=github" alt="Downloads" >
+<img src="https://img.shields.io/github/downloads/asadahimeka/pixiv-viewer-app/total?logo=github" alt="Downloads" >
 </p>
 
 English | [中文](../README.md)
@@ -50,126 +50,156 @@ Download: ⏬ [GitHub Releases](https://github.com/asadahimeka/pixiv-viewer/rele
 
 ### 🏠 Home
 
-* **Multiple Content Types**: Supports illustrations, manga, novels, bookmarks, and more
-* **Rankings**: View daily popular works
-* **Featured Specials**: Browse official curated special content
-* **Personalized Recommendations**: Recommendations based on personal preferences
-* **Discover Page**: Explore site-wide popular and newly discovered works
-* **Random Browse**: Randomly browse high-quality works
-* **Bookmarks**: Centralized display of favorite works
+| Feature | Description |
+| --- | --- |
+| Multiple Content Types | Illustrations, manga, novels, bookmarks, and more |
+| Rankings | View daily popular works |
+| Featured Specials | Browse official curated special content |
+| Personalized Recommendations | Recommendations based on personal preferences |
+| Discover Page | Explore site-wide popular and newly discovered works |
+| Random Browse | Randomly browse high-quality works |
+| Bookmarks | Centralized display of favorite works |
 
 ### 🔍 Search
 
-* **Comprehensive Search**: Search illustrations & manga, novels, users, bookmarks
-* **Trending Keywords**: Display current trending search terms (long press to view tag cover)
-* **Smart Suggestions**: Automatic keyword autocomplete
-* **Search Filters**: Filter by bookmarks count, submission time, etc.
-* **Popular Preview**: Non-member preview of popular works (first 30 items)
-* **Search by Image**: Upload images to search for similar works
-* **Direct ID Navigation**: Enter a work/user ID directly in the search box to jump quickly
+| Feature | Description |
+| --- | --- |
+| Comprehensive Search | Illustrations & manga, novels, users, bookmarks |
+| Trending Keywords | Current trending search terms (long press for tag cover) |
+| Smart Suggestions | Automatic keyword autocomplete |
+| Search Filters | Filter by bookmark count, submission time, etc. |
+| Popular Preview | Non-member preview of popular works (first 30) |
+| Search by Image | Upload images to find similar works |
+| Direct ID Navigation | Enter a work/user ID in the search box to jump directly |
 
 ### 📊 Rankings
 
-* **Multi-dimensional Rankings**: Overall, illustrations, manga, animations, novels
-* **R18 / AI Rankings**: View adult content and AI-generated works rankings
-* **Historical Rankings**: View rankings by date
+| Feature | Description |
+| --- | --- |
+| Multi-dimensional Rankings | Overall / illustrations / manga / animations / novels |
+| R18 / AI Rankings | Adult content and AI-generated works rankings |
+| Historical Rankings | View rankings by date |
 
 ### 📱 Activity
 
-* **Following Updates**: View new works from followed users
-* **My Bookmarks**: View bookmarked illustrations and novels
-* **Followed Users**: View followed users
-* **Recommended Users**: View recommended user list
-* **Latest Works**: Browse the latest uploaded works site-wide
+| Feature | Description |
+| --- | --- |
+| Following Updates | New works from followed users |
+| My Bookmarks | Bookmarked illustrations and novels |
+| Followed Users | Followed user list |
+| Recommended Users | Recommended user list |
+| Latest Works | Latest uploads site-wide |
 
 ### 🖼️ Artwork Page
 
-* **Illustration Actions**: Bookmark, unbookmark, download, view comments, share
-* **Source Link**: Quick access to the Pixiv source page
-* **ID Copy**: One-click copy of artwork/author ID
-* **Animation Playback**: Supports Ugoira playback
+| Feature | Description |
+| --- | --- |
+| Illustration Actions | Bookmark, unbookmark, download, comment, share |
+| Source Link | Quick access to the Pixiv source page |
+| ID Copy | One-click copy of artwork / author ID |
+| Animation Playback | Supports Ugoira playback |
 
 #### Novel Reading
 
-* **Novel Download**: Download novel text, supports TXT, HTML, Markdown, DOC, PDF, EPUB formats
-* **Reading Settings**: Customize fonts, colors, reading direction, etc.
-* **Rich Text Rendering**: Support for novel rich text formatting
-* **Reading Progress Memory**: Auto-saves novel scroll position for continued reading
-* **Native Reader**: Immersive WebView novel reading experience
-* **Novel Translation**: Integrated online translation
+| Feature | Description |
+| --- | --- |
+| Novel Download | TXT / HTML / Markdown / DOC / PDF / EPUB |
+| Reading Settings | Customize fonts, colors, reading direction, etc. |
+| Rich Text Rendering | Novel rich text formatting |
+| Reading Progress Memory | Auto-saves scroll position for continued reading |
+| Native Reader | Immersive WebView reading experience |
+| Novel Translation | Integrated online translation |
 
 #### Manga Translation
 
-* **One-Click Translation**: Built-in manga image translation engine, no external services required
-* **Local Inference**: Text detection, OCR, and image inpainting via ONNX Runtime Web, all processed locally in the browser
-* **Typesetting Engine**: Horizontal/vertical text layout, automatic bubble matching and reading order
-* **Multiple Model Providers**: Supports SiliconCloud and other LLM providers for translation
-* **Original/Translated Toggle**: One-click comparison between original and translated images
+| Feature | Description |
+| --- | --- |
+| One-Click Translation | Built-in translation engine, no external services required |
+| Local Inference | Detection / OCR / inpainting via ONNX Runtime Web, all in-browser |
+| Typesetting Engine | Horizontal / vertical text layout, bubble & reading order matching |
+| Multiple Model Providers | SiliconCloud and other LLM providers |
+| Original / Translated Toggle | One-click comparison of results |
 
 ### 👤 Author Page
 
-* **Follow Management**: Follow / unfollow authors
-* **Works Browsing**: View author's illustrations, manga, bookmarks, novels, and collections
-* **Series View**: View author's manga and novel series
-* **Tag Browsing**: View commonly used illustration tags by the author
-* **Related Users**: Discover similar authors
-* **Twitter Media**: View images/videos posted by the author on X (Twitter)
+| Feature | Description |
+| --- | --- |
+| Follow Management | Follow / unfollow authors |
+| Works Browsing | Illustrations, manga, bookmarks, novels, collections |
+| Series View | Manga and novel series |
+| Tag Browsing | Author's commonly used illustration tags |
+| Related Users | Discover similar authors |
+| Twitter Media | Images / videos posted on X (Twitter) |
 
 ### ⚙️ Settings
 
 #### Login Methods
 
-* **RefreshToken Login**: Log in directly using Pixiv RefreshToken
-* **OAuth Login**: Log in via Pixiv OAuth authorization
-* **Cookie Login**: Log in using Cookies (not recommended)
+| Feature | Description |
+| --- | --- |
+| RefreshToken Login | Log in directly using Pixiv RefreshToken |
+| OAuth Login | Log in via Pixiv OAuth authorization |
+| Cookie Login | Cookie-based login (not recommended) |
 
 #### Content Control
 
-* **R18 Toggle**: Control whether adult content is displayed
-* **AI Works Toggle**: Control whether AI-generated works are displayed
-* **Local Blacklist**: Block works from specific tags or users, with tag-based UI management and individual removal
+| Feature | Description |
+| --- | --- |
+| R18 Toggle | Control adult content display |
+| AI Works Toggle | Control AI-generated works display |
+| Local Blacklist | Block tags / users, tag-based UI, individually removable |
 
 #### Browsing Experience
 
-* **Multi-language Support**: Supports Simplified Chinese, Traditional Chinese, English, Russian, etc.
-* **Dark Mode**: Eye-friendly night mode
-* **Custom Theme Color**: Customize application theme color
-* **Image Feed Layouts**: Multiple layout options (masonry, grid, virtual list, etc.)
-* **Image Quality Selection**: Supports Medium, Large, Large (WebP), and more
-* **Swipe Navigation**: Swipe left/right on artwork detail pages
-* **Page Transitions**: Multiple page transition animation effects
+| Feature | Description |
+| --- | --- |
+| Multi-language Support | Simplified / Traditional Chinese, English, Russian, etc. |
+| Dark Mode | Eye-friendly night mode |
+| Custom Theme Color | Customize app theme color |
+| Image Feed Layouts | Masonry, grid, virtual list, etc. |
+| Image Quality Selection | Medium / Large / Large (WebP), etc. |
+| Swipe Navigation | Swipe left / right on detail pages |
+| Page Transitions | Multiple page transition animations |
 
 #### Network & Data
 
-* **Multiple Image Proxies**: Switch between multiple image proxy services
-* **Multiple API Instances**: Switch between multiple backend API instances
-* **AppAPI Proxy Mode**: Directly connect to Pixiv App API (requires self-hosted proxy)
-* **pximg Direct Access**: Direct access to Pixiv original image servers
-* **IndexedDB Cache**: Local caching to improve loading speed
-* **History**: View browsing history
-* **Clear Cache**: One-click application cache clearing
+| Feature | Description |
+| --- | --- |
+| Multiple Image Proxies | Switch between image proxy services |
+| Multiple API Instances | Switch between backend API instances |
+| AppAPI Proxy Mode | Direct Pixiv App API connection (self-hosted proxy required) |
+| pximg Direct Access | Direct access to Pixiv image servers |
+| IndexedDB Cache | Local caching for faster loading |
+| History | Browsing history |
+| Clear Cache | One-click cache clearing |
 
 #### Download Features
 
-* **Long Press Download**: Long press on list images to quickly download
-* **Long Press Block**: Long press to quickly block users
-* **File System Access API**: Download using modern browser File System Access API
-* **Tampermonkey Support**: Download via Tampermonkey scripts
-* **Custom Filename Format**: Customize download filename templates
-* **Animated Export Formats**: Supports ZIP, GIF, WebM, APNG, MP4, AVIF formats
+| Feature | Description |
+| --- | --- |
+| Long Press Download | Long press list images to download |
+| Long Press Block | Long press to quickly block users |
+| File System Access API | Modern browser File System Access API |
+| Tampermonkey Support | Download via Tampermonkey scripts |
+| Custom Filename Format | Custom download filename templates |
+| Animated Export Formats | ZIP / GIF / WebM / APNG / MP4 / AVIF |
 
 #### Backup & Restore
 
-* **Settings Backup**: Backup current app settings to a file and restore later
-* **History Backup**: Backup browsing history to a file and restore later
-* **Cloud Sync**: Multi-device data sync with PBKDF2 key derivation + AES encryption, conflict detection and smart merge
-* **Export RefreshToken**: Export RefreshToken for use in other applications
+| Feature | Description |
+| --- | --- |
+| Settings Backup | Backup / restore app settings |
+| History Backup | Backup / restore browsing history |
+| Cloud Sync | PBKDF2 + AES encryption, conflict detection & smart merge |
+| Export RefreshToken | For use in other applications |
 
 #### Client Support
 
-* [x] PWA Installation
-* [x] Android / Windows Versions
-* [x] iOS / macOS Versions
+| Platform | Support |
+| --- | --- |
+| PWA Installation | ✅ |
+| Android / Windows | ✅ |
+| iOS / macOS | ✅ |
 
 ---
 
