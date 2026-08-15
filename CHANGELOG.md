@@ -60,6 +60,7 @@
 - *(store)* Add novelDefAiModel appSetting default
 - *(translate)* Add novel translation settings panel component
 - *(translate)* Wire novel translation settings into Novel page
+- *(translate)* Allow manga translation without login
 
 ### 🐛 Bug Fixes
 
@@ -97,6 +98,7 @@
 - *(translate)* TranslateDebug data + consent dialog + extension links
 - *(translate)* Release shinobu model memory + clear model cache + misc cleanup
 - *(translate)* Helper script prompt + live stage timings + misc UI
+- *(translate)* Force CPU (WASM) inference on mobile
 
 ### 💼 Other
 
@@ -116,11 +118,17 @@
 - Update readme
 - *(agents)* Playwright QA notes + Shinobu translation operational notes
 - Update docs
+- Update readme
 
 ### ⚡ Performance
 
 - *(vant)* Unify to lib build via vant-apis facade
 - *(ort)* Isolate onnxruntime-web chunk and exclude from SW precache
+
+### 🎨 Styling
+
+- *(translate)* Adjust settings panels typography and spacing
+- *(theme)* Sakuria card-first containers for detail/user pages
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -150,6 +158,7 @@
 - Disable model CDN env defaults + pxcl SW cache exclusion
 - Release v1.36.0
 - Release v1.36.1
+- Release v1.36.2
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
