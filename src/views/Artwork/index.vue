@@ -30,7 +30,13 @@
         </div>
         <div class="ia-right">
           <van-skeleton class="skeleton" title avatar :row="5" row-width="200px" avatar-size="42px" :loading="loading">
-            <ArtworkMeta ref="artworkMeta" :artwork="artwork" :maybe-ai-author="maybeAiAuthor" @ugoira-download="showUgPanelFromDlBtn" @update-author-follow="updateAuthorFollow" />
+            <ArtworkMeta
+              ref="artworkMeta"
+              :artwork="artwork"
+              :maybe-ai-author="maybeAiAuthor"
+              @ugoira-download="showUgPanelFromDlBtn"
+              @update-author-follow="updateAuthorFollow"
+            />
           </van-skeleton>
           <MangaTranslateToolbar
             v-if="showPicTranslateBtn"
@@ -134,16 +140,6 @@ import MangaTranslateToolbar from './components/MangaTranslateToolbar'
 import MangaTranslateSettings from './components/MangaTranslateSettings'
 // import { mintFilter } from '@/utils/filter'
 
-// 服务端翻译结构化错误码 → 中文 toast（shinobu-server 契约，见其 app.js ERROR_STATUS）
-const SERVER_ERROR_TOAST = {
-  UNAUTHORIZED: '服务端鉴权失败',
-  IMAGE_FETCH_FAILED: '图片下载失败',
-  IMAGE_TOO_LARGE: '图片过大',
-  LLM_RATE_LIMITED: 'LLM 限流，请稍后重试',
-  PIPELINE_FAILED: '翻译失败',
-  JOB_FAILED: '翻译失败',
-}
-
 export default {
   name: 'Artwork',
   components: {
@@ -214,6 +210,9 @@ export default {
       translateErrorCount: 0,
       showTranslateSettings: false,
       pipelineAbort: null,
+      // 标记本组件实例是否实际运行过 shinobu 管线（创建过 ONNX session）
+      // deactivated() 仅在置位时 import modelRegistry 并释放 ~200MB session
+      shinobuSessionsUsed: false,
       isActive: true,
     }
   },
@@ -225,7 +224,7 @@ export default {
       : {}
   },
   computed: {
-    ...mapGetters(['isCensored', 'isLoggedIn']),
+    ...mapGetters(['isCensored']),
     isSimulatedMeta() {
       return this.artwork.width == 0
     },
@@ -249,7 +248,6 @@ export default {
     showPicTranslateBtn() {
       const tags = JSON.stringify(this.artwork.tags)
       return (
-        this.isLoggedIn &&
         i18n.locale.includes('zh') &&
         this.artwork.x_restrict < 1 &&
         (this.artwork.type === 'manga' || /manga|漫画|漫畫|マンガ|まんが/i.test(tags)) &&
@@ -314,10 +312,17 @@ export default {
     // canvases are released in beforeDestroy only
     // Release debug artifacts (currentArtifacts) — full-size canvases, safe to GC
     this.currentArtifacts = null
-    // Release ONNX sessions + terminate the Comlink worker (~200MB)
-    import('@/utils/translate/shinobu/runtime/modelRegistry').then(m => {
-      m.disposeAllModelSessions().catch(err => console.warn('dispose models failed:', err))
-    })
+    // Release ONNX sessions + terminate the Comlink worker (~200MB) —
+    // only when this instance actually ran the shinobu pipeline
+    if (this.shinobuSessionsUsed) {
+      import('@/utils/translate/shinobu/runtime/modelRegistry').then(m => {
+        m.disposeAllModelSessions()
+          .catch(err => console.warn('dispose models failed:', err))
+          .finally(() => {
+            this.shinobuSessionsUsed = false
+          })
+      })
+    }
   },
   beforeDestroy() {
     console.log('[Artwork] beforeDestroy — releasing all translation canvases')
@@ -719,6 +724,7 @@ export default {
         }
         const imageFile = new File([imageBlob], `page-${pageIndex}.png`, { type: imageBlob.type || 'image/png' })
 
+        this.shinobuSessionsUsed = true
         const { runPipeline } = await import('@/utils/translate/shinobu')
         const artifacts = await runPipeline(imageFile, config, onProgress, { signal: abortController.signal })
 
@@ -846,6 +852,15 @@ export default {
           // 非 JSON 错误体，仅用 HTTP 状态兜底
         }
         return { code, message, detail }
+      }
+      // 服务端翻译结构化错误码 → 中文 toast（shinobu-server 契约，见其 app.js ERROR_STATUS）
+      const SERVER_ERROR_TOAST = {
+        UNAUTHORIZED: '服务端鉴权失败',
+        IMAGE_FETCH_FAILED: '图片下载失败',
+        IMAGE_TOO_LARGE: '图片过大',
+        LLM_RATE_LIMITED: 'LLM 限流，请稍后重试',
+        PIPELINE_FAILED: '翻译失败',
+        JOB_FAILED: '翻译失败',
       }
       const failedJobToast = (errorCode, message) => {
         if (SERVER_ERROR_TOAST[errorCode]) return SERVER_ERROR_TOAST[errorCode]
