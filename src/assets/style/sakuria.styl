@@ -15,6 +15,7 @@ sakuria-light()
   // ---- token（--sakuria-* 命名空间，避免与 md/ios26 冲突） ----
   --sakuria-bg: #FFF8F9
   --sakuria-surface: #FFFFFF
+  --sakuria-surface-2: #FFF4F7
   --sakuria-ink: #2b1f2a
   --sakuria-ink-2: #6b5870
   --sakuria-border: #f4e1e8
@@ -52,14 +53,32 @@ sakuria-light()
   .illusts .user_info
     border-radius: var(--sakuria-r-lg)
 
+  .image-card.isOuterMeta
+    .image-card-wrapper
+      border-radius 0
+    .image
+      border-radius: var(--sakuria-r-lg) var(--sakuria-r-lg) 0 0
+
+  .image-card, .novel-card, .user_info:has(.user_avatar+.user_name+.cover)
+    border 1PX solid var(--sakuria-border)
+
   .van-list .image-card,
-  .justified-container .image-card.isOuterMeta
+  .justified-container .image-card.isOuterMeta,
+  .user_info:has(.user_avatar+.user_name+.cover)
     box-shadow: var(--sakuria-shadow)
 
   .justified-container .image-card.isOuterMeta
     background: var(--sakuria-surface)
 
+  .novel-card
+    box-shadow: var(--sakuria-shadow)
+    background: var(--sakuria-surface) !important
+    .image
+      border 1PX solid var(--sakuria-border)
+      border-radius: 8PX
+
   // ---- 按钮 / 搜索框 / 分类 tab：药丸形 ----
+  .van-button,
   #app .van-button
     border-radius: var(--sakuria-r-pill)
 
@@ -82,21 +101,242 @@ sakuria-light()
     .van-hairline::after
       border-color: var(--sakuria-border)
 
-  // ---- 标签：点缀色系区分类型（原标签珊瑚深字 / 译名标签 mint） ----
-  #app .artwork-meta .tag-list .tag.name
-    color: #b23b6b !important
+  // ---- 标签：点缀色系区分类型 ----
+  #app .artwork-meta .tag-list
+    gap 7PX
+    .tag.name
+      padding 0 10PX
+      border-radius var(--sakuria-r-pill)
+      color: #b23b6b !important
+      white-space: nowrap
+      overflow: hidden
+      text-overflow: ellipsis
+      &:nth-child(5n+1 of .name)
+        background: #ffe0eb !important
+        color: #b23b6b !important
+      &:nth-child(5n+2 of .name)
+        background: #ffe4cc !important
+        color: #B86B26 !important
+      &:nth-child(5n+3 of .name)
+        background: #d6f2e5 !important
+        color: #1A6E4A !important
+      &:nth-child(5n+4 of .name)
+        background: #e6dcff !important
+        color: #5A45A0 !important
+      &:nth-child(5n of .name)
+        background: #dcebff !important
+        color: #2A6FDB !important
   #app .artwork-meta .tag-list .tag.translated
     margin-top 1PX
     margin-bottom 1PX
-    padding 0 4PX
-    color: #1f7a56 !important
-    background: linear-gradient(rgba(255, 255, 255, .89)), #7bd4b0 !important
-    border-radius 4PX
+    padding 0 10PX
+    color: var(--sakuria-ink-2) !important
+    background: var(--sakuria-surface-2) !important
+    border-radius var(--sakuria-r-pill)
+    white-space: nowrap
+    overflow: hidden
+    text-overflow: ellipsis
+
+  .member-tags .member-tag
+    padding 4PX 12PX
+    border-radius: 12PX
+    font-size 12PX
+    .member-tag-main
+      font-size 13PX
+
+  .comments-popup
+    border-radius: var(--sakuria-r-lg) 0 0 var(--sakuria-r-lg)
+    .comments-item
+      border-bottom 1px solid var(--sakuria-border)
+    img
+      border-radius 8PX
+      border 1PX solid var(--sakuria-border)
+
+  // ---- 卡片容器化（card-first）：作品详情信息区 + 作者详情信息区 ----
+  // 浅色：白卡浮奶油粉底；暗色由 sakuria-dark() 的 surface token 接管（见暗色块）
+  .artwork-meta
+    background: var(--sakuria-surface) !important
+    border-radius: var(--sakuria-r-lg) !important
+    padding: 16PX !important
+    box-shadow: var(--sakuria-shadow) !important
+    border 1PX solid var(--sakuria-border) !important
+
+    // 作者卡（卡中卡：浅粉底强调）
+    .author-info
+      padding: 12PX !important
+      background: var(--sakuria-surface-2) !important
+      border-radius: 12PX !important
+      border 1PX solid var(--sakuria-border) !important
+      &.hidePIDMask+div
+        display none
+
+    // 简介区（浅粉底卡，突出文本）
+    .caption
+      padding: 12PX !important
+      background: var(--sakuria-surface-2) !important
+      border-radius: 12PX !important
+      border 1PX solid var(--sakuria-border) !important
+      &.no_caption
+        opacity 0
+        padding 0 !important
+
+    .meta_btns
+      margin-bottom 0.1rem
+
+  .artwork:not(.novel) .author-card
+    background: var(--sakuria-surface)
+    border-radius: var(--sakuria-r-lg)
+    padding: 16PX
+    box-shadow: var(--sakuria-shadow)
+    border 1PX solid var(--sakuria-border)
+    .van-cell__title .icon
+      width 1.2em
+      height 1.2em
+      margin-right 0.1rem
+
+  // 作者页：头部做成居中卡片（横幅在卡内不全宽）
+  // 移动端（<1280px）：宽 90% + 居中 + 留白；桌面端（≥1280px）：宽 1200PX
+  // 用 #app .users 前缀匹配 base 特异性（base 的 #app .users .info-container .info 是 1280px 横向布局）
+  #app .users .info-container
+    max-width: 90%
+    margin: 20PX auto 40PX
+    background: var(--sakuria-surface)
+    border-radius: var(--sakuria-r-lg)
+    box-shadow: var(--sakuria-shadow)
+    overflow: hidden
+
+    // 横幅贴合卡片顶部
+    .bg-cover
+      border-radius: var(--sakuria-r-lg) var(--sakuria-r-lg) 0 0
+    .info .avatar img
+      box-shadow: var(--sakuria-shadow)
+      border 1PX solid var(--sakuria-border)
+
+  #app .com_sel_tab
+    padding 0 0.3rem
+  #app .com_sel_tabs .com_sel_tab:not(:last-child)
+    margin-right: 0.2rem
+
+  // 移动端信息区：居中卡片布局（头像悬浮横幅上）
+  @media screen and (max-width: 1279PX)
+    .comments-popup
+      border-radius: var(--sakuria-r-lg) var(--sakuria-r-lg) 0 0
+    .artwork-meta,
+    .author-card
+      width: 84% !important
+      margin-left auto !important
+      margin-right auto !important
+    #app .users .info-container
+      max-width: 95%
+      margin 20PX auto
+      .info
+        position: relative
+        padding: 16PX
+        padding-top: 1.6rem
+
+  // 桌面端（≥1280px）：容器限宽 1200PX 居中；内部布局遵循 base 的横向规则
+  @media screen and (min-width: 1280PX)
+    .home-i-tabs .sel-tabs,
+    .search .com_sel_tabs
+      padding 3PX 6PX
+      border-radius var(--sakuria-r-pill)
+      border 1PX solid var(--sakuria-border)
+      background: var(--sakuria-surface-2)
+      .com_sel_tab
+        margin 0
+        padding 0 12PX
+        border-radius var(--sakuria-r-pill)
+        font-size 18PX
+        color: var(--sakuria-ink) !important
+        background transparent !important
+        border 0 !important
+        box-shadow none !important
+        &.cur
+          padding 0 16PX
+          color var(--sakuria-surface) !important
+          background: var(--accent-color) !important
+          box-shadow var(--sakuria-shadow) !important
+    .outer-meta .content
+      padding 4PX 12PX 8PX
+      .title
+        font-size 15PX
+      .author
+        font-size 13PX
+    #app .rank .top
+      .com_sel_tab
+        padding 0 0.3rem
+        color #fff
+        background: var(--accent-color)
+        box-shadow: 0 4px 14px -6px var(--accent-color), 0 1px 2px rgba(255,111,159,.06),0 1px 0 rgba(43,31,42,.02)
+      .nav
+        padding 6PX 10PX
+        border-radius var(--sakuria-r-pill)
+        border 1PX solid var(--sakuria-border)
+        background: var(--sakuria-surface-2)
+        &::-webkit-scrollbar
+          width 6PX
+          height 6PX
+        a
+          margin 0
+          padding 8PX 12PX
+          border-radius var(--sakuria-r-pill)
+          font-size 18PX
+          color: var(--sakuria-ink) !important
+          background transparent !important
+          border 0 !important
+          &.cur
+            padding 8PX 15PX
+            color var(--accent-color) !important
+            background: var(--sakuria-surface) !important
+            box-shadow var(--sakuria-shadow)
+    #app .History.illusts
+      .van-tabs__nav
+        margin-bottom 15PX
+        padding-bottom 0 !important
+        border-radius: 8PX
+      .van-tabs__line
+        bottom 0 !important
+      .van-tabs__content
+        .illusts
+          max-width 1200PX
+          margin-left auto
+          margin-right auto
+    #app .users .info-container
+      max-width: 1200PX
+      .bg-cover
+        height: 300PX
+        &:not(.hasbgcover)
+          height 200PX
+      .info
+        padding-left 1rem
+        padding-right 1rem
+        .avatar
+          left 1.5rem
+        .share_btn
+          right 1.5rem
+        .follow_btn
+          right 2.5rem
+        .name
+          margin-top -0.1rem !important
+          margin-bottom: 0.2rem !important
+      .user_id_sns
+        padding-left: 0 !important
+        .site-list:first-child
+          padding-left: 3.7rem !important
+        .site-list.social-links
+          padding-left: 0.1rem !important
+      .user_follow_region
+        margin-top: 0.7rem
+      .user_follow_region,
+      .user_link,
+      .detail
+        padding-left: 0.8rem !important
 
 sakuria-dark()
   // ---- 暗色 token（暖黑紫调，替代冷黑 #16161a） ----
   --sakuria-bg: #1b1218
   --sakuria-surface: #271b23
+  --sakuria-surface-2: #312027
   --sakuria-ink: #fbeef3
   --sakuria-primary: #ff8ab5
 
@@ -120,6 +360,15 @@ sakuria-dark()
     .van-action-sheet__cancel,
     .van-action-sheet__item
       background: var(--sakuria-surface)
+
+  // 卡片容器暗色覆盖（sakuria-light 的白卡在此接管为暗色 surface）
+  .artwork-meta,
+  #app .users .info-container
+    background: var(--sakuria-surface)
+    box-shadow: var(--sakuria-shadow)
+    .author-info,
+    .caption
+      background: var(--sakuria-surface-2)
 
   .van-dialog,
   .novel-card,

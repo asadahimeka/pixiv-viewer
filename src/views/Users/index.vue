@@ -44,7 +44,7 @@
             <div class="share_btn" @click="share">
               <Icon class="icon" name="share" />
             </div>
-            <div>
+            <div class="user_id_sns">
               <ul class="site-list">
                 <li class="site user_account">
                   <a target="_blank" rel="noreferrer" :href="'https://pixiv.me/' + userInfo.account">
@@ -68,7 +68,7 @@
                 </li>
               </ul>
             </div>
-            <div>
+            <div class="user_follow_region">
               <span v-if="isCurrentUser" class="follow" style="cursor: pointer;" @click="toFollowedUsers">
                 {{ $t('user.following') }}
                 <span class="num">

@@ -1,6 +1,6 @@
 <template>
   <div class="illusts">
-    <masonry v-bind="$store.getters.novelMyProps">
+    <masonry v-bind="novelMyProps">
       <NovelCard
         v-for="art in artList"
         :key="art.id"
@@ -26,6 +26,15 @@ export default {
     return {
       artList: [],
       isLongpressing: false,
+      novelMyProps: {
+        gutter: '8px',
+        cols: {
+          600: 1,
+          1200: 2,
+          1600: 3,
+          default: 3,
+        },
+      },
     }
   },
   mounted() {

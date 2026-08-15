@@ -42,7 +42,7 @@ export default {
           700: 1,
           1000: 2,
           1600: 3,
-          default: 4,
+          default: 3,
         },
       },
     }

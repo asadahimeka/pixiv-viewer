@@ -6,7 +6,7 @@
     </div>
     <div class="author-info" :class="{ is_novel: isNovel, hidePIDMask }">
       <Pximg
-        v-if="!isNovel"
+        v-if="!isNovel && !hidePIDMask"
         class="avatar"
         nobg
         :src="artwork.author.avatar"
@@ -28,6 +28,7 @@
           </router-link>
         </div>
         <div class="author" :class="{ is_followed: artwork.author.is_followed }" @click="toAuthor(artwork.author.id)">
+          <Pximg v-if="hidePIDMask" class="avatar" nobg :src="artwork.author.avatar" alt="" />
           {{ artwork.author.name }}
         </div>
       </div>
@@ -116,7 +117,7 @@
       </template>
     </ul>
     <div :class="{ shrink: isShrink }" @click="isShrink = false">
-      <div class="caption" :class="{ censored }" @click.stop.prevent="handleClick($event)" v-html="artwork.caption">
+      <div class="caption" :class="{ censored, no_caption: !artwork.caption }" @click.stop.prevent="handleClick($event)" v-html="artwork.caption">
       </div>
       <Icon v-if="isShrink" class="dropdown" name="dropdown" scale="4" />
     </div>
@@ -693,10 +694,6 @@ export default {
         font-size 24px
         line-height 1.2
         color #666
-        &::before {
-          content: 'by '
-          color #999
-        }
       }
     }
 
@@ -708,19 +705,17 @@ export default {
     }
 
     &.hidePIDMask {
-      .avatar {
-        display none
+      .author {
+        display flex
+        align-items center
+        margin-top 0.2rem
+        margin-left 0
+        line-height 1.5
       }
-      .name-box {
-        max-width unset
-        .title, .author {
-          display inline-block
-        }
-        .author {
-          margin-top 0
-          margin-left 0.1rem
-          line-height 1.5
-        }
+      .avatar {
+        min-width unset
+        width 0.5rem
+        height 0.5rem
       }
     }
 
