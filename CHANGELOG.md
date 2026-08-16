@@ -99,6 +99,7 @@
 - *(translate)* Release shinobu model memory + clear model cache + misc cleanup
 - *(translate)* Helper script prompt + live stage timings + misc UI
 - *(translate)* Force CPU (WASM) inference on mobile
+- Style fixes
 
 ### 💼 Other
 
@@ -129,6 +130,7 @@
 
 - *(translate)* Adjust settings panels typography and spacing
 - *(theme)* Sakuria card-first containers for detail/user pages
+- *(theme)* Refine iOS26 glass + MD components per reference libs
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -159,6 +161,7 @@
 - Release v1.36.0
 - Release v1.36.1
 - Release v1.36.2
+- Release v1.36.3
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
