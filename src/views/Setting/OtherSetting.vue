@@ -751,10 +751,10 @@ export default {
       visualTheme: {
         show: false,
         actions: [
-          { name: 'D', _value: 'default' },
-          { name: 'S', _value: 'sakuria' },
-          { name: 'M', _value: 'md' },
-          { name: 'I', _value: 'ios26' },
+          { name: '默认', _value: 'default' },
+          { name: 'Sakuria', _value: 'sakuria' },
+          { name: 'MD', _value: 'md' },
+          { name: 'iOS', _value: 'ios26' },
         ],
       },
       visualThemeValue: getVisualTheme(),

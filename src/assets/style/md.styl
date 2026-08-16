@@ -69,6 +69,10 @@ md-apply()
     border-radius: var(--md-sys-shape-md)
     background-color: #EDE5F5
     background-color: unquote('color-mix(in srgb, var(--md-sys-color-primary) 11%, var(--md-sys-color-surface))')
+    &.isOuterMeta
+      .image-card-wrapper, .image
+        border-bottom-left-radius 0 !important
+        border-bottom-right-radius 0 !important
   .van-list .image-card
     box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.1), 0 1PX 3PX 1PX rgba(0, 0, 0, 0.12)
 
@@ -86,15 +90,42 @@ md-apply()
   .van-popup,
   .van-dialog,
   .van-calendar,
-  .van-share-sheet > button,
+  .van-dialog .van-dialog__footer button,
+  .van-share-sheet button,
+  .van-action-sheet button,
   .search-dropdown,
   #ldio-loading
-    background-color: var(--md-sys-color-surface-container-high) !important
+    background: var(--md-sys-color-surface-container-high) !important
   .van-dialog
     color: var(--md-sys-color-on-surface)
   // 弹层内单元格 → 透明（露出弹层表面，压制 theme-bg 的 accent 渐变）
-  .van-popup .van-cell
+  .van-popup .van-cell,
+  .van-action-sheet__gap
     background-color: transparent !important
+
+  // ===== 导航/底部栏/工具栏 → M3 不透明容器阶色（Konsta MD 做法：与 iOS 玻璃拉开差距） =====
+  #app .van-nav-bar,
+  #app .van-tabbar,
+    background-color: var(--md-sys-color-surface-container) !important
+    color: var(--md-sys-color-on-surface)
+
+  .top-bar .svg-icon,
+  .share_btn .svg-icon
+    color: var(--md-sys-color-on-surface) !important
+  .more_btn .svg-icon path
+    fill: var(--md-sys-color-on-surface) !important
+
+  .van-popover--dark
+    border-radius 8PX
+    .van-popover__content
+      background transparent !important
+      color: var(--md-sys-color-on-surface) !important
+
+  .my-virtual-swiper
+    .swiper-slide
+      background none
+    .image-card
+      backdrop-filter none
 
   // ===== 形状（Vant 2 无 CSS 变量，直接覆盖类） =====
   // 按钮 pill
@@ -103,28 +134,98 @@ md-apply()
   #app .van-button--square
     border-radius: 0
   // 弹层 28px
-  .van-popup--round
+  .van-popup--round,
+  #app .van-popup--round
     border-radius: var(--md-sys-shape-xl)
-  .van-popup--top.van-popup--round
+  .van-popup--top.van-popup--round,
+  #app .van-popup--top.van-popup--round
     border-radius: 0 0 var(--md-sys-shape-xl) var(--md-sys-shape-xl)
-  .van-popup--bottom.van-popup--round
+  .van-popup--bottom.van-popup--round,
+  #app .van-popup--bottom.van-popup--round
     border-radius: var(--md-sys-shape-xl) var(--md-sys-shape-xl) 0 0
-  .van-popup--left.van-popup--round
+  .van-popup--left.van-popup--round,
+  #app .van-popup--left.van-popup--round
     border-radius: 0 var(--md-sys-shape-xl) var(--md-sys-shape-xl) 0
-  .van-popup--right.van-popup--round
+  .van-popup--right.van-popup--round,
+  #app .van-popup--right.van-popup--round
     border-radius: var(--md-sys-shape-xl) 0 0 var(--md-sys-shape-xl)
-  .van-dialog
+  .van-dialog,
+  #app .van-dialog
     border-radius: var(--md-sys-shape-xl)
   // chips 8px（保留 round/mark 变体）
-  .van-tag
+  #app .van-tag
     border-radius: var(--md-sys-shape-sm)
-  .van-tag--round
+  #app .van-tag--round
     border-radius: var(--md-sys-shape-full)
-  .van-tag--mark
+  #app .van-tag--mark
     border-radius: 0 var(--md-sys-shape-full) var(--md-sys-shape-full) 0
   // 搜索栏 pill
   .van-search__content
     border-radius: var(--md-sys-shape-full)
+
+  // ===== 组件级 MD3 样式（参考 Konsta/Framework7） =====
+  // 开关：52×32px + 2px outline 边框 + 24px knob（MD 形态）
+  .van-switch
+    font-size: 30PX
+    width: 52PX
+    height: 32PX
+    border: 2PX solid var(--md-sys-color-outline)
+    border-radius: 32PX
+    background: var(--md-sys-color-surface-variant)
+    transition: background-color 200ms, border-color 200ms
+    .van-switch__node
+      width: 24PX
+      height: 24PX
+      top: 4PX
+      left: 2PX
+      border-radius: 32PX
+      background: var(--md-sys-color-outline)
+      transform: scale(0.666)
+      box-shadow: none
+    &.van-switch--on
+      background: var(--md-sys-color-primary)
+      border-color: var(--md-sys-color-primary)
+      .van-switch__node
+        background: var(--md-sys-color-on-primary)
+        transform: translateX(20PX) scale(1)
+
+  // 分类 tab：MD segmented（surface-variant 容器 + 激活高亮）
+  #app .rank .top .nav a,
+  .com_sel_tabs .com_sel_tab,
+  .discovery-tabs .com_sel_tab
+    background: var(--md-sys-color-surface-variant) !important
+    border-radius: 8PX !important
+    color: var(--md-sys-color-on-surface-variant) !important
+    &.cur
+      background: var(--md-sys-color-surface-container-lowest) !important
+      box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.2) !important
+      color: var(--md-sys-color-on-surface) !important
+  #app .rank .top .nav a
+    border 0 !important
+
+  // van-tabs 激活线：MD 2px 底部指示线
+  .van-tabs__line
+    height: 2PX
+    border-radius: 0
+    background: var(--md-sys-color-primary)
+
+  // 标签 chip：MD squircle + secondary-container
+  #app .van-tag
+    height: 32PX !important
+    padding: 0 12PX !important
+    background-color: var(--md-sys-color-secondary-container) !important
+    color: var(--md-sys-color-on-secondary-container) !important
+    &.x_tag
+      color #ee0a24 !important
+  #app .user-container .user-tabs .van-tag--mark
+    height 24PX !important
+    border-radius: var(--md-sys-shape-sm) !important
+  .image-card .layer-num
+    top 0.21rem
+    background: var(--md-sys-color-secondary-container) !important
+    color: var(--md-sys-color-on-secondary-container) !important
+    svg path
+      fill: var(--md-sys-color-on-secondary-container) !important
 
   // ===== 状态层（on-色叠加：hover 8% / pressed 10%） =====
   #app .van-button::before
@@ -149,10 +250,10 @@ md-apply()
     color: var(--md-sys-color-primary)
     border-color: var(--md-sys-color-primary)
   // .van-tag--primary：Vant 默认蓝 → primary-container（accent 只驱动 plain 变体）
-  .van-tag--primary
+  #app .van-tag--primary
     background-color: var(--md-sys-color-primary-container)
     color: var(--md-sys-color-on-primary-container)
-  .van-tag--primary.van-tag--plain
+  #app .van-tag--primary.van-tag--plain
     color: var(--md-sys-color-primary)
     border-color: var(--md-sys-color-primary)
   #app .van-search__content
@@ -193,7 +294,7 @@ md-dark-apply()
   .van-popup,
   .van-dialog,
   .van-calendar
-    background-color: var(--md-sys-color-surface-container-high) !important
+    background: var(--md-sys-color-surface-container-high) !important
     color: var(--md-sys-color-on-surface)
 
   // 搜索栏 → 容器阶（覆盖 base dark #16161a）
