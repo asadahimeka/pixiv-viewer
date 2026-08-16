@@ -60,8 +60,8 @@ importers:
         specifier: 1.7.2
         version: 1.7.2
       swiper:
-        specifier: 5.4.5
-        version: 5.4.5
+        specifier: 12.1.2
+        version: 12.1.2
       ts-whammy:
         specifier: 1.1.5
         version: 1.1.5
@@ -73,7 +73,7 @@ importers:
         version: 2.7.16
       vue-awesome-swiper:
         specifier: 4.1.1
-        version: 4.1.1(swiper@5.4.5)(vue@2.7.16)
+        version: 4.1.1(swiper@12.1.2)(vue@2.7.16)
       vue-i18n:
         specifier: 8.28.2
         version: 8.28.2(vue@2.7.16)
@@ -2043,9 +2043,6 @@ packages:
 
   dom-serializer@1.4.1:
     resolution: {integrity: sha512-VHwB3KfrcOOkelEG2ZOfxqLZdfkil8PtJi4P8N2MMXucZq2yLp75ClViUlOVwyoHEDjYU433Aq+5zWP61+RGag==}
-
-  dom7@2.1.5:
-    resolution: {integrity: sha512-xnhwVgyOh3eD++/XGtH+5qBwYTgCm0aW91GFgPJ3XG+jlsRLyJivnbP0QmUBFhI+Oaz9FV0s7cxgXHezwOEBYA==}
 
   domelementtype@2.3.0:
     resolution: {integrity: sha512-OLETBj6w0OsagBwdXnPdN0cnMfF9opN69co+7ZrbfPGrdpPVNBUj02spi6B1N7wChLQiPn4CSH/zJvXw56gmHw==}
@@ -4081,9 +4078,6 @@ packages:
     resolution: {integrity: sha512-r46gZQZQV+Kl9oItvl1JZZqJKGr+oEkB08A6BzkiR7593/7IbtuncXHd2YoYeTsG4157ZssMu9KYvUHLcjcDoA==}
     engines: {node: '>=6.0.0'}
 
-  ssr-window@2.0.0:
-    resolution: {integrity: sha512-NXzN+/HPObKAx191H3zKlYomE5WrVIkoCB5IaSdvKokxTpjBdWfr0RaP+1Z5KOfDT0ZVz+2tdtiBkhsEQ9p+0A==}
-
   ssri@8.0.1:
     resolution: {integrity: sha512-97qShzy1AiyxvPNIkLWoGua7xoQzzPjQ0HAH4B0rWKo7SZ6USuPcrUiAFrws0UH8RrbWmgq3LMTObhPIHbbBeQ==}
     engines: {node: '>= 8'}
@@ -4219,8 +4213,8 @@ packages:
     engines: {node: '>=10.13.0'}
     hasBin: true
 
-  swiper@5.4.5:
-    resolution: {integrity: sha512-7QjA0XpdOmiMoClfaZ2lYN6ICHcMm72LXiY+NF4fQLFidigameaofvpjEEiTQuw3xm5eksG5hzkaRsjQX57vtA==}
+  swiper@12.1.2:
+    resolution: {integrity: sha512-4gILrI3vXZqoZh71I1PALqukCFgk+gpOwe1tOvz5uE9kHtl2gTDzmYflYCwWvR4LOvCrJi6UEEU+gnuW5BtkgQ==}
     engines: {node: '>= 4.7.0'}
 
   tapable@2.3.3:
@@ -7086,10 +7080,6 @@ snapshots:
       domhandler: 4.3.1
       entities: 2.2.0
 
-  dom7@2.1.5:
-    dependencies:
-      ssr-window: 2.0.0
-
   domelementtype@2.3.0: {}
 
   domhandler@4.3.1:
@@ -9286,8 +9276,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ssr-window@2.0.0: {}
-
   ssri@8.0.1:
     dependencies:
       minipass: 3.3.6
@@ -9446,10 +9434,7 @@ snapshots:
       sax: 1.6.0
       stable: 0.1.8
 
-  swiper@5.4.5:
-    dependencies:
-      dom7: 2.1.5
-      ssr-window: 2.0.0
+  swiper@12.1.2: {}
 
   tapable@2.3.3: {}
 
@@ -9639,9 +9624,9 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vue-awesome-swiper@4.1.1(swiper@5.4.5)(vue@2.7.16):
+  vue-awesome-swiper@4.1.1(swiper@12.1.2)(vue@2.7.16):
     dependencies:
-      swiper: 5.4.5
+      swiper: 12.1.2
       vue: 2.7.16
 
   vue-demi@0.14.10(vue@2.7.16):
