@@ -35,7 +35,7 @@
 
   // ---- 玻璃配方（全面玻璃） ----
   // 导航/底部栏/弹层：blur 40px（iOS 26 大玻璃）
-  .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog
+  .van-tabbar, .van-popup, .van-action-sheet, .van-dialog
     background: rgba(250, 250, 250, 0.7) !important
     backdrop-filter: blur(40PX) saturate(180%)
     -webkit-backdrop-filter: blur(40PX) saturate(180%)
@@ -47,13 +47,22 @@
     -webkit-backdrop-filter: blur(24PX) saturate(180%)
     box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.3)
   // 玻璃容器内 cell 透明化，让 blur 透出来
-  .van-popup .van-cell, .van-dialog .van-cell, .van-action-sheet .van-cell,
+  .van-popup .van-cell,
+  .van-dialog .van-cell,
+  .van-action-sheet .van-cell,
+  .van-action-sheet button,
+  .van-action-sheet button::before,
+  .van-share-sheet button,
+  .van-share-sheet button::before,
   .van-cell-group .van-cell
     background: transparent !important
 
+  .van-action-sheet__gap
+    height 2PX
+
   // ---- 降级：不支持 backdrop-filter 时纯色不透明 ----
   @supports not (backdrop-filter: blur(1px))
-    .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
+    .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
     .image-card, .van-cell-group, .rank-card
       background: rgba(250, 250, 250, 0.85) !important
 
@@ -74,6 +83,89 @@
   .van-search__content
     background: var(--ios-fill-primary) !important
     border-radius: 999PX
+
+  // ---- 返回按钮：圆形玻璃质感（TopBar 左箭头） ----
+  // 用 #app 前缀匹配 base 的 #app .top-bar .van-nav-bar__left（1,2,1）
+  #app .top-bar-wrap
+    width 1.4rem
+  #app .top-bar .van-nav-bar__left
+    margin-left: 12PX
+    padding: 0 !important
+  #app .back_to_top,
+  #app .top-bar-wrap + .share_btn,
+  #app .top-bar-wrap + .more_btn,
+  #app .top-bar .van-nav-bar__left
+    display: flex
+    align-items: center
+    justify-content: center
+    width: 1rem !important
+    height: 1rem !important
+    border-radius: 50% !important
+    background: rgba(250, 250, 250, 0.7) !important
+    backdrop-filter: blur(20PX) saturate(180%)
+    -webkit-backdrop-filter: blur(20PX) saturate(180%)
+    box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.5)
+    color: #0088FF !important
+    .svg-icon
+      color: #0088FF !important
+      filter: none
+  #app .top-bar-wrap,
+  #app .top-bar-wrap + .share_btn,
+  #app .top-bar-wrap + .more_btn
+    top 1.2rem
+    padding-top 0
+  #app .users .info-container .info .share_btn
+    display none
+  #app .top-bar-wrap + .more_btn svg path
+    fill #0088FF !important
+
+  // ---- 卡片容器化（card-first）：内容区白卡浮灰底 ----
+  // 作品详情信息区
+  .artwork-meta
+    background: var(--ios-bg-primary) !important
+    border-radius: 10PX
+    padding: 16PX
+    box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.06)
+
+    // 作者卡 / 简介：玻璃子卡
+    .author-info,
+    .caption
+      background: rgba(250, 250, 250, 0.6)
+      backdrop-filter: blur(24PX) saturate(180%)
+      -webkit-backdrop-filter: blur(24PX) saturate(180%)
+      border-radius: 8PX
+      padding: 12PX
+      box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.3)
+
+  // 该作者其他作品（3 变体共用 .author-card）
+  .author-card
+    background: var(--ios-bg-primary) !important
+    border-radius: 10PX
+    padding: 16PX
+    box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.06)
+
+  // 作者页：头部居中白卡（横幅在卡内）
+  #app .users .info-container
+    max-width: 90%
+    margin: 0 auto 40PX
+    background: var(--ios-bg-primary) !important
+    border-radius: 10PX
+    box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.06)
+    overflow: hidden
+    .bg-cover
+      border-radius: 10PX 10PX 0 0
+
+  // 移动端信息区 padding（头像悬浮）
+  @media screen and (max-width: 1279PX)
+    #app .users .info-container .info
+      position: relative
+      padding: 16PX
+      padding-top: 1.5rem
+
+  // 桌面端容器限宽
+  @media screen and (min-width: 1280PX)
+    #app .users .info-container
+      max-width: 1200PX
 
   // 压制 theme-bg `.with-body-bg body.dark::before`（specificity (0,2,2)+!important）
   // 等特异性 + 源码顺序（ios26.styl 在 theme-bg.styl 之后）取胜 —— 覆盖 standalone 暗色可见背景层
@@ -104,7 +196,7 @@
     background: #000
 
   // ---- 暗色玻璃：背景 rgba(0,0,0,.6) + 边缘高光变亮 ----
-  .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
+  .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
   .image-card, .van-cell-group, .rank-card
     background: rgba(0, 0, 0, 0.6) !important
     box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.12) !important
@@ -116,8 +208,26 @@
   .van-action-sheet__item
     background: transparent !important
 
+  // ---- 暗色卡片容器（用 --ios-bg-secondary #1C1C1E，iOS 暗色卡片惯例） ----
+  .artwork-meta,
+  .author-card,
+  #app .users .info-container
+    background: var(--ios-bg-secondary) !important
+    box-shadow: none
+    .author-info,
+    .caption
+      background: rgba(255, 255, 255, 0.06)
+      box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.12)
+
+  // 暗色返回按钮玻璃
+  #app .top-bar .van-nav-bar__left
+    background: rgba(0, 0, 0, 0.6)
+    box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.12)
+    .svg-icon
+      color: #0A84FF !important
+
   // 暗色降级
   @supports not (backdrop-filter: blur(1px))
-    .van-nav-bar, .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
+    .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
     .image-card, .van-cell-group, .rank-card
       background: rgba(0, 0, 0, 0.8) !important
