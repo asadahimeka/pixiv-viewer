@@ -131,6 +131,7 @@ export function getNoTranslateWords(tags = []) {
   })
 }
 
+export const freeAiModels = ['tencent/Hunyuan-MT-7B', 'THUDM/GLM-4-9B-0414', 'Qwen/Qwen2.5-7B-Instruct', 'Qwen/Qwen3-8B', 'Qwen/Qwen3.5-4B']
 export const aiModelMap = {
   hy_mt: 'tencent/Hunyuan-MT-7B',
   glm: 'THUDM/GLM-4-9B-0414',

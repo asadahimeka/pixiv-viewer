@@ -22,7 +22,7 @@ export const VL_MODELS = {
   'Qwen3.5-4B': 'Qwen/Qwen3.5-4B',
 }
 
-const DEFAULT_VL_MODEL = 'nex-agi/Nex-N2-Pro'
+export const DEFAULT_VL_MODEL = 'Qwen/Qwen3.5-4B'
 
 /**
  * Resolve a stored VL model id — if it's not a known candidate (e.g. a stale
@@ -51,7 +51,7 @@ export async function getCachedTranslation(artworkId, pageIndex, model) {
  * Call SiliconCloud multimodal API with SSE streaming
  * @param {string} imageSrc
  * @param {function} onRead - callback({ content: string, done: boolean })
- * @param {string} [model] - SiliconCloud model id, defaults to Nex-N2-Pro
+ * @param {string} [model] - SiliconCloud model id
  */
 export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_VL_MODEL) {
   const url = `${SILICON_CLOUD_BASR_URL}/chat/completions`
@@ -133,7 +133,7 @@ export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_
  * @param {string|number} artworkId
  * @param {number} pageIndex
  * @param {function} onRead - callback({ content: string, done: boolean, error?: string })
- * @param {string} [model] - SiliconCloud model id, defaults to Nex-N2-Pro
+ * @param {string} [model] - SiliconCloud model id
  * @returns {Promise<string|null>}
  */
 export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead, model = DEFAULT_VL_MODEL) {

@@ -61,7 +61,7 @@ export default new Vuex.Store({
       bubble: true,
       sourceLang: 'ja',
       targetLang: 'zh-CN',
-      vlModel: 'nex-agi/Nex-N2-Pro',
+      vlModel: 'Qwen/Qwen3.5-4B',
       serverUrl: SERVER_TRANSLATE_URL,
       serverToken: SERVER_TRANSLATE_TOKEN,
       ...getSettingDef('PXV_MANGA_TRANS', {}),

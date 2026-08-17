@@ -40,7 +40,7 @@
     <van-cell-group title="AI 翻译模型">
       <van-cell title="选择 AI 翻译模型" class="preset-model-cell">
         <select v-model="aiModel" class="preset-model-select">
-          <option v-for="(model, key) in aiModelMap" :key="key" :value="key">
+          <option v-for="(model, key) in modelMap" :key="key" :value="key">
             {{ model.split('/').pop() }}
           </option>
         </select>
@@ -71,7 +71,7 @@
 import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
-import { aiModelMap, isNativeTranslatorSupported } from '@/utils/translate'
+import { aiModelMap, freeAiModels, isNativeTranslatorSupported } from '@/utils/translate'
 
 export default {
   name: 'NovelTranslateSettings',
@@ -83,6 +83,16 @@ export default {
     }
   },
   computed: {
+    modelMap() {
+      const map = {}
+      Object.keys(aiModelMap).forEach(k => {
+        const model = aiModelMap[k]
+        if (store.getters.isLoggedIn || freeAiModels.includes(model)) {
+          map[k] = model
+        }
+      })
+      return map
+    },
     translationService: {
       get() {
         const v = store.state.appSetting.novelDefTranslate

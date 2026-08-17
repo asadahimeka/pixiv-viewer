@@ -49,7 +49,7 @@
       </div>
     </van-cell-group>
 
-    <van-cell-group v-if="translationEngine === 'vl-api'" title="VL 模型">
+    <van-cell-group v-if="translationEngine === 'vl-api' && $store.getters.isLoggedIn" title="VL 模型">
       <van-cell
         title="视觉语言模型"
         label="选择云端 VL 模型进行漫画翻译"
@@ -115,7 +115,7 @@
           v-else
           :value="providerConfig.model"
           label="模型"
-          placeholder="输入模型"
+          placeholder="请输入模型，格式参照 API 平台文档"
           @change="onModelChange"
         />
         <div class="test-connection-wrap">
@@ -213,7 +213,7 @@ import { Toast } from '@/lib/vant-apis'
 import localforage from 'localforage'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
-import { aiModelMap } from '@/utils/translate'
+import { aiModelMap, freeAiModels } from '@/utils/translate'
 import { VL_MODELS } from '@/utils/translate/manga'
 
 export default {
@@ -225,10 +225,12 @@ export default {
       clearingModels: false,
       testResult: null,
       vlModels: VL_MODELS,
-      presetModels: Object.values(aiModelMap),
     }
   },
   computed: {
+    presetModels() {
+      return store.getters.isLoggedIn ? Object.values(aiModelMap) : freeAiModels
+    },
     translationEngine: {
       get() {
         return store.state.mangaTrans.engine
@@ -311,10 +313,7 @@ export default {
       return this.translationProviders[this.translationProvider] || {}
     },
     showPresetModelSel() {
-      return (
-        // this.translationProvider == SILICON_CLOUD_BASR_URL &&
-        this.providerConfig.apiKey == SILICON_CLOUD_API_KEY
-      )
+      return this.providerConfig.apiKey == SILICON_CLOUD_API_KEY
     },
   },
   methods: {
