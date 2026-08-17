@@ -104,7 +104,7 @@ export default {
           const model = this.aiModel
           store.commit('setAppSetting', {
             novelDefTranslate: 'sc_' + model,
-            novelDefAiModel: model,
+            novelDefTransAiModel: model,
           })
         } else {
           window.umami?.track('set:novelDefTranslate', { val })
@@ -119,13 +119,13 @@ export default {
           const k = v.slice(3)
           if (k in aiModelMap) return k
         }
-        return store.state.appSetting.novelDefAiModel || 'hy_mt'
+        return store.state.appSetting.novelDefTransAiModel || 'hy_mt'
       },
       set(val) {
-        window.umami?.track('set:novelDefAiModel', { val })
+        window.umami?.track('set:novelDefTransAiModel', { val })
         store.commit('setAppSetting', {
           novelDefTranslate: 'sc_' + val,
-          novelDefAiModel: val,
+          novelDefTransAiModel: val,
         })
       },
     },

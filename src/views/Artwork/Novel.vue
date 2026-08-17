@@ -242,7 +242,7 @@ export default {
   computed: {
     ...mapGetters(['isCensored']),
     pntActions() {
-      const model = store.state.appSetting.novelDefAiModel || 'hy_mt'
+      const model = store.state.appSetting.novelDefTransAiModel || 'hy_mt'
       const modelKey = aiModelMap[model] ? model : 'hy_mt'
       const modelName = aiModelMap[modelKey].split('/').pop()
       return [

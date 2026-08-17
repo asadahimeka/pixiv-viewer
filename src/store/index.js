@@ -64,7 +64,7 @@ export default new Vuex.Store({
       vlModel: 'Qwen/Qwen3.5-4B',
       serverUrl: SERVER_TRANSLATE_URL,
       serverToken: SERVER_TRANSLATE_TOKEN,
-      ...getSettingDef('PXV_MANGA_TRANS', {}),
+      ...getSettingDef('PXV_MANGATRANS_SETTING', {}),
     },
     /** @type {any[]|null} */
     seasonEffects: null,
@@ -95,7 +95,7 @@ export default new Vuex.Store({
       novelDefDlFormat: '',
       novelDlRmStyle: false,
       novelDefTranslate: '',
-      novelDefAiModel: 'hy_mt',
+      novelDefTransAiModel: 'hy_mt',
       pageFont: /zh-|ja/.test(getSelectedLang()) ? 'LXGW WenKai Screen' : '',
       hideNavBarOnScroll: true,
       manualLoadRelated: true,
