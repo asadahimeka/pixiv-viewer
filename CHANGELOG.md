@@ -100,6 +100,11 @@
 - *(translate)* Helper script prompt + live stage timings + misc UI
 - *(translate)* Force CPU (WASM) inference on mobile
 - Style fixes
+- Style syntax fix
+- Style syntax fix
+- Change manga translate default model
+- Change translate storage key
+- Manga translate bug fixes
 
 ### 💼 Other
 
@@ -162,6 +167,7 @@
 - Release v1.36.1
 - Release v1.36.2
 - Release v1.36.3
+- Release v1.36.4
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
