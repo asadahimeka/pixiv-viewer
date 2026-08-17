@@ -34,18 +34,17 @@
             >
               🌐{{ translatingIndex === index ? '' : '译' }}
             </van-button>
+            <MangaTranslateOverlay
+              v-if="showOverlay"
+              :page-index="index"
+              :translated-canvas="translatedCanvases[index]"
+              :show-translated="showTranslated"
+              :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
+              :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+              :stage-timings="pipelineStageTimings[index] || []"
+              @toggle="$emit('toggle-translate')"
+            />
           </template>
-          <MangaTranslateOverlay
-            v-if="showOverlay"
-            :artwork-id="artwork.id"
-            :page-index="index"
-            :translated-canvas="translatedCanvases[index]"
-            :show-translated="showTranslated"
-            :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
-            :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
-            :stage-timings="pipelineStageTimings[index] || []"
-            @toggle="$emit('toggle-translate')"
-          />
         </swiper-slide>
         <div slot="pagination" class="swiper-pagination"></div>
         <div slot="button-prev" class="swiper-button-prev"></div>
@@ -90,18 +89,17 @@
           >
             🌐{{ translatingIndex === index ? '' : '译' }}
           </van-button>
+          <MangaTranslateOverlay
+            v-if="showOverlay"
+            :page-index="index"
+            :translated-canvas="translatedCanvases[index]"
+            :show-translated="showTranslated"
+            :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
+            :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
+            :stage-timings="pipelineStageTimings[index] || []"
+            @toggle="$emit('toggle-translate')"
+          />
         </template>
-        <MangaTranslateOverlay
-          v-if="showOverlay"
-          :artwork-id="artwork.id"
-          :page-index="index"
-          :translated-canvas="translatedCanvases[index]"
-          :show-translated="showTranslated"
-          :loading="!!pipelineProgress[index] && pipelineProgress[index].stage !== '' && pipelineProgress[index].stage !== 'complete'"
-          :progress="pipelineProgress[index] || { stage: '', detail: '', percent: 0 }"
-          :stage-timings="pipelineStageTimings[index] || []"
-          @toggle="$emit('toggle-translate')"
-        />
         <div v-if="seasonEffectSrc" class="season-effect" :style="`--bg:url(${seasonEffectSrc})`"></div>
         <canvas
           v-if="showUgoiraControl"
@@ -261,6 +259,7 @@ export default {
       return store.state.mangaTrans.engine
     },
     showOverlay() {
+      if (!this.showPicTranslateBtn) return false
       // 画布 overlay 的消费引擎：shinobu（本地管线）与 server（服务端管线）都输出
       // translatedCanvases[index] 画布，由 MangaTranslateOverlay 统一渲染；vl-api 走文本面板
       return this.translationEngine === 'shinobu' || this.translationEngine === 'server'

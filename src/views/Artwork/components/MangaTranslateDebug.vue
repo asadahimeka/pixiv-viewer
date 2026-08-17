@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isDev" v-show="visible" class="translate-debug">
+  <div v-show="visible" class="translate-debug">
     <div class="translate-debug__header">
       <span class="translate-debug__title">🔧 Pipeline Debug</span>
       <van-icon name="cross" class="translate-debug__close" @click="$emit('close')" />
@@ -243,9 +243,6 @@ export default {
     }
   },
   computed: {
-    isDev() {
-      return process.env.NODE_ENV !== 'production'
-    },
     detectedRegions() {
       return this.artifacts?.detectedRegions || []
     },

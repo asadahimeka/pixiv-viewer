@@ -1,25 +1,19 @@
 <template>
-  <div
-    class="translate-progress"
-    :class="{
-      'translate-progress--inline': inline,
-      'translate-progress--dismissed': dismissed
-    }"
-  >
+  <div class="translate-progress">
     <!-- Overall Progress Bar -->
     <div class="translate-progress__bar">
       <van-progress
         :percentage="overallPercent"
-        :stroke-width="inline ? 4 : 6"
-        :pivot-text="inline ? '' : overallPercent + '%'"
+        :stroke-width="6"
+        :pivot-text="overallPercent + '%'"
         :color="'var(--accent-color)'"
       />
     </div>
 
     <!-- Stage List (panel mode only) -->
-    <div v-if="!inline" class="translate-progress__stages">
+    <div class="translate-progress__stages">
       <div
-        v-for="(stageDef, index) in activeStageDefs"
+        v-for="(stageDef, index) in shinobuStageDefs"
         :key="stageDef.key"
         class="translate-progress__stage"
         :class="getStageClass(stageDef.key)"
@@ -27,13 +21,13 @@
       >
         <!-- Status Icon -->
         <div class="translate-progress__stage-icon">
-          <template v-if="getStageStatus(stageDef.key) === 'done'">
+          <template v-if="getShinobuStatus(stageDef.key) === 'done'">
             <van-icon name="success" class="status-done" />
           </template>
-          <template v-else-if="getStageStatus(stageDef.key) === 'error'">
+          <template v-else-if="getShinobuStatus(stageDef.key) === 'error'">
             <van-icon name="fail" class="status-error" />
           </template>
-          <template v-else-if="getStageStatus(stageDef.key) === 'running'">
+          <template v-else-if="getShinobuStatus(stageDef.key) === 'running'">
             <div class="status-pulse"></div>
           </template>
           <template v-else>
@@ -42,41 +36,17 @@
         </div>
 
         <!-- Stage Connector Line -->
-        <div v-if="index < activeStageDefs.length - 1" class="translate-progress__stage-line"></div>
+        <div v-if="index < shinobuStageDefs.length - 1" class="translate-progress__stage-line"></div>
 
         <!-- Label -->
         <span class="translate-progress__stage-label">{{ stageDef.label }}</span>
 
         <!-- Duration (for completed stages) -->
-        <span v-if="getStageStatus(stageDef.key) === 'done'" class="translate-progress__stage-duration">
+        <span v-if="getShinobuStatus(stageDef.key) === 'done'" class="translate-progress__stage-duration">
           {{ getStageDuration(stageDef.key) }}ms
-        </span>
-
-        <!-- Error message -->
-        <span v-if="getStageStatus(stageDef.key) === 'error'" class="translate-progress__stage-error">
-          {{ getStageError(stageDef.key) }}
         </span>
       </div>
     </div>
-
-    <!-- Stage Timings (shinobu debug view, panel mode only) -->
-    <!-- <div
-      v-if="!inline && isShinobu && stageTimings.length > 0"
-      class="translate-progress__timings"
-    >
-      <div class="translate-progress__timings-title">
-        <van-icon name="clock-o" />
-        <span>阶段耗时</span>
-      </div>
-      <div
-        v-for="timing in stageTimings"
-        :key="timing.stage"
-        class="translate-progress__timing"
-      >
-        <span class="translate-progress__timing-label">{{ timing.label }}</span>
-        <span class="translate-progress__timing-duration">{{ Math.round(timing.durationMs) }}ms</span>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -84,11 +54,6 @@
 export default {
   name: 'MangaTranslateProgress',
   props: {
-    // vl-api mode: array of { stage, status, durationMs, error }
-    stages: {
-      type: Array,
-      default: () => [],
-    },
     // shinobu mode: single { stage, detail, percent } from cb({stage, detail})
     progress: {
       type: Object,
@@ -99,25 +64,9 @@ export default {
       type: Array,
       default: () => [],
     },
-    inline: {
-      type: Boolean,
-      default: false,
-    },
-    dismissed: {
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
-      stageDefs: [
-        { key: 'load-image', label: '加载图片' },
-        { key: 'detect', label: '文本检测' },
-        { key: 'ocr', label: '文字识别' },
-        { key: 'translate', label: '翻译中' },
-        { key: 'inpaint', label: '去字' },
-        { key: 'typeset', label: '排版' },
-      ],
       // Shinobu 12-stage pipeline stage keys → display labels.
       // Mirrors the report()/stageTimings stage names in shinobu/index.js.
       shinobuStageDefs: [
@@ -136,46 +85,24 @@ export default {
     }
   },
   computed: {
-    // Shinobu mode: progress prop present with a non-empty stage.
-    isShinobu() {
-      return !!(this.progress && this.progress.stage)
-    },
-    // vl-api mode → original 6-stage list; shinobu mode → 12-stage list.
-    activeStageDefs() {
-      return this.isShinobu ? this.shinobuStageDefs : this.stageDefs
-    },
     overallPercent() {
-      if (this.isShinobu) {
-        // cb({stage, detail}) carries no percent — prefer explicit percent
-        // (e.g. from T20's starting-state seed), otherwise derive from stage order.
-        if (typeof this.progress.percent === 'number') {
-          return Math.min(Math.max(Math.round(this.progress.percent), 0), 100)
-        }
-        const total = this.shinobuStageDefs.length
-        const idx = this.shinobuStageDefs.findIndex(s => s.key === this.progress.stage)
-        if (this.progress.stage === 'done') return 100
-        if (idx < 0) return 0
-        const base = (idx / total) * 100
-        return Math.min(Math.round(base + (1 / total) * 50), 100)
+      // cb({stage, detail}) carries no percent — prefer explicit percent
+      // (e.g. from T20's starting-state seed), otherwise derive from stage order.
+      if (typeof this.progress.percent === 'number') {
+        return Math.min(Math.max(Math.round(this.progress.percent), 0), 100)
       }
-      if (!this.stages || this.stages.length === 0) return 0
-      const total = this.stageDefs.length
-      const done = this.stages.filter(s => s.status === 'done' || s.status === 'error').length
-      const running = this.stages.filter(s => s.status === 'running').length
-      const base = (done / total) * 100
-      const bonus = running > 0 ? (1 / total) * 50 : 0
-      return Math.min(Math.round(base + bonus), 100)
+      const total = this.shinobuStageDefs.length
+      const idx = this.shinobuStageDefs.findIndex(s => s.key === this.progress.stage)
+      if (this.progress.stage === 'done') return 100
+      if (idx < 0) return 0
+      const base = (idx / total) * 100
+      return Math.min(Math.round(base + (1 / total) * 50), 100)
     },
   },
   methods: {
     // Order position of a shinobu stage (for status derivation).
     shinobuStageIndex(key) {
       return this.shinobuStageDefs.findIndex(s => s.key === key)
-    },
-    getStageStatus(key) {
-      if (this.isShinobu) return this.getShinobuStatus(key)
-      const stage = this.stages.find(s => s.stage === key)
-      return stage ? stage.status : 'pending'
     },
     // Derive status from cb() progress stream:
     // stages before current → done, current → running, rest → pending.
@@ -192,20 +119,11 @@ export default {
       return 'pending'
     },
     getStageDuration(key) {
-      if (this.isShinobu) {
-        const timing = this.stageTimings.find(t => t.stage === key)
-        return timing ? timing.durationMs || 0 : 0
-      }
-      const stage = this.stages.find(s => s.stage === key)
-      return stage ? stage.durationMs || 0 : 0
-    },
-    getStageError(key) {
-      if (this.isShinobu) return ''
-      const stage = this.stages.find(s => s.stage === key)
-      return stage ? stage.error || '' : ''
+      const timing = this.stageTimings.find(t => t.stage === key)
+      return timing ? timing.durationMs || 0 : 0
     },
     getStageClass(key) {
-      return 'translate-progress__stage--' + this.getStageStatus(key)
+      return 'translate-progress__stage--' + this.getShinobuStatus(key)
     },
   },
 }
@@ -225,15 +143,6 @@ $border-radius = 0.08rem
   font-size 0.22rem
   color $color-text
   transition opacity 0.5s ease, transform 0.5s ease
-
-  &--dismissed
-    opacity 0
-    transform scale(0.8)
-    pointer-events none
-
-  &--inline
-    .translate-progress__bar
-      padding 0
 
   &__bar
     padding 0.08rem 0

@@ -40,6 +40,7 @@
       />
       <van-field
         v-model="serverTokenInput"
+        v-longpress="onSrvTokenLongpress"
         label="鉴权 Token"
         type="password"
         clearable
@@ -93,6 +94,7 @@
           @change="onBaseUrlChange"
         />
         <van-field
+          v-longpress="onApiKeyLongpress"
           :value="showPresetModelSel ? '' : providerConfig.apiKey"
           type="password"
           label="API Key"
@@ -358,6 +360,14 @@ export default {
           [name]: { ...current, model: val },
         },
       })
+    },
+    onSrvTokenLongpress() {
+      const value = prompt('鉴权 Token')
+      if (value) this.serverTokenInput = value
+    },
+    onApiKeyLongpress() {
+      const value = prompt('请输入 API Key')
+      if (value) this.onApiKeyChange({ target: { value } })
     },
     async clearTranslationCache() {
       this.clearingCache = true

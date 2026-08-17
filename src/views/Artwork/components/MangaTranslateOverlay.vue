@@ -1,5 +1,5 @@
 <template>
-  <div v-show="showOverlay" class="translate-overlay" tabindex="0" @keydown.t.prevent="$emit('toggle')">
+  <div v-show="showOverlay" class="translate-overlay">
     <canvas ref="overlayCanvas" class="overlay-canvas"></canvas>
     <div v-if="loading" class="loading-overlay">
       <van-loading type="spinner" />
@@ -26,10 +26,6 @@ export default {
     MangaTranslateProgress,
   },
   props: {
-    artworkId: {
-      type: [String, Number],
-      required: true,
-    },
     pageIndex: {
       type: Number,
       default: 0,
@@ -72,12 +68,9 @@ export default {
     },
   },
   watch: {
-    translatedCanvas() {
-      this.redrawCanvas()
-    },
     showTranslated(val) {
       if (val) {
-        this.redrawCanvas()
+        this.drawTranslated()
       } else {
         this.clearCanvas()
       }
@@ -88,77 +81,16 @@ export default {
       }
     },
   },
-  mounted() {
-    this.initObserver()
-    this.$nextTick(() => {
-      this.positionOverlay()
-    })
-    document.addEventListener('keydown', this.handleKeydown)
-  },
-  activated() {
-    this.initObserver()
-    this.$nextTick(() => {
-      this.positionOverlay()
-    })
-    document.addEventListener('keydown', this.handleKeydown)
-  },
-  deactivated() {
-    this.disconnectObserver()
-    document.removeEventListener('keydown', this.handleKeydown)
-  },
   beforeDestroy() {
-    this.disconnectObserver()
     // Clear canvas context and release resources
-    if (this.$refs.overlayCanvas) {
-      const ctx = this.$refs.overlayCanvas.getContext('2d')
-      if (ctx) ctx.clearRect(0, 0, this.$refs.overlayCanvas.width, this.$refs.overlayCanvas.height)
-    }
-    this._canvasRef = null
-    document.removeEventListener('keydown', this.handleKeydown)
+    this.clearCanvas()
   },
   methods: {
-    initObserver() {
-      this.disconnectObserver()
-      const parent = this.$el?.parentElement
-      if (!parent) return
-      this.observer = new ResizeObserver(() => {
-        this.positionOverlay()
-      })
-      this.observer.observe(parent)
-    },
-    disconnectObserver() {
-      if (this.observer) {
-        this.observer.disconnect()
-        this.observer = null
-      }
-    },
-    positionOverlay() {
-      const parent = this.$el?.parentElement
-      if (!parent) return
-      const img = parent.querySelector('.image') || parent.querySelector('img')
-      if (!img) return
+    drawTranslated() {
       const canvas = this.$refs.overlayCanvas
-      if (!canvas) return
-      const rect = img.getBoundingClientRect()
-      if (rect.width === 0 || rect.height === 0) return
-      canvas.width = rect.width
-      canvas.height = rect.height
-      if (this.showTranslated && this.translatedCanvas) {
-        this.drawTranslated(canvas)
-      } else {
-        this.clearCanvas()
-      }
-    },
-    redrawCanvas() {
-      const canvas = this.$refs.overlayCanvas
-      if (!canvas) return
-      if (this.showTranslated && this.translatedCanvas) {
-        this.drawTranslated(canvas)
-      } else {
-        this.clearCanvas()
-      }
-    },
-    drawTranslated(canvas) {
+      if (!canvas || !this.translatedCanvas) return
+      canvas.width = this.translatedCanvas.width
+      canvas.height = this.translatedCanvas.height
       const ctx = canvas.getContext('2d')
       if (!ctx) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -170,13 +102,6 @@ export default {
       const ctx = canvas.getContext('2d')
       if (!ctx) return
       ctx.clearRect(0, 0, canvas.width, canvas.height)
-    },
-    handleKeydown(e) {
-      const tag = e.target && e.target.tagName
-      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return
-      if ((e.key === 't' || e.key === 'T') && !this.loading && !!this.translatedCanvas) {
-        this.$emit('toggle')
-      }
     },
   },
 }
@@ -226,11 +151,11 @@ export default {
 
 .toggle-btn
   position absolute
-  bottom 0.7rem
+  bottom 1rem
   right 0.2rem
   z-index 10
   width 0.6rem
-  padding 0.06rem 0.16rem
+  padding 0.1rem 0.16rem
   color #fff
   background rgba(0, 0, 0, 0.55)
   font-size 0.22rem

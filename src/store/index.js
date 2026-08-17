@@ -247,7 +247,7 @@ export default new Vuex.Store({
           ...(patch.providers || {}),
         },
       }
-      LocalStorage.set('PXV_MANGA_TRANS', state.mangaTrans)
+      LocalStorage.set('PXV_MANGATRANS_SETTING', state.mangaTrans)
     },
   },
   actions: {
