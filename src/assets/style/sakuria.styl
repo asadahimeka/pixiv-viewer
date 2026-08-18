@@ -104,6 +104,8 @@ sakuria-light()
   // ---- 标签：点缀色系区分类型 ----
   #app .artwork-meta .tag-list
     gap 7PX
+    .x_tag
+      border-radius var(--sakuria-r-pill)
     .tag.name
       padding 0 10PX
       border-radius var(--sakuria-r-pill)
@@ -111,21 +113,41 @@ sakuria-light()
       white-space: nowrap
       overflow: hidden
       text-overflow: ellipsis
+      transform none
+      transition: 0.2s
+      &:hover
+        box-shadow 0 4px 14px -4px rgba(255,111,159,.18),0 2px 6px -2px rgba(43,31,42,.06)
+        text-decoration none
       &:nth-child(5n+1 of .name)
         background: #ffe0eb !important
         color: #b23b6b !important
+        &:hover
+          color #fff !important
+          background #b23b6b !important
       &:nth-child(5n+2 of .name)
         background: #ffe4cc !important
         color: #B86B26 !important
+        &:hover
+          color #fff !important
+          background #B86B26 !important
       &:nth-child(5n+3 of .name)
         background: #d6f2e5 !important
         color: #1A6E4A !important
+        &:hover
+          color #fff !important
+          background #1A6E4A !important
       &:nth-child(5n+4 of .name)
         background: #e6dcff !important
         color: #5A45A0 !important
+        &:hover
+          color #fff !important
+          background #5A45A0 !important
       &:nth-child(5n of .name)
         background: #dcebff !important
         color: #2A6FDB !important
+        &:hover
+          color #fff !important
+          background #2A6FDB !important
   #app .artwork-meta .tag-list .tag.translated
     margin-top 1PX
     margin-bottom 1PX
@@ -136,6 +158,10 @@ sakuria-light()
     white-space: nowrap
     overflow: hidden
     text-overflow: ellipsis
+    opacity 1
+    transition opacity 0.2s
+    &:hover
+      opacity 0.8
 
   .member-tags .member-tag
     padding 4PX 12PX
@@ -151,6 +177,25 @@ sakuria-light()
     img
       border-radius 8PX
       border 1PX solid var(--sakuria-border)
+
+  .van-popover--dark
+    color var(--sakuria-ink)
+    box-shadow: var(--sakuria-shadow)
+    border 1PX solid var(--sakuria-border)
+    border-radius var(--sakuria-r-lg)
+    overflow-y auto
+    .van-popover__content
+      background: var(--sakuria-surface) !important
+    .van-popover__action
+      padding 0 8PX
+    .van-popover__action-text
+      border-radius 12PX
+      background transparent
+      transition background 0.2s
+      &:hover
+        background var(--sakuria-surface-2)
+      &::after
+        border-bottom 1PX solid #fbe9ef
 
   // ---- 卡片容器化（card-first）：作品详情信息区 + 作者详情信息区 ----
   // 浅色：白卡浮奶油粉底；暗色由 sakuria-dark() 的 surface token 接管（见暗色块）
@@ -216,6 +261,15 @@ sakuria-light()
     padding 0 0.3rem
   #app .com_sel_tabs .com_sel_tab:not(:last-child)
     margin-right: 0.2rem
+
+  .isOuterMeta .meta
+    background none
+
+  .my-virtual-swiper
+    .swiper-slide
+      border-radius: 10PX
+    .image-card .image
+      border-radius: 0
 
   // 移动端信息区：居中卡片布局（头像悬浮横幅上）
   @media screen and (max-width: 1279PX)

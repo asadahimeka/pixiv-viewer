@@ -117,6 +117,7 @@
   #app .back_to_top,
   #app .top-bar-wrap + .share_btn,
   #app .top-bar-wrap + .more_btn,
+  #app .top-bar-wrap + .ex_link,
   #app .top-bar .van-nav-bar__left
     display: flex
     align-items: center
@@ -134,9 +135,14 @@
       filter: none
   #app .top-bar-wrap,
   #app .top-bar-wrap + .share_btn,
+  #app .top-bar-wrap + .ex_link,
   #app .top-bar-wrap + .more_btn
     top 1.2rem
     padding-top 0
+  #app .top-bar-wrap + .ex_link
+    padding 0
+    right 12PX
+    font-size: 0.5rem
   #app .users .info-container .info .share_btn
     display none
   #app .top-bar-wrap + .more_btn svg path
@@ -162,6 +168,12 @@
       padding: 12PX
       box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.5),inset 0 0 24PX 0 rgba(0, 0, 0, 0.06)
 
+    .author-info.hidePIDMask+div
+      display none
+    .caption.no_caption
+      opacity 0
+      padding 0 !important
+
   // 该作者其他作品（3 变体共用 .author-card）
   .author-card
     background: var(--ios-bg-primary) !important
@@ -172,7 +184,7 @@
   // 作者页：头部居中白卡（横幅在卡内）
   #app .users .info-container
     max-width: 90%
-    margin: 0 auto 40PX
+    margin: 20PX auto 40PX
     background: var(--ios-bg-primary) !important
     border-radius: 10PX
     box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.06)
@@ -182,15 +194,51 @@
 
   // 移动端信息区 padding（头像悬浮）
   @media screen and (max-width: 1279PX)
-    #app .users .info-container .info
-      position: relative
-      padding: 16PX
-      padding-top: 1.5rem
+    .artwork-meta,
+    .author-card
+      width: 88% !important
+      margin-left auto !important
+      margin-right auto !important
+    #app .users .info-container
+      max-width: 95%
+      margin 20PX auto
+      .info
+        position: relative
+        padding: 16PX
+        padding-top: 1.6rem
 
   // 桌面端容器限宽
   @media screen and (min-width: 1280PX)
     #app .users .info-container
       max-width: 1200PX
+      .bg-cover
+        height: 300PX
+        &:not(.hasbgcover)
+          height 200PX
+      .info
+        padding-left 1rem
+        padding-right 1rem
+        .avatar
+          left 1.5rem
+        .share_btn
+          right 1.5rem
+        .follow_btn
+          right 2.5rem
+        .name
+          margin-top -0.1rem !important
+          margin-bottom: 0.2rem !important
+      .user_id_sns
+        padding-left: 0 !important
+        .site-list:first-child
+          padding-left: 3.7rem !important
+        .site-list.social-links
+          padding-left: 0.1rem !important
+      .user_follow_region
+        margin-top: 0.7rem
+      .user_follow_region,
+      .user_link,
+      .detail
+        padding-left: 0.8rem !important
 
   // ---- 组件级 iOS 样式（参考 Konsta/Framework7） ----
   // 开关：64×28px 轨道 + 38×24px 白 knob + 22px 位移 + 按压光晕
@@ -237,17 +285,44 @@
     &:active
       opacity: 0.3
 
+  .search .com_sel_tabs .com_sel_tab:not(.cur)
+    backdrop-filter: saturate(180%) blur(16PX)
+
   // van-tabs 激活线：iOS pill（inset 4px 白块）
   .van-tabs__line
     box-shadow: 0 2PX 2PX rgba(0, 0, 0, 0.25)
 
+  .isOuterMeta .meta
+    background none
+
+  .my-virtual-swiper
+    .swiper-slide
+      border-radius: 10PX
+    .image-card .image
+      border-radius: 0
+
   // 标签 chip：iOS 全圆 + 浅灰底
-  .van-tag
+  #app .van-tag,
+  #app .image-card .layer-num
     height: 28PX !important
     border-radius: 28PX !important
     padding: 0 10PX !important
     background: rgba(0, 0, 0, 0.12) !important
     color: #000 !important
+  #app .image-card .layer-num
+    top 0.16rem
+    right 0.16rem
+    display flex
+    justify-content center
+    align-items center
+    line-height 28PX
+    .svg-icon
+      vertical-align none
+  #app .image-card .van-tag,
+  #app .image-card .layer-num
+    color #fff !important
+    background: rgba(0, 0, 0, 0.3) !important
+    backdrop-filter: saturate(180%) blur(16PX)
 
   // 压制 theme-bg `.with-body-bg body.dark::before`（specificity (0,2,2)+!important）
   // 等特异性 + 源码顺序（ios26.styl 在 theme-bg.styl 之后）取胜 —— 覆盖 standalone 暗色可见背景层

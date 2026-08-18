@@ -122,13 +122,16 @@ export default {
         this.runtimeChecking = false
         return
       }
-      if (!this.runtimeChecking && this.runtimeCheckRes) {
+      const showInfo = () => {
         Dialog.alert({
           title: '诊断信息',
           width: '9rem',
-          message: JSON.stringify(this.runtimeCheckRes, null, 2),
+          message: `<p style="font-family: Consolas, monospace, sans-serif">${JSON.stringify(this.runtimeCheckRes, null, 2)}</p>`,
           messageAlign: 'left',
         })
+      }
+      if (!this.runtimeChecking && this.runtimeCheckRes) {
+        showInfo()
         return
       }
       try {
@@ -145,6 +148,7 @@ export default {
           webnn: byId['webnn.api'] === 'pass' ? 'available' : 'unavailable',
           recommended: report.summary?.effectiveRuntime || 'wasm',
         }
+        showInfo()
       } catch (err) {
         console.warn('[TranslateToolbar] Runtime check failed:', err.message)
         this.runtimeStatus = { webgpu: 'error', wasm: 'unknown', webnn: 'unknown', recommended: 'wasm' }

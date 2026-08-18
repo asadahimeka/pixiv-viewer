@@ -1,5 +1,5 @@
 <template>
-  <div class="setting-page">
+  <div class="setting-page app-preference-settings">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title" @dblclick="showAnaSwitch=true">{{ $t('setting.other.title') }}</h3>
     <van-cell-group :title="$t('GS0J0mAbmiqPGKw20ORPi')">
@@ -58,13 +58,8 @@
         title="数字搜索默认跳转"
         :label="searchDefaultIdTypeLabel"
         is-link
-        @click="showSearchDefaultTypePicker"
+        @click="showDefaultTypeSheet = true"
       />
-      <van-cell v-if="!appSetting.useNovelWebview && showAutoLoadImtSwitch" center title="自动加载简约翻译(KISS Translator)脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载。翻译范围：小说正文、作品标题与简介、作品评论、用户简介">
-        <template #right-icon>
-          <van-switch :value="appSetting.isAutoLoadKissT" size="24" @change="changeAutoLoadKissT" />
-        </template>
-      </van-cell>
     </van-cell-group>
 
     <van-cell-group v-if="clientConfig.useLocalAppApi" :title="$t('YEPi_dV_gdvw9NzE4iBEu')">
@@ -171,6 +166,20 @@
           <van-button size="small" type="info" @click="saveAppSetting('novelFilterTextLenMin', novelFilterTextLenMin, true)">{{ $t('common.save') }}</van-button>
         </template>
       </van-field>
+    </van-cell-group>
+
+    <van-cell-group v-if="showTranslationGroup" title="翻译设置">
+      <template v-if="!appSetting.useNovelWebview">
+        <van-cell center title="自动加载简约翻译(KISS Translator)脚本并翻译" label="如已安装 KISS Translator 浏览器扩展或用户脚本则无需加载。翻译范围：小说正文、作品标题与简介、作品评论、用户简介">
+          <template #right-icon>
+            <van-switch :value="appSetting.isAutoLoadKissT" size="24" @change="changeAutoLoadKissT" />
+          </template>
+        </van-cell>
+        <van-cell center title="KISS Translator 设置" is-link url="/kiss-translator/options.html" />
+      </template>
+      <van-cell center title="小说翻译设置" is-link @click="showNovelTranslateSetting = true" />
+      <van-cell center title="漫画翻译设置" is-link @click="showMangaTranslateSetting = true" />
+      <van-cell center title="Shinobu 漫画翻译管线环境检测" is-link @click="checkShinobuRuntime" />
     </van-cell-group>
 
     <van-cell-group :title="$t('j2tFt08r6GGMmsfbF4HAN')">
@@ -536,8 +545,32 @@
       cancel-text="取消"
       close-on-click-action
       @select="onDefaultTypeSelect"
-      @cancel="onDefaultTypeCancel"
+      @cancel="showDefaultTypeSheet = false"
     />
+    <van-popup
+      v-if="showTranslationGroup"
+      v-model="showMangaTranslateSetting"
+      position="bottom"
+      class="translate-settings-popup"
+      round
+      closeable
+      close-icon-position="top-right"
+      get-container="body"
+    >
+      <MangaTranslateSettings />
+    </van-popup>
+    <van-popup
+      v-if="showTranslationGroup"
+      v-model="showNovelTranslateSetting"
+      position="bottom"
+      class="translate-settings-popup"
+      round
+      closeable
+      close-icon-position="top-right"
+      get-container="body"
+    >
+      <NovelTranslateSettings />
+    </van-popup>
   </div>
 </template>
 
@@ -559,6 +592,8 @@ import { getCache, setCache } from '@/utils/storage/siteCache'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import NovelTextConfig from '../Artwork/components/NovelTextConfig.vue'
 import PageFontSelect from '../Artwork/components/PageFontSelect.vue'
+import MangaTranslateSettings from '../Artwork/components/MangaTranslateSettings.vue'
+import NovelTranslateSettings from '../Artwork/components/NovelTranslateSettings.vue'
 import SyncDialog from './SyncDialog.vue'
 
 export default {
@@ -566,6 +601,8 @@ export default {
   components: {
     NovelTextConfig,
     PageFontSelect,
+    MangaTranslateSettings,
+    NovelTranslateSettings,
     SyncDialog,
   },
   data() {
@@ -726,7 +763,9 @@ export default {
       },
       hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
       isDark: !!localStorage.getItem('PXV_DARK'),
-      showAutoLoadImtSwitch: i18n.locale.includes('zh'),
+      showTranslationGroup: i18n.locale.includes('zh'),
+      showNovelTranslateSetting: false,
+      showMangaTranslateSetting: false,
       actTheme: localStorage.PXV_THEME || '',
       accentColor: localStorage.PXV_ACT_COLOR || 'Default',
       isFsaSupported,
@@ -788,20 +827,14 @@ export default {
     novelDlFmtLabel() {
       return this.novelDlFmt.actions.find(e => e._value == store.state.appSetting.novelDefDlFormat)?.name || ''
     },
+    searchDefaultIdTypeLabel() {
+      return this.defaultTypeActions.find(e => e.value == store.state.appSetting.searchDefaultIdType)?.name || '每次询问'
+    },
     sampleArtFileName() {
       return getSampleFileName(this.dlFileNameTpl)
     },
     showPIDMaskSetting() {
       return !store.state.isSafari && !store.state.appSetting.isAutoLoadKissT
-    },
-    searchDefaultIdTypeLabel() {
-      const map = {
-        '': '每次询问',
-        'artwork': '作品',
-        'novel': '小说',
-        'user': '用户',
-      }
-      return map[this.appSetting.searchDefaultIdType] || '每次询问'
     },
   },
   watch: {
@@ -986,14 +1019,8 @@ export default {
     showNovelConfig() {
       this.$refs.novelConfigRef?.open()
     },
-    showSearchDefaultTypePicker() {
-      this.showDefaultTypeSheet = true
-    },
     onDefaultTypeSelect(item) {
       this.saveAppSetting('searchDefaultIdType', item.value)
-      this.showDefaultTypeSheet = false
-    },
-    onDefaultTypeCancel() {
       this.showDefaultTypeSheet = false
     },
     async changeAutoLoadKissT(val) {
@@ -1010,20 +1037,6 @@ export default {
       }
       this.saveAppSetting('isAutoLoadKissT', val, true)
     },
-    // async changeAutoLoadImt(val) {
-    //   if (val) {
-    //     const res = await Dialog.confirm({
-    //       title: '自动加载沉浸式翻译 SDK',
-    //       message: '提示：如果已安装沉浸式翻译浏览器扩展则无需加载沉浸式翻译 SDK',
-    //       lockScroll: false,
-    //       closeOnPopstate: true,
-    //       cancelButtonText: '取消',
-    //       confirmButtonText: '确定',
-    //     }).catch(() => 'cancel')
-    //     if (res != 'confirm') return
-    //   }
-    //   this.saveAppSetting('isAutoLoadImt', val, true)
-    // },
     changeLang({ _value }) {
       this.lang.value = _value
       window.umami?.track('set_lang', { lang: _value })
@@ -1034,6 +1047,47 @@ export default {
       this.visualThemeValue = _value
       applyVisualTheme(_value)
       window.umami?.track('set_visual_theme', { _value })
+      if (_value == 'sakuria') {
+        localStorage.removeItem('PXV_THEME')
+        localStorage.setItem('PXV_ACT_COLOR', '#ff6f9f')
+        store.commit('setAppSetting', {
+          pageFont: '寒蝉半圆体',
+          withBodyBg: true,
+          showPIDMask: false,
+          isImageFitScreen: store.state.isMobile,
+          isImageCardBorderRadius: true,
+        })
+      }
+      if (_value == 'md') {
+        localStorage.removeItem('PXV_THEME')
+        localStorage.setItem('PXV_ACT_COLOR', '#6750A4')
+        store.commit('setAppSetting', {
+          pageFont: '',
+          pageTransition: 'f7-md',
+          wfType: 'Masonry(CSSGrid)',
+          withBodyBg: true,
+          isImageFitScreen: store.state.isMobile,
+          isImageCardOuterMeta: true,
+          isImageCardBorderRadius: true,
+          isImageCardBoxShadow: true,
+          navBarAltStyle: false,
+          showPIDMask: false,
+        })
+      }
+      if (_value == 'ios26') {
+        localStorage.removeItem('PXV_THEME')
+        localStorage.setItem('PXV_ACT_COLOR', '#0088FF')
+        store.commit('setAppSetting', {
+          pageFont: 'HarmonyOS_Regular',
+          pageTransition: 'f7-ios',
+          withBodyBg: true,
+          isImageFitScreen: store.state.isMobile,
+          isImageCardBorderRadius: true,
+          navBarAltStyle: true,
+          showPIDMask: false,
+        })
+      }
+      this.reloadPage()
     },
     onAnalyticsChange(val) {
       window.umami?.track('AnalyticsChange', { val })
@@ -1108,6 +1162,30 @@ export default {
       ])
       downloadURL(new Blob([JSON.stringify(history)]), `pixiv-viewer-history-${Date.now()}.json`)
     },
+    async checkShinobuRuntime() {
+      const loading = this.$toast.loading({
+        duration: 0,
+        forbidClick: true,
+        message: '检测运行环境中…',
+      })
+      try {
+        const { runRuntimeSelfCheck } = await import('@/utils/translate/shinobu/runtime/selfCheck')
+        const report = await runRuntimeSelfCheck()
+        Dialog.alert({
+          title: '诊断信息',
+          width: '9rem',
+          message: `<p style="font-family: Consolas, monospace, sans-serif">${JSON.stringify(report, null, 2)}</p>`,
+          messageAlign: 'left',
+        })
+        loading.clear()
+      } catch (error) {
+        loading.clear()
+        Dialog.alert({
+          message: `检测运行环境异常：${error}`,
+          confirmButtonText: 'OK',
+        })
+      }
+    },
     async checkURL(val, checkFn) {
       if (!isURL(val)) {
         const isOK = await mintVerify(val, true)
@@ -1155,8 +1233,8 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.setting-page
+<style lang="stylus">
+.setting-page.app-preference-settings
   min-height 80vh
   #top-bar-wrap
     width 1.4rem
@@ -1181,5 +1259,4 @@ export default {
       flex-wrap wrap
       gap 8px
       padding 20px
-
 </style>

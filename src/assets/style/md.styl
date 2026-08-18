@@ -109,7 +109,8 @@ md-apply()
     color: var(--md-sys-color-on-surface)
 
   .top-bar .svg-icon,
-  .share_btn .svg-icon
+  .share_btn .svg-icon,
+  .ex_link .svg-icon
     color: var(--md-sys-color-on-surface) !important
   .more_btn .svg-icon path
     fill: var(--md-sys-color-on-surface) !important
@@ -208,14 +209,23 @@ md-apply()
     border-radius: 0
     background: var(--md-sys-color-primary)
 
+  .isOuterMeta .meta
+    background none
+
   // 标签 chip：MD squircle + secondary-container
-  #app .van-tag
+  #app .van-tag,
+  #app .artwork-meta .tag-list .tag.name
     height: 32PX !important
     padding: 0 12PX !important
     background: var(--md-sys-color-secondary-container) !important
     color: var(--md-sys-color-on-secondary-container) !important
     &.x_tag
       color #ee0a24 !important
+  #app .artwork-meta .tag-list .tag
+    border-radius: var(--md-sys-shape-sm)
+    overflow hidden
+    white-space nowrap
+    text-overflow ellipsis
   #app .user-container .user-tabs .van-tag--mark
     height 24PX !important
     border-radius: var(--md-sys-shape-sm) !important
@@ -326,6 +336,7 @@ md-dark-apply()
 .custom_theme.t_md-visual
   md-light-tokens()
   md-apply()
+  --accent-color: var(--md-sys-color-primary)
 
   // 暗色块（.dark 在 <body>，令牌重定义级联给 body 内所有元素）
   .dark
@@ -350,5 +361,6 @@ md-dark-apply()
 // html 级暗色背景（base `html:has(.dark)` 强制 #16161a；visible 仅当 body 未盖住视口边缘）
 html.custom_theme.t_md-visual:has(.dark),
 html.t_md-visual:has(.dark)
+  --accent-color: var(--md-sys-color-primary)
   background: var(--md-sys-color-background)
   color: var(--md-sys-color-on-surface)

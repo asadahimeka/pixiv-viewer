@@ -136,8 +136,8 @@ import { SessionStorage } from '@/utils/storage'
 import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation, resolveVlModel } from '@/utils/translate/manga'
 import MangaTranslatePanel from './components/MangaTranslatePanel.vue'
-import MangaTranslateToolbar from './components/MangaTranslateToolbar'
-import MangaTranslateSettings from './components/MangaTranslateSettings'
+import MangaTranslateToolbar from './components/MangaTranslateToolbar.vue'
+import MangaTranslateSettings from './components/MangaTranslateSettings.vue'
 // import { mintFilter } from '@/utils/filter'
 
 export default {
