@@ -50,6 +50,38 @@ export function isHelperAvailable() {
 }
 
 /**
+ * 归一化 header 键名大小写，命中 helper.user.js 的序列化分支。
+ * helper 以大小写敏感方式检查 'Content-Type' / 'Authorization'，
+ * 小写键会导致 JSON data 不被 stringify（被序列化为 "[object Object]"）。
+ * @param {object} [headers]
+ * @returns {object}
+ */
+function normalizeHelperHeaders(headers) {
+  const out = {}
+  for (const [k, v] of Object.entries(headers || {})) {
+    const lower = k.toLowerCase()
+    if (lower === 'content-type') out['Content-Type'] = v
+    else if (lower === 'authorization') out['Authorization'] = v
+    else out[k] = v
+  }
+  return out
+}
+
+/**
+ * 兜底错误归一化：helper reject 的裸 Error（如 "HTTP 401 Unauthorized"）
+ * 包装为 LlmApiError，并按 message 中的 HTTP 状态码映射 kind。
+ * @param {Error} err
+ * @returns {LlmApiError}
+ */
+function normalizeHelperError(err) {
+  if (err instanceof LlmApiError) return err
+  const m = /HTTP\s+(\d+)/.exec(err?.message || '')
+  const status = m ? Number(m[1]) : 0
+  const kind = status === 401 || status === 403 ? 'auth' : status === 429 ? 'rate_limit' : 'server'
+  return new LlmApiError(err?.message || String(err), kind)
+}
+
+/**
  * 通过油猴脚本发请求（无 CORS 限制，仅整包响应）
  * @param {string} url
  * @param {{ method?: string, headers?: object, data?: any }} config
@@ -57,7 +89,11 @@ export function isHelperAvailable() {
  */
 export async function helperRequest(url, config) {
   if (!isHelperAvailable()) throw new LlmApiError(HELPER_HINT, 'no_helper')
-  const resp = await window.__httpRequest__(url, JSON.stringify(config))
+  const normalized = {
+    ...config,
+    headers: normalizeHelperHeaders(config?.headers),
+  }
+  const resp = await window.__httpRequest__(url, JSON.stringify(normalized))
   return resp.data
 }
 
@@ -114,11 +150,15 @@ export async function chatCompletionStream({ baseUrl, apiKey, body, onRead, sign
     if (err?.name === 'AbortError') throw err
     if (classifyFetchFailure(err) === 'network' && isHelperAvailable()) {
       // 油猴兜底：整包返回后一次性输出
-      const data = await helperRequest(endpoint, { method: 'POST', headers, data: body })
-      const content = data?.choices?.[0]?.message?.content || ''
-      if (content) onRead({ content, done: false })
-      onRead({ content: '', done: true })
-      return
+      try {
+        const data = await helperRequest(endpoint, { method: 'POST', headers, data: body })
+        const content = data?.choices?.[0]?.message?.content || ''
+        if (content) onRead({ content, done: false })
+        onRead({ content: '', done: true })
+        return
+      } catch (e) {
+        throw normalizeHelperError(e)
+      }
     }
     if (classifyFetchFailure(err) === 'network') throw new LlmApiError(HELPER_HINT, 'no_helper')
     throw err
@@ -128,14 +168,27 @@ export async function chatCompletionStream({ baseUrl, apiKey, body, onRead, sign
 
   const reader = response.body.getReader()
   const decoder = new TextDecoder()
+  let buffer = ''
   while (true) {
     const { value, done } = await reader.read()
     if (done) break
-    for (const json of parseSseLines(decoder.decode(value, { stream: true }))) {
-      const delta = json.choices?.[0]?.delta || {}
-      const content = delta.content || ''
-      if (content) onRead({ content, done: false })
+    buffer += decoder.decode(value, { stream: true })
+    // 只处理最后一个换行符之前的完整行，残余部分留待下次/流结束
+    const lines = buffer.split('\n')
+    buffer = lines.pop()
+    for (const line of lines) {
+      for (const json of parseSseLines(line)) {
+        const delta = json.choices?.[0]?.delta || {}
+        const content = delta.content || ''
+        if (content) onRead({ content, done: false })
+      }
     }
+  }
+  // 流结束，处理残余 buffer（可能含未以换行结尾的最后一行）
+  for (const json of parseSseLines(buffer)) {
+    const delta = json.choices?.[0]?.delta || {}
+    const content = delta.content || ''
+    if (content) onRead({ content, done: false })
   }
   onRead({ content: '', done: true })
 }
@@ -156,7 +209,11 @@ export async function fetchModels({ baseUrl, apiKey }) {
   } catch (err) {
     if (err instanceof LlmApiError) throw err
     if (classifyFetchFailure(err) === 'network' && isHelperAvailable()) {
-      data = await helperRequest(endpoint, { method: 'GET', headers })
+      try {
+        data = await helperRequest(endpoint, { method: 'GET', headers })
+      } catch (e) {
+        throw normalizeHelperError(e)
+      }
     } else {
       throw err
     }
