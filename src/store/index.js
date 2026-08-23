@@ -244,7 +244,7 @@ export default new Vuex.Store({
     SET_MANGA_TRANS(state, patch) {
       const pKeys = Object.keys(patch)
       const dontTrack = ['sourceLang', 'targetLang', 'serverToken'].some(k => pKeys.includes(k))
-      if (!dontTrack) window.umami?.track('SET_MANGA_TRANS', patch.providers ? { patch: JSON.stringify(patch, (k, v) => k === 'apiKey' ? '[REDACTED]' : v) } : patch)
+      if (!dontTrack) window.umami?.track('SET_MANGA_TRANS', { patch: JSON.stringify(patch, (k, v) => k === 'apiKey' ? '[REDACTED]' : v) })
       state.mangaTrans = {
         ...state.mangaTrans,
         ...patch,

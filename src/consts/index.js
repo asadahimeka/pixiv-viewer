@@ -17,7 +17,6 @@ export const notSelfHibiApi = !/cocomi\.eu\.org|pixiv\.pictures|169889\.xyz|pxve
 export const PIXIV_NEXT_URL = process.env.VUE_APP_PXVEAPI_MAIN || 'https://api.cocomi.eu.org'
 export const PIXIV_NOW_URL = `${PIXIV_NEXT_URL}/api/pixiv-now/http`
 export const SILICON_CLOUD_BASR_URL = 'https://api.siliconflow.cn/v1'
-export const SILICON_CLOUD_API_KEY = process.env.VUE_APP_SILICON_CLOUD_API_KEY
 export const SERVER_TRANSLATE_URL = process.env.VUE_APP_SERVER_TRANSLATE_URL || 'https://hibiapi.cocomi.eu.org/manga'
 export const SERVER_TRANSLATE_TOKEN = process.env.VUE_APP_SERVER_TRANSLATE_TOKEN || ''
 export const ugoiraAvifSrc = id => `https://ugoira.perennialte.ch/ugoira/${id}`

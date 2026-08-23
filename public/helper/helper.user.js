@@ -2,7 +2,7 @@
 // @name         Pxve HTTP Helper
 // @name:ru      HTTP-помощник Pxve
 // @namespace    https://www.nanoka.top
-// @version      0.10
+// @version      0.11
 // @description  HTTP helper for Pixiv-Viewer.
 // @description:ru HTTP-помощник для Pixiv-Viewer.
 // @author       asadahimeka
@@ -25,7 +25,11 @@
 // @connect      pixiv.re
 // @connect      api.siliconflow.cn
 // @connect      api.deepseek.com
+// @connect      api.moonshot.ai
+// @connect      api.moonshot.cn
 // @connect      api.openai.com
+// @connect      open.bigmodel.cn
+// @connect      openrouter.ai
 // @connect      translate.googleapis.com
 // @grant        unsafeWindow
 // @grant        window.close

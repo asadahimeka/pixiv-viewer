@@ -107,7 +107,6 @@ VUE_APP_DEF_PXIMG_MAIN      — Default pximg proxy
 VUE_APP_DEF_APP_API_PROXY   — AppAPI proxy host
 VUE_APP_COMMON_PROXY        — Generic proxy (https://proxy.example.com/https://url)
 VUE_APP_COMMON_IMAGE_PROXY  — Generic image proxy (falls back to COMMON_PROXY)
-VUE_APP_SILICON_CLOUD_API_KEY — AI translation key
 VUE_APP_MODEL_RELEASE_TAG   — ONNX model CDN release tag (rewrites manifest URLs)
 VUE_APP_MODEL_URL_TEMPLATE  — Custom model CDN URL template (priority over release tag)
 VUE_APP_ORT_WASM_PATH       — ONNX Runtime WASM path (default: jsdelivr CDN)
@@ -150,7 +149,7 @@ VUE_APP_ORT_WASM_PATH       — ONNX Runtime WASM path (default: jsdelivr CDN)
 - **Bypassing R18 gate** (zh-CN): `main.js` blocks when `!LocalStorage.get('PXV_NSFW_ON')` is falsy AND locale is zh. To bypass, set BOTH:
   - `localStorage.setItem('PXV_CNT_SHOW', ...)` — content settings (r18/r18g/ai flags)
   - `localStorage.setItem('PXV_NSFW_ON', '{"data":0,"expires":-1}')` — **value MUST be 0** (falsy → `!isOn()` = true → no block). Do NOT set it to truthy (1) — that triggers the blocking page in zh locale.
-- **API Key is in `.env.local`** (gitignored): `VUE_APP_SILICON_CLOUD_API_KEY` is applied automatically to API calls — real translation tests can run directly, no mocking needed.
+- **AI 翻译已 BYOK**：测试真实翻译需先在设置页（或 localStorage `PXV_MANGATRANS_SETTING`）注入测试用 API Key，应用不会内置任何 Key，真实翻译测试需手动注入后直接运行，无需 mock。
 - **dev server reuse**: before dispatching QA, `curl localhost:8080` — if listening, reuse it (`pnpm serve` compile takes 90s+, re-starting wastes ~10 min).
 - **hibiapi.cocomi.eu.org rejects automation**: it returns "Not Accepted" for requests with `HeadlessChrome` in the User-Agent or without a proper referer. In QA scripts, headless mode is fine but you MUST set a normal UA (no `HeadlessChrome` substring) and a `localhost` referer. Browser (real user) requests are unaffected — the app cannot and does not set UA/Referer for hibiapi (forbidden headers).
 

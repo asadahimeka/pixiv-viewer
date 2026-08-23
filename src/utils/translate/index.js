@@ -86,7 +86,6 @@ export async function loadKISSTranslator(isAutoLoad = false, isAutoTrigger = isA
 //       buildinConfig.telemetry = false
 //       // buildinConfig.translationService = 'bing'
 //       buildinConfig.translationService = 'siliconcloud'
-//       buildinConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
 //       buildinConfig.translationServices.siliconcloud.assistantId = 'common'
 //       buildinConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2.5-7B-Instruct'
 //       localStorage.buildinConfig = JSON.stringify({ buildinConfig })
@@ -96,7 +95,6 @@ export async function loadKISSTranslator(isAutoLoad = false, isAutoTrigger = isA
 //       userConfig.translationService = 'siliconcloud'
 //       userConfig.translationServices = userConfig.translationServices || {}
 //       userConfig.translationServices.siliconcloud = userConfig.translationServices.siliconcloud || {}
-//       userConfig.translationServices.siliconcloud.APIKEY = SILICON_CLOUD_API_KEY
 //       userConfig.translationServices.siliconcloud.assistantId = 'common'
 //       userConfig.translationServices.siliconcloud.model = 'Qwen/Qwen2.5-7B-Instruct'
 //       localStorage.userConfig = JSON.stringify({ userConfig })
