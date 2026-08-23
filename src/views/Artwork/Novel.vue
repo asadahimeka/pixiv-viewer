@@ -618,7 +618,6 @@ export default {
         if (!res) {
           let url = `${PIXIV_NEXT_URL}/api/pixiv-novel-translate/${this.artwork.id}.html?srv=${srv}`
           if (nots) url += `&nots=${nots}`
-          if (srv == 'sc' && aiModel) url += `&aimd=${aiModel}`
           res = await fetch(url).then(r => r.text())
           // if (!res.includes('Translate failed')) setCache(cacheKey, res)
           if (!res.startsWith('{')) setCache(cacheKey, res)
@@ -646,6 +645,11 @@ export default {
       this.novelText.text = this.$t('tips.loading')
       const callback = chunk => {
         if (chunk.done) {
+          if (chunk.error) {
+            this.$toast(chunk.error)
+            this.translateLoading = false
+            return
+          }
           novelElement.innerHTML = resText
           this.novelText.text = resText
           setCache(cacheKey, resText)
