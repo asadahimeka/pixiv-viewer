@@ -27,7 +27,7 @@
         <van-icon name="info-o" /> Shinobu 管线: 完整翻译管线（检测 → OCR → 翻译 → 去字 → 排版），结果直接输出到画布。首次使用需要下载模型文件。
       </div>
       <div v-else-if="translationEngine === 'server'" class="engine-help">
-        <van-icon name="info-o" /> 服务端翻译: 由自建服务端完成完整翻译管线（检测 → OCR → 翻译 → 去字 → 排版），结果输出到画布。每次翻译可能需要较长时间，请耐心等待。
+        <van-icon name="info-o" /> 服务端翻译: 由自建服务端完成完整翻译管线（检测 → OCR → 翻译 → 去字 → 排版），结果输出到画布。每次翻译可能需要较长时间(数分钟)，请耐心等待。
       </div>
     </van-cell-group>
 
@@ -46,7 +46,8 @@
         clearable
       />
       <div class="engine-help">
-        <van-icon name="info-o" /> 留空使用构建时默认配置，<a href="https://github.com/asadahimeka/shinobu-server" target="_blank" rel="noopener">点击前往 GitHub 查看部署与自建说明</a>
+        <van-icon name="info-o" />
+        <a href="https://github.com/asadahimeka/shinobu-server" target="_blank" rel="noopener">点击前往 GitHub 查看部署与自建说明</a>
       </div>
     </van-cell-group>
 
