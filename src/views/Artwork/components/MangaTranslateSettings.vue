@@ -51,18 +51,37 @@
       </div>
     </van-cell-group>
 
-    <van-cell-group v-if="translationEngine === 'vl-api' && $store.getters.isLoggedIn" title="VL 模型">
-      <van-cell
-        title="视觉语言模型"
-        label="选择云端 VL 模型进行漫画翻译"
-        class="preset-model-cell"
-      >
-        <select v-model="translationVlModel" class="preset-model-select">
-          <option v-for="(model, label) in vlModels" :key="label" :value="model">
-            {{ label }}
-          </option>
-        </select>
-      </van-cell>
+    <van-cell-group v-if="translationEngine === 'vl-api'" title="VL API 配置（BYOK）">
+      <van-field
+        :value="vlConfig.baseUrl"
+        label="Base URL"
+        placeholder="https://api.siliconflow.cn/v1"
+        clearable
+        @change="onVlBaseUrlChange"
+      />
+      <van-field
+        :value="vlConfig.apiKey"
+        type="password"
+        label="API Key"
+        placeholder="输入你的 API Key"
+        clearable
+        @change="onVlApiKeyChange"
+      />
+      <llm-model-select
+        :base-url="vlConfig.baseUrl"
+        :api-key="vlConfig.apiKey"
+        v-model="translationVlModel"
+      />
+      <div class="engine-help">
+        <van-icon name="info-o" /> 支持 OpenAI 兼容接口。视觉翻译需选择支持图片输入的 VL 模型；API Key 仅存储在本机浏览器，请勿填入他人设备。
+      </div>
+      <div class="test-connection-wrap">
+        <van-button size="small" plain round :loading="vlTestLoading" loading-text="测试中..." @click="testVlConnection">测试连接</van-button>
+      </div>
+      <div v-if="vlTestResult" class="model-test-result" :class="vlTestResult.ok ? 'is-ok' : 'is-fail'">
+        <van-icon :name="vlTestResult.ok ? 'success' : 'warning'" />
+        <span>{{ vlTestResult.message }}</span>
+      </div>
     </van-cell-group>
 
     <template v-if="translationEngine === 'shinobu'">
@@ -99,7 +118,7 @@
           :value="showPresetModelSel ? '' : providerConfig.apiKey"
           type="password"
           label="API Key"
-          placeholder="输入 API Key，留空使用预设"
+          placeholder="输入你的 API Key"
           @change="onApiKeyChange"
         />
         <van-cell
@@ -211,16 +230,21 @@
 </template>
 
 <script>
-import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
+import { SILICON_CLOUD_BASR_URL } from '@/consts'
 import { Toast } from '@/lib/vant-apis'
 import localforage from 'localforage'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
 import { aiModelMap, freeAiModels } from '@/utils/translate'
 import { VL_MODELS } from '@/utils/translate/manga'
+import { fetchModels } from '@/utils/translate/llmClient'
+import LlmModelSelect from './LlmModelSelect.vue'
 
 export default {
   name: 'MangaTranslateSettings',
+  components: {
+    LlmModelSelect,
+  },
   data() {
     return {
       testLoading: false,
@@ -228,6 +252,8 @@ export default {
       clearingModels: false,
       testResult: null,
       vlModels: VL_MODELS,
+      vlTestLoading: false,
+      vlTestResult: null,
     }
   },
   computed: {
@@ -315,8 +341,12 @@ export default {
     providerConfig() {
       return this.translationProviders[this.translationProvider] || {}
     },
+    vlConfig() {
+      const mt = store.state.mangaTrans
+      return mt.providers[mt.vlProvider] || {}
+    },
     showPresetModelSel() {
-      return this.providerConfig.apiKey == SILICON_CLOUD_API_KEY
+      return this.providerConfig.baseUrl == SILICON_CLOUD_BASR_URL
     },
   },
   methods: {
@@ -361,6 +391,37 @@ export default {
           [name]: { ...current, model: val },
         },
       })
+    },
+    onVlBaseUrlChange(e) {
+      const name = e.target.value
+      const current = store.state.mangaTrans.providers[name] || {}
+      store.commit('SET_MANGA_TRANS', {
+        vlProvider: name,
+        providers: { [name]: { ...current, baseUrl: name } },
+      })
+    },
+    onVlApiKeyChange(e) {
+      const name = store.state.mangaTrans.vlProvider
+      const current = store.state.mangaTrans.providers[name] || {}
+      store.commit('SET_MANGA_TRANS', {
+        providers: { [name]: { ...current, apiKey: e.target.value } },
+      })
+    },
+    async testVlConnection() {
+      if (!this.vlConfig.apiKey) {
+        this.vlTestResult = { ok: false, message: '请先输入 API Key' }
+        return
+      }
+      this.vlTestLoading = true
+      try {
+        const ids = await fetchModels({ baseUrl: this.vlConfig.baseUrl, apiKey: this.vlConfig.apiKey })
+        const known = ids.includes(store.state.mangaTrans.vlModel)
+        this.vlTestResult = { ok: true, message: `连接成功，共 ${ids.length} 个模型${known ? '' : '（当前模型不在列表中，请确认其支持图片输入）'}` }
+      } catch (err) {
+        this.vlTestResult = { ok: false, message: `连接失败: ${err.message}` }
+      } finally {
+        this.vlTestLoading = false
+      }
     },
     onSrvTokenLongpress() {
       const value = prompt('鉴权 Token')
