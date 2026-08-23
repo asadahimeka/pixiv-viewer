@@ -1,7 +1,8 @@
 import { Dialog } from '@/lib/vant-apis'
 import { i18n } from '@/i18n'
-import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
 import { loadScript } from '@/utils'
+import { chatCompletionStream } from '@/utils/translate/llmClient'
+import store from '@/store'
 
 export async function loadKISSTranslator(isAutoLoad = false, isAutoTrigger = isAutoLoad) {
   if (!isAutoLoad && !localStorage.getItem('PXV_KISST_CFMED')) {
@@ -161,70 +162,43 @@ export function resolveNovelModel(v) {
   return aiModelMap[v] || v || 'tencent/Hunyuan-MT-7B'
 }
 
-export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd = 'glm', onRead = console.log) {
+export async function siliconCloudTranslate(novelText = '', notsArr = [], modelId = 'tencent/Hunyuan-MT-7B', onRead = console.log) {
   try {
     if (!novelText.trim()) return
+    const mt = store.state.mangaTrans
+    const cfg = mt.providers[mt.novelProvider] || {}
+    if (!cfg.apiKey) {
+      onRead({ done: true, error: 'no_api_key' })
+      return
+    }
     novelText = replaceNovelMark(novelText)
     if (notsArr.length) {
       notsArr.forEach((e, i) => {
         novelText = novelText.replaceAll(e, `[名字${i}]`)
       })
     }
-    const response = await fetch(`${SILICON_CLOUD_BASR_URL}/chat/completions`, {
-      method: 'POST',
-      headers: {
-        'authorization': `Bearer ${SILICON_CLOUD_API_KEY}`,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: aiModelMap[aimd],
+    await chatCompletionStream({
+      baseUrl: cfg.baseUrl,
+      apiKey: cfg.apiKey,
+      onRead,
+      body: {
+        model: modelId,
         stream: true,
         messages: [
           {
             role: 'system',
-            // content: 'You are a professional, authentic machine translation engine.',
-            // content: 'You are a highly skilled translation engine with expertise in eBook translation. Your function is to translate eBook texts accurately into the Simplified Chinese Language, maintaining the original tone, style, and formatting. Focus on delivering translations that resonate with the intended audience while ensuring the essence of the original text is preserved.',
-            // content: 'You are a highly skilled translation engine with expertise in fiction literature. Your function is to translate texts into the Simplified Chinese Language, capturing the narrative depth and emotional nuances of the original work. Maintain the original storytelling elements and cultural references without adding any explanations or annotations.',
-            // content: '你是一个专业的、正宗的机器翻译引擎。',
             content: 'You are a professional literary translator for Pixiv Japanese novels.',
           },
           {
             role: 'user',
-            // content: `Translate the text starting on the next line into Simplified Chinese Language, output translation ONLY. NO explanations. NO notes. The content in "「」" also needs to be translated. Input:\n${novelText}`,
-            // content: `Translate the following source text to Simplified Chinese Language, Output translation directly without any additional text.\nSource Text: ${novelText}`,
-            // content: `将下面的文本翻译为简体中文，直接输出翻译结果，不附加其他文本。\n${novelText}`,
             content: `Translate the following source text into Simplified Chinese Language. Ensure the translation is fluent and natural, maintaining the original meaning and style. Keep names, tone, pacing, and line intent consistent with the source. Do not censor or skip any content. Provide only the translation, without any explanation.\nSource Text:\n${novelText}`,
           },
         ],
-      }),
+      },
     })
-    const reader = response.body.getReader()
-    const decoder = new TextDecoder()
-
-    while (true) {
-      const { value, done } = await reader.read()
-      if (done) break
-      const chunk = decoder.decode(value, { stream: true })
-      const jsonLines = chunk.split('\n').filter(line => line.trim() !== '')
-
-      for (let jsonLine of jsonLines) {
-        jsonLine = jsonLine.replace(/^data: /, '')
-        if (jsonLine === '[DONE]') {
-          onRead({ done: true })
-          return
-        }
-        const json = JSON.parse(jsonLine)
-        const { content, reasoning_content: reason } = json.choices[0].delta
-
-        if (content) {
-          onRead({ done: false, content })
-        } else if (reason) {
-          onRead({ done: false, content: reason, reasoning: true })
-        }
-      }
-    }
   } catch (err) {
     console.log('siliconCloudTranslate err: ', err)
+    onRead({ done: true, error: err.message || String(err) })
   }
 }
 

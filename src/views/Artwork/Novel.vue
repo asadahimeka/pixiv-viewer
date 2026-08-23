@@ -132,12 +132,12 @@
 <script>
 import _ from '@/lib/lodash'
 import { mapGetters } from 'vuex'
-import { ImagePreview } from '@/lib/vant-apis'
+import { Dialog, ImagePreview } from '@/lib/vant-apis'
 import api, { getBookmarkRestrictTags, localApi } from '@/api'
 import store, { novelTextConfig } from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
-import { PIXIV_NEXT_URL, SILICON_CLOUD_API_KEY } from '@/consts'
-import { aiModelMap, getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
+import { PIXIV_NEXT_URL } from '@/consts'
+import { getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, resolveNovelModel, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
 import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel } from '@/utils/novel'
 import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
@@ -242,13 +242,11 @@ export default {
   computed: {
     ...mapGetters(['isCensored']),
     pntActions() {
-      const model = store.state.appSetting.novelDefTransAiModel || 'hy_mt'
-      const modelKey = aiModelMap[model] ? model : 'hy_mt'
-      const modelName = aiModelMap[modelKey].split('/').pop()
+      const modelName = resolveNovelModel(store.state.mangaTrans.novelModel || store.state.appSetting.novelDefTransAiModel).split('/').pop()
       return [
         !this.kissLoaded && ({ text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' }),
         isNativeTranslatorSupported && ({ text: 'Chrome 内置翻译', className: 'sc', key: 'native' }),
-        { text: `AI 翻译(${modelName})`, className: 'sc', key: `sc_${modelKey}` },
+        { text: `AI 翻译(${modelName})`, className: 'sc', key: 'sc_ai' },
         { text: '微软翻译', className: 'ms', key: 'ms' },
         { text: '谷歌翻译', className: 'gg', key: 'gg' },
         { text: '有道翻译', className: 'yd', key: 'yd' },
@@ -563,6 +561,11 @@ export default {
     },
     doDefPnt() {
       const key = store.state.appSetting.novelDefTranslate
+      if (key.startsWith('sc')) {
+        const mt = store.state.mangaTrans
+        const cfg = mt.providers[mt.novelProvider] || {}
+        if (!cfg.apiKey) return
+      }
       this.onPntSelect({ key, text: key })
     },
     async onPntSelect(action) {
@@ -570,10 +573,7 @@ export default {
       window.umami?.track('translate_novel', { with: action.text })
       store.commit('setIsNovelViewShrink', false)
       const fns = {
-        ...Object.keys(aiModelMap).reduce((acc, cur) => {
-          acc[`sc_${cur}`] = async () => this.fanyi('sc', await getNoTranslateWords(this.artwork.tags), cur)
-          return acc
-        }, {}),
+        sc_ai: async () => this.fanyi('sc', await getNoTranslateWords(this.artwork.tags)),
         ms: async () => this.fanyi('ms', await getNoTranslateWords(this.artwork.tags)),
         gg: () => this.fanyi('gg'),
         yd: () => this.fanyi('yd'),
@@ -590,8 +590,20 @@ export default {
     },
     async fanyi(srv, nots = '', aiModel = 'glm') {
       try {
-        if (SILICON_CLOUD_API_KEY && srv == 'sc') {
-          this.aiTranslate(nots, aiModel)
+        if (srv == 'sc') {
+          const mt = store.state.mangaTrans
+          const cfg = mt.providers[mt.novelProvider] || {}
+          if (!cfg.apiKey) {
+            const res = await Dialog.confirm({
+              title: '需要 API Key',
+              message: 'AI 翻译现已改为自带 Key（BYOK）：请在「设置 → 其他设置 → 小说翻译」中填入你的 OpenAI 兼容 API Key（如 SiliconCloud 免费模型）。',
+              confirmButtonText: '前往设置',
+              cancelButtonText: '取消',
+            }).catch(() => 'cancel')
+            if (res == 'confirm') this.$router.push('/setting/preference')
+            return
+          }
+          this.aiTranslate(nots, store.state.mangaTrans.novelModel || store.state.appSetting.novelDefTransAiModel)
           return
         }
 
@@ -620,7 +632,8 @@ export default {
       }
     },
     async aiTranslate(nots = '', aiModel = 'glm', isNative = false) {
-      const cacheKey = `novel.translate.${this.artwork.id}.sc.${aiModel}.${nots}.${isNative}`
+      const aiModelId = resolveNovelModel(aiModel)
+      const cacheKey = `novel.translate.${this.artwork.id}.sc.${aiModelId}.${nots}.${isNative}`
       const cacheText = await getCache(cacheKey)
       if (cacheText) {
         this.novelText.text = cacheText
@@ -660,7 +673,7 @@ export default {
       if (isNative) {
         nativeTranslate(novelTextBak, callback)
       } else {
-        siliconCloudTranslate(novelTextBak, notsArr, aiModel, callback)
+        siliconCloudTranslate(novelTextBak, notsArr, aiModelId, callback)
       }
     },
   },
