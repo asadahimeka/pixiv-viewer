@@ -37,7 +37,7 @@
       </van-radio-group>
     </van-cell-group>
 
-    <van-cell-group title="AI 翻译模型">
+    <van-cell-group v-if="isScProvider" title="AI 翻译模型">
       <van-cell title="选择 AI 翻译模型" class="preset-model-cell">
         <select v-model="aiModel" class="preset-model-select">
           <option v-for="(model, key) in modelMap" :key="key" :value="key">
@@ -45,6 +45,32 @@
           </option>
         </select>
       </van-cell>
+    </van-cell-group>
+
+    <van-cell-group title="AI 翻译 API 配置（BYOK）">
+      <van-field
+        :value="novelConfig.baseUrl"
+        label="Base URL"
+        placeholder="https://api.siliconflow.cn/v1"
+        clearable
+        @change="onNovelBaseUrlChange"
+      />
+      <van-field
+        :value="novelConfig.apiKey"
+        type="password"
+        label="API Key"
+        placeholder="输入你的 API Key"
+        clearable
+        @change="onNovelApiKeyChange"
+      />
+      <llm-model-select
+        v-model="novelModel"
+        :base-url="novelConfig.baseUrl"
+        :api-key="novelConfig.apiKey"
+      />
+      <div class="engine-help">
+        <van-icon name="info-o" /> 默认翻译服务选「AI 翻译」时使用以上配置；API Key 仅存储在本机浏览器。
+      </div>
     </van-cell-group>
 
     <van-cell-group title="缓存管理">
@@ -71,10 +97,14 @@
 import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
-import { aiModelMap, freeAiModels, isNativeTranslatorSupported } from '@/utils/translate'
+import { aiModelMap, freeAiModels, isNativeTranslatorSupported, resolveNovelModel } from '@/utils/translate'
+import LlmModelSelect from './LlmModelSelect.vue'
 
 export default {
   name: 'NovelTranslateSettings',
+  components: {
+    LlmModelSelect,
+  },
   data() {
     return {
       aiModelMap,
@@ -127,10 +157,41 @@ export default {
           novelDefTranslate: 'sc_' + val,
           novelDefTransAiModel: val,
         })
+        store.commit('SET_MANGA_TRANS', { novelModel: aiModelMap[val] || val })
+      },
+    },
+    novelConfig() {
+      const mt = store.state.mangaTrans
+      return mt.providers[mt.novelProvider] || {}
+    },
+    isScProvider() {
+      return /siliconflow\.cn/.test(this.novelConfig.baseUrl || '')
+    },
+    novelModel: {
+      get() {
+        return resolveNovelModel(store.state.mangaTrans.novelModel || store.state.appSetting.novelDefTransAiModel)
+      },
+      set(val) {
+        store.commit('SET_MANGA_TRANS', { novelModel: val })
       },
     },
   },
   methods: {
+    onNovelBaseUrlChange(e) {
+      const name = e.target.value
+      const current = store.state.mangaTrans.providers[name] || {}
+      store.commit('SET_MANGA_TRANS', {
+        novelProvider: name,
+        providers: { [name]: { ...current, baseUrl: name } },
+      })
+    },
+    onNovelApiKeyChange(e) {
+      const name = store.state.mangaTrans.novelProvider
+      const current = store.state.mangaTrans.providers[name] || {}
+      store.commit('SET_MANGA_TRANS', {
+        providers: { [name]: { ...current, apiKey: e.target.value } },
+      })
+    },
     async clearTranslationCache() {
       this.clearingCache = true
       try {

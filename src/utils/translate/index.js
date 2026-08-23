@@ -151,6 +151,16 @@ export const aiModelMap = {
   glm4_5: 'zai-org/GLM-4.5-Air',
   hy: 'tencent/Hunyuan-A13B-Instruct',
 }
+
+/**
+ * 小说翻译模型 id 归一化：兼容历史短键（hy_mt 等）与完整模型 id
+ * @param {string} v
+ * @returns {string}
+ */
+export function resolveNovelModel(v) {
+  return aiModelMap[v] || v || 'tencent/Hunyuan-MT-7B'
+}
+
 export async function siliconCloudTranslate(novelText = '', notsArr = [], aimd = 'glm', onRead = console.log) {
   try {
     if (!novelText.trim()) return
