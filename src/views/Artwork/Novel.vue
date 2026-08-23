@@ -560,7 +560,12 @@ export default {
       this.isTranslated = false
     },
     doDefPnt() {
-      const key = store.state.appSetting.novelDefTranslate
+      let key = store.state.appSetting.novelDefTranslate
+      // 归一化：AI 翻译类键（sc_ 前缀，含旧格式 'sc_' + 短键）统一为 sc_ai，
+      // 兼容改造后 onPntSelect 仅保留 sc_ai 单键的现状
+      if (key.startsWith('sc_')) {
+        key = 'sc_ai'
+      }
       if (key.startsWith('sc')) {
         const mt = store.state.mangaTrans
         const cfg = mt.providers[mt.novelProvider] || {}

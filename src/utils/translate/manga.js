@@ -26,13 +26,15 @@ export const VL_MODELS = {
 export const DEFAULT_VL_MODEL = 'Qwen/Qwen3.5-4B'
 
 /**
- * Resolve a stored VL model id — if it's not a known candidate (e.g. a stale
- * localStorage value from a removed/renamed model), fall back to the default.
+ * Resolve a stored VL model id. Only empty/falsy values fall back to the
+ * default — any non-empty model id (including BYOK custom models outside the
+ * VL_MODELS whitelist, e.g. DeepSeek/OpenRouter) is passed through as-is so
+ * the T4 UI's free-text model input is never silently replaced.
  * @param {string} model
  * @returns {string}
  */
 export function resolveVlModel(model) {
-  return Object.values(VL_MODELS).includes(model) ? model : DEFAULT_VL_MODEL
+  return model || DEFAULT_VL_MODEL
 }
 
 /**
