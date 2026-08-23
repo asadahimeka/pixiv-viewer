@@ -1,4 +1,5 @@
-import { SILICON_CLOUD_API_KEY, SILICON_CLOUD_BASR_URL } from '@/consts'
+import { SILICON_CLOUD_BASR_URL } from '@/consts'
+import { chatCompletionStream } from '@/utils/translate/llmClient'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 
 /**
@@ -48,13 +49,17 @@ export async function getCachedTranslation(artworkId, pageIndex, model) {
 }
 
 /**
- * Call SiliconCloud multimodal API with SSE streaming
+ * Call OpenAI-compatible multimodal API with streaming
  * @param {string} imageSrc
  * @param {function} onRead - callback({ content: string, done: boolean })
- * @param {string} [model] - SiliconCloud model id
+ * @param {string} [model]
+ * @param {{ baseUrl: string, apiKey: string }} apiConfig - BYOK 配置（必传）
  */
-export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_VL_MODEL) {
-  const url = `${SILICON_CLOUD_BASR_URL}/chat/completions`
+export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_VL_MODEL, apiConfig) {
+  if (!apiConfig?.apiKey) {
+    onRead({ content: '', done: true, error: 'no_api_key' })
+    return
+  }
   const imageUrl = new URL(imageSrc)
   imageUrl.protocol = 'https:'
   imageUrl.hostname = 'img.rika.club'
@@ -72,59 +77,17 @@ export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_
     }],
   }
 
-  let response
   try {
-    response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'authorization': `Bearer ${SILICON_CLOUD_API_KEY}`,
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify(body),
+    await chatCompletionStream({
+      baseUrl: apiConfig.baseUrl || SILICON_CLOUD_BASR_URL,
+      apiKey: apiConfig.apiKey,
+      onRead: c => onRead(c.content ? { ...c, content: c.content.replace(/<\|begin_of_box\||<\|end_of_box\|>|^>+\s*/g, '') } : c),
+      body,
     })
   } catch (err) {
-    throw new Error(`Network error calling SiliconCloud API: ${err.message}`)
+    console.log('callMultimodalAPIStream err:', err)
+    onRead({ content: '', done: true, error: err.message || String(err) })
   }
-
-  if (!response.ok) {
-    throw new Error(`SiliconCloud API returned status ${response.status} ${response.statusText}`)
-  }
-
-  const reader = response.body.getReader()
-  const decoder = new TextDecoder()
-
-  while (true) {
-    const { value, done } = await reader.read()
-    if (done) break
-
-    const chunk = decoder.decode(value, { stream: true })
-    const jsonLines = chunk.split('\n').filter(line => line.trim() !== '')
-
-    for (let jsonLine of jsonLines) {
-      jsonLine = jsonLine.replace(/^data: /, '')
-      if (jsonLine === '[DONE]') {
-        onRead({ content: '', done: true })
-        return
-      }
-
-      let content = ''
-      try {
-        const json = JSON.parse(jsonLine)
-        content = json.choices[0].delta.content || ''
-      } catch (e) {
-        continue
-      }
-
-      if (content) {
-        content = content.replace(/<\|begin_of_box\||<\|end_of_box\|>|^>+\s*/g, '')
-        if (content) {
-          onRead({ content, done: false })
-        }
-      }
-    }
-  }
-
-  onRead({ content: '', done: true })
 }
 
 /**
@@ -134,9 +97,10 @@ export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_
  * @param {number} pageIndex
  * @param {function} onRead - callback({ content: string, done: boolean, error?: string })
  * @param {string} [model] - SiliconCloud model id
+ * @param {{ baseUrl: string, apiKey: string }} [apiConfig] - BYOK 配置
  * @returns {Promise<string|null>}
  */
-export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead, model = DEFAULT_VL_MODEL) {
+export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead, model = DEFAULT_VL_MODEL, apiConfig) {
   const key = `pic.translate.${artworkId}.${pageIndex}.${model}`
 
   const cached = await getCachedTranslation(artworkId, pageIndex, model)
@@ -151,7 +115,7 @@ export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead,
     try {
       await callMultimodalAPIStream(imageUrl, ({ content, done }) => {
         fullText += content
-      }, model)
+      }, model, apiConfig)
     } catch (err) {
       console.warn('picTranslate: API call failed', err.message)
       return null
@@ -169,7 +133,7 @@ export async function translateMangaPage(imageUrl, artworkId, pageIndex, onRead,
     await callMultimodalAPIStream(imageUrl, ({ content, done }) => {
       fullText += content
       onRead({ content, done })
-    }, model)
+    }, model, apiConfig)
   } catch (err) {
     console.warn('picTranslate: API call failed', err.message)
     onRead({ content: '', done: true, error: err.message })

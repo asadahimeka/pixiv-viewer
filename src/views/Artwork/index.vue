@@ -273,6 +273,10 @@ export default {
       const { provider, providers } = store.state.mangaTrans
       return providers[provider] || {}
     },
+    vlApiConfig() {
+      const mt = store.state.mangaTrans
+      return mt.providers[mt.vlProvider] || {}
+    },
   },
   watch: {
     $route() {
@@ -1144,6 +1148,11 @@ export default {
       this.$set(this.picTranslating, pageIndex, true)
 
       const imageUrl = this.artwork.images[pageIndex]?.l?.replace(/\/c\/\d+x\d+\w*\//g, '/') || this.artwork.images[pageIndex]?.o
+      if (!this.vlApiConfig.apiKey) {
+        this.$toast('请先在设置中填写 VL API 的 API Key')
+        this.$set(this.picTranslating, pageIndex, false)
+        return
+      }
       try {
         await translateMangaPage(imageUrl, this.artwork.id, pageIndex, ({ content, done, error }) => {
           if (content) {
@@ -1158,7 +1167,7 @@ export default {
               this.$toast('翻译失败，请重试')
             }
           }
-        }, resolveVlModel(store.state.mangaTrans.vlModel))
+        }, resolveVlModel(store.state.mangaTrans.vlModel), this.vlApiConfig)
       } catch (err) {
         console.log('translate err: ', err)
         this.$toast('翻译出错: ' + err.message)
