@@ -68,9 +68,9 @@
         @change="onVlApiKeyChange"
       />
       <llm-model-select
+        v-model="translationVlModel"
         :base-url="vlConfig.baseUrl"
         :api-key="vlConfig.apiKey"
-        v-model="translationVlModel"
       />
       <div class="engine-help">
         <van-icon name="info-o" /> 支持 OpenAI 兼容接口。视觉翻译需选择支持图片输入的 VL 模型；API Key 仅存储在本机浏览器，请勿填入他人设备。
