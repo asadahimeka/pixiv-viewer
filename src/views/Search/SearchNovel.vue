@@ -12,7 +12,7 @@
         @focus="onFocus"
         @search="onSearch"
       />
-      <div ref="words" class="search-bar-word" @click="handleWordsClick($event)">
+      <div v-show="!focus" ref="words" class="search-bar-word" @click="handleWordsClick($event)">
         <span v-if="keywordsList.length === 0 && !lastWord" class="placeholder">{{ $t('search.placeholder') }}</span>
         <div v-for="(word, index) in keywordsList" :key="index" class="word">
           <span class="text">{{ word }}</span>
@@ -855,6 +855,12 @@ export default {
 .dropdown
   &.search-bar-wrap .search-bar
     background #fff
+    ::v-deep .van-cell input
+      opacity: 1
+      color: #333
+      caret-color: #000
+      &::placeholder
+        color: transparent
 
 .search-dropdown
   position: fixed;
