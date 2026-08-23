@@ -5,7 +5,7 @@ import { getSettingDef, LocalStorage, SessionStorage } from '@/utils/storage'
 import { isSafari } from '@/utils'
 import { getSelectedLang } from '@/i18n'
 import { isArtworkNotCensored } from '@/utils/filter'
-import { SILICON_CLOUD_BASR_URL, SILICON_CLOUD_API_KEY, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
+import { SILICON_CLOUD_BASR_URL, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
 
 Vue.use(Vuex)
 
@@ -46,15 +46,21 @@ export default new Vuex.Store({
       /** @type {'google_web'|'llm'} */
       translator: 'llm',
       provider: SILICON_CLOUD_BASR_URL,
-      /** @type {Record<string, {apiKey?: string, model?: string, baseUrl?: string, authMode?: string}>} */
+      /** @type {Record<string, {apiKey?: string, baseUrl?: string, model?: string, modelSelMode?: 'list'|'manual'}>} */
       providers: {
         [SILICON_CLOUD_BASR_URL]: {
-          apiKey: SILICON_CLOUD_API_KEY,
+          apiKey: '',
           baseUrl: SILICON_CLOUD_BASR_URL,
           model: 'tencent/Hunyuan-MT-7B',
-          authMode: 'api_key',
+          modelSelMode: 'list',
         },
       },
+      // VL API 引擎独立配置
+      vlProvider: SILICON_CLOUD_BASR_URL,
+      // 小说翻译独立配置
+      novelProvider: SILICON_CLOUD_BASR_URL,
+      /** @type {string} 小说翻译完整模型 id（兼容旧短键，消费侧经 resolveNovelModel 归一化） */
+      novelModel: '',
       /** @type {'translate'|'erase'|'original'} */
       processMode: 'translate',
       autoTranslate: false,
@@ -238,7 +244,7 @@ export default new Vuex.Store({
     SET_MANGA_TRANS(state, patch) {
       const pKeys = Object.keys(patch)
       const dontTrack = ['sourceLang', 'targetLang', 'serverToken'].some(k => pKeys.includes(k))
-      if (!dontTrack) window.umami?.track('SET_MANGA_TRANS', patch.providers ? { patch: JSON.stringify(patch).replace(/"apiKey":"[\w-]+",/g, '') } : patch)
+      if (!dontTrack) window.umami?.track('SET_MANGA_TRANS', patch.providers ? { patch: JSON.stringify(patch, (k, v) => k === 'apiKey' ? '[REDACTED]' : v) } : patch)
       state.mangaTrans = {
         ...state.mangaTrans,
         ...patch,
