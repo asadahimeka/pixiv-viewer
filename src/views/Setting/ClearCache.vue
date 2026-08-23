@@ -32,10 +32,41 @@
         </van-button>
       </template>
     </van-cell>
+    <template v-if="showClearTransate">
+      <van-cell center title="清除小说翻译缓存">
+        <template #right-icon>
+          <van-button type="info" size="small" @click="clearNovelTransCache">
+            <span>{{ $t('cache.clear') }}</span>
+          </van-button>
+        </template>
+      </van-cell>
+      <van-cell center title="清除漫画翻译缓存">
+        <template #right-icon>
+          <van-button type="info" size="small" @click="clearMangaTransCache">
+            <span>{{ $t('cache.clear') }}</span>
+          </van-button>
+        </template>
+      </van-cell>
+      <van-cell center title="清除漫画翻译管线模型缓存">
+        <template #right-icon>
+          <van-button type="info" size="small" @click="clearShinobuModelCache">
+            <span>{{ $t('cache.clear') }}</span>
+          </van-button>
+        </template>
+      </van-cell>
+    </template>
+    <van-cell center title="清除 PixivCollection 缓存">
+      <template #right-icon>
+        <van-button type="info" size="small" @click="clearPxclCache">
+          <span>{{ $t('cache.clear') }}</span>
+        </van-button>
+      </template>
+    </van-cell>
   </div>
 </template>
 
 <script>
+import localforage from 'localforage'
 import { Dialog } from '@/lib/vant-apis'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import localDb from '@/utils/storage/localDb'
@@ -58,8 +89,6 @@ export default {
       return `${i18n.locale.includes('zh') ? n : n.toLocaleString(i18n.locale)} ${sizes[i]}`
     },
   },
-  components: {
-  },
   data() {
     return {
       size: {
@@ -67,6 +96,7 @@ export default {
         local: [0, 0],
         session: [0, 0],
       },
+      showClearTransate: i18n.locale.includes('zh'),
     }
   },
   head() {
@@ -84,7 +114,22 @@ export default {
         await localDb.length(),
       ]
     },
-    clearCache(type) {
+    async showConfirm(message = '确定要清理缓存吗？') {
+      try {
+        await Dialog.confirm({
+          message,
+          confirmButtonColor: 'black',
+          cancelButtonColor: '#1989fa',
+          closeOnPopstate: true,
+          confirmButtonText: this.$t('common.confirm'),
+          cancelButtonText: this.$t('common.cancel'),
+        })
+        return false
+      } catch (err) {
+        return true
+      }
+    },
+    async clearCache(type) {
       let showName
       switch (type) {
         case 'db':
@@ -102,26 +147,73 @@ export default {
       let message = this.$t('cache.confirm.first', [showName])
       if (type == 'db') message += this.$t('cache.confirm.second')
       if (type == 'local') message += this.$t('a1HSQm-WYv6GDFwhKr9x_')
-      Dialog.confirm({
-        message,
-        confirmButtonColor: 'black',
-        cancelButtonColor: '#1989fa',
-        closeOnPopstate: true,
-        confirmButtonText: this.$t('common.confirm'),
-        cancelButtonText: this.$t('common.cancel'),
-      }).then(async () => {
-        window.umami?.track('clear_cache', { type })
-        if (type === 'db') {
-          await localDb.clear()
-          const cacheKeys = await caches.keys()
-          await Promise.all(cacheKeys.map(key => caches.delete(key)))
-        }
-        if (type === 'local') LocalStorage.clear()
-        if (type === 'session') SessionStorage.clear()
+      if (await this.showConfirm(message)) return
 
-        this.calcCacheSize()
-        this.$toast.success(this.$t('cache.success_tip'))
-      }).catch(() => {})
+      window.umami?.track('clear_cache', { type })
+      if (type === 'db') {
+        await localDb.clear()
+        const cacheKeys = await caches.keys()
+        await Promise.all(cacheKeys.map(key => caches.delete(key)))
+        await this.clearShinobuModelCache(true)
+        await this.clearPxclCache(true)
+      }
+      if (type === 'local') LocalStorage.clear()
+      if (type === 'session') SessionStorage.clear()
+
+      this.calcCacheSize()
+      this.$toast.success(this.$t('cache.success_tip'))
+    },
+    async clearNovelTransCache() {
+      if (await this.showConfirm()) return
+      window.umami?.track('clear_cache', { type: 'novel_translate' })
+      try {
+        const keys = await localDb.keys()
+        for (const key of keys) {
+          if (key.startsWith('novel.translate.')) {
+            await localDb.remove(key)
+          }
+        }
+        this.$toast.success('缓存已清除')
+      } catch (err) {
+        this.$toast('清除缓存失败: ' + err.message)
+      }
+    },
+    async clearMangaTransCache() {
+      if (await this.showConfirm()) return
+      window.umami?.track('clear_cache', { type: 'manga_translate' })
+      try {
+        const keys = await localDb.keys()
+        for (const key of keys) {
+          if (key.startsWith('pic.translate.')) {
+            await localDb.remove(key)
+          }
+        }
+        this.$toast.success('缓存已清除')
+      } catch (err) {
+        this.$toast('清除缓存失败: ' + err.message)
+      }
+    },
+    async clearShinobuModelCache(silent) {
+      if (silent !== true && await this.showConfirm()) return
+      window.umami?.track('clear_cache', { type: 'shinobu_model' })
+      try {
+        const modelDb = localforage.createInstance({ name: 'shinobu-models', storeName: 'models' })
+        await modelDb.clear()
+        silent !== true && this.$toast.success('缓存已清除')
+      } catch (err) {
+        silent !== true && this.$toast('清除缓存失败: ' + err.message)
+      }
+    },
+    async clearPxclCache(silent) {
+      if (silent !== true && await this.showConfirm()) return
+      window.umami?.track('clear_cache', { type: 'pxcl' })
+      try {
+        const pxclDb = localforage.createInstance({ name: 'pxcl-store' })
+        await pxclDb.clear()
+        silent !== true && this.$toast.success('缓存已清除')
+      } catch (err) {
+        silent !== true && this.$toast('清除缓存失败: ' + err.message)
+      }
     },
   },
 }
