@@ -61,7 +61,7 @@ function normalizeHelperHeaders(headers) {
   for (const [k, v] of Object.entries(headers || {})) {
     const lower = k.toLowerCase()
     if (lower === 'content-type') out['Content-Type'] = v
-    else if (lower === 'authorization') out['Authorization'] = v
+    else if (lower === 'authorization') out.Authorization = v
     else out[k] = v
   }
   return out
@@ -200,7 +200,7 @@ export async function chatCompletionStream({ baseUrl, apiKey, body, onRead, sign
  */
 export async function fetchModels({ baseUrl, apiKey }) {
   const endpoint = buildEndpoint(baseUrl, '/models')
-  const headers = { 'authorization': `Bearer ${apiKey}` }
+  const headers = { authorization: `Bearer ${apiKey}` }
   let data
   try {
     const resp = await fetch(endpoint, { headers })
