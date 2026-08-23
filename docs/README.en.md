@@ -512,7 +512,6 @@ Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) t
 
 ### Services
 
-- [Yuki 妙妙屋](https://yuki.sh/): Image proxy service
 * [Pixiv.cat](https://pixiv.re/): Image proxy service
 * [SauceNAO](https://saucenao.com/): Image search API
 * [Cloudflare Workers](https://workers.cloudflare.com/): Image proxy service

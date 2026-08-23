@@ -506,7 +506,6 @@ pnpm build
 
 ### 服务
 
-- [Yuki 妙妙屋](https://yuki.sh/)：图像反代服务
 - [Pixiv.cat](https://pixiv.re/)：图像反代服务
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务

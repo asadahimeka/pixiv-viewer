@@ -38,13 +38,6 @@
       />
       <van-cell
         center
-        title="Yuki 妙妙屋"
-        is-link
-        label="图像反代服务"
-        @click="openLink('https://yuki.sh/?ref=pixiv.pictures')"
-      />
-      <van-cell
-        center
         title="Pixiv.cat"
         is-link
         :label="$t('R7wR59U5tm8NR3Gn1FKAw')"

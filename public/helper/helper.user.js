@@ -23,7 +23,6 @@
 // @connect      pxve.cc
 // @connect      169889.xyz
 // @connect      pixiv.re
-// @connect      yuki.sh
 // @connect      api.siliconflow.cn
 // @connect      api.deepseek.com
 // @connect      api.openai.com
