@@ -183,15 +183,15 @@
   "setting": {
     "about": "關於",
     "api": {
-      "desc": "在下方輸入 HibiAPI/PxveAPI 實例地址，需要加 https://，路徑需填寫到 `/api/pixiv` 部分",
-      "desc2": "例如：https://hibiapi.getloli.com/api/pixiv，儲存後會清空本地快取",
+      "desc": "在下方輸入 PxveAPI 實例位址",
+      "desc2": "例如：{0}，儲存後會清空本地快取",
       "desc3": "API 實例可前往 Github 查找或自行搭建",
       "desc4": "查找或自行搭建",
       "desc5": "API 實例地址需要支援跨域（CORS）前往",
       "ph": "請選擇 HibiAPI 實例（切換後會清空本地快取）",
       "title": "PxveAPI 實例設定",
       "title2": "HibiAPI 實例選擇",
-      "title3": "HibiAPI/PxveAPI 實例地址",
+      "title3": "PxveAPI 實例地址",
       "title4": "PxveAPI 實例"
     },
     "dark": {
@@ -228,7 +228,7 @@
       "lang": "語言",
       "lang_ph": "請選擇語言",
       "title": "偏好設定",
-      "manual_input": "不使用預設API或圖片代理",
+      "manual_input": "不使用預設 pximg 代理",
       "manual_input_label": "打開此開關可在下方手動輸入連結",
       "api_proxy": {
         "def_ph": "預設代理無法使用的話可以嘗試其他代理",

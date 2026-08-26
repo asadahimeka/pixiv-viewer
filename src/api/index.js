@@ -5,7 +5,7 @@ import { SessionStorage } from '@/utils/storage'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { filterCensoredIllusts, filterCensoredNovels, isBlockTagHit, mintFilter } from '@/utils/filter'
-import { PXIMG_PROXY_BASE, notSelfHibiApi, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_PROXY, COMMON_IMAGE_PROXY, PXIMG_PID_BASE } from '@/consts'
+import { PXIMG_PROXY_BASE, PIXIV_NOW_URL, PIXIV_NEXT_URL, COMMON_PROXY, COMMON_IMAGE_PROXY, PXIMG_PID_BASE } from '@/consts'
 import { setProperFontSize } from '@/utils'
 
 const isSupportWebP = (() => {
@@ -1530,22 +1530,12 @@ const api = {
     let artwork = await getCache(cacheKey)
 
     if (!artwork) {
-      let res
-      if (notSelfHibiApi) {
-        res = await get(`${PIXIV_NOW_URL}/ajax/novel/${id}`).then(r => ({
-          text: r.content,
-          prev: r.seriesNavData?.prev,
-          next: r.seriesNavData?.next,
-          embedImgs: r.textEmbeddedImages,
-        }))
-      } else {
-        res = await get('/webview_novel', { id }).then(r => ({
-          text: r.text,
-          prev: r.seriesNavigation?.prevNovel,
-          next: r.seriesNavigation?.nextNovel,
-          embedImgs: r.images,
-        }))
-      }
+      const res = await get('/webview_novel', { id }).then(r => ({
+        text: r.text,
+        prev: r.seriesNavigation?.prevNovel,
+        next: r.seriesNavigation?.nextNovel,
+        embedImgs: r.images,
+      }))
 
       if (res.text) {
         artwork = res

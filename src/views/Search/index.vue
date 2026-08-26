@@ -99,7 +99,6 @@
 <script>
 import _ from '@/lib/lodash'
 import { mapState, mapActions } from 'vuex'
-import { notSelfHibiApi } from '@/consts'
 import { BLOCK_LAST_WORD_RE } from '@/utils/filter'
 import api from '@/api'
 
@@ -128,7 +127,6 @@ export default {
         { name: '搜索关键词', value: 'keyword' },
       ],
       autoCompleteTagList: [],
-      isSelfHibi: !notSelfHibiApi,
     }
   },
   head() {
@@ -202,7 +200,6 @@ export default {
       })
     },
     onSearchInput: _.debounce(async function () {
-      if (notSelfHibiApi) return
       if (!this.lastWord || !this.keywords.trim()) {
         this.autoCompleteTagList = []
         return

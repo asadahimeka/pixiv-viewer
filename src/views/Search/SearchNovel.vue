@@ -23,7 +23,7 @@
         </div>
       </div>
       <div
-        v-if="(isSelfHibi && keywords.trim() && artList.length)"
+        v-if="keywords.trim() && artList.length"
         class="show_pop_icon"
         @click="(showPopPreview = !showPopPreview)"
       >
@@ -116,7 +116,7 @@
           </template>
         </van-dropdown-menu>
       </div>
-      <PopularPreviewNovel v-if="(isSelfHibi && showPopPreview && keywords.trim())" ref="popPreview" :word="keywords" :params="searchParams" />
+      <PopularPreviewNovel v-if="showPopPreview && keywords.trim()" ref="popPreview" :word="keywords" :params="searchParams" />
       <van-list
         v-else-if="keywords.trim()"
         v-model="loading"
@@ -147,7 +147,6 @@ import dayjs from 'dayjs'
 import _ from '@/lib/lodash'
 import api from '@/api'
 import store from '@/store'
-import { notSelfHibiApi } from '@/consts'
 import { mintVerify, BLOCK_SEARCH_WORD_RE, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE } from '@/utils/filter'
 import { i18n } from '@/i18n'
 import { sleep } from '@/utils'
@@ -177,7 +176,6 @@ export default {
       finished: false,
       autoCompleteTagList: [],
       showPopPreview: false,
-      isSelfHibi: !notSelfHibiApi,
       usersIriTag: '',
       usersIriTags: [
         { text: this.$t('7PnT90lP_mZTPfL3Uwlhl'), value: '' },
@@ -185,8 +183,7 @@ export default {
           return { text: i18n.t('8SuotxAmYS7l1QCfLz0Yv', [e]), value: `${e}users入り` }
         }),
       ],
-      // minDate: new Date('2007/09/13'),
-      minDate: dayjs().subtract(1, 'year').toDate(),
+      minDate: new Date('2007/09/13'),
       maxDate: new Date(),
       searchParams: {
         mode: 'partial_match_for_tags',
@@ -511,7 +508,6 @@ export default {
       })
     },
     onSearchInput: _.debounce(async function () {
-      if (notSelfHibiApi) return
       if (!this.lastWord || !this.keywords.trim()) {
         this.autoCompleteTagList = []
         return

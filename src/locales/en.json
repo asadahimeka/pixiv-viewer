@@ -183,7 +183,7 @@
   "setting": {
     "about": "About",
     "api": {
-      "desc": "Enter the HibiAPI/PxveAPI instance address below, you need to add https://, and the path needs to be filled in the `/api/pixiv` part",
+      "desc": "Enter the PxveAPI instance address below",
       "desc2": "For example: {0}, the local cache will be cleared after saving",
       "desc3": "API instances can be found or built by yourself at Github",
       "desc4": "or built your own",
@@ -191,7 +191,7 @@
       "ph": "Please select a HibiAPI instance (the local cache will be cleared after switching)",
       "title": "PxveAPI Instance Setting",
       "title2": "HibiAPI instance select",
-      "title3": "HibiAPI/PxveAPI instance link",
+      "title3": "PxveAPI instance link",
       "title4": "PxveAPI instance"
     },
     "dark": {
@@ -228,7 +228,7 @@
       "title": "Preferences",
       "lang": "Language",
       "lang_ph": "Please select language",
-      "manual_input": "Not using default API or image proxy",
+      "manual_input": "Not using the default pximg proxy",
       "manual_input_label": "Turn this switch on to manually enter the link below",
       "api_proxy": {
         "def_ph": "If the default proxy cannot be used, you can try another proxy",

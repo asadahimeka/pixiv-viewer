@@ -5,7 +5,7 @@
     <van-cell-group :title="$t('GS0J0mAbmiqPGKw20ORPi')">
       <van-cell center :title="$t('setting.other.lang')" is-link :label="selLangLabel" @click="lang.show = true" />
       <van-cell center :title="$t('psoXLFqv51j1SeKjTbnms')" is-link :label="`${accentColor} ${actTheme}`" to="/setting/accent_color" />
-      <van-cell center title="视觉主题" is-link :label="$t('setting.lab.title')" @click="visualTheme.show = true" />
+      <van-cell v-if="!isDark" center title="视觉主题" is-link :label="$t('setting.lab.title')" @click="visualTheme.show = true" />
       <van-cell center :title="$t('setting.dark.title')" :label="$t('setting.lab.title')">
         <template #right-icon>
           <van-switch :value="isDark" size="24" @change="onDarkChange" />
@@ -217,15 +217,14 @@
     </van-cell-group>
 
     <van-cell-group :title="$t('7-drBPGRIz_BsYuc9ybCm')">
-      <van-cell v-if="(pximgBed_.actions.length || hibiapi_.actions.length) && (!clientConfig.useLocalAppApi || !appSetting.isDirectPximg)" center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
+      <van-cell v-if="!clientConfig.useLocalAppApi" center :title="$t('setting.api.title')" is-link :label="hibiapi.value" @click="hibiapi.show = true" />
+      <van-cell v-if="pximgBed_.actions.length && (!clientConfig.useLocalAppApi || !appSetting.isDirectPximg)" center :title="$t('setting.other.manual_input')" :label="$t('setting.other.manual_input_label')">
         <template #right-icon>
           <van-switch v-model="hideApSelect" size="24" />
         </template>
       </van-cell>
       <van-cell v-if="hideApSelect && !appSetting.isDirectPximg" center :title="$t('setting.img_proxy.title')" is-link :label="pximgBed.value" @click="pximgBed.show = true" />
-      <van-cell v-if="!clientConfig.useLocalAppApi && hideApSelect" center :title="$t('setting.api.title')" is-link :label="hibiapi.value" @click="hibiapi.show = true" />
       <van-cell v-if="!hideApSelect && !appSetting.isDirectPximg && pximgBed_.actions.length" center :title="$t('setting.img_proxy.title2')" is-link :label="pximgBedLabel" @click="pximgBed_.show = true" />
-      <van-cell v-if="!clientConfig.useLocalAppApi && !hideApSelect && hibiapi_.actions.length" center :title="$t('setting.api.title2')" is-link :label="hibiapiLabel" @click="hibiapi_.show = true" />
       <van-cell center :title="$t('lGZGzwfWz9tW_KQey3AmQ')" :label="$t('OA8ygupG-4FcNWHtwEUG-')">
         <template #right-icon>
           <van-switch :value="appSetting.isDirectPximg" size="24" @change="setDirectPximg" />
@@ -350,7 +349,7 @@
     >
       <van-cell>{{ $t('setting.img_proxy.desc') }}</van-cell>
       <van-cell>{{ $t('setting.img_proxy.desc2') }}</van-cell>
-      <van-field v-model="pximgBed.value" :label="$t('setting.input')" label-width="3.5em" :placeholder="$t('setting.img_proxy.title4')" />
+      <van-field v-model="pximgBed.value" :label="$t('setting.input')" label-width="4.5em" :placeholder="$t('setting.img_proxy.title4')" />
     </van-dialog>
     <van-dialog
       v-model="hibiapi.show"
@@ -362,10 +361,10 @@
       @confirm="changeHibiapi"
     >
       <van-cell>{{ $t('setting.api.desc') }}</van-cell>
-      <van-cell>{{ $t('setting.api.desc2', ['https://api.pxve.cc/api/pixiv']) }}</van-cell>
-      <van-cell>{{ $t('setting.api.desc3') }}: <a href="https://github.com/asadahimeka/pxve-api" target="_blank">🔗PxveAPI</a>&nbsp;<a href="https://github.com/mixmoe/HibiAPI" target="_blank">🔗HibiAPI</a></van-cell>
+      <van-cell>{{ $t('setting.api.desc2', ['https://api.pxve.cc']) }}</van-cell>
+      <van-cell>{{ $t('setting.api.desc3') }}: <a href="https://github.com/asadahimeka/pxve-api" target="_blank">🔗PxveAPI</a></van-cell>
       <van-cell>{{ $t('setting.api.desc5') }}</van-cell>
-      <van-field v-model="hibiapi.value" :label="$t('setting.input')" label-width="3.5em" :placeholder="$t('setting.api.title3')" />
+      <van-field v-model="hibiapi.value" :label="$t('setting.input')" label-width="4.5em" :placeholder="$t('setting.api.title3')" />
     </van-dialog>
     <van-action-sheet
       v-model="apiProxySel.show"
@@ -455,15 +454,6 @@
       :description="$t('setting.img_proxy.ph')"
       close-on-click-action
       @select="changePximgBed_"
-    />
-    <van-action-sheet
-      v-model="hibiapi_.show"
-      :actions="hibiapi_.actions"
-      :cancel-text="$t('common.cancel')"
-      :description="$t('setting.api.ph')"
-      close-on-click-action
-      class="hibiapi-actions"
-      @select="changeHibiapi_"
     />
     <NovelTextConfig ref="novelConfigRef" style="left: 50%;right: unset;" />
     <van-dialog
@@ -579,9 +569,9 @@ import { Dialog } from '@/lib/vant-apis'
 import PixivAuth from '@/api/client/pixiv-auth'
 import localDb from '@/utils/storage/localDb'
 import store from '@/store'
-import { APP_API_PROXYS, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, HIBIAPI_ALTS, PXIMG_PROXYS } from '@/consts'
+import { APP_API_PROXYS, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, PXIMG_PROXYS } from '@/consts'
 import { i18n } from '@/i18n'
-import { getVisualTheme, applyVisualTheme } from '@/utils/theme'
+import { applyVisualTheme } from '@/utils/theme'
 import { getSampleFileName } from '@/store/actions/filename'
 import { localApi } from '@/api'
 import { checkImgAvailable, checkUrlAvailable, copyText, downloadURL, isURL, readTextFile } from '@/utils'
@@ -634,15 +624,7 @@ export default {
       },
       hibiapi: {
         show: false,
-        value: LocalStorage.get('HIBIAPI_BASE', DEF_HIBIAPI_MAIN),
-      },
-      hibiapi_: {
-        show: false,
-        value: LocalStorage.get('HIBIAPI_BASE', DEF_HIBIAPI_MAIN),
-        actions: HIBIAPI_ALTS.split(';').map(e => {
-          const [name, _value] = e.split(',')
-          return { name, _value }
-        }),
+        value: LocalStorage.get('PXVEAPI_BASE', DEF_HIBIAPI_MAIN),
       },
       wfType: {
         show: false,
@@ -654,7 +636,7 @@ export default {
           { name: 'Justified', subname: this.$t('setting.layout.j') },
           { name: 'Masonry', subname: this.$t('setting.layout.m') },
           { name: 'Masonry(CSSGrid)', subname: this.$t('setting.layout.m') },
-          { name: 'Masonry(FlexOrder)', subname: this.$t('setting.layout.m') },
+          // { name: 'Masonry(FlexOrder)', subname: this.$t('setting.layout.m') },
         ],
       },
       imgRes: {
@@ -761,7 +743,7 @@ export default {
           { name: i18n.t('nav.setting'), _value: '/setting' },
         ],
       },
-      hideApSelect: LocalStorage.get('__HIDE_AP_SEL', true),
+      hideApSelect: LocalStorage.get('PXV_HIDE_AP_SEL', true),
       isDark: !!localStorage.getItem('PXV_DARK'),
       showTranslationGroup: i18n.locale.includes('zh'),
       showNovelTranslateSetting: false,
@@ -796,7 +778,6 @@ export default {
           { name: 'iOS', _value: 'ios26' },
         ],
       },
-      visualThemeValue: getVisualTheme(),
     }
   },
   head() {
@@ -811,9 +792,6 @@ export default {
     },
     pximgBedLabel() {
       return this.pximgBed_.actions.find(e => e._value == this.pximgBed_.value)?.name || ''
-    },
-    hibiapiLabel() {
-      return this.hibiapi_.actions.find(e => e._value == this.hibiapi_.value)?.name || ''
     },
     apiProxyLabel() {
       return this.apiProxySel.actions.find(e => e._value == this.clientConfig.apiProxy)?.name || ''
@@ -839,9 +817,8 @@ export default {
   },
   watch: {
     hideApSelect(val) {
-      LocalStorage.set('__HIDE_AP_SEL', val)
+      LocalStorage.set('PXV_HIDE_AP_SEL', val)
       if (val) {
-        LocalStorage.set('HIBIAPI_BASE', DEF_HIBIAPI_MAIN)
         LocalStorage.set('PXIMG_PROXY', DEF_PXIMG_MAIN)
       }
       this.reloadPage()
@@ -985,29 +962,23 @@ export default {
     async changeHibiapi() {
       const url = this.hibiapi.value
       const res = await this.checkURL(url, () => {
-        return checkUrlAvailable(`${url}/rank?_t=${Date.now()}`)
+        return checkUrlAvailable(`${url}/api/pixiv/rank?_t=${Date.now()}`)
       })
       if (!res) return
       SessionStorage.clear()
       await localDb.clear()
-      this.saveSetting('HIBIAPI_BASE', this.hibiapi.value)
-    },
-    async changeHibiapi_({ _value }) {
-      const res = await this.checkURL(_value, () => {
-        return checkUrlAvailable(`${_value}/rank?_t=${Date.now()}`)
-      })
-      if (!res) return
-      this.hibiapi_.value = _value
-      SessionStorage.clear()
-      await localDb.clear()
-      this.saveSetting('HIBIAPI_BASE', _value)
+      this.saveSetting('PXVEAPI_BASE', this.hibiapi.value)
     },
     onDarkChange(val) {
       window.umami?.track(`set_dark_${val}`)
       this.isDark = val
       localStorage.setItem('PXV_DARK', val || '')
-      if (val) document.body.classList.add('dark')
-      else document.body.classList.remove('dark')
+      if (val) {
+        applyVisualTheme('default')
+        document.body.classList.add('dark')
+      } else {
+        document.body.classList.remove('dark')
+      }
     },
     onPageTransitionChange({ _value }) {
       this.saveAppSetting('pageTransition', _value, false)
@@ -1044,7 +1015,6 @@ export default {
       this.reloadPage()
     },
     changeVisualTheme({ _value }) {
-      this.visualThemeValue = _value
       applyVisualTheme(_value)
       window.umami?.track('set_visual_theme', { _value })
       if (_value == 'sakuria') {
@@ -1066,6 +1036,7 @@ export default {
           pageTransition: 'f7-md',
           wfType: 'Masonry(CSSGrid)',
           withBodyBg: true,
+          imgReso: 'Large(WebP)',
           isImageFitScreen: store.state.isMobile,
           isImageCardOuterMeta: true,
           isImageCardBorderRadius: true,

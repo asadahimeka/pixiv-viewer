@@ -8,15 +8,14 @@
     </div>
     <div class="home-n">
       <NovelRankCard />
-      <NovelRecommendCard v-if="isSelfHibi" />
+      <NovelRecommendCard />
       <RandomNovel />
-      <LatestNovelCard v-if="isSelfHibi" />
+      <LatestNovelCard />
     </div>
   </div>
 </template>
 
 <script>
-import { notSelfHibiApi } from '@/consts'
 import LatestNovelCard from './components/LatestNovelCard.vue'
 import NovelRankCard from './components/NovelRankCard.vue'
 import NovelRecommendCard from './components/NovelRecommendCard.vue'
@@ -29,11 +28,6 @@ export default {
     NovelRecommendCard,
     RandomNovel,
     LatestNovelCard,
-  },
-  data() {
-    return {
-      isSelfHibi: !notSelfHibiApi,
-    }
   },
   head() {
     return {

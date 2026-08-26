@@ -219,5 +219,47 @@ export async function fetchModels({ baseUrl, apiKey }) {
     }
   }
   const ids = (data?.data || []).map(m => m.id).filter(Boolean)
-  return [...new Set(ids)].sort()
+  return [...new Set(ids)]
+}
+
+/**
+ * 测试 LLM 连接
+ * @param {{ baseUrl: string, apiKey: string, model: string }} opts
+ * @returns {Promise<{ ok: boolean, message: string }>}
+ */
+export async function testConnection({ baseUrl, apiKey, model }) {
+  if (!baseUrl || !apiKey || !model) {
+    return { ok: false, message: '请输入 BaseURL、API Key 和模型' }
+  }
+  window.umami?.track('llm-test-connection', { val: `${baseUrl}:${model}` })
+  const endpoint = buildEndpoint(baseUrl, '/chat/completions')
+  const headers = {
+    'authorization': `Bearer ${apiKey}`,
+    'content-type': 'application/json',
+  }
+  const body = JSON.stringify({
+    model,
+    messages: [{ role: 'user', content: 'Hi' }],
+    max_tokens: 5,
+  })
+
+  const okMsg = { ok: true, message: '连接成功' }
+  const errMsg = e => ({ ok: false, message: `连接失败: ${e.message || e}` })
+  try {
+    const resp = await fetch(endpoint, { method: 'POST', headers, body })
+    if (!resp.ok) await throwHttpError(resp)
+    return okMsg
+  } catch (err) {
+    if (err instanceof LlmApiError) return errMsg(err)
+    if (classifyFetchFailure(err) === 'network' && isHelperAvailable()) {
+      try {
+        const data = await helperRequest(endpoint, { method: 'POST', headers, data: body })
+        if (data) return okMsg
+      } catch (e) {
+        return errMsg(e)
+      }
+    } else {
+      return errMsg(err)
+    }
+  }
 }

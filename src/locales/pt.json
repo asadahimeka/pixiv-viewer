@@ -244,7 +244,7 @@
   "setting": {
     "about": "Sobre",
     "api": {
-      "desc": "Insira o endereço da instância HibiAPI/PxveAPI abaixo, você precisa adicionar https://, e o caminho precisa ser preenchido na parte `/api/pixiv`",
+      "desc": "Insira o endereço da instância PxveAPI abaixo",
       "desc2": "Por exemplo: {0}, o cache local será limpo após salvar",
       "desc3": "Instâncias de API podem ser encontradas ou construídas por você mesmo no GitHub",
       "desc4": "encontrar ou construir o seu próprio",
@@ -252,7 +252,7 @@
       "ph": "Selecione uma instância HibiAPI (o cache local será limpo após a troca)",
       "title": "Configuração de instância PxveAPI",
       "title2": "Seleção de instância HibiAPI",
-      "title3": "Link da instância HibiAPI/PxveAPI",
+      "title3": "Link da instância PxveAPI",
       "title4": "Instância PxveAPI"
     },
     "app_desc": "Outra ferramenta de ilustração/navegador de romance Pixiv",
@@ -316,7 +316,7 @@
       },
       "lang": "Linguagem",
       "lang_ph": "Selecione o idioma",
-      "manual_input": "Não usar API padrão ou proxy de imagem",
+      "manual_input": "Não usando o proxy pximg padrão",
       "manual_input_label": "Ative esta opção para inserir manualmente o link abaixo",
       "swipe_toggle": "Deslize para a esquerda ou para a direita na página de detalhes para alternar as obras de arte",
       "title": "Preferências"

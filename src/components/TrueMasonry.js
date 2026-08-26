@@ -109,7 +109,7 @@ const TrueMasonry = {
     })
 
     // Bind resize handler to page
-    window.addEventListener('resize', this._reCalculate)
+    window.addEventListener('resize', this._resizeCalculate)
   },
   activated() {
     this.$nextTick(() => {
@@ -122,7 +122,7 @@ const TrueMasonry = {
     })
   },
   beforeDestroy() {
-    window.removeEventListener('resize', this._reCalculate)
+    window.removeEventListener('resize', this._resizeCalculate)
   },
   methods: {
     getChildItemsInColumnsArray() {
@@ -180,6 +180,11 @@ const TrueMasonry = {
       for (let i = 0; i < allItems.length; i++) {
         this._resizeMasonryItem(allItems[i])
       }
+    },
+    _resizeCalculate() {
+      setTimeout(() => {
+        this._reCalculate()
+      }, 500)
     },
     _reCalculate(force) {
       if (force == 'force') {

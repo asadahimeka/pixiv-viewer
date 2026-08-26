@@ -101,8 +101,7 @@ App.vue
 
 ### API Config (via .env)
 ```
-VUE_APP_PXVEAPI_MAIN        — PxveAPI instance (also serves PixivNow)
-VUE_APP_DEF_HIBIAPI_MAIN    — Default HibiAPI endpoint
+VUE_APP_DEF_HIBIAPI_MAIN    — Default PxveAPI endpoint
 VUE_APP_DEF_PXIMG_MAIN      — Default pximg proxy
 VUE_APP_DEF_APP_API_PROXY   — AppAPI proxy host
 VUE_APP_COMMON_PROXY        — Generic proxy (https://proxy.example.com/https://url)

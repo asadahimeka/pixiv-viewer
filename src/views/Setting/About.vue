@@ -115,6 +115,13 @@
         :label="$t('9H-9VJU67Fuabl8OgbhOr')"
         @click="openLink('https://www.nanoka.top/say/pxve_comments.html')"
       />
+      <van-cell
+        center
+        title="聊天室"
+        is-link
+        label="点击前往 Pixiv Viewer 讨论频道"
+        to="/chat-room"
+      />
     </van-cell-group>
   </div>
 </template>

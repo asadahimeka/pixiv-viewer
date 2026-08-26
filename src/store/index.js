@@ -38,13 +38,18 @@ export default new Vuex.Store({
     appNotice: null,
     mangaTrans: {
       /** @type {'shinobu'|'vl-api'|'server'} */
-      engine: 'vl-api',
+      engine: 'shinobu',
       /** @type {boolean} 用户是否已同意首次下载 Shinobu 模型 */
       shinobuModelConsent: false,
       /** @type {boolean} 用户是否已知晓 HTTP Helper 用户脚本提示 */
       helperConsent: false,
+      /** @type {'translate'|'erase'|'original'} */
+      processMode: 'translate',
+      bubble: true,
+      sourceLang: 'ja',
+      targetLang: 'zh-CN',
       /** @type {'google_web'|'llm'} */
-      translator: 'llm',
+      translator: 'google_web',
       provider: SILICON_CLOUD_BASR_URL,
       /** @type {Record<string, {apiKey?: string, baseUrl?: string, model?: string, modelSelMode?: 'list'|'manual'}>} */
       providers: {
@@ -57,20 +62,14 @@ export default new Vuex.Store({
       },
       // VL API 引擎独立配置
       vlProvider: SILICON_CLOUD_BASR_URL,
+      vlModel: 'Qwen/Qwen3.5-4B',
       // 小说翻译独立配置
       novelProvider: SILICON_CLOUD_BASR_URL,
-      /** @type {string} 小说翻译完整模型 id（兼容旧短键，消费侧经 resolveNovelModel 归一化） */
-      novelModel: '',
-      /** @type {'translate'|'erase'|'original'} */
-      processMode: 'translate',
-      autoTranslate: false,
-      bubble: true,
-      sourceLang: 'ja',
-      targetLang: 'zh-CN',
-      vlModel: 'Qwen/Qwen3.5-4B',
+      /** @type {string} 小说翻译完整模型 id */
+      novelModel: 'tencent/Hunyuan-MT-7B',
       serverUrl: SERVER_TRANSLATE_URL,
       serverToken: SERVER_TRANSLATE_TOKEN,
-      ...getSettingDef('PXV_MANGATRANS_SETTING', {}),
+      ...getSettingDef('PXV_TRANSLATE', {}),
     },
     /** @type {any[]|null} */
     seasonEffects: null,
@@ -101,7 +100,6 @@ export default new Vuex.Store({
       novelDefDlFormat: '',
       novelDlRmStyle: false,
       novelDefTranslate: '',
-      novelDefTransAiModel: 'hy_mt',
       pageFont: /zh-|ja/.test(getSelectedLang()) ? 'LXGW WenKai Screen' : '',
       hideNavBarOnScroll: true,
       manualLoadRelated: true,

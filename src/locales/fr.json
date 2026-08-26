@@ -183,7 +183,7 @@
   "setting": {
     "about": "À propos",
     "api": {
-      "desc": "Entrez l'adresse de l'instance HibiAPI/PxveAPI ci-dessous, vous devez ajouter https://, et le chemin doit être renseigné dans la partie `/api/pixiv`",
+      "desc": "Entrez l'adresse de l'instance PxveAPI ci-dessous",
       "desc2": "Par exemple : {0}, le cache local sera vidé après l'enregistrement",
       "desc3": "Les instances de l'API peuvent être trouvées ou construites par vous-même chez GitHub",
       "desc4": "trouver ou créer le vôtre",
@@ -191,7 +191,7 @@
       "ph": "Veuillez sélectionner une instance HibiAPI (le cache local sera vidé après le changement)",
       "title": "Paramètre d'instance PxveAPI",
       "title2": "Sélection d'instance HibiAPI",
-      "title3": "Lien d'instance HibiAPI/PxveAPI",
+      "title3": "Lien d'instance PxveAPI",
       "title4": "Instance PxveAPI"
     },
     "dark": {
@@ -229,7 +229,7 @@
       "lang_ph": "Veuillez sélectionner la langue",
       "title": "Préférences",
       "manual_input_label": "Activez ce commutateur pour saisir manuellement le lien ci-dessous",
-      "manual_input": "Ne pas utiliser l'API par défaut ou le proxy d'image",
+      "manual_input": "Ne pas utiliser le proxy pximg par défaut",
       "api_proxy": {
         "def_ph": "Si le proxy par défaut ne peut pas être utilisé, vous pouvez essayer un autre proxy",
         "sel_desc": "Veuillez sélectionner le proxy AppAPI",

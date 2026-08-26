@@ -37,17 +37,7 @@
       </van-radio-group>
     </van-cell-group>
 
-    <van-cell-group v-if="isScProvider" title="AI 翻译模型">
-      <van-cell title="选择 AI 翻译模型" class="preset-model-cell">
-        <select v-model="aiModel" class="preset-model-select">
-          <option v-for="(model, key) in modelMap" :key="key" :value="key">
-            {{ model.split('/').pop() }}
-          </option>
-        </select>
-      </van-cell>
-    </van-cell-group>
-
-    <van-cell-group title="AI 翻译 API 配置（BYOK）">
+    <van-cell-group title="AI 翻译 API 配置">
       <van-field
         :value="novelConfig.baseUrl"
         label="Base URL"
@@ -70,6 +60,14 @@
       />
       <div class="engine-help">
         <van-icon name="info-o" /> 默认翻译服务选「AI 翻译」时使用以上配置；API Key 仅存储在本机浏览器。
+      </div>
+      <div class="test-connection-wrap">
+        <van-button size="small" plain round :loading="testLoading" loading-text="测试中..." @click="testConnection">测试连接</van-button>
+      </div>
+      <div v-if="testResult" class="model-test-result" :class="testResult.ok ? 'is-ok' : 'is-fail'">
+        <van-icon :name="testResult.ok ? 'success' : 'warning'" />
+        <span>{{ testResult.message }}</span>
+        <span v-if="testResult.durationMs != null" class="result-duration">{{ testResult.durationMs }}ms</span>
       </div>
     </van-cell-group>
 
@@ -97,7 +95,8 @@
 import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
-import { aiModelMap, freeAiModels, isNativeTranslatorSupported, resolveNovelModel } from '@/utils/translate'
+import { isNativeTranslatorSupported } from '@/utils/translate'
+import { testConnection } from '@/utils/translate/llmClient'
 import LlmModelSelect from './LlmModelSelect.vue'
 
 export default {
@@ -107,22 +106,13 @@ export default {
   },
   data() {
     return {
-      aiModelMap,
       isNativeTranslatorSupported,
       clearingCache: false,
+      testLoading: false,
+      testResult: null,
     }
   },
   computed: {
-    modelMap() {
-      const map = {}
-      Object.keys(aiModelMap).forEach(k => {
-        const model = aiModelMap[k]
-        if (store.getters.isLoggedIn || freeAiModels.includes(model)) {
-          map[k] = model
-        }
-      })
-      return map
-    },
     translationService: {
       get() {
         const v = store.state.appSetting.novelDefTranslate
@@ -130,46 +120,17 @@ export default {
         return v || ''
       },
       set(val) {
-        if (val === 'sc') {
-          const model = this.aiModel
-          store.commit('setAppSetting', {
-            novelDefTranslate: 'sc_' + model,
-            novelDefTransAiModel: model,
-          })
-        } else {
-          window.umami?.track('set:novelDefTranslate', { val })
-          store.commit('setAppSetting', { novelDefTranslate: val })
-        }
-      },
-    },
-    aiModel: {
-      get() {
-        const v = store.state.appSetting.novelDefTranslate
-        if (v && v.startsWith('sc_')) {
-          const k = v.slice(3)
-          if (k in aiModelMap) return k
-        }
-        return store.state.appSetting.novelDefTransAiModel || 'hy_mt'
-      },
-      set(val) {
-        window.umami?.track('set:novelDefTransAiModel', { val })
-        store.commit('setAppSetting', {
-          novelDefTranslate: 'sc_' + val,
-          novelDefTransAiModel: val,
-        })
-        store.commit('SET_MANGA_TRANS', { novelModel: aiModelMap[val] || val })
+        window.umami?.track('set:novelDefTranslate', { val })
+        store.commit('setAppSetting', { novelDefTranslate: val })
       },
     },
     novelConfig() {
       const mt = store.state.mangaTrans
       return mt.providers[mt.novelProvider] || {}
     },
-    isScProvider() {
-      return /siliconflow\.cn/.test(this.novelConfig.baseUrl || '')
-    },
     novelModel: {
       get() {
-        return resolveNovelModel(store.state.mangaTrans.novelModel || store.state.appSetting.novelDefTransAiModel)
+        return store.state.mangaTrans.novelModel
       },
       set(val) {
         store.commit('SET_MANGA_TRANS', { novelModel: val })
@@ -179,6 +140,7 @@ export default {
   methods: {
     onNovelBaseUrlChange(e) {
       const name = e.target.value
+      if (!name) return
       const current = store.state.mangaTrans.providers[name] || {}
       store.commit('SET_MANGA_TRANS', {
         novelProvider: name,
@@ -191,6 +153,23 @@ export default {
       store.commit('SET_MANGA_TRANS', {
         providers: { [name]: { ...current, apiKey: e.target.value } },
       })
+    },
+    async testConnection() {
+      const { baseUrl, apiKey } = this.novelConfig
+      const model = this.novelModel
+      if (!baseUrl || !apiKey || !model) {
+        Toast('请输入 BaseURL、API Key 和模型')
+        return
+      }
+      this.testLoading = true
+      const start = Date.now()
+      const res = await testConnection({ baseUrl, apiKey, model })
+      res.durationMs = Date.now() - start
+      this.testResult = res
+      this.testLoading = false
+      setTimeout(() => {
+        this.testResult = null
+      }, 2000)
     },
     async clearTranslationCache() {
       this.clearingCache = true
@@ -223,6 +202,20 @@ export default {
     .van-cell
       padding 0.2rem 0.3rem
 
+  .translator-options
+    padding 0.2rem 0.3rem
+
+    ::v-deep .van-radio--horizontal
+      margin-right 0.3rem
+
+    ::v-deep .van-radio--horizontal:last-child
+      margin-right 0
+
+  .test-connection-wrap
+    padding 0.2rem 0.3rem
+    display flex
+    justify-content flex-end
+
   ::v-deep .van-radio
     display flex
     align-items center
@@ -237,18 +230,42 @@ export default {
     padding 0.3rem 0.3rem 0.1rem
     color #555
 
-  .preset-model-cell
-    ::v-deep .van-cell__value
-      display flex
-      align-items center
-      justify-content flex-end
+  .engine-help
+    font-size 12PX
+    color #666
+    padding 0.1rem 0.3rem 0.2rem
+    line-height 1.5
 
-    .preset-model-select
-      width 3.5rem
-      padding 0.08rem 0.2rem
-      border 1px solid #ddd
-      border-radius 0.08rem
-      background #fff
-      font-size 13PX
-      color #333
+    .van-icon
+      vertical-align middle
+      margin-right 0.06rem
+
+  .model-test-result
+    margin 0.1rem 0.3rem 0.2rem
+    padding 0.15rem 0.2rem
+    border 1px solid #eee
+    border-radius 0.08rem
+    text-align right
+    font-size 13PX
+    line-height 1.8
+    color #555
+
+    .van-icon
+      vertical-align middle
+      margin-right 0.06rem
+
+    &.is-ok
+      border-color #07c160
+      color #07c160
+      background rgba(7, 193, 96, 0.08)
+
+    &.is-fail
+      border-color #ee0a24
+      color #ee0a24
+      background rgba(238, 10, 36, 0.08)
+
+    .result-duration
+      margin-left 0.1rem
+      font-size 12PX
+      color #999
 </style>

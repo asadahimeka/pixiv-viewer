@@ -30,12 +30,12 @@
       </template>
       <WebRecommCards v-else-if="isWebLogin" />
       <template v-else>
-        <div v-if="isSelfHibi" class="rec-cards">
+        <div class="rec-cards">
           <DiscoveryCard />
           <RecommendIllustCard />
         </div>
         <RandomIllust />
-        <LatestIllustCard v-if="isSelfHibi && notVirtualList" />
+        <LatestIllustCard v-if="notVirtualList" />
       </template>
     </div>
   </div>
@@ -45,7 +45,6 @@
 import _ from '@/lib/lodash'
 import store from '@/store'
 import api, { localApi } from '@/api'
-import { notSelfHibiApi } from '@/consts'
 import { existsSessionId } from '@/api/user'
 import RankCard from './components/RankCard.vue'
 import SpotlightCard from '../Spotlights/SpotlightCard.vue'
@@ -74,7 +73,6 @@ export default {
   },
   data() {
     return {
-      isSelfHibi: !notSelfHibiApi,
       isAppLogin: localApi.APP_CONFIG.useLocalAppApi,
       isWebLogin,
       term: '',

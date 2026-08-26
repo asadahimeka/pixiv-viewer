@@ -183,7 +183,7 @@
   "setting": {
     "about": "Um",
     "api": {
-      "desc": "Geben Sie unten die Adresse der HibiAPI/PxveAPI-Instanz ein, Sie müssen https:// hinzufügen, und der Pfad muss in den Teil „/api/pixiv“ eingetragen werden",
+      "desc": "Geben Sie unten die PxveAPI-Instanzadresse ein",
       "desc2": "Zum Beispiel: {0}, der lokale Cache wird nach dem Speichern gelöscht",
       "desc3": "API -Instanzen können von Ihnen in Github gefunden oder gebaut werden",
       "desc4": "selber suchen oder bauen",
@@ -191,7 +191,7 @@
       "ph": "Bitte wählen Sie eine HibiAPI-Instanz aus (der lokale Cache wird nach dem Wechsel gelöscht)",
       "title": "PxveAPI-Instanzeinstellung",
       "title2": "HibiAPI-Instanz auswählen",
-      "title3": "HibiAPI/PxveAPI-Instanzlink",
+      "title3": "PxveAPI-Instanzlink",
       "title4": "PxveAPI-Instanz"
     },
     "dark": {
@@ -229,7 +229,7 @@
       "lang_ph": "Bitte Sprache auswählen",
       "title": "Präferenzen",
       "manual_input_label": "Aktivieren Sie diesen Schalter, um den unten stehenden Link manuell einzugeben",
-      "manual_input": "Standard-API oder Bild-Proxy werden nicht verwendet",
+      "manual_input": "Der standardmäßige pximg-Proxy wird nicht verwendet",
       "api_proxy": {
         "def_ph": "Wenn der Standard-Proxy nicht verwendet werden kann, können Sie es mit einem anderen Proxy versuchen",
         "sel_desc": "Bitte wählen Sie AppAPI Proxy",

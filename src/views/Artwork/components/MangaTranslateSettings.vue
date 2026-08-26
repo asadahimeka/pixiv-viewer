@@ -51,7 +51,7 @@
       </div>
     </van-cell-group>
 
-    <van-cell-group v-if="translationEngine === 'vl-api'" title="VL API 配置（BYOK）">
+    <van-cell-group v-if="translationEngine === 'vl-api'" title="VL API 配置">
       <van-field
         :value="vlConfig.baseUrl"
         label="Base URL"
@@ -69,6 +69,7 @@
       />
       <llm-model-select
         v-model="translationVlModel"
+        :sc-vl-model="isSiliconCloud"
         :base-url="vlConfig.baseUrl"
         :api-key="vlConfig.apiKey"
       />
@@ -81,6 +82,7 @@
       <div v-if="vlTestResult" class="model-test-result" :class="vlTestResult.ok ? 'is-ok' : 'is-fail'">
         <van-icon :name="vlTestResult.ok ? 'success' : 'warning'" />
         <span>{{ vlTestResult.message }}</span>
+        <span v-if="vlTestResult.durationMs != null" class="result-duration">{{ vlTestResult.durationMs }}ms</span>
       </div>
     </van-cell-group>
 
@@ -97,14 +99,13 @@
         <div v-if="translationTranslator === 'google_web'" class="engine-help">
           <van-icon name="info-o" /> 使用 Google 翻译网页版接口，无需 API Key。<br><span style="margin-left:1.5em">需要能访问 translate.googleapis.com</span>
         </div>
+        <div class="engine-help">
+          <van-icon name="info-o" /> 如需在 Pixiv 原站阅读漫画，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>
+        </div>
+        <div class="engine-help">
+          <van-icon name="info-o" /> Firefox 用户可前往 <a href="https://github.com/DonutShinobu/ShinobuTranslator" target="_blank" rel="noreferrer">GitHub Releases</a> 手动安装
+        </div>
       </van-cell-group>
-
-      <div class="engine-help">
-        <van-icon name="info-o" /> 如需在 Pixiv 原站阅读漫画，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>
-      </div>
-      <div class="engine-help">
-        <van-icon name="info-o" /> Firefox 用户可前往 <a href="https://github.com/DonutShinobu/ShinobuTranslator" target="_blank" rel="noreferrer">GitHub Releases</a> 手动安装
-      </div>
 
       <van-cell-group v-if="translationTranslator == 'llm'" title="翻译提供商" style="padding-bottom: 1px">
         <van-field
@@ -115,48 +116,27 @@
         />
         <van-field
           v-longpress="onApiKeyLongpress"
-          :value="showPresetModelSel ? '' : providerConfig.apiKey"
+          :value="providerConfig.apiKey"
           type="password"
           label="API Key"
           placeholder="输入你的 API Key"
           @change="onApiKeyChange"
         />
-        <van-cell
-          v-if="showPresetModelSel"
-          title="模型"
-          label="请选择翻译模型"
-          class="preset-model-cell"
-        >
-          <select :value="providerConfig.model" class="preset-model-select" @change="onPresetModelChange">
-            <option v-for="model in presetModels" :key="model" :value="model">
-              {{ model.split('/').pop() }}
-            </option>
-          </select>
-        </van-cell>
-        <van-field
-          v-else
+        <llm-model-select
           :value="providerConfig.model"
-          label="模型"
-          placeholder="请输入模型，格式参照 API 平台文档"
-          @change="onModelChange"
+          :base-url="providerConfig.baseUrl"
+          :api-key="providerConfig.apiKey"
+          @input="onModelChange"
         />
+        <div class="engine-help">
+          <van-icon name="info-o" /> 支持 OpenAI 兼容接口。API Key 仅存储在本机浏览器，请勿填入他人设备。
+        </div>
         <div class="test-connection-wrap">
-          <van-button
-            size="small"
-            plain
-            round
-            :loading="testLoading"
-            loading-text="测试中..."
-            @click="testConnection"
-          >
+          <van-button size="small" plain round :loading="testLoading" loading-text="测试中..." @click="testConnection">
             测试连接
           </van-button>
         </div>
-        <div
-          v-if="testResult"
-          class="model-test-result"
-          :class="testResult.ok ? 'is-ok' : 'is-fail'"
-        >
+        <div v-if="testResult" class="model-test-result" :class="testResult.ok ? 'is-ok' : 'is-fail'">
           <van-icon :name="testResult.ok ? 'success' : 'warning'" />
           <span>{{ testResult.message }}</span>
           <span v-if="testResult.durationMs != null" class="result-duration">{{ testResult.durationMs }}ms</span>
@@ -235,9 +215,7 @@ import { Toast } from '@/lib/vant-apis'
 import localforage from 'localforage'
 import store from '@/store'
 import localDb from '@/utils/storage/localDb'
-import { aiModelMap, freeAiModels } from '@/utils/translate'
-import { VL_MODELS } from '@/utils/translate/manga'
-import { fetchModels } from '@/utils/translate/llmClient'
+import { testConnection } from '@/utils/translate/llmClient'
 import LlmModelSelect from './LlmModelSelect.vue'
 
 export default {
@@ -248,18 +226,14 @@ export default {
   data() {
     return {
       testLoading: false,
+      testResult: null,
       clearingCache: false,
       clearingModels: false,
-      testResult: null,
-      vlModels: VL_MODELS,
       vlTestLoading: false,
       vlTestResult: null,
     }
   },
   computed: {
-    presetModels() {
-      return store.getters.isLoggedIn ? Object.values(aiModelMap) : freeAiModels
-    },
     translationEngine: {
       get() {
         return store.state.mangaTrans.engine
@@ -345,13 +319,14 @@ export default {
       const mt = store.state.mangaTrans
       return mt.providers[mt.vlProvider] || {}
     },
-    showPresetModelSel() {
-      return this.providerConfig.baseUrl == SILICON_CLOUD_BASR_URL
+    isSiliconCloud() {
+      return this.providerConfig.baseUrl?.includes(SILICON_CLOUD_BASR_URL)
     },
   },
   methods: {
     onBaseUrlChange(e) {
       const name = e.target.value
+      if (!name) return
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
         provider: name,
@@ -362,7 +337,6 @@ export default {
     },
     onApiKeyChange(e) {
       const val = e.target.value
-      if (!val && this.showPresetModelSel) return
       const name = this.providerConfig.baseUrl
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
@@ -371,19 +345,7 @@ export default {
         },
       })
     },
-    onPresetModelChange(e) {
-      const model = e.target.value
-      const name = SILICON_CLOUD_BASR_URL
-      const current = this.translationProviders[name] || {}
-      const patch = { ...current, model }
-      store.commit('SET_MANGA_TRANS', {
-        providers: {
-          [name]: patch,
-        },
-      })
-    },
-    onModelChange(e) {
-      const val = e.target.value
+    onModelChange(val) {
       const name = this.providerConfig.baseUrl
       const current = this.translationProviders[name] || {}
       store.commit('SET_MANGA_TRANS', {
@@ -408,20 +370,36 @@ export default {
       })
     },
     async testVlConnection() {
-      if (!this.vlConfig.apiKey) {
-        this.vlTestResult = { ok: false, message: '请先输入 API Key' }
+      const { baseUrl, apiKey, model } = this.vlConfig
+      if (!baseUrl || !apiKey || !model) {
+        Toast('请输入 BaseURL、API Key 和模型')
         return
       }
       this.vlTestLoading = true
-      try {
-        const ids = await fetchModels({ baseUrl: this.vlConfig.baseUrl, apiKey: this.vlConfig.apiKey })
-        const known = ids.includes(store.state.mangaTrans.vlModel)
-        this.vlTestResult = { ok: true, message: `连接成功，共 ${ids.length} 个模型${known ? '' : '（当前模型不在列表中，请确认其支持图片输入）'}` }
-      } catch (err) {
-        this.vlTestResult = { ok: false, message: `连接失败: ${err.message}` }
-      } finally {
-        this.vlTestLoading = false
+      const start = Date.now()
+      const res = await testConnection({ baseUrl, apiKey, model })
+      res.durationMs = Date.now() - start
+      this.vlTestResult = res
+      this.vlTestLoading = false
+      setTimeout(() => {
+        this.vlTestResult = null
+      }, 2000)
+    },
+    async testConnection() {
+      const { baseUrl, apiKey, model } = this.providerConfig
+      if (!baseUrl || !apiKey || !model) {
+        Toast('请输入 BaseURL、API Key 和模型')
+        return
       }
+      this.testLoading = true
+      const start = Date.now()
+      const res = await testConnection({ baseUrl, apiKey, model })
+      res.durationMs = Date.now() - start
+      this.testResult = res
+      this.testLoading = false
+      setTimeout(() => {
+        this.testResult = null
+      }, 2000)
     },
     onSrvTokenLongpress() {
       const value = prompt('鉴权 Token')
@@ -463,91 +441,6 @@ export default {
         Toast('清除模型缓存失败: ' + err.message)
       } finally {
         this.clearingModels = false
-      }
-    },
-    async testConnection() {
-      const config = this.providerConfig
-      const apiKey = config.apiKey || ''
-      const model = config.model || ''
-
-      if (!apiKey) {
-        this.testResult = { ok: false, message: '请先输入 API Key' }
-        Toast('请先输入 API Key')
-        return
-      }
-
-      window.umami?.track('llm-test-connection', { val: config.baseUrl })
-
-      this.testLoading = true
-      const start = Date.now()
-
-      try {
-        // BaseURL 识别：追加 /chat/completions（若未以该后缀结尾）
-        const baseUrl = (config.baseUrl || SILICON_CLOUD_BASR_URL).replace(/\/$/, '')
-        const url = baseUrl.endsWith('/chat/completions')
-          ? baseUrl
-          : `${baseUrl}/chat/completions`
-
-        // 按域名模式推断默认模型，不匹配时兜底 gpt-4o-mini
-        const defaultModel = /siliconflow\.cn/.test(baseUrl)
-          ? 'Qwen/Qwen3-8B'
-          : /openai\.com/.test(baseUrl)
-            ? 'gpt-4o-mini'
-            : /deepseek\.com/.test(baseUrl)
-              ? 'deepseek-chat'
-              : 'gpt-4o-mini'
-
-        const authMode = config.authMode || 'api_key'
-        const headers = { 'Content-Type': 'application/json' }
-        if (authMode === 'bearer_token') {
-          headers.Authorization = apiKey
-        } else if (authMode === 'custom_header') {
-          headers[config.customHeaderName || 'X-API-Key'] = config.customHeaderValue || apiKey
-        } else {
-          headers.Authorization = `Bearer ${apiKey}`
-        }
-
-        const body = JSON.stringify({
-          model: model || defaultModel,
-          messages: [{ role: 'user', content: 'Hi' }],
-          max_tokens: 5,
-        })
-
-        if (window.__httpRequest__) {
-          const resp = await window.__httpRequest__(url, JSON.stringify({
-            method: 'POST',
-            headers,
-            data: body,
-          }))
-          if (resp.data) {
-            this.testResult = { ok: true, message: '连接成功', durationMs: Date.now() - start }
-            Toast.success('连接成功')
-          }
-        } else {
-          const response = await fetch(url, {
-            method: 'POST',
-            headers,
-            body: JSON.stringify({
-              model: model || defaultModel,
-              messages: [{ role: 'user', content: 'Hi' }],
-              max_tokens: 5,
-            }),
-          })
-
-          if (!response.ok) {
-            const errText = await response.text().catch(() => '')
-            throw new Error(`${response.status} ${response.statusText}${errText ? ': ' + errText : ''}`)
-          }
-
-          this.testResult = { ok: true, message: '连接成功', durationMs: Date.now() - start }
-          Toast.success('连接成功')
-        }
-      } catch (err) {
-        console.log('testConnection err:', err)
-        this.testResult = { ok: false, message: `连接失败: ${err.message}`, durationMs: Date.now() - start }
-        Toast(`连接失败: ${err.message}`)
-      } finally {
-        this.testLoading = false
       }
     },
   },
@@ -603,26 +496,12 @@ export default {
       vertical-align middle
       margin-right 0.06rem
 
-  .preset-model-cell
-    ::v-deep .van-cell__value
-      display flex
-      align-items center
-      justify-content flex-end
-
-    .preset-model-select
-      width 3.5rem
-      padding 0.08rem 0.2rem
-      border 1px solid #ddd
-      border-radius 0.08rem
-      background #fff
-      font-size 13PX
-      color #333
-
   .model-test-result
     margin 0.1rem 0.3rem 0.2rem
     padding 0.15rem 0.2rem
     border 1px solid #eee
     border-radius 0.08rem
+    text-align right
     font-size 13PX
     line-height 1.8
     color #555

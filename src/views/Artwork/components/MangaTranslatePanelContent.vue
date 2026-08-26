@@ -8,7 +8,7 @@
       <van-loading v-if="loading" class="ptp-loading" size="30px" />
       <div v-else class="ptp-empty">
         <p class="ptp-empty-text">暂无翻译结果</p>
-        <van-button size="small" type="primary" @click="$emit('retry')">重试</van-button>
+        <van-button size="small" plain @click="$emit('retry')">重试</van-button>
       </div>
     </div>
     <div v-else class="ptp-text-content" :class="{ 'ptp-streaming-active': loading }">

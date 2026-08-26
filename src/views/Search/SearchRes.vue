@@ -23,7 +23,7 @@
         </div>
       </div>
       <div
-        v-if="(isSelfHibi && keywords.trim() && artList.length)"
+        v-if="(keywords.trim() && artList.length)"
         class="show_pop_icon"
         @click="togglePopPreview"
       >
@@ -195,7 +195,6 @@ import _ from '@/lib/lodash'
 import dayjs from 'dayjs'
 import api from '@/api'
 import store from '@/store'
-import { notSelfHibiApi } from '@/consts'
 import { mintVerify, BLOCK_INPUT_WORDS, BLOCK_LAST_WORD_RE, BLOCK_SEARCH_WORD_RE, BLOCK_RESULT_RE, isAiIllust } from '@/utils/filter'
 import { i18n } from '@/i18n'
 import { sleep } from '@/utils'
@@ -233,8 +232,7 @@ export default {
           return { text: i18n.t('8SuotxAmYS7l1QCfLz0Yv', [e]), value: `${e}users入り` }
         }),
       ],
-      // minDate: new Date('2007/09/13'),
-      minDate: dayjs().subtract(1, 'year').toDate(),
+      minDate: new Date('2007/09/13'),
       maxDate: new Date(),
       searchParams: {
         mode: 'partial_match_for_tags',
@@ -304,7 +302,6 @@ export default {
       ],
       searchOtherOptions,
       showPopPreview: false,
-      isSelfHibi: !notSelfHibiApi,
       totalPages: 166,
       pageBtnNum: document.documentElement.clientWidth / 80,
       actSearchQuickTab: 0,
@@ -652,7 +649,6 @@ export default {
       })
     },
     onSearchInput: _.debounce(async function () {
-      if (notSelfHibiApi) return
       if (!this.lastWord || !this.keywords.trim()) {
         this.autoCompleteTagList = []
         return

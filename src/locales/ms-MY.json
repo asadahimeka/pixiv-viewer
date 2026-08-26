@@ -445,7 +445,7 @@
   "setting": {
     "about": "Mengenai",
     "api": {
-      "desc": "Masukkan alamat contoh Hibiapi/PxveAPI di bawah, anda perlu menambah https: //, dan jalan perlu diisi dalam bahagian `/API/pixiv`",
+      "desc": "Masukkan alamat contoh PxveAPI di bawah",
       "desc2": "Contohnya: {0}, cache tempatan akan dibersihkan selepas menyimpan",
       "desc3": "Contoh API boleh didapati atau dibina sendiri di GitHub",
       "desc4": "atau membina sendiri",
@@ -453,7 +453,7 @@
       "ph": "Sila pilih contoh Hibiapi (cache tempatan akan dibersihkan selepas bertukar)",
       "title": "Tetapan contoh PxveAPI",
       "title2": "Contoh Hibiapi Pilih",
-      "title3": "Pautan contoh Hibiapi/PxveAPI",
+      "title3": "Pautan contoh PxveAPI",
       "title4": "Contoh PxveAPI"
     },
     "app_desc": "Satu lagi ilustrasi pixiv",
@@ -517,7 +517,7 @@
       },
       "lang": "Bahasa",
       "lang_ph": "Sila pilih bahasa",
-      "manual_input": "Tidak menggunakan API lalai atau proksi imej",
+      "manual_input": "Tidak menggunakan proksi pximg lalai",
       "manual_input_label": "Hidupkan suis ini ke secara manual memasuki pautan di bawah",
       "swipe_toggle": "Leret ke kiri atau kanan pada halaman Butiran untuk bertukar -tukar karya seni",
       "title": "Keutamaan"

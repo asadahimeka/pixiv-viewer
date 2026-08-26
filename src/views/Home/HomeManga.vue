@@ -8,15 +8,14 @@
     </div>
     <div class="home-m">
       <MangaRankCard />
-      <MangaRecommendCard v-if="isSelfHibi" />
+      <MangaRecommendCard />
       <RandomManga />
-      <LatestMangaCard v-if="isSelfHibi && notVirtualList" />
+      <LatestMangaCard v-if="notVirtualList" />
     </div>
   </div>
 </template>
 
 <script>
-import { notSelfHibiApi } from '@/consts'
 import LatestMangaCard from './components/LatestMangaCard.vue'
 import MangaRankCard from './components/MangaRankCard.vue'
 import MangaRecommendCard from './components/MangaRecommendCard.vue'
@@ -30,11 +29,6 @@ export default {
     MangaRecommendCard,
     RandomManga,
     LatestMangaCard,
-  },
-  data() {
-    return {
-      isSelfHibi: !notSelfHibiApi,
-    }
   },
   head() {
     return {

@@ -130,36 +130,6 @@ export function getNoTranslateWords(tags = []) {
   })
 }
 
-export const freeAiModels = ['tencent/Hunyuan-MT-7B', 'THUDM/GLM-4-9B-0414', 'Qwen/Qwen2.5-7B-Instruct', 'Qwen/Qwen3-8B', 'Qwen/Qwen3.5-4B']
-export const aiModelMap = {
-  hy_mt: 'tencent/Hunyuan-MT-7B',
-  glm: 'THUDM/GLM-4-9B-0414',
-  qwen2_5: 'Qwen/Qwen2.5-7B-Instruct',
-  qwen3: 'Qwen/Qwen3-8B',
-  qwen3_5: 'Qwen/Qwen3.5-4B',
-  longcat2: 'meituan-longcat/LongCat-2.0',
-  glm5_2: 'zai-org/GLM-5.2',
-  kimi2_7: 'moonshotai/Kimi-K2.7-Code',
-  dpsk_v4p: 'deepseek-ai/DeepSeek-V4-Pro',
-  dpsk_v4f: 'deepseek-ai/DeepSeek-V4-Flash',
-  nex: 'nex-agi/Nex-N2-Pro',
-  minimax: 'MiniMaxAI/MiniMax-M2.5',
-  qwen3_6: 'Qwen/Qwen3.6-35B-A3B',
-  step3_5: 'stepfun-ai/Step-3.5-Flash',
-  ling2: 'inclusionAI/Ling-flash-2.0',
-  glm4_5: 'zai-org/GLM-4.5-Air',
-  hy: 'tencent/Hunyuan-A13B-Instruct',
-}
-
-/**
- * 小说翻译模型 id 归一化：兼容历史短键（hy_mt 等）与完整模型 id
- * @param {string} v
- * @returns {string}
- */
-export function resolveNovelModel(v) {
-  return aiModelMap[v] || v || 'tencent/Hunyuan-MT-7B'
-}
-
 export async function siliconCloudTranslate(novelText = '', notsArr = [], modelId = 'tencent/Hunyuan-MT-7B', onRead = console.log) {
   try {
     if (!novelText.trim()) return

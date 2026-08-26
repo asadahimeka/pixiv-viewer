@@ -137,7 +137,7 @@ import api, { getBookmarkRestrictTags, localApi } from '@/api'
 import store, { novelTextConfig } from '@/store'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL } from '@/consts'
-import { getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, resolveNovelModel, siliconCloudTranslate } from '@/utils/translate'
+import { getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
 import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel } from '@/utils/novel'
 import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
@@ -242,7 +242,7 @@ export default {
   computed: {
     ...mapGetters(['isCensored']),
     pntActions() {
-      const modelName = resolveNovelModel(store.state.mangaTrans.novelModel || store.state.appSetting.novelDefTransAiModel).split('/').pop()
+      const modelName = store.state.mangaTrans.novelModel?.split('/').pop() || 'N/A'
       return [
         !this.kissLoaded && ({ text: '加载 KISS Translator', className: 'imt', key: 'kiss_t' }),
         isNativeTranslatorSupported && ({ text: 'Chrome 内置翻译', className: 'sc', key: 'native' }),
@@ -593,7 +593,7 @@ export default {
         await fn()
       }
     },
-    async fanyi(srv, nots = '', aiModel = 'glm') {
+    async fanyi(srv, nots) {
       try {
         if (srv == 'sc') {
           const mt = store.state.mangaTrans
@@ -601,14 +601,14 @@ export default {
           if (!cfg.apiKey) {
             const res = await Dialog.confirm({
               title: '需要 API Key',
-              message: 'AI 翻译现已改为自带 Key（BYOK）：请在「设置 → 其他设置 → 小说翻译」中填入你的 OpenAI 兼容 API Key（如 SiliconCloud 免费模型）。',
+              message: 'AI 翻译需要自带 Key：请在「翻译设置」中填入你的 OpenAI 兼容 API Key（如 SiliconCloud 免费模型）。',
               confirmButtonText: '前往设置',
               cancelButtonText: '取消',
             }).catch(() => 'cancel')
-            if (res == 'confirm') this.$router.push('/setting/preference')
+            if (res == 'confirm') this.showNovelTransSettings = true
             return
           }
-          this.aiTranslate(nots, store.state.mangaTrans.novelModel || store.state.appSetting.novelDefTransAiModel)
+          this.aiTranslate(nots, store.state.mangaTrans.novelModel)
           return
         }
 
@@ -618,7 +618,7 @@ export default {
           forbidClick: true,
           message: '加载时间较长，请耐心等待',
         })
-        const cacheKey = `novel.translate.${this.artwork.id}.${srv}.${nots}.${aiModel}`
+        const cacheKey = `novel.translate.${this.artwork.id}.${srv}.${nots}`
         let res = await getCache(cacheKey)
         if (!res) {
           let url = `${PIXIV_NEXT_URL}/api/pixiv-novel-translate/${this.artwork.id}.html?srv=${srv}`
@@ -635,9 +635,8 @@ export default {
         console.log('fanyi err: ', err)
       }
     },
-    async aiTranslate(nots = '', aiModel = 'glm', isNative = false) {
-      const aiModelId = resolveNovelModel(aiModel)
-      const cacheKey = `novel.translate.${this.artwork.id}.sc.${aiModelId}.${nots}.${isNative}`
+    async aiTranslate(nots, aiModel, isNative = false) {
+      const cacheKey = `novel.translate.${this.artwork.id}.sc.${aiModel}.${nots}.${isNative}`
       const cacheText = await getCache(cacheKey)
       if (cacheText) {
         this.novelText.text = cacheText
@@ -664,12 +663,7 @@ export default {
           return
         }
 
-        if (chunk.reasoning) {
-          resText = `<span style="color:gray;font-size:0.8em">思考中：${chunk.content}</span>`
-        } else {
-          resText += chunk.content
-        }
-
+        resText += chunk.content
         notsArr.forEach((e, i) => {
           resText = resText.replaceAll(`[名字${i}]`, e)
           resText = resText.replaceAll(`名字${i}`, e)
@@ -682,7 +676,7 @@ export default {
       if (isNative) {
         nativeTranslate(novelTextBak, callback)
       } else {
-        siliconCloudTranslate(novelTextBak, notsArr, aiModelId, callback)
+        siliconCloudTranslate(novelTextBak, notsArr, aiModel, callback)
       }
     },
   },

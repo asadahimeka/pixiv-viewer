@@ -223,7 +223,7 @@
   "setting": {
     "about": "Di",
     "api": {
-      "desc": "Immettere l'indirizzo dell'istanza HibiAPI/PxveAPI di seguito, è necessario aggiungere https:// e il percorso deve essere compilato nella parte `/api/pixiv`",
+      "desc": "Inserisci l'indirizzo dell'istanza PxveAPI di seguito",
       "desc2": "Ad esempio: {0}, la cache locale verrà cancellata dopo il salvataggio",
       "desc3": "Le istanze API possono essere trovate o costruite da solo a GitHub",
       "desc4": "trovare o costruire il tuo",
@@ -231,7 +231,7 @@
       "ph": "Seleziona un'istanza HibiAPI (la cache locale verrà cancellata dopo il passaggio)",
       "title": "Impostazione dell'istanza PxveAPI",
       "title2": "Selezione istanza HibiAPI",
-      "title3": "Collegamento all'istanza HibiAPI/PxveAPI",
+      "title3": "Collegamento all'istanza PxveAPI",
       "title4": "Istanza PxveAPI"
     },
     "dark": {
@@ -270,7 +270,7 @@
       "lang_ph": "Seleziona la lingua",
       "title": "Preferenze",
       "manual_input_label": "Attiva questo interruttore per inserire manualmente il collegamento sottostante",
-      "manual_input": "Non utilizzare l'API predefinita o il proxy di immagine",
+      "manual_input": "Non utilizzare il proxy pximg predefinito",
       "api_proxy": {
         "def_ph": "Se non è possibile utilizzare il proxy predefinito, puoi provare un altro proxy",
         "sel_desc": "Seleziona AppAPI Proxy",

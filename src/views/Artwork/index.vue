@@ -681,7 +681,7 @@ export default {
         targetLang: 'zh-CN',
         translator: this.translationTranslator,
         llmProvider: 'custom',
-        llmAuthMode: providerConfig.authMode || 'api_key',
+        llmAuthMode: 'api_key',
         llmBaseUrl: providerConfig.baseUrl || '',
         llmApiKey: providerConfig.apiKey || '',
         llmModel: providerConfig.model || '',

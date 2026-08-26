@@ -244,7 +244,7 @@
   "setting": {
     "about": "Acerca de",
     "api": {
-      "desc": "Ingrese la dirección de instancia de HibiAPI/PxveAPI a continuación, debe agregar https:// y la ruta debe completarse en la parte `/api/pixiv`",
+      "desc": "Ingrese la dirección de la instancia de PxveAPI a continuación",
       "desc2": "Por ejemplo: {0}, el caché local se borrará después de guardar",
       "desc3": "Las instancias de la API se pueden encontrar o construir solo en Github",
       "desc4": "encontrar o construir el tuyo propio",
@@ -252,7 +252,7 @@
       "ph": "Seleccione una instancia de HibiAPI (el caché local se borrará después de cambiar)",
       "title": "Configuración de instancia PxveAPI",
       "title2": "Seleccionar instancia de HibiAPI",
-      "title3": "Enlace de instancia de HibiAPI/PxveAPI",
+      "title3": "Enlace de instancia de PxveAPI",
       "title4": "Instancia PxveAPI"
     },
     "app_desc": "Otra herramienta de navegación de ilustraciones/novedosas de Pixiv",
@@ -316,7 +316,7 @@
       },
       "lang": "Idioma",
       "lang_ph": "Por favor seleccione idioma",
-      "manual_input": "No utilizar API predeterminada ni proxy de imagen",
+      "manual_input": "No usar el proxy pximg predeterminado",
       "manual_input_label": "Active este interruptor para ingresar manualmente al siguiente enlace",
       "swipe_toggle": "Deslícese hacia la izquierda o hacia la derecha en la página de detalles para alternar obras de arte",
       "title": "Preferencias"

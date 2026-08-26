@@ -19,7 +19,7 @@
       </template>
     </van-cell>
 
-    <van-popup v-model="showPicker" position="bottom" round get-container="body">
+    <van-popup v-model="showPicker" class="llm-model-select-popup" position="bottom" round closeable :overlay="false" get-container="body">
       <van-search v-model="keyword" placeholder="搜索模型 ID" />
       <div class="model-list">
         <van-cell
@@ -28,7 +28,11 @@
           :title="id"
           clickable
           @click="pick(id)"
-        />
+        >
+          <template v-if="id == value" #right-icon>
+            <van-icon name="success" />
+          </template>
+        </van-cell>
         <div v-if="!filteredIds.length" class="model-list-empty">
           {{ loading ? '加载中...' : error ? error : '列表为空，可开启「手动输入模型」直接填写' }}
         </div>
@@ -38,11 +42,10 @@
 </template>
 
 <script>
-import { Toast } from '@/lib/vant-apis'
 import store from '@/store'
 import { fetchModels } from '@/utils/translate/llmClient'
-
-const modelsCache = new Map() // baseUrl -> string[]（会话级缓存）
+import { VL_MODELS } from '@/utils/translate/manga'
+import { getCache, setCache } from '@/utils/storage/siteCache'
 
 export default {
   name: 'LlmModelSelect',
@@ -50,6 +53,7 @@ export default {
     value: { type: String, default: '' },
     baseUrl: { type: String, required: true },
     apiKey: { type: String, default: '' },
+    scVlModel: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -57,12 +61,12 @@ export default {
       keyword: '',
       loading: false,
       error: '',
-      cachedIds: modelsCache.get(this.baseUrl) || [],
+      cachedIds: [],
     }
   },
   computed: {
     isManual() {
-      return (store.state.mangaTrans.providers[this.baseUrl] || {}).modelSelMode === 'manual'
+      return store.state.mangaTrans.providers[this.baseUrl]?.modelSelMode === 'manual'
     },
     filteredIds() {
       const kw = this.keyword.trim().toLowerCase()
@@ -71,31 +75,42 @@ export default {
   },
   methods: {
     setManual(val) {
+      const provider = store.state.mangaTrans.providers[this.baseUrl] || {}
       store.commit('SET_MANGA_TRANS', {
         providers: {
-          [this.baseUrl]: { ...(store.state.mangaTrans.providers[this.baseUrl] || {}), baseUrl: this.baseUrl, modelSelMode: val ? 'manual' : 'list' },
+          [this.baseUrl]: {
+            ...provider,
+            baseUrl: this.baseUrl,
+            modelSelMode: val ? 'manual' : 'list',
+          },
         },
       })
     },
     async openPicker() {
       this.showPicker = true
-      if (modelsCache.has(this.baseUrl)) {
-        this.cachedIds = modelsCache.get(this.baseUrl)
+      if (this.scVlModel) {
+        this.cachedIds = Object.values(VL_MODELS)
+        return
+      }
+      const cacheKey = `model.list.${this.baseUrl}`
+      const cached = await getCache(cacheKey)
+      if (cached) {
+        this.cachedIds = cached
         return
       }
       if (!this.apiKey) {
-        Toast('请先填写 API Key')
+        this.$toast('请先填写 API Key')
         return
       }
       this.loading = true
       this.error = ''
       try {
         const ids = await fetchModels({ baseUrl: this.baseUrl, apiKey: this.apiKey })
-        modelsCache.set(this.baseUrl, ids)
+        setCache(cacheKey, ids, 86400)
         this.cachedIds = ids
       } catch (err) {
         console.log('fetchModels err:', err)
-        this.error = `获取模型列表失败: ${err.message}`
+        this.error = `获取模型列表失败: ${err.message}，可开启「手动输入模型」直接填写`
       } finally {
         this.loading = false
       }
@@ -108,22 +123,28 @@ export default {
 }
 </script>
 
-<style lang="stylus" scoped>
-.llm-model-select
+<style lang="stylus">
+.llm-model-select-popup
+  left: 50%
+  width: 10rem
+  height: 80%
+  margin-left: -5rem
+  overflow: hidden
   .model-cell
     .model-current
       font-size 13PX
       color #666
       word-break break-all
-
   .model-list
-    max-height 50vh
-    overflow-y auto
+    height: 100%
     padding-bottom 0.3rem
-
+    box-sizing: border-box
+    overflow-y: auto
     .model-list-empty
       padding 0.4rem 0.3rem
       font-size 13PX
       color #999
       text-align center
+  .van-popup__close-icon--top-right
+    right 0.6rem
 </style>
