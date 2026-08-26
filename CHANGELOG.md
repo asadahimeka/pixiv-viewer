@@ -61,6 +61,16 @@
 - *(translate)* Add novel translation settings panel component
 - *(translate)* Wire novel translation settings into Novel page
 - *(translate)* Allow manga translation without login
+- Expand cache clearing for translate and pxcl caches
+- Add page jump markers and links in novel view
+- Add unified LLM request layer (llmClient.js) with SSE parsing and CORS fallback
+- Store 增加 VL/小说独立 Provider 配置并收紧 umami 脱敏
+- Add LlmModelSelect component (dropdown/manual model id switch)
+- MangaTranslateSettings VL 引擎接入 BYOK（独立 Provider/模型，移除登录门控）
+- Novel translate settings BYOK provider/model config (Task 5)
+- 小说翻译调用链接入 BYOK（Task 6）
+- *(translate)* BYOK VL engine call chain — pass vlApiConfig to manga.js
+- BYOK LLM translation + personal workspace sync
 
 ### 🐛 Bug Fixes
 
@@ -105,6 +115,11 @@
 - Change manga translate default model
 - Change translate storage key
 - Manga translate bug fixes
+- Style fix and translation settings group
+- Show cursor in novel search input
+- Normalize helper headers (C-1), buffer SSE across chunks (I-1), wrap fallback errors (I-2)
+- 小说翻译失败走假成功路径 + 清理不可达死代码（Task 6 review）
+- 终审修复 — resolveVlModel 放宽白名单兜底 + doDefPnt 键归一化
 
 ### 💼 Other
 
@@ -136,6 +151,9 @@
 - *(translate)* Adjust settings panels typography and spacing
 - *(theme)* Sakuria card-first containers for detail/user pages
 - *(theme)* Refine iOS26 glass + MD components per reference libs
+- Tweak manga translate settings help text
+- Apply lint --fix quote-props to llmClient.js
+- Fix attributes-order in MangaTranslateSettings vl-model-select
 
 ### ⚙️ Miscellaneous Tasks
 
@@ -168,6 +186,9 @@
 - Release v1.36.2
 - Release v1.36.3
 - Release v1.36.4
+- Release v1.36.5
+- Remove Yuki service references
+- *(byok)* 移除内置 SiliconCloud Key 常量与 env，helper @connect 扩充 + 文档 BYOK 化 (T8+T9)
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
