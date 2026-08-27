@@ -240,9 +240,9 @@ export default new Vuex.Store({
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
     },
     SET_MANGA_TRANS(state, patch) {
-      const pKeys = Object.keys(patch)
-      const dontTrack = ['sourceLang', 'targetLang', 'serverToken'].some(k => pKeys.includes(k))
-      if (!dontTrack) window.umami?.track('SET_MANGA_TRANS', { patch: JSON.stringify(patch, (k, v) => k === 'apiKey' ? '[REDACTED]' : v) })
+      window.umami?.track('SET_MANGA_TRANS', { 
+        patch: JSON.stringify(patch, (k, v) => (k == 'apiKey' || k == 'serverToken') ? '[REDACTED]' : v) 
+      })
       state.mangaTrans = {
         ...state.mangaTrans,
         ...patch,
@@ -251,7 +251,7 @@ export default new Vuex.Store({
           ...(patch.providers || {}),
         },
       }
-      LocalStorage.set('PXV_MANGATRANS_SETTING', state.mangaTrans)
+      LocalStorage.set('PXV_TRANSLATE', state.mangaTrans)
     },
   },
   actions: {
