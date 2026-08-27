@@ -120,6 +120,8 @@
 - Normalize helper headers (C-1), buffer SSE across chunks (I-1), wrap fallback errors (I-2)
 - 小说翻译失败走假成功路径 + 清理不可达死代码（Task 6 review）
 - 终审修复 — resolveVlModel 放宽白名单兜底 + doDefPnt 键归一化
+- Translate settings
+- Translate settings and style fixes
 
 ### 💼 Other
 
@@ -189,6 +191,9 @@
 - Release v1.36.5
 - Remove Yuki service references
 - *(byok)* 移除内置 SiliconCloud Key 常量与 env，helper @connect 扩充 + 文档 BYOK 化 (T8+T9)
+- Release v1.37.0
+- Update lodash
+- Patch swiper
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
