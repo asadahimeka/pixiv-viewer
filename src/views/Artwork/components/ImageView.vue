@@ -25,7 +25,7 @@
           <template v-if="showPicTranslateBtn">
             <van-button
               class="translate-btn"
-              size="mini"
+              size="small"
               round
               plain
               :loading="translatingIndex === index"
@@ -80,7 +80,7 @@
         <template v-if="showPicTranslateBtn">
           <van-button
             class="translate-btn"
-            size="mini"
+            size="small"
             round
             plain
             :loading="translatingIndex === index"

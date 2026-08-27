@@ -1016,13 +1016,14 @@ export default {
       content: "→"
       position: absolute;
       right: 0.25rem;
-      bottom: 0.1rem;
+      bottom: 0;
       font-size 0.6rem
       line-height 1
       color var(--accent-color, #f2c358)
       transform: translateX(0);
       opacity: 0.6;
       animation: fade 1.5s infinite;
+      pointer-events none
     &::-webkit-scrollbar
       display none
     ::v-deep .van-dropdown-menu

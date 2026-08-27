@@ -151,10 +151,10 @@ export default {
 
 .toggle-btn
   position absolute
-  bottom 1rem
+  bottom 1.1rem
   right 0.2rem
   z-index 10
-  width 0.6rem
+  width 3.5em
   padding 0.1rem 0.16rem
   color #fff
   background rgba(0, 0, 0, 0.55)

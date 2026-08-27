@@ -136,7 +136,7 @@ export default {
       color #666
       word-break break-all
   .model-list
-    height: 100%
+    height: 90%
     padding-bottom 0.3rem
     box-sizing: border-box
     overflow-y: auto
@@ -145,6 +145,8 @@ export default {
       font-size 13PX
       color #999
       text-align center
+  .van-field__clear
+    display none
   .van-popup__close-icon--top-right
     right 0.6rem
 </style>

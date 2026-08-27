@@ -1,5 +1,5 @@
 <template>
-  <div v-show="visible" class="translate-toolbar">
+  <div v-show="visible && (engine === 'shinobu' || engine === 'server')" class="translate-toolbar">
     <!-- Engine Mode Badge -->
     <span
       class="translate-toolbar__engine"
@@ -37,23 +37,6 @@
       >
         <span>取消</span>
       </van-button>
-
-      <!-- Toggle Original/Translated -->
-      <!-- <van-button
-        v-if="engine === 'shinobu'"
-        :icon="showTranslated ? 'eye-o' : 'closed-eye'"
-        @click.stop="$emit('toggle-view')"
-      >
-        <span>{{ showTranslated ? '原图' : '译图' }}</span>
-      </van-button> -->
-
-      <!-- Settings -->
-      <van-button
-        icon="setting-o"
-        @click.stop="$emit('open-settings')"
-      >
-        <span>翻译设置</span>
-      </van-button>
     </div>
   </div>
 </template>
@@ -66,10 +49,7 @@ export default {
   props: {
     visible: { type: Boolean, default: false },
     translating: { type: Boolean, default: false },
-    showTranslated: { type: Boolean, default: false },
     statusText: { type: String, default: '' },
-    pageCount: { type: Number, default: 0 },
-    currentPage: { type: Number, default: 0 },
     errorCount: { type: Number, default: 0 },
     engine: { type: String, default: 'vl-api' },
   },
@@ -162,14 +142,20 @@ export default {
 
 <style lang="stylus" scoped>
 .translate-toolbar
+  position fixed
+  z-index 50
+  top 90vh
+  left 0.2rem
   display flex
   align-items center
   flex-wrap wrap
   gap 0.1rem
   width auto
-  margin -0.2rem 0.1rem 0
   padding 0.1rem 0.16rem
   border-radius 0.12rem
+  background rgba(0, 0, 0, 0.85)
+  backdrop-filter saturate(200%) blur(10PX)
+  box-shadow 0 2PX 12PX rgba(0, 0, 0, 0.3)
 
   &__status
     display flex

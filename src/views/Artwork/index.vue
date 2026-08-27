@@ -34,6 +34,7 @@
               ref="artworkMeta"
               :artwork="artwork"
               :maybe-ai-author="maybeAiAuthor"
+              :show-pic-translate-btn="showPicTranslateBtn"
               @ugoira-download="showUgPanelFromDlBtn"
               @update-author-follow="updateAuthorFollow"
             />
@@ -42,14 +43,9 @@
             v-if="showPicTranslateBtn"
             :visible="showPicTranslateBtn"
             :translating="pipelineTranslating"
-            :show-translated="showTranslated"
             :status-text="translateStatusText"
-            :page-count="pageCount"
-            :current-page="currentTransPage"
             :error-count="translateErrorCount"
             :engine="translationEngine"
-            @toggle-view="showTranslated = !showTranslated"
-            @open-settings="showTranslateSettings = true"
             @cancel-translate="handleCancelTranslate"
           />
           <keep-alive>
@@ -72,18 +68,6 @@
       @close="handleClosePanel"
       @retry="handleVLRetry(currentTransPage)"
     />
-    <van-popup
-      v-if="showPicTranslateBtn"
-      v-model="showTranslateSettings"
-      position="bottom"
-      class="translate-settings-popup"
-      round
-      closeable
-      close-icon-position="top-right"
-      get-container="body"
-    >
-      <MangaTranslateSettings />
-    </van-popup>
     <van-divider style="margin: 0.7rem 0;" />
     <keep-alive>
       <Related v-show="artwork.id" :key="artwork.id" :artwork="artwork" />
@@ -118,11 +102,11 @@ import { getCache, setCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import { copyText, loadBlobAsImage, sleep } from '@/utils'
 import { PIXIV_NEXT_URL, COMMON_PROXY, PXIMG_PID_BASE } from '@/consts'
-import TopBar from '@/components/TopBar'
-import ImageView from './components/ImageView'
-import Meta from './components/Meta'
-import AuthorCard from './components/AuthorCard'
-import Related from './components/Related'
+import TopBar from '@/components/TopBar.vue'
+import ImageView from './components/ImageView.vue'
+import Meta from './components/Meta.vue'
+import AuthorCard from './components/AuthorCard.vue'
+import Related from './components/Related.vue'
 import IconLink from '@/assets/images/share-sheet-link.png'
 import IconQQ from '@/assets/images/share-sheet-qq.png'
 import IconQrcode from '@/assets/images/share-sheet-qrcode.png'
@@ -137,8 +121,6 @@ import { ugoiraDownloadActions } from '@/utils/ugoira'
 import { translateMangaPage, getCachedTranslation, resolveVlModel } from '@/utils/translate/manga'
 import MangaTranslatePanel from './components/MangaTranslatePanel.vue'
 import MangaTranslateToolbar from './components/MangaTranslateToolbar.vue'
-import MangaTranslateSettings from './components/MangaTranslateSettings.vue'
-// import { mintFilter } from '@/utils/filter'
 
 export default {
   name: 'Artwork',
@@ -150,7 +132,6 @@ export default {
     Related,
     MangaTranslatePanel,
     MangaTranslateToolbar,
-    MangaTranslateSettings,
   },
   beforeRouteUpdate(to, from, next) {
     if (this.$refs.artworkMeta?.showComments) {
@@ -208,7 +189,6 @@ export default {
       pipelineTranslating: false,
       translateStatusText: '',
       translateErrorCount: 0,
-      showTranslateSettings: false,
       pipelineAbort: null,
       // 标记本组件实例是否实际运行过 shinobu 管线（创建过 ONNX session）
       // deactivated() 仅在置位时 import modelRegistry 并释放 ~200MB session

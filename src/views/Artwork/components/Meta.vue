@@ -131,7 +131,6 @@
           :icon="bookmarkId ? 'like' : 'like-o'"
           plain
           color="#E87A90"
-          style="margin-right: 0.15rem;"
           @click="toggleBookmark"
         >
           {{ bookmarkId ? $t('user.faved') : $t('user.fav') }}
@@ -142,7 +141,6 @@
           size="small"
           plain
           color="#5DAC81"
-          style="margin-right: 0.15rem;"
           @click="downloadArtwork()"
         >
           {{ $t('common.download') }}
@@ -150,11 +148,33 @@
         <van-button type="info" icon="comment-o" size="small" plain color="#005CAF" @click="showComments = true">
           <span>{{ $t('user.view_comments') }}</span>
         </van-button>
+        <van-button
+          v-if="showPicTranslateBtn"
+          type="info"
+          icon="setting-o"
+          size="small"
+          plain
+          @click.stop="showTranslateSettings = true"
+        >
+          <span>翻译设置</span>
+        </van-button>
         <van-popup v-model="showComments" class="comments-popup" position="right" get-container="body" closeable>
           <template v-if="showComments">
             <p class="comments-title">{{ $t('hGqGftQ7v772prEac1hbJ') }}</p>
             <CommentsArea :id="artwork.id" :count="0" :limit="10" />
           </template>
+        </van-popup>
+        <van-popup
+          v-if="showPicTranslateBtn"
+          v-model="showTranslateSettings"
+          position="bottom"
+          class="translate-settings-popup"
+          round
+          closeable
+          close-icon-position="top-right"
+          get-container="body"
+        >
+          <MangaTranslateSettings />
         </van-popup>
       </div>
     </template>
@@ -175,6 +195,7 @@ import { isAiIllust } from '@/utils/filter'
 import { getArtworkFileName } from '@/store/actions/filename'
 import { COMMON_IMAGE_PROXY } from '@/consts'
 import CommentsArea from './Comment/CommentsArea.vue'
+import MangaTranslateSettings from './MangaTranslateSettings.vue'
 
 const {
   isDefBookmarkPrivate,
@@ -188,7 +209,10 @@ const {
 
 export default {
   name: 'ArtworkMeta',
-  components: { CommentsArea },
+  components: {
+    CommentsArea,
+    MangaTranslateSettings,
+  },
   props: {
     artwork: {
       type: Object,
@@ -202,6 +226,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    showPicTranslateBtn: {
+      type: Boolean,
+      default: false,
+    },
   },
   data() {
     return {
@@ -209,6 +237,7 @@ export default {
       bookmarkId: null,
       favLoading: false,
       showComments: false,
+      showTranslateSettings: false,
     }
   },
   computed: {
@@ -549,37 +578,17 @@ export default {
 .meta_btns {
   display flex
   margin-top 16px
-  ::v-deep button {
+  gap 0.15rem
+  flex-wrap wrap
+  ::v-deep .van-button {
     flex 1
-    padding 0 5px
+    width max-content
+    min-width max-content
+    transition: filter 0.2s
+    filter: none
 
-    &:nth-child(1) {
-      transition 0.2s
-      filter: none;
-      &:hover {
-        color: #e74767 !important;
-        border-color: #e74767 !important;
-        background: #FEDFE1;
-        filter: brightness(1.05);
-      }
-    }
-
-    &:nth-child(2) {
-      transition 0.2s
-      filter: none;
-      &:hover {
-        background: #e2ffef;
-        filter: brightness(1.05);
-      }
-    }
-
-    &:nth-child(3) {
-      transition 0.2s
-      filter: none;
-      &:hover {
-        background: #d4ebff
-        filter: brightness(1.05);
-      }
+    &:hover {
+      filter: brightness(1.05);
     }
   }
 }

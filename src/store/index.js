@@ -240,8 +240,8 @@ export default new Vuex.Store({
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
     },
     SET_MANGA_TRANS(state, patch) {
-      window.umami?.track('SET_MANGA_TRANS', { 
-        patch: JSON.stringify(patch, (k, v) => (k == 'apiKey' || k == 'serverToken') ? '[REDACTED]' : v) 
+      window.umami?.track('SET_PXV_TRANSLATE', {
+        patch: JSON.stringify(patch, (k, v) => (k == 'apiKey' || k == 'serverToken') ? '[REDACTED]' : v),
       })
       state.mangaTrans = {
         ...state.mangaTrans,

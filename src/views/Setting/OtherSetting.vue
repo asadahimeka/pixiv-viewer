@@ -573,6 +573,7 @@ import { APP_API_PROXYS, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, PXIMG_PROXYS } from '
 import { i18n } from '@/i18n'
 import { applyVisualTheme } from '@/utils/theme'
 import { getSampleFileName } from '@/store/actions/filename'
+import { changeVisualTheme } from '@/store/actions/change-theme'
 import { localApi } from '@/api'
 import { checkImgAvailable, checkUrlAvailable, copyText, downloadURL, isURL, readTextFile } from '@/utils'
 import { mintVerify } from '@/utils/filter'
@@ -1015,49 +1016,7 @@ export default {
       this.reloadPage()
     },
     changeVisualTheme({ _value }) {
-      applyVisualTheme(_value)
-      window.umami?.track('set_visual_theme', { _value })
-      if (_value == 'sakuria') {
-        localStorage.removeItem('PXV_THEME')
-        localStorage.setItem('PXV_ACT_COLOR', '#ff6f9f')
-        store.commit('setAppSetting', {
-          pageFont: '寒蝉半圆体',
-          withBodyBg: true,
-          showPIDMask: false,
-          isImageFitScreen: store.state.isMobile,
-          isImageCardBorderRadius: true,
-        })
-      }
-      if (_value == 'md') {
-        localStorage.removeItem('PXV_THEME')
-        localStorage.setItem('PXV_ACT_COLOR', '#6750A4')
-        store.commit('setAppSetting', {
-          pageFont: '',
-          pageTransition: 'f7-md',
-          wfType: 'Masonry(CSSGrid)',
-          withBodyBg: true,
-          imgReso: 'Large(WebP)',
-          isImageFitScreen: store.state.isMobile,
-          isImageCardOuterMeta: true,
-          isImageCardBorderRadius: true,
-          isImageCardBoxShadow: true,
-          navBarAltStyle: false,
-          showPIDMask: false,
-        })
-      }
-      if (_value == 'ios26') {
-        localStorage.removeItem('PXV_THEME')
-        localStorage.setItem('PXV_ACT_COLOR', '#0088FF')
-        store.commit('setAppSetting', {
-          pageFont: 'HarmonyOS_Regular',
-          pageTransition: 'f7-ios',
-          withBodyBg: true,
-          isImageFitScreen: store.state.isMobile,
-          isImageCardBorderRadius: true,
-          navBarAltStyle: true,
-          showPIDMask: false,
-        })
-      }
+      changeVisualTheme(_value)
       this.reloadPage()
     },
     onAnalyticsChange(val) {

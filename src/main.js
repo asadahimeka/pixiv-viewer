@@ -33,11 +33,12 @@ import { loadCustomFont } from '@/utils/font'
 import { getSelectedLang, i18n, initLocale } from '@/i18n'
 import { getActionMap } from '@/api/client/action'
 import { initBookmarkCache } from '@/utils/storage/siteCache'
+import { changeVisualTheme } from '@/store/actions/change-theme'
 
 setupApp()
 
 async function setupApp() {
-  initPxveccTheme()
+  initVisualTheme()
   await checkWechat()
   await checkBrowser()
   await initSetting()
@@ -132,10 +133,16 @@ async function checkBrowser() {
   return true
 }
 
-function initPxveccTheme() {
-  if (location.hostname != 'pxve.cc' || localStorage.PXV_THEME) return
-  localStorage.PXV_THEME = 'Anon'
-  localStorage.PXV_ACT_COLOR = '#ff8899'
-  document.documentElement.classList.add('custom_theme', 't_' + localStorage.PXV_THEME)
-  document.documentElement.style.setProperty('--accent-color', localStorage.PXV_ACT_COLOR)
+function initVisualTheme() {
+  if (localStorage.PXV_VISUAL_THEME) return
+  if (location.hostname == 'pxve.cc') {
+    changeVisualTheme('sakuria')
+    return
+  }
+  const ua = navigator.userAgent
+  if (/Android/i.test(ua)) {
+    changeVisualTheme('md')
+  } else if (/iPhone|iPod|Macintosh|MacIntel/i.test(ua)) {
+    changeVisualTheme('ios26')
+  }
 }

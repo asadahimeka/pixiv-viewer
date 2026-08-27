@@ -33,7 +33,6 @@ const {
   isImageCardBorderRadius,
   isImageCardBoxShadow,
   hideNavBarOnScroll,
-  navBarAltStyle,
   openArtDetailAsPopup,
 } = store.state.appSetting
 
@@ -72,7 +71,7 @@ export default {
       return {
         'noImgFillScreen': !isImageFitScreen,
         'safe-area': this.safeArea,
-        'navbar-alt-style': navBarAltStyle,
+        'navbar-alt-style': store.state.appSetting.navBarAltStyle,
       }
     },
   },

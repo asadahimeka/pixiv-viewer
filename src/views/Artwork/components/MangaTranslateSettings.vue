@@ -100,7 +100,7 @@
           <van-icon name="info-o" /> 使用 Google 翻译网页版接口，无需 API Key。<br><span style="margin-left:1.5em">需要能访问 translate.googleapis.com</span>
         </div>
         <div class="engine-help">
-          <van-icon name="info-o" /> 如需在 Pixiv 原站阅读漫画，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>
+          <van-icon name="info-o" /> 如需更好体验，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>
         </div>
         <div class="engine-help">
           <van-icon name="info-o" /> Firefox 用户可前往 <a href="https://github.com/DonutShinobu/ShinobuTranslator" target="_blank" rel="noreferrer">GitHub Releases</a> 手动安装
@@ -370,7 +370,8 @@ export default {
       })
     },
     async testVlConnection() {
-      const { baseUrl, apiKey, model } = this.vlConfig
+      const { baseUrl, apiKey } = this.vlConfig
+      const model = this.translationVlModel
       if (!baseUrl || !apiKey || !model) {
         Toast('请输入 BaseURL、API Key 和模型')
         return
