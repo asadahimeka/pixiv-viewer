@@ -4,6 +4,11 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  swiper@5.4.5:
+    hash: f800fc386a9086b047a327bfb2dc1d6e783fb3b313d1d806bc2fa513e2cca523
+    path: patches/swiper@5.4.5.patch
+
 importers:
 
   .:
@@ -61,7 +66,7 @@ importers:
         version: 1.7.2
       swiper:
         specifier: 5.4.5
-        version: 5.4.5
+        version: 5.4.5(patch_hash=f800fc386a9086b047a327bfb2dc1d6e783fb3b313d1d806bc2fa513e2cca523)
       ts-whammy:
         specifier: 1.1.5
         version: 1.1.5
@@ -73,7 +78,7 @@ importers:
         version: 2.7.16
       vue-awesome-swiper:
         specifier: 4.1.1
-        version: 4.1.1(swiper@5.4.5)(vue@2.7.16)
+        version: 4.1.1(swiper@5.4.5(patch_hash=f800fc386a9086b047a327bfb2dc1d6e783fb3b313d1d806bc2fa513e2cca523))(vue@2.7.16)
       vue-i18n:
         specifier: 8.28.2
         version: 8.28.2(vue@2.7.16)
@@ -9446,7 +9451,7 @@ snapshots:
       sax: 1.6.0
       stable: 0.1.8
 
-  swiper@5.4.5:
+  swiper@5.4.5(patch_hash=f800fc386a9086b047a327bfb2dc1d6e783fb3b313d1d806bc2fa513e2cca523):
     dependencies:
       dom7: 2.1.5
       ssr-window: 2.0.0
@@ -9639,9 +9644,9 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vue-awesome-swiper@4.1.1(swiper@5.4.5)(vue@2.7.16):
+  vue-awesome-swiper@4.1.1(swiper@5.4.5(patch_hash=f800fc386a9086b047a327bfb2dc1d6e783fb3b313d1d806bc2fa513e2cca523))(vue@2.7.16):
     dependencies:
-      swiper: 5.4.5
+      swiper: 5.4.5(patch_hash=f800fc386a9086b047a327bfb2dc1d6e783fb3b313d1d806bc2fa513e2cca523)
       vue: 2.7.16
 
   vue-demi@0.14.10(vue@2.7.16):

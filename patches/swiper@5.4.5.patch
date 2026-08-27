@@ -1,0 +1,60 @@
+diff --git a/js/swiper.esm.browser.bundle.js b/js/swiper.esm.browser.bundle.js
+index 5d2abd657c0f09759fbc62f6737e7f7969c92d62..62975334e3922465543f652d1f441993749783d1 100755
+--- a/js/swiper.esm.browser.bundle.js
++++ b/js/swiper.esm.browser.bundle.js
+@@ -976,6 +976,7 @@ const Utils = {
+         const keysArray = Object.keys(Object(nextSource));
+         for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
+           const nextKey = keysArray[nextIndex];
++          if (nextKey === '__proto__' || nextKey === 'constructor' || nextKey === 'prototype') continue;
+           const desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+           if (desc !== undefined && desc.enumerable) {
+             if (Utils.isObject(to[nextKey]) && Utils.isObject(nextSource[nextKey])) {
+diff --git a/js/swiper.esm.bundle.js b/js/swiper.esm.bundle.js
+index e6689183f29c166238ba495a45f92b30efba3ef3..23c4fb8a0fb14ffe53468fbfee64c219b66653aa 100755
+--- a/js/swiper.esm.bundle.js
++++ b/js/swiper.esm.bundle.js
+@@ -148,6 +148,7 @@ const Utils = {
+         const keysArray = Object.keys(Object(nextSource));
+         for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
+           const nextKey = keysArray[nextIndex];
++          if (nextKey === '__proto__' || nextKey === 'constructor' || nextKey === 'prototype') continue;
+           const desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+           if (desc !== undefined && desc.enumerable) {
+             if (Utils.isObject(to[nextKey]) && Utils.isObject(nextSource[nextKey])) {
+diff --git a/js/swiper.esm.js b/js/swiper.esm.js
+index d616e97276c12950b709749eb84b236aa496ec3e..b2b1428d51baebd5187318a6e8a61a9e0cf8eb25 100755
+--- a/js/swiper.esm.js
++++ b/js/swiper.esm.js
+@@ -148,6 +148,7 @@ const Utils = {
+         const keysArray = Object.keys(Object(nextSource));
+         for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
+           const nextKey = keysArray[nextIndex];
++          if (nextKey === '__proto__' || nextKey === 'constructor' || nextKey === 'prototype') continue;
+           const desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+           if (desc !== undefined && desc.enumerable) {
+             if (Utils.isObject(to[nextKey]) && Utils.isObject(nextSource[nextKey])) {
+diff --git a/js/swiper.js b/js/swiper.js
+index fdd2b3a9cc75f8b0f27ebdd50f041cdd5b2c3390..2e1c7845dd98c55dde15a93a0028d4b0fa2caace 100755
+--- a/js/swiper.js
++++ b/js/swiper.js
+@@ -1012,6 +1012,7 @@
+             var keysArray = Object.keys(Object(nextSource));
+             for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
+               var nextKey = keysArray[nextIndex];
++              if (nextKey === '__proto__' || nextKey === 'constructor' || nextKey === 'prototype') continue;
+               var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+               if (desc !== undefined && desc.enumerable) {
+                 if (Utils.isObject(to[nextKey]) && Utils.isObject(nextSource[nextKey])) {
+diff --git a/src/utils/utils.js b/src/utils/utils.js
+index c2b2e7c26d9ba91d00793acf8c7608ef6563ef46..4c2f88bb6c352be3f16bbd717d664e6f9835c96d 100755
+--- a/src/utils/utils.js
++++ b/src/utils/utils.js
+@@ -90,6 +90,7 @@ const Utils = {
+         const keysArray = Object.keys(Object(nextSource));
+         for (let nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex += 1) {
+           const nextKey = keysArray[nextIndex];
++          if (nextKey === '__proto__' || nextKey === 'constructor' || nextKey === 'prototype') continue;
+           const desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+           if (desc !== undefined && desc.enumerable) {
+             if (Utils.isObject(to[nextKey]) && Utils.isObject(nextSource[nextKey])) {
