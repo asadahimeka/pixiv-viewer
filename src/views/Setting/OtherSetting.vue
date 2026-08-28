@@ -525,7 +525,7 @@
           <van-switch :value="appSetting.dlFileNameNoSingleP0" size="24" @change="v => saveAppSetting('dlFileNameNoSingleP0', v)" />
         </div>
       </van-cell>
-      <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="2.5em" />
+      <van-field v-model="dlFileNameTpl" :label="$t('498jRU7yCP-NoupL7HBFk')" label-width="4.5em" />
       <van-cell>{{ $t('vrHKCLkhV92dZ7eyvgFx8') }}:&nbsp;&nbsp;&nbsp;&nbsp;{{ sampleArtFileName }}</van-cell>
     </van-dialog>
     <SyncDialog v-model="syncDialogShow" />

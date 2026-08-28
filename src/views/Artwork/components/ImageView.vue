@@ -28,6 +28,7 @@
               size="small"
               round
               plain
+              style="border-radius: 12px !important"
               :loading="translatingIndex === index"
               :disabled="translatingIndex === index"
               @click.stop="$emit('translate', index)"
@@ -83,6 +84,7 @@
             size="small"
             round
             plain
+            style="border-radius: 12px !important"
             :loading="translatingIndex === index"
             :disabled="translatingIndex === index"
             @click.stop="$emit('translate', index)"

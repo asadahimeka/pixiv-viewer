@@ -61,6 +61,9 @@
       <div class="engine-help">
         <van-icon name="info-o" /> 默认翻译服务选「AI 翻译」时使用以上配置；API Key 仅存储在本机浏览器。
       </div>
+      <div class="engine-help">
+        <van-icon name="info-o" /> 可<a target="_blank" rel="noopener noreferrer" href="https://cloud.siliconflow.cn/i/F5UpdO0m">点击此处</a>前往 SiliconCloud 注册后使用免费模型。
+      </div>
       <div class="test-connection-wrap">
         <van-button size="small" plain round :loading="testLoading" loading-text="测试中..." @click="testConnection">测试连接</van-button>
       </div>

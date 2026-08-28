@@ -25,7 +25,7 @@
         <van-cell
           v-for="id in filteredIds"
           :key="id"
-          :title="id"
+          :title="modelTitle(id)"
           clickable
           @click="pick(id)"
         >
@@ -46,6 +46,9 @@ import store from '@/store'
 import { fetchModels } from '@/utils/translate/llmClient'
 import { VL_MODELS } from '@/utils/translate/manga'
 import { getCache, setCache } from '@/utils/storage/siteCache'
+import { SILICON_CLOUD_BASR_URL } from '@/consts'
+
+const freeAiModels = ['tencent/Hunyuan-MT-7B', 'THUDM/GLM-4-9B-0414', 'Qwen/Qwen2.5-7B-Instruct', 'Qwen/Qwen3-8B', 'Qwen/Qwen3.5-4B']
 
 export default {
   name: 'LlmModelSelect',
@@ -62,6 +65,7 @@ export default {
       loading: false,
       error: '',
       cachedIds: [],
+      freeAiModels,
     }
   },
   computed: {
@@ -74,6 +78,12 @@ export default {
     },
   },
   methods: {
+    modelTitle(id) {
+      if (this.baseUrl.includes(SILICON_CLOUD_BASR_URL) && freeAiModels.includes(id)) {
+        return `${id}（免费）`
+      }
+      return id
+    },
     setManual(val) {
       const provider = store.state.mangaTrans.providers[this.baseUrl] || {}
       store.commit('SET_MANGA_TRANS', {

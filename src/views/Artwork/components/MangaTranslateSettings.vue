@@ -76,6 +76,9 @@
       <div class="engine-help">
         <van-icon name="info-o" /> 支持 OpenAI 兼容接口。视觉翻译需选择支持图片输入的 VL 模型；API Key 仅存储在本机浏览器，请勿填入他人设备。
       </div>
+      <div class="engine-help">
+        <van-icon name="info-o" /> 可<a target="_blank" rel="noopener noreferrer" href="https://cloud.siliconflow.cn/i/F5UpdO0m">点击此处</a>前往 SiliconCloud 注册后使用免费模型。
+      </div>
       <div class="test-connection-wrap">
         <van-button size="small" plain round :loading="vlTestLoading" loading-text="测试中..." @click="testVlConnection">测试连接</van-button>
       </div>
@@ -96,7 +99,7 @@
           <van-radio name="llm">LLM（AI 翻译）</van-radio>
           <van-radio name="google_web">Google 翻译</van-radio>
         </van-radio-group>
-        <div v-if="translationTranslator === 'google_web'" class="engine-help">
+        <div v-if="translationTranslator == 'google_web'" class="engine-help">
           <van-icon name="info-o" /> 使用 Google 翻译网页版接口，无需 API Key。<br><span style="margin-left:1.5em">需要能访问 translate.googleapis.com</span>
         </div>
         <div class="engine-help">
@@ -130,6 +133,9 @@
         />
         <div class="engine-help">
           <van-icon name="info-o" /> 支持 OpenAI 兼容接口。API Key 仅存储在本机浏览器，请勿填入他人设备。
+        </div>
+        <div class="engine-help">
+          <van-icon name="info-o" /> 可<a target="_blank" rel="noopener noreferrer" href="https://cloud.siliconflow.cn/i/F5UpdO0m">点击此处</a>前往 SiliconCloud 注册后使用免费模型。
         </div>
         <div class="test-connection-wrap">
           <van-button size="small" plain round :loading="testLoading" loading-text="测试中..." @click="testConnection">

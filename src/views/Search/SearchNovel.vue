@@ -91,6 +91,7 @@
               :show-title="false"
               :min-date="minDate"
               :max-date="maxDate"
+              :max-range="365"
               @confirm="v => { searchDateVals = v; $refs.s_date.toggle() }"
             />
             <div style="width: 9.4rem;margin: 5px auto 10px">

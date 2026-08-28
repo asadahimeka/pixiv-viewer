@@ -601,7 +601,7 @@ export default {
           if (!cfg.apiKey) {
             const res = await Dialog.confirm({
               title: '需要 API Key',
-              message: 'AI 翻译需要自带 Key：请在「翻译设置」中填入你的 OpenAI 兼容 API Key（如 SiliconCloud 免费模型）。',
+              message: 'AI 翻译需要自带 Key：请在「翻译设置」中填入你的 OpenAI 兼容 API Key（如 SiliconCloud 免费模型）。可<a target="_blank" rel="noopener noreferrer" href="https://cloud.siliconflow.cn/i/F5UpdO0m">点击此处</a>前往 SiliconCloud 注册后使用免费模型。',
               confirmButtonText: '前往设置',
               cancelButtonText: '取消',
             }).catch(() => 'cancel')
