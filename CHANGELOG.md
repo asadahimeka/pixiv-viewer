@@ -122,6 +122,10 @@
 - 终审修复 — resolveVlModel 放宽白名单兜底 + doDefPnt 键归一化
 - Translate settings
 - Translate settings and style fixes
+- Filename template
+- Style fixes
+- Microsoft translate
+- Style fixes
 
 ### 💼 Other
 
@@ -194,6 +198,7 @@
 - Release v1.37.0
 - Update lodash
 - Patch swiper
+- Release v1.37.1
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
