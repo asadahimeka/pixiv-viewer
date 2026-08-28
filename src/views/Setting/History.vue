@@ -60,6 +60,11 @@ export default {
 .h-tabs
   ::v-deep .van-tabs__content
     margin-top 10px
+  ::v-deep .van-tabs__nav--line
+    padding-bottom 0
+    border-radius 10PX
+    .van-tabs__line
+      bottom 0
 
 .af_title
   position relative

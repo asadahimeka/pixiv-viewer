@@ -36,9 +36,10 @@ sakuria-light()
   body:not(.dark)
     .image-card .outer-meta .content .author,
     .novel-card .author,
-    .rank-card .author,
     .van-cell__label
       color: var(--sakuria-ink-2)
+    .rank-card .author
+      color var(--sakuria-surface) !important
 
   // ---- 卡片：16px 圆角 + 粉系微阴影（替代 Material 三层阴影） ----
   .image-card,
@@ -375,6 +376,8 @@ sakuria-light()
         .name
           margin-top -0.1rem !important
           margin-bottom: 0.2rem !important
+        .detail .content
+          max-width 900PX
       .user_id_sns
         padding-left: 0 !important
         .site-list:first-child

@@ -701,7 +701,8 @@ export default {
           }
         }
         if (!imageBlob) {
-          const fetchUrl = COMMON_PROXY + imageUrl
+          const fetchUrl = new URL(imageUrl)
+          fetchUrl.hostname = 'prox.spacetimee.xyz'
           const res = await fetch(fetchUrl)
           if (!res.ok) throw new Error(`图片下载失败 HTTP ${res.status}`)
           imageBlob = await res.blob()

@@ -2,8 +2,8 @@
   <div class="illusts">
     <top-bar />
     <h3 class="af_title">{{ $t('setting.recomm.title') }}</h3>
-    <div style="max-width: 10rem;margin: 0 auto;">
-      <div class="setting-page">
+    <div class="setting-page">
+      <div class="setting-cell-group">
         <van-cell
           center
           title="Sakuria"

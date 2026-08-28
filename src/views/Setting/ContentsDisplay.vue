@@ -2,7 +2,7 @@
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('display.title') }}</h3>
-    <div>
+    <div class="setting-cell-group">
       <van-cell center :title="$t('display.r18')" :label="$t('display.r18_label')">
         <template #right-icon>
           <van-switch active-color="#fb7299" :value="currentContentSetting.r18" size="24" @input="onR18Change($event, 1)" />
@@ -36,7 +36,7 @@
         </template>
       </van-field>
     </div>
-    <div class="block-section">
+    <div class="block-section setting-cell-group">
       <van-cell :title="$t('display.block_tags')" />
       <div class="block-tags-wrap">
         <van-tag
@@ -62,7 +62,7 @@
         </template>
       </van-field>
     </div>
-    <div class="block-section">
+    <div class="block-section setting-cell-group">
       <van-cell :title="$t('display.block_uids')" />
       <div class="block-tags-wrap">
         <van-tag

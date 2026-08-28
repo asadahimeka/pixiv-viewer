@@ -65,7 +65,6 @@ export default {
       loading: false,
       error: '',
       cachedIds: [],
-      freeAiModels,
     }
   },
   computed: {
@@ -115,7 +114,13 @@ export default {
       this.loading = true
       this.error = ''
       try {
-        const ids = await fetchModels({ baseUrl: this.baseUrl, apiKey: this.apiKey })
+        let ids = await fetchModels({ baseUrl: this.baseUrl, apiKey: this.apiKey })
+        if (this.baseUrl.includes(SILICON_CLOUD_BASR_URL)) {
+          ids = [
+            ...ids.filter(e => freeAiModels.includes(e)),
+            ...ids.filter(e => !freeAiModels.includes(e)),
+          ]
+        }
         setCache(cacheKey, ids, 86400)
         this.cachedIds = ids
       } catch (err) {

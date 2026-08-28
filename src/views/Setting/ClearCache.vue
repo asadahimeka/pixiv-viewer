@@ -2,66 +2,68 @@
   <div class="setting-page">
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('cache.title') }}</h3>
-    <van-cell center :title="$t('cache.db')">
-      <template #label>
-        <span>{{ $t('cache.records', [size.db[1]]) }} ~ {{ size.db[0] | bytes }}</span>
-      </template>
-      <template #right-icon>
-        <van-button type="info" size="small" @click="clearCache('db')">
-          <span>{{ $t('cache.clear') }}</span>
-        </van-button>
-      </template>
-    </van-cell>
-    <van-cell center :title="$t('cache.local')">
-      <template #label>
-        <span>{{ $t('cache.records', [size.local[1]]) }} ~ {{ size.local[0] | bytes }}</span>
-      </template>
-      <template #right-icon>
-        <van-button size="small" color="linear-gradient(to right, #ff6034, #ee0a24)" @click="clearCache('local')">
-          <span>{{ $t('cache.clear') }}</span>
-        </van-button>
-      </template>
-    </van-cell>
-    <van-cell center :title="$t('cache.session')">
-      <template #label>
-        <span>{{ $t('cache.records', [size.session[1]]) }} ~ {{ size.session[0] | bytes }}</span>
-      </template>
-      <template #right-icon>
-        <van-button type="primary" size="small" @click="clearCache('session')">
-          <span>{{ $t('cache.clear') }}</span>
-        </van-button>
-      </template>
-    </van-cell>
-    <template v-if="showClearTransate">
-      <van-cell center title="清除小说翻译缓存">
+    <div class="setting-cell-group">
+      <van-cell center :title="$t('cache.db')">
+        <template #label>
+          <span>{{ $t('cache.records', [size.db[1]]) }} ~ {{ size.db[0] | bytes }}</span>
+        </template>
         <template #right-icon>
-          <van-button type="info" size="small" @click="clearNovelTransCache">
+          <van-button type="info" size="small" @click="clearCache('db')">
             <span>{{ $t('cache.clear') }}</span>
           </van-button>
         </template>
       </van-cell>
-      <van-cell center title="清除漫画翻译缓存">
+      <van-cell center :title="$t('cache.local')">
+        <template #label>
+          <span>{{ $t('cache.records', [size.local[1]]) }} ~ {{ size.local[0] | bytes }}</span>
+        </template>
         <template #right-icon>
-          <van-button type="info" size="small" @click="clearMangaTransCache">
+          <van-button size="small" color="linear-gradient(to right, #ff6034, #ee0a24)" @click="clearCache('local')">
             <span>{{ $t('cache.clear') }}</span>
           </van-button>
         </template>
       </van-cell>
-      <van-cell center title="清除漫画翻译管线模型缓存">
+      <van-cell center :title="$t('cache.session')">
+        <template #label>
+          <span>{{ $t('cache.records', [size.session[1]]) }} ~ {{ size.session[0] | bytes }}</span>
+        </template>
         <template #right-icon>
-          <van-button type="info" size="small" @click="clearShinobuModelCache">
+          <van-button type="primary" size="small" @click="clearCache('session')">
             <span>{{ $t('cache.clear') }}</span>
           </van-button>
         </template>
       </van-cell>
-    </template>
-    <van-cell center title="清除 PixivCollection 缓存">
-      <template #right-icon>
-        <van-button type="info" size="small" @click="clearPxclCache">
-          <span>{{ $t('cache.clear') }}</span>
-        </van-button>
+      <template v-if="showClearTransate">
+        <van-cell center title="清除小说翻译缓存">
+          <template #right-icon>
+            <van-button type="info" size="small" @click="clearNovelTransCache">
+              <span>{{ $t('cache.clear') }}</span>
+            </van-button>
+          </template>
+        </van-cell>
+        <van-cell center title="清除漫画翻译缓存">
+          <template #right-icon>
+            <van-button type="info" size="small" @click="clearMangaTransCache">
+              <span>{{ $t('cache.clear') }}</span>
+            </van-button>
+          </template>
+        </van-cell>
+        <van-cell center title="清除漫画翻译管线模型缓存">
+          <template #right-icon>
+            <van-button type="info" size="small" @click="clearShinobuModelCache">
+              <span>{{ $t('cache.clear') }}</span>
+            </van-button>
+          </template>
+        </van-cell>
       </template>
-    </van-cell>
+      <van-cell center title="清除 PixivCollection 缓存">
+        <template #right-icon>
+          <van-button type="info" size="small" @click="clearPxclCache">
+            <span>{{ $t('cache.clear') }}</span>
+          </van-button>
+        </template>
+      </van-cell>
+    </div>
   </div>
 </template>
 

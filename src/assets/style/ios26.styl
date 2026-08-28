@@ -42,10 +42,13 @@
     -webkit-backdrop-filter: saturate(180%) blur(16PX)
     box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.5),inset 0 0 24PX 0 rgba(0, 0, 0, 0.1),0 0 25PX 0 rgba(0, 0, 0, 0.2)
   // 卡片/分组列表（略低 blur 12px 保性能）
+  .van-collapse,
   .van-cell-group,
   .search .search-dropdown,
   .search .search-bar-wrap .search-bar,
-  .search .search_params .van-dropdown-menu__bar
+  .search .search_params .van-dropdown-menu__bar,
+  .setting .setting-group,
+  .setting-page .setting-cell-group
     background: rgba(255, 255, 255, 0.8) !important
     backdrop-filter: saturate(180%) blur(12PX)
     -webkit-backdrop-filter: saturate(180%) blur(12PX)
@@ -59,6 +62,11 @@
   .van-share-sheet button,
   .van-share-sheet button::before,
   .van-cell-group .van-cell,
+  .van-collapse .van-cell,
+  .van-collapse .van-collapse-item__content,
+  .setting .setting-group .van-cell,
+  .setting-page .setting-cell-group .van-cell,
+  .setting-page .setting-cell-group .block-tags-wrap,
   .van-overlay,
   .van-calendar
     background: transparent !important
@@ -89,7 +97,14 @@
 
   // ---- 圆角（iOS 26） ----
   // 卡片 10px（保留 .image-card-no-radius 的 !important 优先生效）
-  .image-card, .image-card .image, .image-card-wrapper, .rank-card .spec_wp, .van-cell-group
+  .image-card,
+  .image-card .image,
+  .image-card-wrapper,
+  .rank-card .spec_wp,
+  .van-cell-group,
+  .van-collapse,
+  .setting .setting-group,
+  .setting-page .setting-cell-group
     border-radius: 10PX
   // 按钮 pill（弹层在 body 顶层，需单独覆盖）
   #app .van-button, .van-dialog .van-button, .van-popup .van-button
@@ -239,6 +254,8 @@
         .name
           margin-top -0.1rem !important
           margin-bottom: 0.2rem !important
+        .detail .content
+          max-width 900PX
       .user_id_sns
         padding-left: 0 !important
         .site-list:first-child
