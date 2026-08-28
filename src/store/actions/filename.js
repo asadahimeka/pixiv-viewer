@@ -7,16 +7,16 @@ export function getArtworkFileName(artwork, index, tpl = '') {
   const { dlFileNameTpl, dlFileNameNoSingleP0 } = store.state.appSetting
   tpl = (tpl || dlFileNameTpl).toLowerCase()
     .replaceAll('{author}', artwork.author.name)
-    .replaceAll('{authorId}', artwork.author.id)
+    .replaceAll('{authorid}', artwork.author.id)
     .replaceAll('{title}', artwork.title)
     .replaceAll('{pid}', artwork.id)
     .replaceAll('{index}', index != null ? index : '0')
     .replaceAll('{width}', artwork.width || '')
     .replaceAll('{height}', artwork.height || '')
     .replaceAll('{tags}', artwork.tags.map(e => e.name).join('_'))
-    .replaceAll('{createDate}', dayjs(artwork.created).format('YYYYMMDD_HHmmss'))
-    .replaceAll('{xRestrict}', ['SFW', 'R18', 'R18G'][artwork.x_restrict])
-    .replaceAll('{aiType}', isAiIllust(artwork) ? 'AI' : '')
+    .replaceAll('{createdate}', dayjs(artwork.created).format('YYYYMMDD_HHmmss'))
+    .replaceAll('{xrestrict}', ['SFW', 'R18', 'R18G'][artwork.x_restrict])
+    .replaceAll('{aitype}', isAiIllust(artwork) ? 'AI' : '')
 
   if (dlFileNameNoSingleP0 && (index == null || index == 0) && tpl.endsWith('_p0') && artwork.images.length == 1) {
     tpl = tpl.replace('_p0', '')
