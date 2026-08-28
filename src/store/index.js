@@ -48,8 +48,8 @@ export default new Vuex.Store({
       bubble: true,
       sourceLang: 'ja',
       targetLang: 'zh-CN',
-      /** @type {'google_web'|'llm'} */
-      translator: 'google_web',
+      /** @type {'google_web'|'microsoft'|'llm'} */
+      translator: 'microsoft',
       provider: SILICON_CLOUD_BASR_URL,
       /** @type {Record<string, {apiKey?: string, baseUrl?: string, model?: string, modelSelMode?: 'list'|'manual'}>} */
       providers: {

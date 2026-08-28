@@ -579,7 +579,7 @@ export default {
       store.commit('setIsNovelViewShrink', false)
       const fns = {
         sc_ai: async () => this.fanyi('sc', await getNoTranslateWords(this.artwork.tags)),
-        ms: async () => this.fanyi('ms', await getNoTranslateWords(this.artwork.tags)),
+        ms: async () => this.fanyi('ms'),
         gg: () => this.fanyi('gg'),
         yd: () => this.fanyi('yd'),
         kiss_t: async () => {

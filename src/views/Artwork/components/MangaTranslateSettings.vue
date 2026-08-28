@@ -98,9 +98,13 @@
         >
           <van-radio name="llm">LLM（AI 翻译）</van-radio>
           <van-radio name="google_web">Google 翻译</van-radio>
+          <van-radio name="microsoft">Microsoft 翻译</van-radio>
         </van-radio-group>
         <div v-if="translationTranslator == 'google_web'" class="engine-help">
           <van-icon name="info-o" /> 使用 Google 翻译网页版接口，无需 API Key。<br><span style="margin-left:1.5em">需要能访问 translate.googleapis.com</span>
+        </div>
+        <div v-if="translationTranslator == 'microsoft'" class="engine-help">
+          <van-icon name="info-o" /> 使用 Microsoft Edge 免费接口，无需 API Key。
         </div>
         <div class="engine-help">
           <van-icon name="info-o" /> 如需更好体验，推荐安装 <a href="https://chromewebstore.google.com/detail/pgehhpbnifjlalmmnpiebkjhphojffef" target="_blank" rel="noreferrer">ShinobuTranslator 浏览器扩展</a>

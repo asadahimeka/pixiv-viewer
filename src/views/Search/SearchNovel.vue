@@ -109,10 +109,10 @@
             <van-dropdown-item v-model="searchParams.duration" :options="searchDuration" />
             <van-dropdown-item v-model="searchParams.search_ai_type" :disabled="!isAIOn" :options="searchAIOptions" />
             <van-dropdown-item v-model="searchParams.searchR18Type" :disabled="!isR18On" :options="searchR18Options" />
-            <van-dropdown-item v-model="searchParams.lang" :title="$t('w_o-jyGfUrVwuq-c1ktF_')" :options="searchOtherOptions.novel.lang" />
+            <van-dropdown-item v-model="searchParams.lang" :title="searchLangLabel" :options="searchLangOptions" />
             <van-dropdown-item v-model="searchParams.searchTextLength" :disabled="!!searchParams.searchReadingTime" :options="searchTextLengthOptions" />
             <van-dropdown-item v-model="searchParams.searchReadingTime" :disabled="!!searchParams.searchTextLength" :options="searchReadingTimeOptions" />
-            <van-dropdown-item v-model="searchParams.genre" :title="$t('TVYNquFy9f2ysUtkiyrVd')" :options="searchOtherOptions.novel.genre" />
+            <van-dropdown-item v-model="searchParams.genre" :title="searchGeneLabel" :options="searchGeneOptions" />
             <van-dropdown-item v-model="searchParams.include_potential_violation_works" :options="searchPotentialViolations" />
           </template>
         </van-dropdown-menu>
@@ -244,7 +244,8 @@ export default {
         { text: this.$t('bsUkOJL1hGMF910TAuAs7'), value: 'true' },
         { text: this.$t('B6_a-r-LnCBiHNTtnmv_-'), value: 'false' },
       ],
-      searchOtherOptions,
+      searchLangOptions: searchOtherOptions.novel.lang,
+      searchGeneOptions: searchOtherOptions.novel.genre,
     }
   },
   head() {
@@ -270,6 +271,14 @@ export default {
       return store.getters.isR18On &&
         !this.pidOrUidList.length &&
         !this.keywords.includes('R-18')
+    },
+    searchLangLabel() {
+      const text = this.searchLangOptions.find(e => e.value == this.searchParams.lang)?.text
+      return text && text != 'All' ? text : this.$t('w_o-jyGfUrVwuq-c1ktF_')
+    },
+    searchGeneLabel() {
+      const text = this.searchGeneOptions.find(e => e.value == this.searchParams.genre)?.text
+      return text && text != 'All' ? text : this.$t('TVYNquFy9f2ysUtkiyrVd')
     },
   },
   watch: {

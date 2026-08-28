@@ -132,7 +132,7 @@ export const BubbleDetection = {}
  * @typedef {Object} PipelineConfig
  * @property {string} sourceLang - Source language code (e.g., 'ja', 'en')
  * @property {string} targetLang - Target language code (e.g., 'zh-CN')
- * @property {'google_web'|'llm'} translator - Translator backend
+ * @property {'google_web'|'microsoft'|'llm'} translator - Translator backend
  * @property {LlmProvider} llmProvider - LLM provider name
  * @property {LlmAuthMode} llmAuthMode - LLM authentication mode
  * @property {string} llmBaseUrl - LLM API base URL

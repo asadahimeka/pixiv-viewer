@@ -117,10 +117,10 @@
             <van-dropdown-item v-model="searchDurationParam" :options="searchDurations" @change="handleDurationChange" />
             <van-dropdown-item v-model="searchParams.search_ai_type" :disabled="!isAIOn" :options="searchAIOptions" />
             <van-dropdown-item v-model="searchParams.searchR18Type" :disabled="!isR18On" :options="searchR18Options" />
-            <van-dropdown-item v-if="searchParams.content_type == 'manga'" v-model="searchParams.lang" :title="$t('w_o-jyGfUrVwuq-c1ktF_')" :options="searchOtherOptions.illust.lang" />
+            <van-dropdown-item v-if="searchParams.content_type == 'manga'" v-model="searchParams.lang" :title="searchLangLabel" :options="searchLangOptions" />
             <van-dropdown-item v-model="searchParams.searchResolution" :options="searchResolutions" />
             <van-dropdown-item v-model="searchParams.ratio_pattern" :options="searchRatioOptions" />
-            <van-dropdown-item v-model="searchParams.tool" :title="$t('38voBbE8fUIdxgli3n14t')" :options="searchOtherOptions.illust.tool" />
+            <van-dropdown-item v-model="searchParams.tool" :title="searchToolLabel" :options="searchToolOptions" />
             <van-dropdown-item v-model="searchParams.include_potential_violation_works" :options="searchPotentialViolations" />
           </template>
         </van-dropdown-menu>
@@ -301,7 +301,8 @@ export default {
         { text: this.$t('bsUkOJL1hGMF910TAuAs7'), value: 'true' },
         { text: this.$t('B6_a-r-LnCBiHNTtnmv_-'), value: 'false' },
       ],
-      searchOtherOptions,
+      searchLangOptions: searchOtherOptions.illust.lang,
+      searchToolOptions: searchOtherOptions.illust.tool,
       showPopPreview: false,
       totalPages: 166,
       pageBtnNum: document.documentElement.clientWidth / 80,
@@ -346,6 +347,14 @@ export default {
     isPagination() {
       const { isVirtualList, searchListPagination } = store.state.appSetting
       return !isVirtualList && searchListPagination
+    },
+    searchLangLabel() {
+      const text = this.searchLangOptions.find(e => e.value == this.searchParams.lang)?.text
+      return text && text != 'All' ? text : this.$t('w_o-jyGfUrVwuq-c1ktF_')
+    },
+    searchToolLabel() {
+      const text = this.searchToolOptions.find(e => e.value == this.searchParams.tool)?.text
+      return text && text != 'All' ? text : this.$t('38voBbE8fUIdxgli3n14t')
     },
   },
   watch: {

@@ -134,7 +134,7 @@ VUE_APP_ORT_WASM_PATH       — ONNX Runtime WASM path (default: jsdelivr CDN)
 
 ## Playwright QA Test Notes
 
-> **总原则（2026-08-11 起）**：**默认不进行 Playwright 浏览器模拟测试**。浏览器 UI 的最终验收由用户**手动**进行——agent 跑浏览器模拟既耗时（每场景 ~3 分钟 + dev server 90s+ 启动）又低效（用户反正会自己实测）。agent 允许的验证方式：
+> **总原则**：**默认不进行 Playwright 浏览器模拟测试**。浏览器 UI 的最终验收由用户**手动**进行——agent 跑浏览器模拟既耗时（每场景 ~3 分钟 + dev server 90s+ 启动）又低效（用户反正会自己实测）。agent 允许的验证方式：
 > - **脚本级测试**（优先）：bash/curl、node 脚本、node:test 单元测试——验证逻辑正确性足够
 > - **不跑浏览器模拟**，除非用户**显式**要求"帮我用浏览器测一下 X"（如跨域/CORS、真实点击流等必须真实浏览器行为的场景）
 > - 需要验证用户可见效果时，产出**清晰的改动说明 + 预期行为清单**，由用户手动确认，而非 agent 截图代劳
@@ -148,7 +148,7 @@ VUE_APP_ORT_WASM_PATH       — ONNX Runtime WASM path (default: jsdelivr CDN)
 - **Bypassing R18 gate** (zh-CN): `main.js` blocks when `!LocalStorage.get('PXV_NSFW_ON')` is falsy AND locale is zh. To bypass, set BOTH:
   - `localStorage.setItem('PXV_CNT_SHOW', ...)` — content settings (r18/r18g/ai flags)
   - `localStorage.setItem('PXV_NSFW_ON', '{"data":0,"expires":-1}')` — **value MUST be 0** (falsy → `!isOn()` = true → no block). Do NOT set it to truthy (1) — that triggers the blocking page in zh locale.
-- **AI 翻译已 BYOK**：测试真实翻译需先在设置页（或 localStorage `PXV_MANGATRANS_SETTING`）注入测试用 API Key，应用不会内置任何 Key，真实翻译测试需手动注入后直接运行，无需 mock。
+- **AI 翻译已 BYOK**：测试真实翻译需先在设置页（或 localStorage `PXV_TRANSLATE`）注入测试用 API Key，应用不会内置任何 Key，真实翻译测试需手动注入后直接运行，无需 mock。
 - **dev server reuse**: before dispatching QA, `curl localhost:8080` — if listening, reuse it (`pnpm serve` compile takes 90s+, re-starting wastes ~10 min).
 - **hibiapi.cocomi.eu.org rejects automation**: it returns "Not Accepted" for requests with `HeadlessChrome` in the User-Agent or without a proper referer. In QA scripts, headless mode is fine but you MUST set a normal UA (no `HeadlessChrome` substring) and a `localhost` referer. Browser (real user) requests are unaffected — the app cannot and does not set UA/Referer for hibiapi (forbidden headers).
 

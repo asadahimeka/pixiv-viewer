@@ -18,6 +18,7 @@ import {
   llmTranslateRegions,
 } from '../translators/llm.js'
 import { googleWebTranslate } from '../translators/googleWeb.js'
+import { microsoftTranslate } from '../translators/microsoft.js'
 
 /**
  * @typedef {import('../types.js').TextRegion} TextRegion
@@ -102,6 +103,10 @@ async function translateOne(text, config) {
 
   if (config.translator === 'google_web') {
     return googleWebTranslate(text, config.sourceLang, config.targetLang)
+  }
+
+  if (config.translator === 'microsoft') {
+    return microsoftTranslate(text, config.sourceLang, config.targetLang)
   }
 
   assertTextTranslationProvider(config)
