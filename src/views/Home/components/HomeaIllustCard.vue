@@ -111,6 +111,7 @@ export default {
         background: var(--bg)
       .image-card-wrapper
         backdrop-filter: saturate(200%) blur(20PX)
+        -webkit-backdrop-filter: saturate(200%) blur(20PX)
         background: rgba(255, 255, 255, 0.5)
       .image
         top 50%

@@ -278,8 +278,8 @@ sakuria-light()
   @media screen and (max-width: 1279PX)
     .comments-popup
       border-radius: var(--sakuria-r-lg) var(--sakuria-r-lg) 0 0
-    .artwork-meta,
-    .author-card
+    .ia-right .artwork-meta,
+    .ia-right .author-card
       width: 84% !important
       margin-left auto !important
       margin-right auto !important
@@ -293,12 +293,18 @@ sakuria-light()
 
   // 桌面端（≥1280px）：容器限宽 1200PX 居中；内部布局遵循 base 的横向规则
   @media screen and (min-width: 1280PX)
+    .search .com_sel_tabs
+      position: absolute
+      top: 1.48rem
+      z-index: 2
+      &+.list-wrap
+        padding-top 2.8rem !important
     .home-i-tabs .sel-tabs,
     .search .com_sel_tabs
       padding 3PX 6PX
       border-radius var(--sakuria-r-pill)
       border 1PX solid var(--sakuria-border)
-      background: var(--sakuria-surface-2)
+      background: var(--sakuria-surface-2) !important
       .com_sel_tab
         margin 0
         padding 0 12PX
@@ -346,6 +352,28 @@ sakuria-light()
             color var(--accent-color) !important
             background: var(--sakuria-surface) !important
             box-shadow var(--sakuria-shadow)
+    #app .Following .van-tabs__nav
+      width max-content
+      height 44PX !important
+      margin 8PX auto 0
+      padding 3PX 6PX !important
+      border-radius var(--sakuria-r-pill) !important
+      border 1PX solid var(--sakuria-border) !important
+      background: var(--sakuria-surface-2) !important
+      .van-tab__text
+        margin 0
+        padding 0 12PX
+        border-radius var(--sakuria-r-pill)
+        font-size 18PX
+        color: var(--sakuria-ink) !important
+        background transparent !important
+        border 0 !important
+        box-shadow none !important
+      .van-tab--active .van-tab__text
+        padding 0 16PX
+        color var(--sakuria-surface) !important
+        background: var(--accent-color) !important
+        box-shadow var(--sakuria-shadow) !important
     #app .History.illusts
       .van-tabs__nav
         margin-bottom 15PX

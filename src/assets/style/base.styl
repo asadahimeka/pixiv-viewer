@@ -303,8 +303,8 @@ html:has(.van-tabs__content--animated)
     .title, .author
       user-select none
 
-
 html:has(.dark)
+  color-scheme: dark
   background #16161a
   color #fff
   ::-webkit-scrollbar
@@ -330,7 +330,22 @@ html:has(.dark)
   .van-dialog__message--has-title
     color #fff
   a
-   color #dba5ff
+    color #dba5ff
+  .translate-settings-popup,
+  .llm-model-select-popup
+    background #16161a !important
+    color #fff !important
+    .van-search
+      background #16161a !important
+    .van-search__content
+      background #333 !important
+    .van-cell,
+    .van-cell-group,
+    .van-cell-group__title,
+    .van-field__label,
+    .van-radio__label
+      background transparent !important
+      color #fff !important
 
 .dark #app
   min-height 100vh
@@ -450,6 +465,7 @@ html:has(.dark)
   .Home .com_sel_tabs
     background #16161a
     backdrop-filter: none
+    -webkit-backdrop-filter: none
 
   .show_pop_icon,
   .search_popular_icon
@@ -558,10 +574,13 @@ html:has(.dark)
   .image-slide
       border 1PX solid #16161a
 
-  .artwork-meta
-    .whid .svg-icon,
-    .tag-list .tag
-      filter: invert(1) hue-rotate(180deg);
+  .artwork-meta .whid .svg-icon,
+  .artwork-meta .tag-list .tag,
+  .users .user_id_sns .svg-icon
+      filter: invert(1) hue-rotate(180deg)
+
+  .artwork-meta .author-info.hidePIDMask+div[style*="background"]
+    opacity 0
 
   .ss-title,
   .ss-author,

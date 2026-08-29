@@ -174,6 +174,7 @@ defineExpose({
   right 0
   background: hsla(0, 0%, 100%, .9);
   backdrop-filter: blur(.05333rem);
+  -webkit-backdrop-filter: blur(.05333rem);
   box-shadow 0px 0px 8px 2px #ccc;
   .configs
     padding 0px 50px 80px

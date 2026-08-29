@@ -3,7 +3,6 @@ import { applyVisualTheme } from '@/utils/theme'
 
 export function changeVisualTheme(value) {
   applyVisualTheme(value)
-  window.umami?.track('set_visual_theme', { value })
   if (value == 'sakuria') {
     localStorage.removeItem('PXV_THEME')
     localStorage.setItem('PXV_ACT_COLOR', '#ff6f9f')

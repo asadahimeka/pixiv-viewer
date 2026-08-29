@@ -1016,6 +1016,7 @@ export default {
       this.reloadPage()
     },
     changeVisualTheme({ _value }) {
+      window.umami?.track('set_visual_theme', { _value })
       changeVisualTheme(_value)
       this.reloadPage()
     },

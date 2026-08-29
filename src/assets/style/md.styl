@@ -158,6 +158,7 @@ md-apply()
       @media screen and (min-width: 1120px)
         background: var(--md-sys-color-surface-container) !important
         backdrop-filter none !important
+        -webkit-backdrop-filter none !important
         box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.1), 0 1PX 3PX 1PX rgba(0, 0, 0, 0.12)
         border-top-right-radius: 12PX
         border-bottom-right-radius: 12PX
@@ -181,6 +182,7 @@ md-apply()
       background none
     .image-card
       backdrop-filter none
+      -webkit-backdrop-filter none
 
   .translate-settings-popup .model-test-result
     background none !important
@@ -258,6 +260,15 @@ md-apply()
     border-radius: 8PX !important
     color: var(--md-sys-color-on-surface-variant) !important
     &.cur
+      background: var(--md-sys-color-surface-container-lowest) !important
+      box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.2) !important
+      color: var(--md-sys-color-on-surface) !important
+  .Following
+    .van-tab__text
+      background: var(--md-sys-color-surface-variant) !important
+      border-radius: 8PX !important
+      color: var(--md-sys-color-on-surface-variant) !important
+    .van-tab--active .van-tab__text
       background: var(--md-sys-color-surface-container-lowest) !important
       box-shadow: 0 1PX 2PX rgba(0, 0, 0, 0.2) !important
       color: var(--md-sys-color-on-surface) !important

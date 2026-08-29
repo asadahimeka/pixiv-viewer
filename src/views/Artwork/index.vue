@@ -1261,12 +1261,14 @@ img[src*="https://api.moedog.org/qr/?url="]
         box-shadow: 0 0 transparent, 0 0 transparent, 0 1PX 3PX 0 rgba(0,0,0,.1), 0 1PX 2PX -1PX rgba(0,0,0,.1)
 
   .ia-right
-    position: sticky;
-    top: 0;
     max-width 28%
     padding-right 40px
     box-sizing border-box
     overflow hidden
+
+.artwork:not(.isSafari) .ia-cont .ia-right
+  position: sticky;
+  top: 0;
 
 @media screen and (min-width: 1600px)
   .ia-cont
@@ -1315,12 +1317,11 @@ img[src*="https://api.moedog.org/qr/?url="]
       max-width: 100% !important
 
 @media screen and (min-width: 1121px)
-  .ia-cont
-    &:not(:has(.shrink)) .ia-right
-      max-height 100vh
-      overflow-y auto
-      &::-webkit-scrollbar
-        display none
+  .artwork:not(.isSafari) .ia-cont:not(:has(.shrink)) .ia-right
+    max-height 100vh
+    overflow-y auto
+    &::-webkit-scrollbar
+      display none
 
 .ia-cont .ia-left
   ::v-deep .image-view.horizon-scroll

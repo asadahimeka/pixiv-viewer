@@ -4,7 +4,7 @@
     <div v-if="!useNovelWebview" class="more_btn" @click="toggleNovelConfigShow">
       <Icon class="icon" name="novel_setting" />
     </div>
-    <div class="ia-cont" :class="{ isCollapseMeta }">
+    <div class="ia-cont" :class="{ isCollapseMeta, isSafari }">
       <div class="ia-left">
         <van-loading v-if="loading" size="50px" style="margin-top: 3rem;" />
         <template v-else>
@@ -269,6 +269,9 @@ export default {
     },
     useNovelWebview() {
       return store.state.appSetting.useNovelWebview
+    },
+    isSafari() {
+      return store.state.isSafari
     },
   },
   watch: {

@@ -807,6 +807,7 @@ export default {
       padding-top 0.133rem
       padding-bottom 0
       backdrop-filter: saturate(200%) blur(10PX);
+      -webkit-backdrop-filter: saturate(200%) blur(10PX);
       background: rgba(255, 255, 255, 0.8);
 
       ::v-deep .van-cell {

@@ -155,6 +155,7 @@ export default {
   border-radius 0.12rem
   background rgba(0, 0, 0, 0.85)
   backdrop-filter saturate(200%) blur(10PX)
+  -webkit-backdrop-filter saturate(200%) blur(10PX)
   box-shadow 0 2PX 12PX rgba(0, 0, 0, 0.3)
 
   &__status

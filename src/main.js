@@ -11,6 +11,7 @@ import '@/assets/style/vta.css'
 import '@vant/touch-emulator'
 import '@/lib/polyfill'
 import '@/lib/registerServiceWorker'
+import '@/lib/init-theme'
 
 import Vue from 'vue'
 import VueAwesomeSwiper from 'vue-awesome-swiper'
@@ -33,12 +34,11 @@ import { loadCustomFont } from '@/utils/font'
 import { getSelectedLang, i18n, initLocale } from '@/i18n'
 import { getActionMap } from '@/api/client/action'
 import { initBookmarkCache } from '@/utils/storage/siteCache'
-import { changeVisualTheme } from '@/store/actions/change-theme'
 
+addErrorListener()
 setupApp()
 
 async function setupApp() {
-  initVisualTheme()
   await checkWechat()
   await checkBrowser()
   await initSetting()
@@ -65,6 +65,19 @@ async function setupApp() {
     i18n,
     render: h => h(App),
   }).$mount('#app')
+}
+
+function addErrorListener() {
+  Vue.config.errorHandler = function (err, vm, info) {
+    const msg = `Error: ${err.toString()}\nInfo: ${info}\nDescription: ${vm.description}\nTag: ${vm.$vnode.tag}`
+    if (msg.includes('Swiper')) return
+    window.umami?.track('vue_error', { msg })
+  }
+  window.onerror = function (ev, source, lineno, colno, error) {
+    const msg = `${ev} ${error}: ${source} ${lineno}:${colno}`
+    if (msg.includes('ResizeObserver')) return
+    window.umami?.track('global_error', { msg })
+  }
 }
 
 async function initLocalApi() {
@@ -131,18 +144,4 @@ async function checkBrowser() {
     })
   }
   return true
-}
-
-function initVisualTheme() {
-  if (localStorage.PXV_VISUAL_THEME) return
-  if (location.hostname == 'pxve.cc') {
-    changeVisualTheme('sakuria')
-    return
-  }
-  const ua = navigator.userAgent
-  if (/Android/i.test(ua)) {
-    changeVisualTheme('md')
-  } else if (/iPhone|iPod|Macintosh|MacIntel/i.test(ua)) {
-    changeVisualTheme('ios26')
-  }
 }

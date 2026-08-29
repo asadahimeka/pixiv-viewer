@@ -157,6 +157,7 @@ export default {
   height: 100%;
   margin-bottom: 0 !important;
   backdrop-filter: saturate(200%) blur(20PX);
+  -webkit-backdrop-filter: saturate(200%) blur(20PX);
   background: rgba(255, 255, 255, 0.5);
 }
 .my-virtual-swiper .image-card-wrapper {

@@ -46,6 +46,7 @@
     width max-content
     padding-top 0.1rem
     backdrop-filter: none !important
+    -webkit-backdrop-filter none !important
     background none !important
 
   body:not(.dark)
@@ -115,12 +116,14 @@
       width max-content
       padding-top 0.1rem
       backdrop-filter: none
+      -webkit-backdrop-filter: none
       background none
     .rank .top,
     .Home .com_sel_tabs,
     .Following .van-tabs__nav,
     .search .search-bar
       backdrop-filter: saturate(200%) blur(16PX);
+      -webkit-backdrop-filter: saturate(200%) blur(16PX);
       background: rgba(255, 255, 255, 0.2);
     .search .search_params
       position fixed

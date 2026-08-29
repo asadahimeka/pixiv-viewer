@@ -376,6 +376,7 @@ export default {
     z-index: 10;
     // backdrop-filter: blur(6px);
     backdrop-filter: saturate(200%) blur(10PX);
+    -webkit-backdrop-filter: saturate(200%) blur(10PX);
     background: rgba(255, 255, 255, 0.8);
 
     .nav {

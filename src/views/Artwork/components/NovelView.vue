@@ -336,11 +336,12 @@ export default {
 html:has(.isCollapseMeta .horizon-cols)
   overflow hidden
   overflow clip
-.artwork.novel .ia-cont
-  height max-content
+.artwork.novel .ia-cont:not(.isSafari)
   .ia-right
     position: sticky;
     top: 0;
+.artwork.novel .ia-cont
+  height max-content
   .novel_text
     hr[data-index]
       position relative

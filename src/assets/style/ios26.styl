@@ -92,7 +92,7 @@
   // ---- 降级：不支持 backdrop-filter 时纯色不透明 ----
   @supports not (backdrop-filter: blur(1px))
     .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
-    .image-card, .van-cell-group, .rank-card
+    .image-card, .van-cell-group
       background: rgba(255, 255, 255, 0.88) !important
 
   // ---- 圆角（iOS 26） ----
@@ -221,8 +221,8 @@
 
   // 移动端信息区 padding（头像悬浮）
   @media screen and (max-width: 1279PX)
-    .artwork-meta,
-    .author-card
+    .ia-right .artwork-meta,
+    .ia-right .author-card
       width: 88% !important
       margin-left auto !important
       margin-right auto !important
@@ -304,18 +304,29 @@
       background: #fff !important
       box-shadow: 0 2PX 2PX rgba(0, 0, 0, 0.25) !important
       color: #000 !important
+  .Following
+    .van-tab__text
+      background: rgba(0, 0, 0, 0.07) !important
+      border-radius: 6PX !important
+      color: #000 !important
+    .van-tab--active .van-tab__text
+      background: #fff !important
+      box-shadow: 0 2PX 2PX rgba(0, 0, 0, 0.25) !important
+      color: #000 !important
   #app .rank .top .nav a
     border 0 !important
 
   // 链接按压：iOS = opacity 0.3（非背景色）
   .rank .top .nav a,
-  .com_sel_tabs .com_sel_tab
+  .com_sel_tabs .com_sel_tab,
+  .Following .van-tab__text
     transition: opacity 300ms
     &:active
       opacity: 0.3
 
   .search .com_sel_tabs .com_sel_tab:not(.cur)
     backdrop-filter: saturate(180%) blur(16PX)
+    -webkit-backdrop-filter: saturate(180%) blur(16PX)
 
   // van-tabs 激活线：iOS pill（inset 4px 白块）
   .van-tabs__line
@@ -352,6 +363,7 @@
     color #fff !important
     background: rgba(0, 0, 0, 0.3) !important
     backdrop-filter: saturate(180%) blur(16PX)
+    -webkit-backdrop-filter: saturate(180%) blur(16PX)
 
   // 压制 theme-bg `.with-body-bg body.dark::before`（specificity (0,2,2)+!important）
   // 等特异性 + 源码顺序（ios26.styl 在 theme-bg.styl 之后）取胜 —— 覆盖 standalone 暗色可见背景层
@@ -383,7 +395,7 @@
 
   // ---- 暗色玻璃：真实配方 rgba(50,50,50,.5)（F7/Konsta 值）+ 高光变亮 ----
   .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
-  .image-card, .van-cell-group, .rank-card
+  .image-card, .van-cell-group
     background: rgba(50, 50, 50, 0.5) !important
     box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.12),inset 0 0 24PX 0 rgba(0, 0, 0, 0.3),0 0 25PX 0 rgba(0, 0, 0, 0.4) !important
   // 暗色玻璃容器内 cell 透明化（弹层在 body 顶层，#app 变体兼容两种挂载）
@@ -433,5 +445,5 @@
   // 暗色降级
   @supports not (backdrop-filter: blur(1px))
     .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
-    .image-card, .van-cell-group, .rank-card
+    .image-card, .van-cell-group
       background: rgba(50, 50, 50, 0.85) !important

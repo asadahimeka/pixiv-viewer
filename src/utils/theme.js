@@ -73,9 +73,3 @@ export function resetVisualTheme() {
   localStorage.removeItem(VISUAL_THEME_KEY)
   syncCustomTheme()
 }
-
-// 启动时（模块静态导入即执行）：md 主题 + 自定义 accent seed → 动态取色
-const currentTheme = getVisualTheme()
-if (currentTheme === 'md' && localStorage.PXV_ACT_COLOR) {
-  applyDynamicMdTheme(localStorage.PXV_ACT_COLOR)
-}

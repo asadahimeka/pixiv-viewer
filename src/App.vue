@@ -105,6 +105,7 @@ html,body
     padding 0.3rem 0
     background: rgba(255,255,255,0.8)
     backdrop-filter: saturate(200%) blur(10PX)
+    -webkit-backdrop-filter: saturate(200%) blur(10PX)
     .home-title
       position absolute
       top 50%
