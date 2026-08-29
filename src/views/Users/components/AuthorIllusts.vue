@@ -26,6 +26,26 @@
           </div>
         </div>
       </template>
+      <template v-if="showAspectFilter">
+        <div class="member-tag" style="background: #8e7af7;color: #fff;" @click="setAspectFilter('H')">
+          <div class="member-tag-main">
+            <span>横图</span>
+            <van-icon v-if="aspectFilter == 'H'" class="member-tag-check" name="checked" />
+          </div>
+        </div>
+        <div class="member-tag" style="background: #4caf8a;color: #fff;" @click="setAspectFilter('V')">
+          <div class="member-tag-main">
+            <span>竖图</span>
+            <van-icon v-if="aspectFilter == 'V'" class="member-tag-check" name="checked" />
+          </div>
+        </div>
+        <div class="member-tag" style="background: #ffb74d;color: #fff;" @click="setAspectFilter('S')">
+          <div class="member-tag-main">
+            <span>方图</span>
+            <van-icon v-if="aspectFilter == 'S'" class="member-tag-check" name="checked" />
+          </div>
+        </div>
+      </template>
       <div v-for="t in memberTagsDisplay" :key="t.tag" class="member-tag" :style="t.style" @click="setSelTag(t.tag)">
         <div class="member-tag-main">
           <span>#{{ t.tag }}</span>
@@ -141,6 +161,7 @@ export default {
       showAllTags: false,
       tagArtsCount: 0,
       ageFilter: '',
+      aspectFilter: '',
     }
   },
   computed: {
@@ -161,6 +182,9 @@ export default {
     },
     showR18TagFilter() {
       return localApi.APP_CONFIG.useLocalAppApi && this.$store.getters.isR18On
+    },
+    showAspectFilter() {
+      return this.showR18TagFilter && !this.once
     },
   },
   mounted() {
@@ -184,6 +208,7 @@ export default {
       this.memberTags = []
       this.selTag = ''
       this.ageFilter = ''
+      this.aspectFilter = ''
       this.showAllTags = false
       this.tagArtsCount = 0
     },
@@ -217,6 +242,28 @@ export default {
       this.ageFilter = type
       this.getMemberArtwork()
     },
+    setAspectFilter(type) {
+      this.resetList()
+      if (type == this.aspectFilter) {
+        this.aspectFilter = ''
+        this.getMemberArtwork()
+        return
+      }
+      window.umami?.track('sel_user_aspect_filter', { type })
+      this.aspectFilter = type
+      this.getMemberArtwork()
+    },
+    isAspectMatch(art) {
+      if (!this.aspectFilter) return true
+      const w = art.width
+      const h = art.height
+      if (!w || !h) return false
+      const ratio = w / h
+      if (this.aspectFilter == 'H') return ratio > 1.05
+      if (this.aspectFilter == 'V') return ratio < 0.95
+      if (this.aspectFilter == 'S') return ratio >= 0.95 && ratio <= 1.05
+      return true
+    },
     async getMemberTags() {
       if (this.iType != 'illust') return
       const res = await api.getMemberTags(this.id, this.$store.getters.isR18On)
@@ -241,6 +288,10 @@ export default {
 
         if (this.ageFilter == 'S') {
           newList = newList.filter(e => e.x_restrict == 0)
+        }
+
+        if (this.aspectFilter) {
+          newList = newList.filter(e => this.isAspectMatch(e))
         }
 
         if (newList.length < 10) {
@@ -287,6 +338,10 @@ export default {
           newList = newList.filter(e => e.x_restrict == 0)
         }
 
+        if (this.aspectFilter) {
+          newList = newList.filter(e => this.isAspectMatch(e))
+        }
+
         if (newList.length < 10) {
           console.log('------------- sleep')
           await sleep(800)
@@ -300,7 +355,7 @@ export default {
 
         this.loading = false
         this.curPage++
-        if (this.once || !newList.length) this.finished = true
+        if (this.once || res.hasNext === false) this.finished = true
       } else {
         this.$toast({
           message: res.msg,

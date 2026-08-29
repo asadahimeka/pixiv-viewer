@@ -1806,6 +1806,7 @@ const api = {
   async getMemberArtwork(id, page, illust_type = 'illust') {
     const cacheKey = `memberArtwork_${id}_${illust_type}_p${page}`
     let memberArtwork = await getCache(cacheKey)
+    let hasNext = true
 
     if (!memberArtwork) {
       const res = await get('/member_illust', {
@@ -1816,6 +1817,7 @@ const api = {
 
       if (res.illusts) {
         memberArtwork = res.illusts.map(art => parseIllust(art))
+        hasNext = Boolean(res.next_url)
         setCache(cacheKey, memberArtwork, 60 * 60 * 6)
       } else if (res.error) {
         return {
@@ -1830,7 +1832,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: filterCensoredIllusts(memberArtwork) }
+    return { status: 0, data: filterCensoredIllusts(memberArtwork), hasNext: Boolean(hasNext && memberArtwork.length) }
   },
 
   async getMemberIllustSeries(id, page = 1) {
