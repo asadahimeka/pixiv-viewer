@@ -16,6 +16,11 @@
           </van-tag>
           <van-tag color="#cdeefe" text-color="#0b6aaf">{{ $t('P8RGkre-rnlFxZ18aH2VW', [convertToK(detail.total_character_count)]) }}</van-tag>
         </p>
+        <div style="text-align:center;margin-bottom:0.4rem;">
+          <van-button type="info" size="small" plain @click="downloadSeriesEpub">
+            ⬇️下载系列EPUB
+          </van-button>
+        </div>
       </template>
       <van-list
         v-model="loading"
@@ -38,6 +43,43 @@
         />
       </van-list>
     </div>
+    <van-dialog
+      v-model="seriesDl.show"
+      :title="seriesDl.title"
+      :show-confirm-button="false"
+      :close-on-click-overlay="false"
+      class="series-dl-dialog"
+      get-container="body"
+    >
+      <div class="series-dl-body">
+        <van-progress
+          :percentage="seriesDl.total ? Math.floor((seriesDl.current / seriesDl.total) * 100) : 0"
+          color="#7232dd"
+        />
+        <p class="series-dl-status">
+          {{ seriesDl.current }} / {{ seriesDl.total }}
+          {{ seriesDl.phase === 'build' ? '正在生成 EPUB…' : seriesDl.failed ? '下载失败：' + seriesDl.errorMsg : '下载中…' }}
+        </p>
+        <div class="series-dl-list">
+          <div
+            v-for="(it, i) in seriesDl.items"
+            :key="it.id"
+            class="series-dl-item"
+            :class="it.status"
+          >
+            <span class="idx">{{ i + 1 }}.</span>
+            <span class="tt">{{ it.title }}</span>
+            <span class="st">{{ seriesDlStatusText(it.status) }}</span>
+          </div>
+        </div>
+        <div class="series-dl-actions">
+          <van-button v-if="seriesDl.failed" type="danger" size="small" @click="retrySeriesDownload">
+            重试
+          </van-button>
+          <van-button size="small" @click="cancelSeriesDownload">取消</van-button>
+        </div>
+      </div>
+    </van-dialog>
   </div>
 </template>
 
@@ -46,8 +88,9 @@ import _ from '@/lib/lodash'
 import TopBar from '@/components/TopBar'
 import NovelCard from '@/components/NovelCard.vue'
 import api from '@/api'
-import { formatIntlNumber } from '@/utils'
+import { formatIntlNumber, downloadFile } from '@/utils'
 import { isCNLocale } from '@/i18n'
+import { runSeriesEpubDownload } from '@/utils/novel'
 
 export default {
   name: 'NovelSeries',
@@ -63,6 +106,20 @@ export default {
       loading: false,
       finished: false,
       detail: null,
+      seriesDl: {
+        show: false,
+        title: '正在下载系列',
+        total: 0,
+        current: 0,
+        items: [],
+        phase: 'fetch',
+        failed: false,
+        errorMsg: '',
+        cancel: false,
+        seriesId: null,
+        seriesTitle: '',
+        _resolvePause: null,
+      },
     }
   },
   head() {
@@ -95,6 +152,81 @@ export default {
         params: { id },
       })
     },
+    seriesDlStatusText(status) {
+      return (
+        {
+          pending: '等待',
+          downloading: '下载中',
+          done: '完成',
+          error: '失败',
+        }[status] || ''
+      )
+    },
+    async downloadSeriesEpub() {
+      const seriesId = this.$route.params.id
+      if (!seriesId) return
+      const seriesTitle = this.detail?.title || `系列_${seriesId}`
+      this.seriesDl = {
+        show: true,
+        title: '正在下载系列',
+        total: 0,
+        current: 0,
+        items: [],
+        phase: 'fetch',
+        failed: false,
+        errorMsg: '',
+        cancel: false,
+        seriesId,
+        seriesTitle,
+        _resolvePause: null,
+      }
+      const epub = await runSeriesEpubDownload(seriesId, seriesTitle, {
+        onProgress: st => {
+          this.seriesDl.total = st.total
+          this.seriesDl.current = st.current
+          this.seriesDl.items = st.items
+          this.seriesDl.phase = st.phase
+          this.seriesDl.failed = st.failed
+          this.seriesDl.errorMsg = st.errorMsg
+          requestAnimationFrame(() => {
+            document.querySelector('.series-dl-item.downloading')?.scrollIntoView?.()
+          })
+        },
+        onPause: () =>
+          new Promise(resolve => {
+            this.seriesDl._resolvePause = resolve
+          }),
+        shouldCancel: () => this.seriesDl.cancel,
+      }, this.detail)
+      if (this.seriesDl.cancel) {
+        this.seriesDl.show = false
+        return
+      }
+      if (epub) {
+        const safeName = seriesTitle.replace(/[\\/:*?"<>|]/g, '_')
+        await downloadFile(epub, `${safeName}.epub`, { subDir: 'novel' })
+        this.seriesDl.show = false
+        this.$toast('系列 EPUB 下载完成')
+      }
+    },
+    retrySeriesDownload() {
+      if (this.seriesDl._resolvePause) {
+        const r = this.seriesDl._resolvePause
+        this.seriesDl._resolvePause = null
+        this.seriesDl.failed = false
+        r('retry')
+      }
+    },
+    cancelSeriesDownload() {
+      this.seriesDl.cancel = true
+      if (this.seriesDl._resolvePause) {
+        const r = this.seriesDl._resolvePause
+        this.seriesDl._resolvePause = null
+        r('cancel')
+      } else {
+        this.seriesDl.show = false
+      }
+    },
     getArtList: _.throttle(async function () {
       const { id } = this.$route.params
       if (!id) return
@@ -106,6 +238,7 @@ export default {
           ...res.data,
         ], 'id')
 
+        console.log('res.data.detail: ', res.data.detail)
         this.detail = res.data.detail
         this.loading = false
         if (res.data.next) {
@@ -192,5 +325,49 @@ export default {
       background-image: linear-gradient(0deg, rgba(0,0,0,0.7) 0%, rgba(255,255,255,0) 100%);
     .title
       display block !important
+
+.series-dl-dialog
+  width 9rem
+  .series-dl-body
+    padding 0.4rem 0.5rem 0.6rem
+  .series-dl-status
+    margin 0.3rem 0
+    font-size 0.35rem
+    text-align center
+    color #666
+  .series-dl-list
+    max-height 8rem
+    overflow-y auto
+    border 1px solid #eee
+    border-radius 0.2rem
+    margin-bottom 0.4rem
+  .series-dl-item
+    display flex
+    align-items center
+    gap 0.2rem
+    padding 0.15rem 0.3rem
+    font-size 0.35rem
+    border-bottom 1px solid #f5f5f5
+    .idx
+      flex 0 0 auto
+      color #999
+    .tt
+      flex 1
+      overflow hidden
+      text-overflow ellipsis
+      white-space nowrap
+    .st
+      flex 0 0 auto
+      color #999
+    &.downloading .st
+      color #1989fa
+    &.done .st
+      color #07c160
+    &.error .st
+      color #ee0a24
+  .series-dl-actions
+    display flex
+    justify-content flex-end
+    gap 0.3rem
 
 </style>

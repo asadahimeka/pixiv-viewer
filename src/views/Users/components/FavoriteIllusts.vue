@@ -11,7 +11,7 @@
       </van-cell>
       <h3 v-else class="af_title">
         <div class="discovery-tabs">
-          <div v-if="showPxcl" class="com_sel_tab" @click="$router.push('/my-illust-bookmarks')">插画收藏(本地缓存)</div>
+          <div v-if="showPxcl" class="com_sel_tab" @click="$router.push('/my-illust-bookmarks')">PixivCollection</div>
           <div class="com_sel_tab cur">{{ $t('user.fav_title') }}</div>
           <div class="com_sel_tab" @click="$router.replace($route.fullPath.replace('favorites', 'favorite_novels').replace('artworks', 'novels'))">
             {{ $t('user.fav_novel_title') }}

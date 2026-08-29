@@ -61,6 +61,15 @@
                 <van-button type="info" size="small" plain style="width: 100%;">⬇️{{ $t('common.download') }}</van-button>
               </template>
             </van-popover>
+            <van-button
+              v-if="isNovelDlFormatSet && artwork.series && artwork.series.id"
+              type="info"
+              size="small"
+              plain
+              @click="downloadNovel({ val: 'epub_series' })"
+            >
+              ⬇️EPUB(系列)
+            </van-button>
             <template v-if="showPntBtn">
               <van-button v-if="isTranslated" type="info" size="small" plain @click="showOriginText">↩️显示原文</van-button>
               <van-button
@@ -126,6 +135,43 @@
         <CommentsArea :id="artwork.id" is-novel :count="0" :limit="10" />
       </template>
     </van-popup>
+    <van-dialog
+      v-model="seriesDl.show"
+      :title="seriesDl.title"
+      :show-confirm-button="false"
+      :close-on-click-overlay="false"
+      class="series-dl-dialog"
+      get-container="body"
+    >
+      <div class="series-dl-body">
+        <van-progress
+          :percentage="seriesDl.total ? Math.floor((seriesDl.current / seriesDl.total) * 100) : 0"
+          color="#7232dd"
+        />
+        <p class="series-dl-status">
+          {{ seriesDl.current }} / {{ seriesDl.total }}
+          {{ seriesDl.phase === 'build' ? '正在生成 EPUB…' : seriesDl.failed ? '下载失败：' + seriesDl.errorMsg : '下载中…' }}
+        </p>
+        <div ref="seriesDlList" class="series-dl-list">
+          <div
+            v-for="(it, i) in seriesDl.items"
+            :key="it.id"
+            class="series-dl-item"
+            :class="it.status"
+          >
+            <span class="idx">{{ i + 1 }}.</span>
+            <span class="tt">{{ it.title }}</span>
+            <span class="st">{{ seriesDlStatusText(it.status) }}</span>
+          </div>
+        </div>
+        <div class="series-dl-actions">
+          <van-button v-if="seriesDl.failed" type="danger" size="small" @click="retrySeriesDownload">
+            重试
+          </van-button>
+          <van-button size="small" @click="cancelSeriesDownload">取消</van-button>
+        </div>
+      </div>
+    </van-dialog>
   </div>
 </template>
 
@@ -139,7 +185,7 @@ import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL } from '@/consts'
 import { getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
-import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel } from '@/utils/novel'
+import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel, buildMetaHeaderTxt, buildMetaHeaderHtml, runSeriesEpubDownload } from '@/utils/novel'
 import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
@@ -217,15 +263,20 @@ export default {
       kissLoaded: !!document.querySelector('#kiss-translator'),
       showNovelTransSettings: false,
       showDlPopover: false,
-      novelDlOptions: [
-        { text: 'TXT', val: 'txt' },
-        { text: 'HTML', val: 'html' },
-        { text: 'MD', val: 'md' },
-        { text: 'DOC', val: 'doc' },
-        !store.state.appSetting.useNovelWebview && { text: 'PDF', val: 'pdf' },
-        !store.state.isMobile && ({ text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' }),
-        !store.state.appSetting.useNovelWebview && { text: 'EPUB', val: 'epub' },
-      ].filter(Boolean),
+      seriesDl: {
+        show: false,
+        title: '正在下载系列',
+        total: 0,
+        current: 0,
+        items: [],
+        phase: 'fetch',
+        failed: false,
+        errorMsg: '',
+        cancel: false,
+        seriesId: null,
+        seriesTitle: '',
+        _resolvePause: null,
+      },
       showBookmarkBtn: localApi.APP_CONFIG.useLocalAppApi,
       favLoading: false,
       translateLoading: false,
@@ -266,6 +317,18 @@ export default {
     },
     isNovelDlFormatSet() {
       return Boolean(store.state.appSetting.novelDefDlFormat && !store.state.appSetting.useNovelWebview)
+    },
+    novelDlOptions() {
+      return [
+        { text: 'TXT', val: 'txt' },
+        { text: 'HTML', val: 'html' },
+        { text: 'MD', val: 'md' },
+        { text: 'DOC', val: 'doc' },
+        !store.state.appSetting.useNovelWebview && { text: 'PDF', val: 'pdf' },
+        !store.state.isMobile && ({ text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' }),
+        !store.state.appSetting.useNovelWebview && { text: 'EPUB', val: 'epub' },
+        this.artwork.series && this.artwork.series.id && { text: 'EPUB(系列)', val: 'epub_series' },
+      ].filter(Boolean)
     },
     useNovelWebview() {
       return store.state.appSetting.useNovelWebview
@@ -514,8 +577,8 @@ export default {
         return el.outerHTML
       }
       const actions = {
-        txt: async () => new Blob([novelTextBak], { type: 'text/plain;charset=utf-8' }),
-        html: async () => new Blob(['<meta charset="utf-8">' + getOuterHTML()], { type: 'text/html;charset=utf-8' }),
+        txt: async () => new Blob([buildMetaHeaderTxt(this.artwork) + novelTextBak], { type: 'text/plain;charset=utf-8' }),
+        html: async () => new Blob(['<meta charset="utf-8">' + buildMetaHeaderHtml(this.artwork) + getOuterHTML()], { type: 'text/html;charset=utf-8' }),
         epub: async () => {
           const el = document.querySelector('.novel_text').cloneNode(true)
           const style = store.state.appSetting.novelDlRmStyle ? '' : el.getAttribute('style')
@@ -523,10 +586,12 @@ export default {
           return res
         },
         print: async () => {
-          printNovel(getOuterHTML(), fileName)
+          printNovel(buildMetaHeaderHtml(this.artwork) + getOuterHTML(), fileName)
         },
         pdf: async () => {
           const el = document.querySelector('.novel_text').cloneNode(true)
+          const headerHtml = buildMetaHeaderHtml(this.artwork)
+          el.innerHTML = headerHtml + el.innerHTML
           el.innerHTML = el.innerHTML.split('<br>').map(e => `<p${e ? '' : ' style="padding: 1em 0"'}>${e}</p>`).join('')
           el.querySelectorAll('img').forEach(img => {
             img.setAttribute('crossorigin', 'anonymous')
@@ -535,8 +600,12 @@ export default {
           const res = await convertHtmlToPdf(el, fileName)
           return res
         },
-        doc: async () => convertHtmlToDoc(getOuterHTML()),
+        doc: async () => convertHtmlToDoc(buildMetaHeaderHtml(this.artwork) + getOuterHTML()),
         md: async () => convertNovelToMarkdown(this.novelText, this.artwork),
+        epub_series: async () => {
+          await this.downloadSeriesEpub(this.artwork.series.id, this.artwork.series.title)
+          return null
+        },
       }
       const blob = await actions[ext]()
       if (blob) await downloadFile(blob, `${fileName}.${ext}`, { subDir: 'novel' })
@@ -561,6 +630,79 @@ export default {
     showOriginText() {
       this.novelText.text = novelTextBak
       this.isTranslated = false
+    },
+    seriesDlStatusText(status) {
+      return (
+        {
+          pending: '等待',
+          downloading: '下载中',
+          done: '完成',
+          error: '失败',
+        }[status] || ''
+      )
+    },
+    async downloadSeriesEpub(seriesId, seriesTitle) {
+      if (!seriesId) return
+      this.seriesDl = {
+        show: true,
+        title: '正在下载系列',
+        total: 0,
+        current: 0,
+        items: [],
+        phase: 'fetch',
+        failed: false,
+        errorMsg: '',
+        cancel: false,
+        seriesId,
+        seriesTitle: seriesTitle || `系列_${seriesId}`,
+        _resolvePause: null,
+      }
+      const epub = await runSeriesEpubDownload(seriesId, this.seriesDl.seriesTitle, {
+        onProgress: st => {
+          this.seriesDl.total = st.total
+          this.seriesDl.current = st.current
+          this.seriesDl.items = st.items
+          this.seriesDl.phase = st.phase
+          this.seriesDl.failed = st.failed
+          this.seriesDl.errorMsg = st.errorMsg
+          requestAnimationFrame(() => {
+            document.querySelector('.series-dl-item.downloading')?.scrollIntoView?.()
+          })
+        },
+        onPause: () =>
+          new Promise(resolve => {
+            this.seriesDl._resolvePause = resolve
+          }),
+        shouldCancel: () => this.seriesDl.cancel,
+      })
+      if (this.seriesDl.cancel) {
+        this.seriesDl.show = false
+        return
+      }
+      if (epub) {
+        const safeName = this.seriesDl.seriesTitle.replace(/[\\/:*?"<>|]/g, '_')
+        await downloadFile(epub, `${safeName}.epub`, { subDir: 'novel' })
+        this.seriesDl.show = false
+        this.$toast('系列 EPUB 下载完成')
+      }
+    },
+    retrySeriesDownload() {
+      if (this.seriesDl._resolvePause) {
+        const r = this.seriesDl._resolvePause
+        this.seriesDl._resolvePause = null
+        this.seriesDl.failed = false
+        r('retry')
+      }
+    },
+    cancelSeriesDownload() {
+      this.seriesDl.cancel = true
+      if (this.seriesDl._resolvePause) {
+        const r = this.seriesDl._resolvePause
+        this.seriesDl._resolvePause = null
+        r('cancel')
+      } else {
+        this.seriesDl.show = false
+      }
     },
     doDefPnt() {
       let key = store.state.appSetting.novelDefTranslate
@@ -884,5 +1026,49 @@ img[src*="https://api.moedog.org/qr/?url="]
         height 4.5rem !important
       .author-card .artwork-list-wrap .artwork-list .swiper-slide .image-slide
         height 4.2rem !important
+
+.series-dl-dialog
+  width 9rem
+  .series-dl-body
+    padding 0.4rem 0.5rem 0.6rem
+  .series-dl-status
+    text-align center
+    margin 0.3rem 0
+    font-size 0.35rem
+    color #666
+  .series-dl-list
+    max-height 8rem
+    overflow-y auto
+    border 1px solid #eee
+    border-radius 0.2rem
+    margin-bottom 0.4rem
+  .series-dl-item
+    display flex
+    align-items center
+    gap 0.2rem
+    padding 0.15rem 0.3rem
+    font-size 0.35rem
+    border-bottom 1px solid #f5f5f5
+    .idx
+      flex 0 0 auto
+      color #999
+    .tt
+      flex 1
+      overflow hidden
+      text-overflow ellipsis
+      white-space nowrap
+    .st
+      flex 0 0 auto
+      color #999
+    &.downloading .st
+      color #1989fa
+    &.done .st
+      color #07c160
+    &.error .st
+      color #ee0a24
+  .series-dl-actions
+    display flex
+    justify-content flex-end
+    gap 0.3rem
 
 </style>
