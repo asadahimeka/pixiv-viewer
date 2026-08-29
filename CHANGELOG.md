@@ -71,6 +71,7 @@
 - 小说翻译调用链接入 BYOK（Task 6）
 - *(translate)* BYOK VL engine call chain — pass vlApiConfig to manga.js
 - BYOK LLM translation + personal workspace sync
+- Member artworks aspect filter
 
 ### 🐛 Bug Fixes
 
@@ -126,6 +127,8 @@
 - Style fixes
 - Microsoft translate
 - Style fixes
+- Ios style fixes
+- Novel download meta header and series epub
 
 ### 💼 Other
 
@@ -199,6 +202,7 @@
 - Update lodash
 - Patch swiper
 - Release v1.37.1
+- Release v1.37.2
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
