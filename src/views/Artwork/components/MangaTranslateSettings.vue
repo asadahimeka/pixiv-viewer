@@ -96,7 +96,7 @@
           direction="horizontal"
           class="translator-options"
         >
-          <van-radio name="llm">LLM（AI 翻译）</van-radio>
+          <van-radio name="llm">AI 翻译</van-radio>
           <van-radio name="google_web">Google 翻译</van-radio>
           <van-radio name="microsoft">Microsoft 翻译</van-radio>
         </van-radio-group>
@@ -470,12 +470,10 @@ export default {
       padding 0.2rem 0.3rem
 
   .translator-options
+    gap 0.3rem
     padding 0.2rem 0.3rem
 
     ::v-deep .van-radio--horizontal
-      margin-right 0.3rem
-
-    ::v-deep .van-radio--horizontal:last-child
       margin-right 0
 
   .test-connection-wrap

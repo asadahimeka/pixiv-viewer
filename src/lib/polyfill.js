@@ -16,3 +16,10 @@ if (!('createImageBitmap' in window)) {
     })
   }
 }
+
+if (!String.prototype.replaceAll) {
+  // eslint-disable-next-line no-extend-native
+  String.prototype.replaceAll = function (search, replacement) {
+    return this.split(search).join(replacement)
+  }
+}

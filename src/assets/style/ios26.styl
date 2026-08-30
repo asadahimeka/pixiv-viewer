@@ -36,16 +36,23 @@
 
   // ---- 玻璃配方（真实 iOS：blur 16px + .75 白 + 多层 inset 高光） ----
   // 导航/底部栏/弹层
-  .van-tabbar, .van-popup, .van-action-sheet, .van-dialog
+  .van-popup,
+  .van-toast,
+  .van-dialog,
+  .van-tabbar,
+  .van-action-sheet,
+  #app .search .search-dropdown,
+  #app .search .search-bar-wrap .van-search__content,
+  #app .Home .home-search .van-search__content
     background: rgba(255, 255, 255, 0.75) !important
     backdrop-filter: saturate(180%) blur(16PX)
     -webkit-backdrop-filter: saturate(180%) blur(16PX)
+    box-shadow: inset -1px -1px 0px -0.5px #fff,inset 1px 1px 0px -0.5px #fff,inset 3px 3px 10px -3px #ddd,inset -3px -3px 10px -3px #ddd,inset 0 0 5px 1px #fff,inset 0 0 0 0.5px #00000040,inset 0 0 24px 0 #0000001a,0 0 25px 0 #0003
+  .van-toast, .van-tabbar
     box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.5),inset 0 0 24PX 0 rgba(0, 0, 0, 0.1),0 0 25PX 0 rgba(0, 0, 0, 0.2)
   // 卡片/分组列表（略低 blur 12px 保性能）
   .van-collapse,
   .van-cell-group,
-  .search .search-dropdown,
-  .search .search-bar-wrap .search-bar,
   .search .search_params .van-dropdown-menu__bar,
   .setting .setting-group,
   .setting-page .setting-cell-group
@@ -53,6 +60,11 @@
     backdrop-filter: saturate(180%) blur(12PX)
     -webkit-backdrop-filter: saturate(180%) blur(12PX)
     box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.5),inset 0 0 24PX 0 rgba(0, 0, 0, 0.06)
+  .search .search-bar-wrap .search-bar
+    background none !important
+    backdrop-filter none !important
+    -webkit-backdrop-filter none !important
+    box-shadow none !important
   // 玻璃容器内 cell 透明化，让 blur 透出来
   .van-popup .van-cell,
   .van-dialog .van-cell,
@@ -64,6 +76,7 @@
   .van-cell-group .van-cell,
   .van-collapse .van-cell,
   .van-collapse .van-collapse-item__content,
+  .llm-model-select-popup .van-search,
   .setting .setting-group .van-cell,
   .setting-page .setting-cell-group .van-cell,
   .setting-page .setting-cell-group .block-tags-wrap,
@@ -71,6 +84,20 @@
   .van-calendar
     background: transparent !important
 
+  .van-toast
+    border-radius: 28PX !important
+    &, & svg
+      color var(--ios-label-primary) !important
+    .van-toast__icon img
+      filter invert(1) hue-rotate(180deg)
+  .van-notify
+    color var(--ios-label-primary) !important
+  .van-notify--success
+    color #07c160 !important
+  .van-notify--warning
+    color #ff976a !important
+  .van-notify--danger
+    color #ee0a24 !important
   .van-dialog button
     color var(--ios-label-primary) !important
     background: transparent !important
@@ -114,6 +141,100 @@
     border-radius: 28PX !important
   .van-popup--bottom, .van-action-sheet
     border-radius: 32PX 32PX 0 0 !important
+  .van-dialog .van-dialog__cancel
+    color var(--accent-color) !important
+  .van-dialog  .van-dialog__confirm
+    color: #ff3b30 !important
+  .van-popup--bottom
+    bottom 0.5rem
+    border-radius: 32PX !important
+    .van-action-sheet__item
+      color var(--accent-color) !important
+    .van-action-sheet__item,
+    .van-action-sheet__description
+      border-bottom 1px solid #0003
+    .van-action-sheet__description::after
+      display none
+    .van-action-sheet__cancel, .van-share-sheet__cancel
+      color: #ff3b30 !important
+  .van-popup--bottom,
+  #app .van-popup--bottom
+    width 9.5rem !important
+    margin-left -4.75rem !important
+  .artwork.novel .setting-actions
+    right 0.25rem
+
+  #app .search
+    .search-bar-wrap,
+    .search-dropdown
+      left 50%
+      transform translateX(-50%)
+    .search-bar-wrap,
+    .search-bar-wrap .search-bar
+      width 10rem
+      @media screen and (min-width: 1280px)
+        width 800PX
+    .search-bar-wrap .search-bar
+      padding-left 12PX !important
+      padding-right 12PX !important
+    .search-bar-wrap .search-bar-word
+      left 1.5rem !important
+    .search-dropdown
+      width 9.5rem
+      @media screen and (min-width: 1280px)
+        width 760PX
+    .search-dropdown
+      padding-top 0.2rem
+      border-radius: 28PX
+    .image-search
+      position absolute !important
+      top 0.32rem !important
+      right 0.4rem !important
+    .list-wrap >.mask
+      top 0
+      height 100%
+      opacity 0.3
+    .search_params
+      left 50%
+      width 9.5rem
+      margin-left -4.75rem
+      border-radius: 10PX
+      &::after
+        bottom -0.25rem
+      .search_param_sel
+        height 1rem
+        padding-bottom 0 !important
+        .van-dropdown-menu__bar .van-dropdown-menu__item
+          min-width: max-content
+          padding: 0 0.2rem
+        .van-dropdown-item
+          left 50%
+          width 9.5rem
+          margin-left -4.75rem
+          .van-dropdown-item__content
+            top 0.1rem
+            border-radius: 10PX
+            .sel_search_date
+              width 100% !important
+    @media screen and (min-width: 1280px)
+      .search_params
+        position absolute
+        top 1.5rem
+        left 50%
+        width 1200PX
+        margin-left -600PX
+        overflow-x auto
+        .search_param_sel
+          .van-dropdown-menu__bar .van-dropdown-menu__item
+            min-width unset
+            flex none
+            overflow hidden
+          .van-dropdown-item
+            left 50%
+            width 1200PX
+            margin-left -600PX
+            .van-dropdown-item__content
+              top 0
 
   // ---- 搜索框：fill 底 + pill ----
   .van-search__content
@@ -126,9 +247,11 @@
   #app .top-bar-wrap
     width 1.4rem
   #app .top-bar .van-nav-bar__left
-    margin-left: 12PX
+    margin-left: 0.5rem !important
     padding: 0 !important
   #app .back_to_top,
+  #app .af_title .clear-ih,
+  #app .af_title .reset-color,
   #app .top-bar-wrap + .share_btn,
   #app .top-bar-wrap + .more_btn,
   #app .top-bar-wrap + .ex_link,
@@ -153,15 +276,34 @@
         stroke: var(--ios-label-primary) !important
         stroke-width: 30
   #app .top-bar-wrap,
+  #app .af_title .clear-ih,
+  #app .af_title .reset-color,
   #app .top-bar-wrap + .share_btn,
   #app .top-bar-wrap + .ex_link,
   #app .top-bar-wrap + .more_btn
-    top 1.2rem
+    top 0.7rem
     padding-top 0
+  #app .af_title
+    margin-top 0.7rem
+  #app .users:has(.van-sticky--fixed) .top-bar-wrap,
+  #app .users:has(.van-sticky--fixed) .share_btn
+    top 1.5rem
   #app .top-bar-wrap + .ex_link
     padding 0
     right 12PX
     font-size: 0.5rem
+  #app .af_title .clear-ih,
+  #app .af_title .reset-color
+    position fixed !important
+    z-index 5
+    right 0.5rem !important
+    transform: translateY(0)
+  #app .Discovery.illusts .clear-ih
+    gap 0.2rem
+    background none !important
+    backdrop-filter none !important
+    -webkit-backdrop-filter none !important
+    box-shadow none !important
   #app .users .info-container .info .share_btn
     display none
   #app .back_to_top .van-icon
@@ -268,6 +410,18 @@
       .user_link,
       .detail
         padding-left: 0.8rem !important
+    #app .History.illusts
+      .van-tabs__nav
+        margin-bottom 15PX
+        padding-bottom 0 !important
+        border-radius: 8PX
+      .van-tabs__line
+        bottom 0 !important
+      .van-tabs__content
+        .illusts
+          max-width 1200PX
+          margin-left auto
+          margin-right auto
 
   // ---- 组件级 iOS 样式（参考 Konsta/Framework7） ----
   // 开关：64×28px 轨道 + 38×24px 白 knob + 22px 位移 + 按压光晕

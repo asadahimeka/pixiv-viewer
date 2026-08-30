@@ -158,26 +158,26 @@
         >
           <span>翻译设置</span>
         </van-button>
-        <van-popup v-model="showComments" class="comments-popup" position="right" get-container="body" closeable>
-          <template v-if="showComments">
-            <p class="comments-title">{{ $t('hGqGftQ7v772prEac1hbJ') }}</p>
-            <CommentsArea :id="artwork.id" :count="0" :limit="10" />
-          </template>
-        </van-popup>
-        <van-popup
-          v-if="showPicTranslateBtn"
-          v-model="showTranslateSettings"
-          position="bottom"
-          class="translate-settings-popup"
-          round
-          closeable
-          close-icon-position="top-right"
-          get-container="body"
-        >
-          <MangaTranslateSettings />
-        </van-popup>
       </div>
     </template>
+    <van-popup v-if="!isNovel" v-model="showComments" class="comments-popup" position="right" get-container="body" closeable>
+      <template v-if="showComments">
+        <p class="comments-title">{{ $t('hGqGftQ7v772prEac1hbJ') }}</p>
+        <CommentsArea :id="artwork.id" :count="0" :limit="10" />
+      </template>
+    </van-popup>
+    <van-popup
+      v-if="!isNovel && showPicTranslateBtn"
+      v-model="showTranslateSettings"
+      position="bottom"
+      class="translate-settings-popup"
+      round
+      closeable
+      close-icon-position="top-right"
+      get-container="body"
+    >
+      <MangaTranslateSettings />
+    </van-popup>
   </div>
 </template>
 

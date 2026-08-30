@@ -284,6 +284,20 @@ md-apply()
   .isOuterMeta .meta
     background none
 
+  @media screen and (min-width: 1280PX)
+    #app .History.illusts
+      .van-tabs__nav
+        margin-bottom 15PX
+        padding-bottom 0 !important
+        border-radius: 8PX
+      .van-tabs__line
+        bottom 0 !important
+      .van-tabs__content
+        .illusts
+          max-width 1200PX
+          margin-left auto
+          margin-right auto
+
   // 标签 chip：MD squircle + secondary-container
   #app .van-tag,
   #app .artwork-meta .tag-list .tag.name
