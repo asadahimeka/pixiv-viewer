@@ -275,7 +275,7 @@ export async function runSeriesEpubDownload(seriesId, seriesTitle, callbacks = {
       if (res.status !== 0) throw new Error(res.msg || '获取系列失败')
       all.push(...res.data)
       if (!res.data.next) break
-      await sleep(1000)
+      await sleep(1500)
       page++
     }
     state.items = all.map((a, i) => ({
@@ -313,7 +313,7 @@ export async function runSeriesEpubDownload(seriesId, seriesTitle, callbacks = {
       item.textObj = res.data
       item.text = res.data.text
       item.status = 'done'
-      // await sleep(1000)
+      await sleep(3000)
       update()
     } catch (err) {
       item.status = 'error'
