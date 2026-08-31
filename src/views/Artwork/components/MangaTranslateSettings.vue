@@ -5,7 +5,7 @@
         <van-cell-group class="engine-options">
           <van-cell>
             <template #title>
-              <van-radio name="vl-api">VL API（默认，侧边栏显示翻译文本）</van-radio>
+              <van-radio name="vl-api">VL API（侧边栏显示翻译文本）</van-radio>
             </template>
           </van-cell>
           <van-cell>

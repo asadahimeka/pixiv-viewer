@@ -806,7 +806,6 @@ export default {
   position relative
   top -24px
   @media screen and (max-width: 1280px)
-    overflow-x: auto;
     &::after
       content: "→"
       position: absolute;
@@ -819,10 +818,15 @@ export default {
       opacity: 0.6;
       animation: fade 1.5s infinite;
       pointer-events none
-    &::-webkit-scrollbar
-      display none
+    .search_param_sel
+      width 100%
     ::v-deep .van-dropdown-menu
       padding-bottom 0.3rem
+    ::v-deep .van-dropdown-menu__bar
+      width 100%
+      overflow-x auto
+      &::-webkit-scrollbar
+        display none
 
 @keyframes fade {
   0% { opacity: 0.2; transform: translateX(0); }

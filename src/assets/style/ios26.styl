@@ -1,8 +1,8 @@
 // ios26 视觉主题（iOS 26 Liquid Glass token 级近似）
 // 选择器方向（Metis 验证）：.dark 在 <body>，custom_theme 在 <html>
 // 暗色覆盖需用 .custom_theme.t_ios26-visual .dark 或 html.custom_theme.t_ios26-visual body.dark
-// 策略：全面玻璃（用户确认）——导航/弹层 blur 40px，卡片 blur ≤24px（性能约束）
-// 精确 px 值用大写 PX 绕过 pxtorem；不覆盖 Novel 阅读器（.novel_view / .novel_text）
+// 策略：全面玻璃（用户确认）——导航/弹层 blur 40PX，卡片 blur ≤24PX（性能约束）
+// 精确 PX 值用大写 PX 绕过 PXtorem；不覆盖 Novel 阅读器（.novel_view / .novel_text）
 
 // ============ 正常态（custom_theme + standalone 双路径） ============
 // standalone：resetColor 会移除 custom_theme，.t_ios26-visual 保证主题仍生效
@@ -10,7 +10,7 @@
   // ---- 颜色 token（--ios-* 命名空间，暗色在下方 .dark 块覆盖） ----
   // unquote 保留 #0088FF 原样（stylus 默认会把可缩写的 hex 压缩成 #08f）
   // 非 !important：用户自选 accent（inline）优先，iOS 蓝仅为主题默认（正交原则）
-  // 参考 Konsta/Framework7：真实 iOS 玻璃 = rgba(255,255,255,.75) + blur(16px) saturate(180%) + 多层 inset 高光
+  // 参考 Konsta/Framework7：真实 iOS 玻璃 = rgba(255,255,255,.75) + blur(16PX) saturate(180%) + 多层 inset 高光
   --accent-color: unquote('#0088FF')
   --ios-bg-primary: #FFFFFF                    // 卡片/表面
   --ios-bg-secondary: #EFEFF4                  // 分组背景（真实 iOS 灰，Konsta 值）
@@ -34,7 +34,7 @@
   body::before
     background: #EFEFF4 !important
 
-  // ---- 玻璃配方（真实 iOS：blur 16px + .75 白 + 多层 inset 高光） ----
+  // ---- 玻璃配方（真实 iOS：blur 16PX + .75 白 + 多层 inset 高光） ----
   // 导航/底部栏/弹层
   .van-popup,
   .van-toast,
@@ -47,10 +47,10 @@
     background: rgba(255, 255, 255, 0.75) !important
     backdrop-filter: saturate(180%) blur(16PX)
     -webkit-backdrop-filter: saturate(180%) blur(16PX)
-    box-shadow: inset -1px -1px 0px -0.5px #fff,inset 1px 1px 0px -0.5px #fff,inset 3px 3px 10px -3px #ddd,inset -3px -3px 10px -3px #ddd,inset 0 0 5px 1px #fff,inset 0 0 0 0.5px #00000040,inset 0 0 24px 0 #0000001a,0 0 25px 0 #0003
+    box-shadow: inset -1PX -1PX 0PX -0.5PX #fff,inset 1PX 1PX 0PX -0.5PX #fff,inset 3PX 3PX 10PX -3PX #ddd,inset -3PX -3PX 10PX -3PX #ddd,inset 0 0 5PX 1PX #fff,inset 0 0 0 0.5PX #00000040,inset 0 0 24PX 0 #0000001a,0 0 25PX 0 #0003
   .van-toast, .van-tabbar
     box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.5),inset 0 0 24PX 0 rgba(0, 0, 0, 0.1),0 0 25PX 0 rgba(0, 0, 0, 0.2)
-  // 卡片/分组列表（略低 blur 12px 保性能）
+  // 卡片/分组列表（略低 blur 12PX 保性能）
   .van-collapse,
   .van-cell-group,
   .search .search_params .van-dropdown-menu__bar,
@@ -117,13 +117,13 @@
     box-shadow none !important
 
   // ---- 降级：不支持 backdrop-filter 时纯色不透明 ----
-  @supports not (backdrop-filter: blur(1px))
+  @supports not (backdrop-filter: blur(1PX))
     .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
     .image-card, .van-cell-group
       background: rgba(255, 255, 255, 0.88) !important
 
   // ---- 圆角（iOS 26） ----
-  // 卡片 10px（保留 .image-card-no-radius 的 !important 优先生效）
+  // 卡片 10PX（保留 .image-card-no-radius 的 !important 优先生效）
   .image-card,
   .image-card .image,
   .image-card-wrapper,
@@ -136,7 +136,7 @@
   // 按钮 pill（弹层在 body 顶层，需单独覆盖）
   #app .van-button, .van-dialog .van-button, .van-popup .van-button
     border-radius: 999PX !important
-  // 弹层 28-32px
+  // 弹层 28-32PX
   .van-dialog, .van-popup--center
     border-radius: 28PX !important
   .van-popup--bottom, .van-action-sheet
@@ -152,7 +152,7 @@
       color var(--accent-color) !important
     .van-action-sheet__item,
     .van-action-sheet__description
-      border-bottom 1px solid #0003
+      border-bottom 1PX solid #0003
     .van-action-sheet__description::after
       display none
     .van-action-sheet__cancel, .van-share-sheet__cancel
@@ -172,7 +172,7 @@
     .search-bar-wrap,
     .search-bar-wrap .search-bar
       width 10rem
-      @media screen and (min-width: 1280px)
+      @media screen and (min-width: 1280PX)
         width 800PX
     .search-bar-wrap .search-bar
       padding-left 12PX !important
@@ -181,7 +181,7 @@
       left 1.5rem !important
     .search-dropdown
       width 9.5rem
-      @media screen and (min-width: 1280px)
+      @media screen and (min-width: 1280PX)
         width 760PX
     .search-dropdown
       padding-top 0.2rem
@@ -198,15 +198,16 @@
       left 50%
       width 9.5rem
       margin-left -4.75rem
-      border-radius: 10PX
       &::after
         bottom -0.25rem
       .search_param_sel
         height 1rem
         padding-bottom 0 !important
-        .van-dropdown-menu__bar .van-dropdown-menu__item
-          min-width: max-content
-          padding: 0 0.2rem
+        .van-dropdown-menu__bar
+          border-radius: 10PX
+          .van-dropdown-menu__item
+            min-width: max-content
+            padding: 0 0.2rem
         .van-dropdown-item
           left 50%
           width 9.5rem
@@ -216,25 +217,28 @@
             border-radius: 10PX
             .sel_search_date
               width 100% !important
-    @media screen and (min-width: 1280px)
+    @media screen and (min-width: 1280PX)
       .search_params
         position absolute
         top 1.5rem
         left 50%
         width 1200PX
         margin-left -600PX
-        overflow-x auto
         .search_param_sel
-          .van-dropdown-menu__bar .van-dropdown-menu__item
-            min-width unset
-            flex none
-            overflow hidden
+          .van-dropdown-menu__bar
+            &.van-dropdown-menu__bar--opened
+              border-radius: 10PX 10PX 0 0
+            .van-dropdown-menu__item
+              min-width unset
+              flex none
+              overflow hidden
           .van-dropdown-item
             left 50%
             width 1200PX
             margin-left -600PX
             .van-dropdown-item__content
               top 0
+              border-radius: 0 0 10PX 10PX
 
   // ---- 搜索框：fill 底 + pill ----
   .van-search__content
@@ -243,7 +247,7 @@
 
   // ---- 返回按钮：圆形玻璃质感（TopBar 左箭头） ----
   // 用 #app 前缀匹配 base 的 #app .top-bar .van-nav-bar__left（1,2,1）
-  // 玻璃配方参考 Konsta NavbarBackLink：.75 白 + blur 16px + 多层 inset 高光
+  // 玻璃配方参考 Konsta NavbarBackLink：.75 白 + blur 16PX + 多层 inset 高光
   #app .top-bar-wrap
     width 1.4rem
   #app .top-bar .van-nav-bar__left
@@ -266,7 +270,7 @@
     backdrop-filter: saturate(180%) blur(16PX)
     -webkit-backdrop-filter: saturate(180%) blur(16PX)
     // box-shadow: inset 0 0 0 0.5PX rgba(255, 255, 255, 0.5),inset 0 0 24PX 0 rgba(0, 0, 0, 0.1),0 0 25PX 0 rgba(0, 0, 0, 0.2)
-    box-shadow: inset -1px -1px 0px -0.5px #fff,inset 1px 1px 0px -0.5px #fff,inset 3px 3px 10px -3px #ddd,inset -3px -3px 10px -3px #ddd,inset 0 0 5px 1px #fff,inset 0 0 0 0.5px #00000040,inset 0 0 24px 0 #0000001a,0 0 25px 0 #0003
+    box-shadow: inset -1PX -1PX 0PX -0.5PX #fff,inset 1PX 1PX 0PX -0.5PX #fff,inset 3PX 3PX 10PX -3PX #ddd,inset -3PX -3PX 10PX -3PX #ddd,inset 0 0 5PX 1PX #fff,inset 0 0 0 0.5PX #00000040,inset 0 0 24PX 0 #0000001a,0 0 25PX 0 #0003
     color: var(--ios-label-primary) !important
     .svg-icon
       color: var(--ios-label-primary) !important
@@ -310,10 +314,10 @@
     font-size 0.5rem
 
   #app .nav-container .nav-bar
-    backdrop-filter: saturate(180%) blur(16px);
-    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    backdrop-filter: saturate(180%) blur(16PX);
+    -webkit-backdrop-filter: saturate(180%) blur(16PX);
     background-color: #ffffffbf
-    box-shadow: inset -1px -1px 0px -0.5px #fff,inset 1px 1px 0px -0.5px #fff,inset 3px 3px 10px -3px #ddd,inset -3px -3px 10px -3px #ddd,inset 0 0 5px 1px #fff,inset 0 0 0 0.5px #00000040,inset 0 0 24px 0 #0000001a,0 0 25px 0 #0003
+    box-shadow: inset -1PX -1PX 0PX -0.5PX #fff,inset 1PX 1PX 0PX -0.5PX #fff,inset 3PX 3PX 10PX -3PX #ddd,inset -3PX -3PX 10PX -3PX #ddd,inset 0 0 5PX 1PX #fff,inset 0 0 0 0.5PX #00000040,inset 0 0 24PX 0 #0000001a,0 0 25PX 0 #0003
     li:has(.active)::before
       background #0000001a
     .svg-icon.active path
@@ -424,7 +428,7 @@
           margin-right auto
 
   // ---- 组件级 iOS 样式（参考 Konsta/Framework7） ----
-  // 开关：64×28px 轨道 + 38×24px 白 knob + 22px 位移 + 按压光晕
+  // 开关：64×28PX 轨道 + 38×24PX 白 knob + 22PX 位移 + 按压光晕
   .van-switch
     font-size: 30PX
     width: 64PX
@@ -482,7 +486,7 @@
     backdrop-filter: saturate(180%) blur(16PX)
     -webkit-backdrop-filter: saturate(180%) blur(16PX)
 
-  // van-tabs 激活线：iOS pill（inset 4px 白块）
+  // van-tabs 激活线：iOS pill（inset 4PX 白块）
   .van-tabs__line
     box-shadow: 0 2PX 2PX rgba(0, 0, 0, 0.25)
 
@@ -597,7 +601,7 @@
     box-shadow: 0 2PX 2PX rgba(0, 0, 0, 0.4)
 
   // 暗色降级
-  @supports not (backdrop-filter: blur(1px))
+  @supports not (backdrop-filter: blur(1PX))
     .van-tabbar, .van-popup, .van-action-sheet, .van-dialog,
     .image-card, .van-cell-group
       background: rgba(50, 50, 50, 0.85) !important
