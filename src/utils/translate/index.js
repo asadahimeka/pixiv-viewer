@@ -133,7 +133,7 @@ export function getNoTranslateWords(tags = []) {
 export async function siliconCloudTranslate(novelText = '', notsArr = [], modelId = 'tencent/Hunyuan-MT-7B', onRead = console.log) {
   try {
     if (!novelText.trim()) return
-    const mt = store.state.mangaTrans
+    const mt = store.state.translateConfig
     const cfg = mt.providers[mt.novelProvider] || {}
     if (!cfg.apiKey) {
       onRead({ done: true, error: 'no_api_key' })

@@ -48,10 +48,11 @@ async function setSeasonEffects(effects) {
 export async function fetchNotices() {
   try {
     const res = await fetch(`https://pxve-notice.nanoka.top/anon.json?t=${dayjs().format('YYYYMMDD')}`)
-    const { notices = [], effects = [], buids = [], rntm = [], rnta = [] } = await res.json()
+    const { notices = [], effects = [], buids = [], rntm = [], rnta = [], promo = [] } = await res.json()
     setAppNotice(notices)
     setSeasonEffects(effects)
     store.commit('addBlockUids', buids)
+    store.commit('setScPromo', promo)
     HiddenAuthors.NO_TYPE_MANGA = rntm
     HiddenAuthors.NO_TYPE_AI = rnta
   } catch (err) {

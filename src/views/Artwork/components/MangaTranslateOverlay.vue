@@ -64,7 +64,7 @@ export default {
       return !this.loading && !!this.translatedCanvas
     },
     translationEngine() {
-      return this.$store.state.mangaTrans.engine
+      return this.$store.state.translateConfig.engine
     },
   },
   watch: {

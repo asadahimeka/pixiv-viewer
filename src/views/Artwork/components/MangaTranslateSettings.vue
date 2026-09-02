@@ -76,9 +76,11 @@
       <div class="engine-help">
         <van-icon name="info-o" /> 支持 OpenAI 兼容接口。视觉翻译需选择支持图片输入的 VL 模型；API Key 仅存储在本机浏览器，请勿填入他人设备。
       </div>
-      <div class="engine-help">
-        <van-icon name="info-o" /> 可<a target="_blank" rel="noopener noreferrer" href="https://cloud.siliconflow.cn/i/F5UpdO0m">点击此处</a>前往 SiliconCloud 注册后使用免费模型。
-      </div>
+      <template v-if="$store.state.scPromo.length">
+        <div v-for="p in $store.state.scPromo" :key="p[0]" class="engine-help">
+          <van-icon name="info-o" /> <a target="_blank" rel="noopener noreferrer" :href="p[0]">点击此处</a>{{ p[1] }}
+        </div>
+      </template>
       <div class="test-connection-wrap">
         <van-button size="small" plain round :loading="vlTestLoading" loading-text="测试中..." @click="testVlConnection">测试连接</van-button>
       </div>
@@ -138,9 +140,11 @@
         <div class="engine-help">
           <van-icon name="info-o" /> 支持 OpenAI 兼容接口。API Key 仅存储在本机浏览器，请勿填入他人设备。
         </div>
-        <div class="engine-help">
-          <van-icon name="info-o" /> 可<a target="_blank" rel="noopener noreferrer" href="https://cloud.siliconflow.cn/i/F5UpdO0m">点击此处</a>前往 SiliconCloud 注册后使用免费模型。
-        </div>
+        <template v-if="$store.state.scPromo.length">
+          <div v-for="p in $store.state.scPromo" :key="p[0]" class="engine-help">
+            <van-icon name="info-o" /> <a target="_blank" rel="noopener noreferrer" :href="p[0]">点击此处</a>{{ p[1] }}
+          </div>
+        </template>
         <div class="test-connection-wrap">
           <van-button size="small" plain round :loading="testLoading" loading-text="测试中..." @click="testConnection">
             测试连接
@@ -246,87 +250,87 @@ export default {
   computed: {
     translationEngine: {
       get() {
-        return store.state.mangaTrans.engine
+        return store.state.translateConfig.engine
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { engine: val })
+        store.commit('SET_TRANSLATE_CONFIG', { engine: val })
       },
     },
     translationTranslator: {
       get() {
-        return store.state.mangaTrans.translator || 'llm'
+        return store.state.translateConfig.translator || 'llm'
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { translator: val })
+        store.commit('SET_TRANSLATE_CONFIG', { translator: val })
       },
     },
     translationProvider() {
-      return store.state.mangaTrans.provider
+      return store.state.translateConfig.provider
     },
     translationProviders() {
-      return store.state.mangaTrans.providers
+      return store.state.translateConfig.providers
     },
     translationProcessMode: {
       get() {
-        return store.state.mangaTrans.processMode
+        return store.state.translateConfig.processMode
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { processMode: val })
+        store.commit('SET_TRANSLATE_CONFIG', { processMode: val })
       },
     },
     translationBubble: {
       get() {
-        return store.state.mangaTrans.bubble
+        return store.state.translateConfig.bubble
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { bubble: val })
+        store.commit('SET_TRANSLATE_CONFIG', { bubble: val })
       },
     },
     translationSourceLang: {
       get() {
-        return store.state.mangaTrans.sourceLang
+        return store.state.translateConfig.sourceLang
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { sourceLang: val })
+        store.commit('SET_TRANSLATE_CONFIG', { sourceLang: val })
       },
     },
     translationTargetLang: {
       get() {
-        return store.state.mangaTrans.targetLang
+        return store.state.translateConfig.targetLang
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { targetLang: val })
+        store.commit('SET_TRANSLATE_CONFIG', { targetLang: val })
       },
     },
     translationVlModel: {
       get() {
-        return store.state.mangaTrans.vlModel
+        return store.state.translateConfig.vlModel
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { vlModel: val })
+        store.commit('SET_TRANSLATE_CONFIG', { vlModel: val })
       },
     },
     serverUrlInput: {
       get() {
-        return store.state.mangaTrans.serverUrl
+        return store.state.translateConfig.serverUrl
       },
       set(value) {
-        store.commit('SET_MANGA_TRANS', { serverUrl: value })
+        store.commit('SET_TRANSLATE_CONFIG', { serverUrl: value })
       },
     },
     serverTokenInput: {
       get() {
-        return store.state.mangaTrans.serverToken
+        return store.state.translateConfig.serverToken
       },
       set(value) {
-        store.commit('SET_MANGA_TRANS', { serverToken: value })
+        store.commit('SET_TRANSLATE_CONFIG', { serverToken: value })
       },
     },
     providerConfig() {
       return this.translationProviders[this.translationProvider] || {}
     },
     vlConfig() {
-      const mt = store.state.mangaTrans
+      const mt = store.state.translateConfig
       return mt.providers[mt.vlProvider] || {}
     },
     isSiliconCloud() {
@@ -338,7 +342,7 @@ export default {
       const name = e.target.value
       if (!name) return
       const current = this.translationProviders[name] || {}
-      store.commit('SET_MANGA_TRANS', {
+      store.commit('SET_TRANSLATE_CONFIG', {
         provider: name,
         providers: {
           [name]: { ...current, baseUrl: name },
@@ -349,7 +353,7 @@ export default {
       const val = e.target.value
       const name = this.providerConfig.baseUrl
       const current = this.translationProviders[name] || {}
-      store.commit('SET_MANGA_TRANS', {
+      store.commit('SET_TRANSLATE_CONFIG', {
         providers: {
           [name]: { ...current, apiKey: val },
         },
@@ -358,7 +362,7 @@ export default {
     onModelChange(val) {
       const name = this.providerConfig.baseUrl
       const current = this.translationProviders[name] || {}
-      store.commit('SET_MANGA_TRANS', {
+      store.commit('SET_TRANSLATE_CONFIG', {
         providers: {
           [name]: { ...current, model: val },
         },
@@ -366,16 +370,16 @@ export default {
     },
     onVlBaseUrlChange(e) {
       const name = e.target.value
-      const current = store.state.mangaTrans.providers[name] || {}
-      store.commit('SET_MANGA_TRANS', {
+      const current = store.state.translateConfig.providers[name] || {}
+      store.commit('SET_TRANSLATE_CONFIG', {
         vlProvider: name,
         providers: { [name]: { ...current, baseUrl: name } },
       })
     },
     onVlApiKeyChange(e) {
-      const name = store.state.mangaTrans.vlProvider
-      const current = store.state.mangaTrans.providers[name] || {}
-      store.commit('SET_MANGA_TRANS', {
+      const name = store.state.translateConfig.vlProvider
+      const current = store.state.translateConfig.providers[name] || {}
+      store.commit('SET_TRANSLATE_CONFIG', {
         providers: { [name]: { ...current, apiKey: e.target.value } },
       })
     },
@@ -437,7 +441,7 @@ export default {
       }
     },
     resetModelConsent() {
-      store.commit('SET_MANGA_TRANS', { shinobuModelConsent: false })
+      store.commit('SET_TRANSLATE_CONFIG', { shinobuModelConsent: false })
       Toast.success('已重置，下次翻译将重新询问')
     },
     async clearModelCache() {

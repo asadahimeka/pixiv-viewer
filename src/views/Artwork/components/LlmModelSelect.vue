@@ -69,7 +69,7 @@ export default {
   },
   computed: {
     isManual() {
-      return store.state.mangaTrans.providers[this.baseUrl]?.modelSelMode === 'manual'
+      return store.state.translateConfig.providers[this.baseUrl]?.modelSelMode === 'manual'
     },
     filteredIds() {
       const kw = this.keyword.trim().toLowerCase()
@@ -84,8 +84,8 @@ export default {
       return id
     },
     setManual(val) {
-      const provider = store.state.mangaTrans.providers[this.baseUrl] || {}
-      store.commit('SET_MANGA_TRANS', {
+      const provider = store.state.translateConfig.providers[this.baseUrl] || {}
+      store.commit('SET_TRANSLATE_CONFIG', {
         providers: {
           [this.baseUrl]: {
             ...provider,

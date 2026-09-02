@@ -244,17 +244,17 @@ export default {
       return this.artwork?.images?.length || 0
     },
     translationEngine() {
-      return store.state.mangaTrans.engine
+      return store.state.translateConfig.engine
     },
     translationTranslator() {
-      return store.state.mangaTrans.translator || 'llm'
+      return store.state.translateConfig.translator || 'llm'
     },
     providerConfig() {
-      const { provider, providers } = store.state.mangaTrans
+      const { provider, providers } = store.state.translateConfig
       return providers[provider] || {}
     },
     vlApiConfig() {
-      const mt = store.state.mangaTrans
+      const mt = store.state.translateConfig
       return mt.providers[mt.vlProvider] || {}
     },
   },
@@ -532,7 +532,7 @@ export default {
       }
     },
     async handleTranslate(pageIndex) {
-      const engine = store.state.mangaTrans.engine
+      const engine = store.state.translateConfig.engine
       window.umami?.track('translate_manga', { engine })
 
       switch (engine) {
@@ -550,7 +550,7 @@ export default {
       }
     },
     handleClosePanel() {
-      const engine = store.state.mangaTrans.engine
+      const engine = store.state.translateConfig.engine
       if (engine === 'vl-api') {
         this.showPicTranslatePanel = false
       } else {
@@ -574,7 +574,7 @@ export default {
     },
     async handleVLRetry(pageIndex) {
       try {
-        await setCache(`pic.translate.${this.artwork.id}.${pageIndex}.${resolveVlModel(store.state.mangaTrans.vlModel)}`, null)
+        await setCache(`pic.translate.${this.artwork.id}.${pageIndex}.${resolveVlModel(store.state.translateConfig.vlModel)}`, null)
       } catch (e) {
         console.warn('Failed to clear translate cache', e)
       }
@@ -584,7 +584,7 @@ export default {
     },
     async translateByShinobu(pageIndex) {
       // 提示安装 HTTP Helper 用户脚本（一次性，仅未安装时）
-      if (!window.__httpRequest__ && !store.state.mangaTrans.helperConsent) {
+      if (!window.__httpRequest__ && !store.state.translateConfig.helperConsent) {
         const helperRes = await Dialog.confirm({
           title: '提示',
           message: '建议安装 Tampermonkey 浏览器扩展并安装 HTTP Helper 用户脚本，否则可能无法进行翻译。<br><br><p>Tampermonkey 扩展: <a href="https://www.tampermonkey.net/" target="_blank" rel="noreferrer">前往安装</a></p><p>HTTP Helper 用户脚本: <a href="https://fastly.jsdelivr.net/gh/asadahimeka/pixiv-viewer@master/public/helper/helper.user.js" target="_blank" rel="noreferrer">点击安装</a></p>',
@@ -592,11 +592,11 @@ export default {
           confirmButtonText: '知道了',
           cancelButtonText: '取消',
         }).catch(() => 'cancel')
-        if (helperRes === 'confirm') store.commit('SET_MANGA_TRANS', { helperConsent: true })
+        if (helperRes === 'confirm') store.commit('SET_TRANSLATE_CONFIG', { helperConsent: true })
         // 无论确认与否，都不阻断翻译
       }
       // 首次使用需确认下载模型（检测/OCR/去字，约 199MB）
-      if (!store.state.mangaTrans.shinobuModelConsent) {
+      if (!store.state.translateConfig.shinobuModelConsent) {
         const res = await Dialog.confirm({
           title: '模型下载确认',
           message: '首次使用 Shinobu 管线需要下载模型文件（检测/OCR/去字），约 199MB，可能需要较长时间，请耐心等待。',
@@ -604,7 +604,7 @@ export default {
           cancelButtonText: '取消',
         }).catch(() => 'cancel')
         if (res !== 'confirm') return
-        store.commit('SET_MANGA_TRANS', { shinobuModelConsent: true })
+        store.commit('SET_TRANSLATE_CONFIG', { shinobuModelConsent: true })
       }
       // SHINOBU PIPELINE path (canvas output, replaces old ONNX pipeline)
       if (this.pipelineTranslating) {
@@ -665,7 +665,7 @@ export default {
         llmBaseUrl: providerConfig.baseUrl || '',
         llmApiKey: providerConfig.apiKey || '',
         llmModel: providerConfig.model || '',
-        processMode: store.state.mangaTrans.processMode || 'translate',
+        processMode: store.state.translateConfig.processMode || 'translate',
         ocrEngine: 'paddleocr_v6_medium',
         ocrPostFilter: 'balanced',
         typesetDebug: false,
@@ -765,7 +765,7 @@ export default {
     async translateByServer(pageIndex) {
       // 服务端翻译引擎（异步 job）：POST /translate 提交 → 轮询
       // GET /translate/jobs/:id → done 后 GET .../result 取翻译 PNG → 画布 overlay
-      const { serverUrl, serverToken } = store.state.mangaTrans
+      const { serverUrl, serverToken } = store.state.translateConfig
       if (!serverUrl) {
         this.$toast('未配置服务端翻译地址')
         return
@@ -1119,7 +1119,7 @@ export default {
       // EXISTING VL-API path — keep unchanged
       this.showPicTranslatePanel = true
       this.currentTransPage = pageIndex
-      const cached = await getCachedTranslation(this.artwork.id, pageIndex, resolveVlModel(store.state.mangaTrans.vlModel))
+      const cached = await getCachedTranslation(this.artwork.id, pageIndex, resolveVlModel(store.state.translateConfig.vlModel))
       if (cached) {
         this.$set(this.picTranslations, pageIndex, cached)
         return
@@ -1148,7 +1148,7 @@ export default {
               this.$toast('翻译失败，请重试')
             }
           }
-        }, resolveVlModel(store.state.mangaTrans.vlModel), this.vlApiConfig)
+        }, resolveVlModel(store.state.translateConfig.vlModel), this.vlApiConfig)
       } catch (err) {
         console.log('translate err: ', err)
         this.$toast('翻译出错: ' + err.message)

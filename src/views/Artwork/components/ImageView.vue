@@ -258,7 +258,7 @@ export default {
         !store.state.appSetting.imgViewHorizonScroll
     },
     translationEngine() {
-      return store.state.mangaTrans.engine
+      return store.state.translateConfig.engine
     },
     showOverlay() {
       if (!this.showPicTranslateBtn) return false

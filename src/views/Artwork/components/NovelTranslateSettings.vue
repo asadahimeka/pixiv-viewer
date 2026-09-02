@@ -61,9 +61,11 @@
       <div class="engine-help">
         <van-icon name="info-o" /> 默认翻译服务选「AI 翻译」时使用以上配置；API Key 仅存储在本机浏览器。
       </div>
-      <div class="engine-help">
-        <van-icon name="info-o" /> 可<a target="_blank" rel="noopener noreferrer" href="https://cloud.siliconflow.cn/i/F5UpdO0m">点击此处</a>前往 SiliconCloud 注册后使用免费模型。
-      </div>
+      <template v-if="$store.state.scPromo.length">
+        <div v-for="p in $store.state.scPromo" :key="p[0]" class="engine-help">
+          <van-icon name="info-o" /> <a target="_blank" rel="noopener noreferrer" :href="p[0]">点击此处</a>{{ p[1] }}
+        </div>
+      </template>
       <div class="test-connection-wrap">
         <van-button size="small" plain round :loading="testLoading" loading-text="测试中..." @click="testConnection">测试连接</van-button>
       </div>
@@ -128,15 +130,15 @@ export default {
       },
     },
     novelConfig() {
-      const mt = store.state.mangaTrans
+      const mt = store.state.translateConfig
       return mt.providers[mt.novelProvider] || {}
     },
     novelModel: {
       get() {
-        return store.state.mangaTrans.novelModel
+        return store.state.translateConfig.novelModel
       },
       set(val) {
-        store.commit('SET_MANGA_TRANS', { novelModel: val })
+        store.commit('SET_TRANSLATE_CONFIG', { novelModel: val })
       },
     },
   },
@@ -144,16 +146,16 @@ export default {
     onNovelBaseUrlChange(e) {
       const name = e.target.value
       if (!name) return
-      const current = store.state.mangaTrans.providers[name] || {}
-      store.commit('SET_MANGA_TRANS', {
+      const current = store.state.translateConfig.providers[name] || {}
+      store.commit('SET_TRANSLATE_CONFIG', {
         novelProvider: name,
         providers: { [name]: { ...current, baseUrl: name } },
       })
     },
     onNovelApiKeyChange(e) {
-      const name = store.state.mangaTrans.novelProvider
-      const current = store.state.mangaTrans.providers[name] || {}
-      store.commit('SET_MANGA_TRANS', {
+      const name = store.state.translateConfig.novelProvider
+      const current = store.state.translateConfig.providers[name] || {}
+      store.commit('SET_TRANSLATE_CONFIG', {
         providers: { [name]: { ...current, apiKey: e.target.value } },
       })
     },

@@ -15,6 +15,7 @@ export const APP_API_PROXYS = process.env.VUE_APP_APP_API_PROXYS || ''
 export const COMMON_PROXY = process.env.VUE_APP_COMMON_PROXY || ''
 export const COMMON_IMAGE_PROXY = process.env.VUE_APP_COMMON_IMAGE_PROXY || COMMON_PROXY
 export const SILICON_CLOUD_BASR_URL = 'https://api.siliconflow.cn/v1'
+export const DEF_LLM_API_BASE = 'https://api.cocomi.eu.org/api/llm/v1'
 export const SERVER_TRANSLATE_URL = process.env.VUE_APP_SERVER_TRANSLATE_URL || 'https://hibiapi.cocomi.eu.org/manga'
 export const SERVER_TRANSLATE_TOKEN = process.env.VUE_APP_SERVER_TRANSLATE_TOKEN || ''
 export const ugoiraAvifSrc = id => `https://ugoira.perennialte.ch/ugoira/${id}`

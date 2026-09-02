@@ -5,7 +5,7 @@ import { getSettingDef, LocalStorage, SessionStorage } from '@/utils/storage'
 import { isSafari } from '@/utils'
 import { getSelectedLang } from '@/i18n'
 import { isArtworkNotCensored } from '@/utils/filter'
-import { SILICON_CLOUD_BASR_URL, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
+import { DEF_LLM_API_BASE, SILICON_CLOUD_BASR_URL, SERVER_TRANSLATE_URL, SERVER_TRANSLATE_TOKEN } from '@/consts'
 
 Vue.use(Vuex)
 
@@ -36,9 +36,11 @@ export default new Vuex.Store({
     isSafari: isSafari(),
     /** @type {any[]|null} */
     appNotice: null,
-    mangaTrans: {
+    /** @type {string[][]} */
+    scPromo: [],
+    translateConfig: {
       /** @type {'shinobu'|'vl-api'|'server'} */
-      engine: 'shinobu',
+      engine: 'vl-api',
       /** @type {boolean} 用户是否已同意首次下载 Shinobu 模型 */
       shinobuModelConsent: false,
       /** @type {boolean} 用户是否已知晓 HTTP Helper 用户脚本提示 */
@@ -50,9 +52,15 @@ export default new Vuex.Store({
       targetLang: 'zh-CN',
       /** @type {'google_web'|'microsoft'|'llm'} */
       translator: 'microsoft',
-      provider: SILICON_CLOUD_BASR_URL,
+      provider: DEF_LLM_API_BASE,
       /** @type {Record<string, {apiKey?: string, baseUrl?: string, model?: string, modelSelMode?: 'list'|'manual'}>} */
       providers: {
+        [DEF_LLM_API_BASE]: {
+          apiKey: '****************',
+          baseUrl: DEF_LLM_API_BASE,
+          model: 'THUDM/GLM-4-9B-0414',
+          modelSelMode: 'list',
+        },
         [SILICON_CLOUD_BASR_URL]: {
           apiKey: '',
           baseUrl: SILICON_CLOUD_BASR_URL,
@@ -61,15 +69,15 @@ export default new Vuex.Store({
         },
       },
       // VL API 引擎独立配置
-      vlProvider: SILICON_CLOUD_BASR_URL,
+      vlProvider: DEF_LLM_API_BASE,
       vlModel: 'Qwen/Qwen3.5-4B',
       // 小说翻译独立配置
-      novelProvider: SILICON_CLOUD_BASR_URL,
+      novelProvider: DEF_LLM_API_BASE,
       /** @type {string} 小说翻译完整模型 id */
       novelModel: 'tencent/Hunyuan-MT-7B',
       serverUrl: SERVER_TRANSLATE_URL,
       serverToken: SERVER_TRANSLATE_TOKEN,
-      ...getSettingDef('PXV_TRANSLATE', {}),
+      ...getSettingDef('PXV_TRANSLATE_CONFIG', {}),
     },
     /** @type {any[]|null} */
     seasonEffects: null,
@@ -228,6 +236,11 @@ export default new Vuex.Store({
     setAppNotice(state, val) {
       state.appNotice = val
     },
+    setScPromo(state, val) {
+      if (Array.isArray(val) && val.length) {
+        state.scPromo = val
+      }
+    },
     setSeasonEffects(state, val) {
       state.seasonEffects = val
     },
@@ -239,19 +252,19 @@ export default new Vuex.Store({
       state.routeHistory = val
       SessionStorage.set('PXV_ROUTE_HISTORY', val)
     },
-    SET_MANGA_TRANS(state, patch) {
-      window.umami?.track('SET_PXV_TRANSLATE', {
+    SET_TRANSLATE_CONFIG(state, patch) {
+      window.umami?.track('SET_TRANSLATE_CONFIG', {
         patch: JSON.stringify(patch, (k, v) => (k == 'apiKey' || k == 'serverToken') ? '[REDACTED]' : v),
       })
-      state.mangaTrans = {
-        ...state.mangaTrans,
+      state.translateConfig = {
+        ...state.translateConfig,
         ...patch,
         providers: {
-          ...state.mangaTrans.providers,
+          ...state.translateConfig.providers,
           ...(patch.providers || {}),
         },
       }
-      LocalStorage.set('PXV_TRANSLATE', state.mangaTrans)
+      LocalStorage.set('PXV_TRANSLATE_CONFIG', state.translateConfig)
     },
   },
   actions: {

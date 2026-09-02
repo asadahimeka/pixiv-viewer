@@ -1,4 +1,3 @@
-import { SILICON_CLOUD_BASR_URL } from '@/consts'
 import { chatCompletionStream } from '@/utils/translate/llmClient'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 
@@ -81,7 +80,7 @@ export async function callMultimodalAPIStream(imageSrc, onRead, model = DEFAULT_
 
   try {
     await chatCompletionStream({
-      baseUrl: apiConfig.baseUrl || SILICON_CLOUD_BASR_URL,
+      baseUrl: apiConfig.baseUrl,
       apiKey: apiConfig.apiKey,
       onRead: c => onRead(c.content ? { ...c, content: c.content.replace(/<\|begin_of_box\||<\|end_of_box\|>|^>+\s*/g, '') } : c),
       body,
