@@ -151,6 +151,7 @@ export async function chatCompletionStream({ baseUrl, apiKey, body, onRead, sign
     if (classifyFetchFailure(err) === 'network' && isHelperAvailable()) {
       // 油猴兜底：整包返回后一次性输出
       try {
+        delete body.stream
         const data = await helperRequest(endpoint, { method: 'POST', headers, data: body })
         const content = data?.choices?.[0]?.message?.content || ''
         if (content) onRead({ content, done: false })

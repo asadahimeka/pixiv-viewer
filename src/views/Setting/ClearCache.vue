@@ -207,7 +207,7 @@ export default {
       }
     },
     async clearPxclCache(silent) {
-      if (silent !== true && await this.showConfirm()) return
+      if (silent !== true && await this.showConfirm('确定要清理 PixivCollection 缓存吗？清理后需要重新下载收藏夹数据')) return
       window.umami?.track('clear_cache', { type: 'pxcl' })
       try {
         const pxclDb = localforage.createInstance({ name: 'pxcl-store' })

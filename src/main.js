@@ -35,7 +35,7 @@ import { getSelectedLang, i18n, initLocale } from '@/i18n'
 import { getActionMap } from '@/api/client/action'
 import { initBookmarkCache } from '@/utils/storage/siteCache'
 
-addErrorListener()
+// addErrorListener()
 setupApp()
 
 async function setupApp() {
@@ -67,18 +67,18 @@ async function setupApp() {
   }).$mount('#app')
 }
 
-function addErrorListener() {
-  Vue.config.errorHandler = function (err, vm, info) {
-    const msg = `Error: ${err.toString()}\nInfo: ${info}\nDescription: ${vm.description}\nTag: ${vm.$vnode.tag}`
-    if (msg.includes('Swiper')) return
-    window.umami?.track('vue_error', { msg })
-  }
-  window.onerror = function (ev, source, lineno, colno, error) {
-    const msg = `${ev} ${error}: ${source} ${lineno}:${colno}`
-    if (msg.includes('ResizeObserver')) return
-    window.umami?.track('global_error', { msg })
-  }
-}
+// function addErrorListener() {
+//   Vue.config.errorHandler = function (err, vm, info) {
+//     const msg = `Error: ${err.toString()}\nInfo: ${info}\nDescription: ${vm.description}\nTag: ${vm.$vnode.tag}`
+//     if (msg.includes('Swiper')) return
+//     window.umami?.track('vue_error', { msg })
+//   }
+//   window.onerror = function (ev, source, lineno, colno, error) {
+//     const msg = `${ev} ${error}: ${source} ${lineno}:${colno}`
+//     if (msg.includes('ResizeObserver')) return
+//     window.umami?.track('global_error', { msg })
+//   }
+// }
 
 async function initLocalApi() {
   const config = LocalStorage.get('PXV_CLIENT_CONFIG', {})
