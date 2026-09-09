@@ -50,7 +50,12 @@
     "records": "{0} Records",
     "session": "Cache di runtime",
     "success_tip": "Pulizia completata",
-    "title": "Cancella cache"
+    "title": "Cancella cache",
+    "cleared": "Cache svuotata",
+    "clear_fail": "Svuotamento della cache non riuscito: {0}",
+    "confirm_default": "Svuotare la cache?",
+    "confirm_pxcl": "Svuotare la cache di PixivCollection? Al termine sarà necessario scaricare di nuovo i dati dei preferiti",
+    "pxcl": "Svuota la cache di PixivCollection"
   },
   "common": {
     "ai_gen": "Generato dall'intelligenza artificiale",
@@ -80,7 +85,9 @@
     "user": "Utente",
     "view_more": "Vedi altro",
     "words": "Parole",
-    "related": "Opere correlate"
+    "related": "Opere correlate",
+    "retry": "Riprova",
+    "default": "Predefinito"
   },
   "display": {
     "ai": "Visualizzazione del lavoro generato dall'intelligenza artificiale",
@@ -95,7 +102,11 @@
     "r18_label": "Contiene nudità o descrizioni sessuali",
     "r18g": "Esposizione delle opere di R-18G",
     "r18g_label": "Contiene contenuti cruenti o disgustosi",
-    "title": "Impostazioni di visualizzazione grafica"
+    "title": "Impostazioni di visualizzazione grafica",
+    "delete_tag_title": "Elimina tag bloccato",
+    "delete_tag_confirm": "Eliminare il tag bloccato «{0}»?",
+    "delete_uid_title": "Elimina autore bloccato",
+    "delete_uid_confirm": "Eliminare l'autore bloccato «{0}»?"
   },
   "follow": {
     "fav": "Segnalibri",
@@ -120,7 +131,18 @@
   "novel": {
     "series": {
       "next": "Prossimo capitolo:",
-      "prev": "Capitolo precedente:"
+      "prev": "Capitolo precedente:",
+      "epub_btn": "EPUB (serie)",
+      "dl_btn": "Scarica EPUB della serie",
+      "dl_title": "Download della serie in corso",
+      "dl_pending": "In attesa",
+      "dl_downloading": "Download in corso",
+      "dl_done": "Completato",
+      "dl_error": "Errore",
+      "dl_generating": "Generazione EPUB in corso…",
+      "dl_failed_prefix": "Download non riuscito: ",
+      "dl_downloading_status": "Download in corso…",
+      "dl_done_toast": "Download dell'EPUB della serie completato"
     },
     "settings": {
       "text": {
@@ -138,6 +160,28 @@
         "direct_hc": "Colonne orizzontali"
       },
       "title": "Impostazioni del romanzo"
+    },
+    "export": {
+      "epub_error": "Errore durante l'esportazione dell'EPUB: {0}",
+      "pdf_error": "Errore durante l'esportazione del PDF: {0}",
+      "series_fetch_fail": "Recupero della serie non riuscito",
+      "content_fetch_fail": "Recupero del testo non riuscito",
+      "build_fail": "Generazione dell'EPUB non riuscita",
+      "meta_title": "Informazioni sull'opera",
+      "m_title": "Titolo: ",
+      "m_author": "Autore: ",
+      "m_novel_id": "ID romanzo: ",
+      "m_created": "Creato il: ",
+      "m_series": "Serie: ",
+      "m_tags": "Tag: ",
+      "m_caption": "Descrizione: ",
+      "m_stats": "Statistiche: ",
+      "m_link": "Link originale: ",
+      "stats_value": "Caratteri: {0}  Preferiti: {1}  Visualizzazioni: {2}",
+      "series_desc": "Serie: {0} (ID: {1})",
+      "series_count": " {0} parti",
+      "series_chars": " {0} caratteri",
+      "series_caption": " Descrizione: {0}"
     }
   },
   "rank": {
@@ -184,7 +228,16 @@
     "pop_preview_novel": "Anteprima del romanzo popolare",
     "seach_tag": "Cerca tag",
     "search": "Ricerca",
-    "search_user": "Cerca utente"
+    "search_user": "Cerca utente",
+    "jump": {
+      "title": "Seleziona il tipo di salto",
+      "default_title": "Salto predefinito per la ricerca numerica",
+      "ask": "Chiedi ogni volta",
+      "artwork": "ID opera",
+      "novel": "ID novel",
+      "user": "ID utente",
+      "keyword": "Parola chiave"
+    }
   },
   "sess": {
     "example": "L'ID sessione è simile a (non valido, per demo):",
@@ -389,7 +442,93 @@
       "d2": "Si prega di compilare il RefreshToken, fare riferimento al link sottostante per come ottenerlo",
       "d3": "Si prega di compilare RefreshToken",
       "d4": "RefreshToken non è valido"
-    }
+    },
+    "cant_login_msg": "<p>Non è possibile effettuare l'accesso dal sito attuale. Vai su <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> per procedere.<p>"
+  },
+  "filter": {
+    "all_age": "Tutto pubblico",
+    "landscape": "Orizzontale",
+    "portrait": "Verticale",
+    "square": "Quadrata"
+  },
+  "sync": {
+    "config_title": "Configurazione della sincronizzazione cloud",
+    "title": "☁️ Configurazione della sincronizzazione cloud",
+    "address": "Indirizzo del server di sincronizzazione",
+    "identifier": "ID di sincronizzazione",
+    "identifier_desc": "(Serve a distinguere i diversi spazi di sincronizzazione; non è collegato all'account Pixiv)",
+    "identifier_ph": "Inserisci l'ID di sincronizzazione (alfanumerico, almeno 8 caratteri)",
+    "password": "Password di crittografia",
+    "password_desc": "(Usata per crittografare i dati localmente)",
+    "password_ph": "Inserisci la password di crittografia, almeno 8 caratteri",
+    "dual_1": "L'<b>ID di sincronizzazione</b> e la <b>password di crittografia</b> determinano insieme un set di dati di sincronizzazione.",
+    "dual_2": "Se ne modifichi anche uno solo, verrai indirizzato a uno spazio di archiviazione diverso,",
+    "dual_3": "il nuovo spazio sarà vuoto oppure conterrà un altro set di dati di sincronizzazione.",
+    "dual_4": "Usa la stessa password e lo stesso ID di sincronizzazione su tutti i dispositivi.",
+    "scope_all": "Sincronizza tutto",
+    "scope_history": "Cronologia di navigazione/ricerca",
+    "scope_blocks": "Tag/autori bloccati",
+    "scope_joiner": ", ",
+    "upload_btn": "Carica sul cloud",
+    "download_btn": "Scarica dal cloud",
+    "check_btn": "Verifica stato",
+    "last_sync": "Ultima sincronizzazione: {0}",
+    "enc_title": "🔒 Note sulla crittografia",
+    "enc_1": "La password serve solo a crittografare i dati localmente nel browser e <b>non viene inviata al server</b>",
+    "enc_2": "Ogni sincronizzazione viene crittografata con AES-256; sul cloud viene archiviato solo il testo cifrato",
+    "enc_3": "Se dimentichi la password non potrai recuperare i dati: conservala con cura",
+    "priv_title": "🛡️ Avviso sulla privacy",
+    "priv_1": "I dati di sincronizzazione includono le impostazioni e la cronologia di navigazione e possono contenere credenziali sensibili come il <b>RefreshToken</b>",
+    "priv_2": "Se dai molta importanza alla privacy, si consiglia di <b>ospitare il server di sincronizzazione autonomamente</b> per avere il pieno controllo dei dati",
+    "priv_3": "L'ID di sincronizzazione serve solo a distinguere i diversi spazi di sincronizzazione, <b>non ha nulla a che fare con l'account Pixiv</b> e non viene caricato sul servizio di sincronizzazione",
+    "exp_title": "⚠️ Funzione sperimentale",
+    "exp_1": "Questa funzione di sincronizzazione è sperimentale e la sua stabilità non è garantita",
+    "exp_2": "I dati sul cloud potrebbero andare persi a causa di manutenzione o guasti",
+    "exp_3": "Si consiglia di eseguire periodicamente un backup su file locale con la funzione «Esporta impostazioni/cronologia»",
+    "data_all": "Tutti i dati",
+    "data_history": "Cronologia",
+    "data_blocks": "Configurazione dei blocchi",
+    "upload_title": "☁️ Stai per caricare i dati di sincronizzazione",
+    "upload_msg_head": "I seguenti dati verranno crittografati e caricati su <b>{0}</b>:<br><br>• <b>{1}</b><br><br>I dati verranno crittografati con AES-256; sul cloud verrà archiviato solo il testo cifrato.",
+    "upload_conflict_warn": "⚠️ Se sul cloud esistono già dati con lo stesso ID di sincronizzazione e la stessa password, {0}",
+    "upload_overwrite": "i dati precedenti verranno sovrascritti.",
+    "upload_merge": "i dati selezionati verranno uniti.",
+    "confirm_identifier": "Verifica che l'ID di sincronizzazione «<b>{0}</b>» e la password di crittografia coincidano con quelli degli altri dispositivi.",
+    "confirm_identifier_dl": "⚠️ Verifica che l'ID di sincronizzazione «<b>{0}</b>» e la password di crittografia coincidano con quelli degli altri dispositivi,<br>per assicurarti di scaricare i dati di sincronizzazione corretti.",
+    "confirm_end": "Vuoi continuare?",
+    "uploading": "Caricamento in corso...",
+    "conflict_status": "⚠️ Conflitto di sincronizzazione: sul cloud sono presenti dati più recenti ({0}); scaricali prima di caricare",
+    "conflict_toast": "Conflitto di sincronizzazione: i dati sul cloud sono più recenti",
+    "ok_status": "✅ Sincronizzazione riuscita!",
+    "upload_ok": "Caricamento riuscito",
+    "cloud_newer_title": "☁️ Rilevati dati più recenti sul cloud",
+    "cloud_newer_msg": "I dati sul cloud ({0}) sono più recenti dell'ultima sincronizzazione. Il download unirà la cronologia di navigazione e le impostazioni del cloud sovrascriveranno quelle locali. Vuoi continuare?",
+    "download_title": "☁️ Stai per scaricare i dati di sincronizzazione dal cloud",
+    "download_msg_head": "I seguenti dati verranno decrittografati con la password locale e sincronizzati:",
+    "dl_scope_all": "<b>Tutti i dati</b>: impostazioni, cronologia, configurazione dei blocchi",
+    "dl_scope_history": "<b>Cronologia di navigazione e di ricerca</b>: unita ai record del cloud eliminando i duplicati",
+    "dl_scope_blocks": "<b>Configurazione dei blocchi</b>: unita a quella del cloud (tag bloccati + autori bloccati)",
+    "downloading": "Download in corso...",
+    "no_update_status": "ℹ️ Nessun nuovo dato sul cloud",
+    "no_update_toast": "Nessun nuovo dato sul cloud",
+    "dl_ok_status": "✅ Download riuscito, aggiornamento in arrivo!",
+    "dl_ok_toast": "Download riuscito, aggiornamento in arrivo",
+    "checking": "Verifica in corso...",
+    "info_status": "ℹ️ Dati sul cloud: {0} | Dimensione: {1}KB",
+    "no_cloud_data": "ℹ️ Nessun dato sul cloud per questo ID di sincronizzazione",
+    "connect_fail": "⚠️ Impossibile connettersi al servizio di sincronizzazione",
+    "dl_http_fail": "Download non riuscito: HTTP {0}",
+    "decrypt_fail": "Decrittazione non riuscita, la password potrebbe essere errata",
+    "network_error": "Errore di rete: {0}",
+    "need_address": "Configura prima l'indirizzo del server di sincronizzazione",
+    "need_password": "Inserisci la password di crittografia",
+    "need_identifier": "Inserisci l'ID di sincronizzazione",
+    "merge_no_cloud": "Impossibile recuperare i dati dal cloud per l'unione",
+    "ul_http_fail": "Caricamento non riuscito: HTTP {0}"
+  },
+  "theme": {
+    "title": "Tema visivo",
+    "pick_desc": "Scegli il tema visivo"
   },
   "iAH7adsXaqWMXEi3TOuwS": "serie",
   "qmd5JADeSGtrvucK3TnGb": "Nascondi i manga nella pagina della classifica generale in base al tipo di opera, potrebbero esserci delle omissioni",

@@ -2,6 +2,7 @@ import CryptoJS from 'crypto-js'
 import _ from '@/lib/lodash'
 import { getCache, setCache } from '@/utils/storage/siteCache'
 import { PIXIV_NEXT_URL } from '@/consts'
+import { i18n } from '@/i18n'
 
 const STORAGE_KEY_CONFIG = 'PXV_SYNC_CONFIG'
 const STORAGE_KEY_PASSWORD = 'PXV_SYNC_PASSWORD'
@@ -289,17 +290,17 @@ class SyncManager {
 
       const res = await fetch(url, { headers: { 'X-Sync-Key': syncKey } })
       if (res.status === 304) return { ok: true, noUpdate: true }
-      if (!res.ok) return { ok: false, error: `下载失败: HTTP ${res.status}` }
+      if (!res.ok) return { ok: false, error: i18n.t('sync.dl_http_fail', [res.status]) }
 
       const data = await res.json()
       const settings = this.decrypt(data.settings, encKey)
       const history = this.decrypt(data.history, encKey)
       if (!settings || !history) {
-        return { ok: false, error: '解密失败，密码可能不正确' }
+        return { ok: false, error: i18n.t('sync.decrypt_fail') }
       }
       return { ok: true, settings, history, timestamp: data.timestamp }
     } catch (e) {
-      return { ok: false, error: `网络错误: ${e.message}` }
+      return { ok: false, error: i18n.t('sync.network_error', [e.message]) }
     }
   }
 
@@ -341,13 +342,13 @@ class SyncManager {
 
     const config = this.getConfig()
     if (!config.syncUrl) {
-      return { ok: false, error: '请先配置同步服务地址' }
+      return { ok: false, error: i18n.t('sync.need_address') }
     }
     if (!password) {
-      return { ok: false, error: '请输入加密密码' }
+      return { ok: false, error: i18n.t('sync.need_password') }
     }
     if (!syncIdentifier) {
-      return { ok: false, error: '请输入同步标识' }
+      return { ok: false, error: i18n.t('sync.need_identifier') }
     }
 
     const encKey = await this.deriveEncKey(password)
@@ -365,7 +366,7 @@ class SyncManager {
         cloudRes = await this._downloadRaw(password, syncIdentifier, true)
       }
       if (!cloudRes.ok) {
-        return { ok: false, error: cloudRes.error || '无法获取云端数据以合并' }
+        return { ok: false, error: cloudRes.error || i18n.t('sync.merge_no_cloud') }
       }
       settings = cloudRes.settings || {}
       history = cloudRes.history || { illusts: [], novels: [], users: [] }
@@ -395,7 +396,7 @@ class SyncManager {
         return { ok: false, conflict: true, error: errData.error, serverTimestamp: errData.serverTimestamp }
       }
       if (!res.ok) {
-        return { ok: false, error: `上传失败: HTTP ${res.status}` }
+        return { ok: false, error: i18n.t('sync.ul_http_fail', [res.status]) }
       }
       const data = await res.json()
       if (data.timestamp) {
@@ -403,7 +404,7 @@ class SyncManager {
       }
       return { ok: true, timestamp: data.timestamp }
     } catch (e) {
-      return { ok: false, error: `网络错误: ${e.message}` }
+      return { ok: false, error: i18n.t('sync.network_error', [e.message]) }
     }
   }
 
@@ -413,13 +414,13 @@ class SyncManager {
 
     const config = this.getConfig()
     if (!config.syncUrl) {
-      return { ok: false, error: '请先配置同步服务地址' }
+      return { ok: false, error: i18n.t('sync.need_address') }
     }
     if (!password) {
-      return { ok: false, error: '请输入加密密码' }
+      return { ok: false, error: i18n.t('sync.need_password') }
     }
     if (!syncIdentifier) {
-      return { ok: false, error: '请输入同步标识' }
+      return { ok: false, error: i18n.t('sync.need_identifier') }
     }
 
     const encKey = await this.deriveEncKey(password)
@@ -438,7 +439,7 @@ class SyncManager {
         return { ok: true, noUpdate: true }
       }
       if (!res.ok) {
-        return { ok: false, error: `下载失败: HTTP ${res.status}` }
+        return { ok: false, error: i18n.t('sync.dl_http_fail', [res.status]) }
       }
       const data = await res.json()
 
@@ -446,7 +447,7 @@ class SyncManager {
       const history = this.decrypt(data.history, encKey)
 
       if (!settings || !history) {
-        return { ok: false, error: '解密失败，密码可能不正确' }
+        return { ok: false, error: i18n.t('sync.decrypt_fail') }
       }
 
       if (all) {
@@ -469,7 +470,7 @@ class SyncManager {
 
       return { ok: true, timestamp: data.timestamp }
     } catch (e) {
-      return { ok: false, error: `网络错误: ${e.message}` }
+      return { ok: false, error: i18n.t('sync.network_error', [e.message]) }
     }
   }
 

@@ -50,7 +50,12 @@
     "session": "런타임 캐시",
     "success_tip": "정리 완료",
     "title": "캐시 지우기",
-    "mem": "사용된 메모리"
+    "mem": "사용된 메모리",
+    "cleared": "캐시가 삭제되었습니다",
+    "clear_fail": "캐시 삭제 실패: {0}",
+    "confirm_default": "캐시를 삭제하시겠습니까?",
+    "confirm_pxcl": "PixivCollection 캐시를 삭제하시겠습니까? 삭제 후에는 북마크 데이터를 다시 다운로드해야 합니다",
+    "pxcl": "PixivCollection 캐시 삭제"
   },
   "common": {
     "ai_gen": "AI 생성",
@@ -80,7 +85,9 @@
     "words": "글자",
     "date": "날짜",
     "reset": "초기화",
-    "save": "구하다"
+    "save": "구하다",
+    "retry": "다시 시도",
+    "default": "기본값"
   },
   "display": {
     "ai": "AI 생성 작품 전시",
@@ -95,7 +102,11 @@
     "block_tags": "태그 블랙리스트",
     "block_tags_ph": "태그를 쉼표로 구분하여 입력하세요.",
     "block_uids": "아티스트 블랙리스트",
-    "block_uids_ph": "아티스트 ID를 쉼표로 구분하여 입력하세요."
+    "block_uids_ph": "아티스트 ID를 쉼표로 구분하여 입력하세요.",
+    "delete_tag_title": "차단된 태그 삭제",
+    "delete_tag_confirm": "차단된 태그 ‘{0}’을(를) 삭제하시겠습니까?",
+    "delete_uid_title": "차단된 작가 삭제",
+    "delete_uid_confirm": "차단된 작가 ‘{0}’을(를) 삭제하시겠습니까?"
   },
   "history": {
     "confirm": {
@@ -114,7 +125,18 @@
   "novel": {
     "series": {
       "next": "시모이치 :",
-      "prev": "이전 단어:"
+      "prev": "이전 단어:",
+      "epub_btn": "EPUB(시리즈)",
+      "dl_btn": "시리즈 EPUB 다운로드",
+      "dl_title": "시리즈 다운로드 중",
+      "dl_pending": "대기 중",
+      "dl_downloading": "다운로드 중",
+      "dl_done": "완료",
+      "dl_error": "실패",
+      "dl_generating": "EPUB 생성 중…",
+      "dl_failed_prefix": "다운로드 실패: ",
+      "dl_downloading_status": "다운로드 중…",
+      "dl_done_toast": "시리즈 EPUB 다운로드 완료"
     },
     "settings": {
       "text": {
@@ -132,6 +154,28 @@
         "direct_hc": "수평 기둥"
       },
       "title": "소설 설정"
+    },
+    "export": {
+      "epub_error": "EPUB 내보내기 오류: {0}",
+      "pdf_error": "PDF 내보내기 오류: {0}",
+      "series_fetch_fail": "시리즈를 가져오지 못했습니다",
+      "content_fetch_fail": "본문을 가져오지 못했습니다",
+      "build_fail": "EPUB 생성에 실패했습니다",
+      "meta_title": "작품 정보",
+      "m_title": "제목: ",
+      "m_author": "작가: ",
+      "m_novel_id": "소설 ID: ",
+      "m_created": "생성 시각: ",
+      "m_series": "시리즈: ",
+      "m_tags": "태그: ",
+      "m_caption": "소개: ",
+      "m_stats": "통계: ",
+      "m_link": "원본 링크: ",
+      "stats_value": "글자 수: {0}  북마크: {1}  조회수: {2}",
+      "series_desc": "시리즈: {0} (ID: {1})",
+      "series_count": " {0}편",
+      "series_chars": " {0}자",
+      "series_caption": " 소개: {0}"
     }
   },
   "rank": {
@@ -178,6 +222,15 @@
       "exact": "태그에 대한 정확한 일치",
       "partial": "태그 부분 일치",
       "title": "제목과 캡션"
+    },
+    "jump": {
+      "title": "이동 유형 선택",
+      "default_title": "숫자 검색 기본 이동 유형",
+      "ask": "매번 묻기",
+      "artwork": "일러스트 ID",
+      "novel": "소설 ID",
+      "user": "사용자 ID",
+      "keyword": "검색어"
     }
   },
   "setting": {
@@ -389,7 +442,93 @@
       "d2": "RefreshToken을 입력하세요. 획득 방법은 아래 링크를 참조하세요.",
       "d3": "RefreshToken을 입력하세요.",
       "d4": "RefreshToken의 형식이 잘못되었습니다."
-    }
+    },
+    "cant_login_msg": "<p>현재 사이트에서는 로그인할 수 없습니다. <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a>에서 로그인해 주세요.<p>"
+  },
+  "filter": {
+    "all_age": "전체 연령",
+    "landscape": "가로 그림",
+    "portrait": "세로 그림",
+    "square": "정사각형 그림"
+  },
+  "sync": {
+    "config_title": "클라우드 동기화 설정",
+    "title": "☁️ 클라우드 동기화 설정",
+    "address": "동기화 서버 주소",
+    "identifier": "동기화 ID",
+    "identifier_desc": "(다른 동기화 공간을 구분하는 데 사용되며, Pixiv 계정과는 무관합니다)",
+    "identifier_ph": "동기화 ID를 입력하세요 (영숫자, 8자 이상)",
+    "password": "암호화 비밀번호",
+    "password_desc": "(데이터를 로컬로 암호화하는 데 사용)",
+    "password_ph": "암호화 비밀번호를 입력하세요 (8자 이상)",
+    "dual_1": "<b>동기화 ID</b>와 <b>암호화 비밀번호</b>가 함께 하나의 동기화 데이터를 결정합니다.",
+    "dual_2": "이 중 하나라도 변경하면 다른 저장 공간으로 연결되며,",
+    "dual_3": "새 위치에는 데이터가 없거나 다른 동기화 데이터가 있을 수 있습니다.",
+    "dual_4": "모든 기기에서 동일한 비밀번호와 동기화 ID로 동기화해 주세요.",
+    "scope_all": "전체 동기화",
+    "scope_history": "열람/검색 기록",
+    "scope_blocks": "태그/작가 차단",
+    "scope_joiner": ", ",
+    "upload_btn": "클라우드에 업로드",
+    "download_btn": "클라우드에서 다운로드",
+    "check_btn": "상태 확인",
+    "last_sync": "마지막 동기화: {0}",
+    "enc_title": "🔒 암호화 안내",
+    "enc_1": "비밀번호는 브라우저에서 데이터를 로컬로 암호화하는 데만 사용되며, <b>서버로 전송되지 않습니다</b>",
+    "enc_2": "모든 동기화는 AES-256으로 암호화되며, 클라우드에는 암호문만 저장됩니다",
+    "enc_3": "비밀번호를 잊으면 데이터를 복구할 수 없으므로 안전하게 보관해 주세요",
+    "priv_title": "🛡️ 개인정보 안내",
+    "priv_1": "동기화 데이터에는 설정과 열람 기록이 포함되며, <b>RefreshToken</b> 등 민감한 인증 정보가 포함될 수 있습니다",
+    "priv_2": "개인정보 보호를 중요하게 생각한다면, 데이터를 완전히 관리할 수 있도록 <b>동기화 서버를 직접 구축</b>하는 것을 권장합니다",
+    "priv_3": "동기화 ID는 다른 동기화 공간을 구분하는 용도일 뿐이며, <b>Pixiv 계정과는 무관</b>하고 동기화 서버로 업로드되지 않습니다",
+    "exp_title": "⚠️ 실험적 기능",
+    "exp_1": "이 동기화 기능은 실험적이며 안정적인 동작을 보장하지 않습니다",
+    "exp_2": "클라우드 데이터는 유지보수나 장애로 인해 유실될 수 있습니다",
+    "exp_3": "‘설정/기록 내보내기’ 기능을 사용해 주기적으로 로컬 파일에 백업하는 것을 권장합니다",
+    "data_all": "전체 데이터",
+    "data_history": "기록",
+    "data_blocks": "차단 설정",
+    "upload_title": "☁️ 동기화 데이터 업로드",
+    "upload_msg_head": "다음 데이터를 암호화하여 <b>{0}</b>에 업로드합니다:<br><br>• <b>{1}</b><br><br>데이터는 AES-256으로 암호화되며, 클라우드에는 암호문만 저장됩니다.",
+    "upload_conflict_warn": "⚠️ 클라우드에 동일한 동기화 ID+비밀번호의 데이터가 이미 있는 경우, {0}",
+    "upload_overwrite": "기존 데이터를 덮어씁니다.",
+    "upload_merge": "선택한 데이터를 병합합니다.",
+    "confirm_identifier": "동기화 ID ‘<b>{0}</b>’와 암호화 비밀번호가 다른 기기의 것과 일치하는지 확인해 주세요.",
+    "confirm_identifier_dl": "⚠️ 동기화 ID ‘<b>{0}</b>’와 암호화 비밀번호가 다른 기기의 것과 일치하는지 확인해 주세요.<br>그래야 올바른 동기화 데이터를 다운로드할 수 있습니다.",
+    "confirm_end": "계속하시겠습니까?",
+    "uploading": "업로드 중...",
+    "conflict_status": "⚠️ 동기화 충돌: 클라우드에 더 최신 데이터({0})가 있습니다. 먼저 다운로드한 후 업로드해 주세요",
+    "conflict_toast": "동기화 충돌: 클라우드 데이터가 더 최신입니다",
+    "ok_status": "✅ 동기화 성공!",
+    "upload_ok": "업로드 성공",
+    "cloud_newer_title": "☁️ 클라우드 업데이트 감지",
+    "cloud_newer_msg": "클라우드 데이터({0})가 마지막 동기화보다 최신입니다. 다운로드 시 열람 기록은 병합되며, 클라우드 설정이 로컬 설정을 덮어씁니다. 계속하시겠습니까?",
+    "download_title": "☁️ 클라우드에서 동기화 데이터 다운로드",
+    "download_msg_head": "로컬 비밀번호로 복호화하여 다음 데이터를 동기화합니다:",
+    "dl_scope_all": "<b>전체 데이터</b>: 설정, 기록, 차단 설정",
+    "dl_scope_history": "<b>열람 기록 및 검색 기록</b>: 클라우드 기록과 병합하여 중복 제거",
+    "dl_scope_blocks": "<b>차단 설정</b>: 클라우드와 병합 (태그 차단 + 작가 차단)",
+    "downloading": "다운로드 중...",
+    "no_update_status": "ℹ️ 클라우드에 새 데이터 없음",
+    "no_update_toast": "클라우드에 새 데이터 없음",
+    "dl_ok_status": "✅ 다운로드 성공, 곧 새로고칩니다!",
+    "dl_ok_toast": "다운로드 성공, 곧 새로고칩니다",
+    "checking": "확인 중...",
+    "info_status": "ℹ️ 클라우드 데이터: {0} | 크기: {1}KB",
+    "no_cloud_data": "ℹ️ 해당 동기화 ID에는 클라우드 데이터가 없습니다",
+    "connect_fail": "⚠️ 동기화 서버에 연결할 수 없습니다",
+    "dl_http_fail": "다운로드 실패: HTTP {0}",
+    "decrypt_fail": "복호화에 실패했습니다. 비밀번호가 틀렸을 수 있습니다",
+    "network_error": "네트워크 오류: {0}",
+    "need_address": "동기화 서버 주소를 먼저 설정해 주세요",
+    "need_password": "암호화 비밀번호를 입력해 주세요",
+    "need_identifier": "동기화 ID를 입력해 주세요",
+    "merge_no_cloud": "병합할 클라우드 데이터를 가져올 수 없습니다",
+    "ul_http_fail": "업로드 실패: HTTP {0}"
+  },
+  "theme": {
+    "title": "비주얼 테마",
+    "pick_desc": "비주얼 테마 선택"
   },
   "iAH7adsXaqWMXEi3TOuwS": "시리즈",
   "qmd5JADeSGtrvucK3TnGb": "작품 종류에 따라 전체 순위 목록 페이지에서 만화를 숨기거나 누락된 부분이 있을 수 있습니다.",

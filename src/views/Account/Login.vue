@@ -76,7 +76,7 @@ export default {
       if (showKey == 'showConfirmDialog' && !['pixiv.pictures', 'pxve.cc'].includes(location.hostname)) {
         Dialog.alert({
           title: this.$t('tips.tip'),
-          message: '<p>当前站点无法进行登录，请前往 <a href="https://pixiv.pictures" target="_blank">https://pixiv.pictures</a> 进行操作。<p>',
+          message: this.$t('login.cant_login_msg'),
           cancelButtonText: this.$t('common.cancel'),
           confirmButtonText: this.$t('common.confirm'),
         })

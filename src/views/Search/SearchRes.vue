@@ -173,7 +173,7 @@
     </div>
     <van-dialog
       v-model="showNumberDialog"
-      title="选择跳转类型"
+      :title="$t('search.jump.title')"
       :show-confirm-button="false"
       close-on-click-overlay
     >
@@ -310,10 +310,10 @@ export default {
       showNumberDialog: false,
       pendingNumber: '',
       numberDialogActions: [
-        { name: '作品ID', value: 'artwork' },
-        { name: '小说ID', value: 'novel' },
-        { name: '用户ID', value: 'user' },
-        { name: '搜索关键词', value: 'keyword' },
+        { name: this.$t('search.jump.artwork'), value: 'artwork' },
+        { name: this.$t('search.jump.novel'), value: 'novel' },
+        { name: this.$t('search.jump.user'), value: 'user' },
+        { name: this.$t('search.jump.keyword'), value: 'keyword' },
       ],
     }
   },

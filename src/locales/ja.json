@@ -27,7 +27,9 @@
     "confirm": "確認",
     "date": "日付",
     "reset": "リセット",
-    "save": "保存"
+    "save": "保存",
+    "retry": "再試行",
+    "default": "デフォルト"
   },
   "about": {
     "disclaimer": "免責事項",
@@ -80,7 +82,12 @@
     "session": "ランタイムキャッシュ",
     "success_tip": "クリーンアップ完了",
     "title": "キャッシュの消去",
-    "mem": "使用メモリ"
+    "mem": "使用メモリ",
+    "cleared": "キャッシュを削除しました",
+    "clear_fail": "キャッシュの削除に失敗しました: {0}",
+    "confirm_default": "キャッシュを削除しますか？",
+    "confirm_pxcl": "PixivCollectionのキャッシュを削除しますか？削除後はブックマークデータを再ダウンロードする必要があります",
+    "pxcl": "PixivCollectionのキャッシュを削除"
   },
   "display": {
     "ai": "AI生成作品展示",
@@ -95,7 +102,11 @@
     "block_tags": "タグのブラックリスト",
     "block_tags_ph": "タグをコンマで区切って入力してください",
     "block_uids": "アーティストのブラックリスト",
-    "block_uids_ph": "アーティスト ID をカンマで区切って入力してください"
+    "block_uids_ph": "アーティスト ID をカンマで区切って入力してください",
+    "delete_tag_title": "ブロックタグの削除",
+    "delete_tag_confirm": "ブロックタグ「{0}」を削除しますか？",
+    "delete_uid_title": "ブロックしたユーザーの削除",
+    "delete_uid_confirm": "ブロックしたユーザー「{0}」を削除しますか？"
   },
   "history": {
     "confirm": {
@@ -114,7 +125,18 @@
   "novel": {
     "series": {
       "next": "下一话:",
-      "prev": "上一话："
+      "prev": "上一话：",
+      "epub_btn": "EPUB(シリーズ)",
+      "dl_btn": "シリーズEPUBをダウンロード",
+      "dl_title": "シリーズをダウンロード中",
+      "dl_pending": "待機",
+      "dl_downloading": "ダウンロード中",
+      "dl_done": "完了",
+      "dl_error": "失敗",
+      "dl_generating": "EPUBを生成中…",
+      "dl_failed_prefix": "ダウンロードに失敗しました：",
+      "dl_downloading_status": "ダウンロード中…",
+      "dl_done_toast": "シリーズEPUBのダウンロードが完了しました"
     },
     "settings": {
       "text": {
@@ -132,6 +154,28 @@
         "direct_hc": "水平列"
       },
       "title": "小説設定"
+    },
+    "export": {
+      "epub_error": "EPUBのエクスポート中にエラーが発生しました：{0}",
+      "pdf_error": "PDFのエクスポート中にエラーが発生しました：{0}",
+      "series_fetch_fail": "シリーズの取得に失敗しました",
+      "content_fetch_fail": "本文の取得に失敗しました",
+      "build_fail": "EPUBの生成に失敗しました",
+      "meta_title": "作品情報",
+      "m_title": "タイトル：",
+      "m_author": "作者：",
+      "m_novel_id": "小説ID：",
+      "m_created": "作成日時：",
+      "m_series": "シリーズ：",
+      "m_tags": "タグ：",
+      "m_caption": "あらすじ：",
+      "m_stats": "統計：",
+      "m_link": "元リンク：",
+      "stats_value": "文字数：{0}  ブックマーク：{1}  閲覧数：{2}",
+      "series_desc": "シリーズ：{0} (ID: {1})",
+      "series_count": " 全{0}話",
+      "series_chars": " {0}文字",
+      "series_caption": " あらすじ：{0}"
     }
   },
   "rank": {
@@ -178,6 +222,15 @@
       "exact": "タグの完全一致",
       "partial": "タグの部分一致",
       "title": "タイトルとキャプション"
+    },
+    "jump": {
+      "title": "ジャンプ先の種類を選択",
+      "default_title": "検索で数字を入力した際の既定のジャンプ先",
+      "ask": "毎回確認する",
+      "artwork": "作品ID",
+      "novel": "小説ID",
+      "user": "ユーザーID",
+      "keyword": "検索キーワード"
     }
   },
   "setting": {
@@ -389,7 +442,93 @@
       "d2": "RefreshToken を入力してください。取得方法については、以下のリンクを参照してください。",
       "d3": "RefreshToken を入力してください",
       "d4": "RefreshToken の形式が不正です"
-    }
+    },
+    "cant_login_msg": "<p>現在のサイトではログインできません。<a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> からログインしてください。<p>"
+  },
+  "filter": {
+    "all_age": "全年齢",
+    "landscape": "横図",
+    "portrait": "縦図",
+    "square": "正方形"
+  },
+  "sync": {
+    "config_title": "クラウド同期設定",
+    "title": "☁️ クラウド同期設定",
+    "address": "同期サーバーのアドレス",
+    "identifier": "同期ID",
+    "identifier_desc": "（異なる保存領域を区別するための識別子です。Pixivアカウントとは無関係です）",
+    "identifier_ph": "同期IDを入力（半角英数字、8文字以上）",
+    "password": "暗号化パスワード",
+    "password_desc": "（データのローカル暗号化に使用します）",
+    "password_ph": "暗号化パスワードを入力（8文字以上）",
+    "dual_1": "<b>同期ID</b>と<b>暗号化パスワード</b>の組み合わせで、同期データが一意に決まります。",
+    "dual_2": "いずれか一方を変更すると、別の保存領域に切り替わり、",
+    "dual_3": "その領域にはデータが存在しないか、別の同期データが保存されています。",
+    "dual_4": "すべてのデバイスで同じパスワードと同期IDを使用して同期してください。",
+    "scope_all": "すべて同期",
+    "scope_history": "閲覧/検索履歴",
+    "scope_blocks": "タグ/ユーザーブロック",
+    "scope_joiner": "、",
+    "upload_btn": "クラウドへアップロード",
+    "download_btn": "クラウドからダウンロード",
+    "check_btn": "状態を確認",
+    "last_sync": "前回の同期: {0}",
+    "enc_title": "🔒 暗号化について",
+    "enc_1": "パスワードはブラウザ内でデータを暗号化するためだけに使用され、<b>サーバーには送信されません</b>",
+    "enc_2": "同期のたびにAES-256で暗号化され、クラウドには暗号文のみが保存されます",
+    "enc_3": "パスワードを忘れるとデータを復元できません。大切に保管してください",
+    "priv_title": "🛡️ プライバシーに関する注意",
+    "priv_1": "同期データには設定と閲覧履歴が含まれており、<b>RefreshToken</b> などの機密性の高い認証情報が含まれる場合があります",
+    "priv_2": "プライバシーを特に重視する場合は、データを完全に管理できるよう<b>同期サービスを自身で構築する</b>ことをおすすめします",
+    "priv_3": "同期IDは異なる保存領域を区別するためだけのものであり、<b>Pixivアカウントとは無関係</b>で、同期サービスにはアップロードされません",
+    "exp_title": "⚠️ 実験的機能",
+    "exp_1": "この同期機能は実験的なものであり、安定した動作は保証されません",
+    "exp_2": "クラウド上のデータはメンテナンスや障害により失われる可能性があります",
+    "exp_3": "「設定/履歴のエクスポート」機能で定期的にローカルファイルへバックアップすることをおすすめします",
+    "data_all": "すべてのデータ",
+    "data_history": "履歴データ",
+    "data_blocks": "ブロック設定",
+    "upload_title": "☁️ 同期データをアップロードします",
+    "upload_msg_head": "以下のデータを暗号化して <b>{0}</b> にアップロードします：<br><br>• <b>{1}</b><br><br>データはAES-256で暗号化され、クラウドには暗号文のみが保存されます。",
+    "upload_conflict_warn": "⚠️ クラウドに同じ同期ID+パスワードのデータが既に存在する場合、{0}",
+    "upload_overwrite": "既存のデータは上書きされます。",
+    "upload_merge": "選択したデータがマージされます。",
+    "confirm_identifier": "同期ID「<b>{0}</b>」と暗号化パスワードが、他のデバイスと一致していることをご確認ください。",
+    "confirm_identifier_dl": "⚠️ 同期ID「<b>{0}</b>」と暗号化パスワードが、他のデバイスと一致していることをご確認ください。<br>正しい同期データをダウンロードするために必要です。",
+    "confirm_end": "続行しますか？",
+    "uploading": "アップロード中...",
+    "conflict_status": "⚠️ 同期の競合：クラウドにより新しいデータがあります（{0}）。先にダウンロードしてからアップロードしてください",
+    "conflict_toast": "同期の競合：クラウドのデータが新しいです",
+    "ok_status": "✅ 同期に成功しました！",
+    "upload_ok": "アップロードに成功しました",
+    "cloud_newer_title": "☁️ クラウドの更新を検出",
+    "cloud_newer_msg": "クラウドのデータ（{0}）は前回の同期よりも新しいです。ダウンロードすると閲覧履歴はマージされ、クラウドの設定がローカルの設定を上書きします。続行しますか？",
+    "download_title": "☁️ クラウドから同期データをダウンロードします",
+    "download_msg_head": "ローカルのパスワードで復号し、以下のデータを同期します：",
+    "dl_scope_all": "<b>すべてのデータ</b>：設定、履歴、ブロック設定",
+    "dl_scope_history": "<b>閲覧履歴と検索履歴</b>：クラウドの記録とマージして重複を除外します",
+    "dl_scope_blocks": "<b>ブロック設定</b>：クラウドとマージします（タグブロック + ユーザーブロック）",
+    "downloading": "ダウンロード中...",
+    "no_update_status": "ℹ️ クラウドに新しいデータはありません",
+    "no_update_toast": "クラウドに新しいデータはありません",
+    "dl_ok_status": "✅ ダウンロードに成功しました！まもなく再読み込みします",
+    "dl_ok_toast": "ダウンロードに成功しました。まもなく再読み込みします",
+    "checking": "確認中...",
+    "info_status": "ℹ️ クラウドのデータ: {0} | サイズ: {1}KB",
+    "no_cloud_data": "ℹ️ この同期IDのクラウドデータはありません",
+    "connect_fail": "⚠️ 同期サービスに接続できません",
+    "dl_http_fail": "ダウンロードに失敗しました: HTTP {0}",
+    "decrypt_fail": "復号に失敗しました。パスワードが間違っている可能性があります",
+    "network_error": "ネットワークエラー: {0}",
+    "need_address": "先に同期サーバーのアドレスを設定してください",
+    "need_password": "暗号化パスワードを入力してください",
+    "need_identifier": "同期IDを入力してください",
+    "merge_no_cloud": "マージ用のクラウドデータを取得できませんでした",
+    "ul_http_fail": "アップロードに失敗しました: HTTP {0}"
+  },
+  "theme": {
+    "title": "ビジュアルテーマ",
+    "pick_desc": "ビジュアルテーマを選択"
   },
   "iAH7adsXaqWMXEi3TOuwS": "シリーズ",
   "qmd5JADeSGtrvucK3TnGb": "総合ランキング一覧ページの漫画を作品の種類に応じて非表示にします、一部漏れがある場合があります",

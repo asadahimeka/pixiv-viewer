@@ -1,7 +1,7 @@
 <template>
   <van-dialog
     width="9rem"
-    title="☁️ 云同步配置"
+    :title="$t('sync.title')"
     :value="value"
     :show-confirm-button="false"
     :close-on-click-overlay="true"
@@ -11,7 +11,7 @@
     <div class="sync-dialog-body">
       <!-- 同步服务地址 -->
       <div class="sync-field-group">
-        <label class="sync-label">同步服务地址</label>
+        <label class="sync-label">{{ $t('sync.address') }}</label>
         <van-field
           v-model="syncUrl"
           placeholder="https://your-api.example.com/api/sync"
@@ -23,13 +23,13 @@
       <!-- 同步标识 -->
       <div class="sync-field-group">
         <label class="sync-label">
-          同步标识
-          <span class="sync-label-desc">（用于区分不同的同步空间，与 Pixiv 账户无关）</span>
+          {{ $t('sync.identifier') }}
+          <span class="sync-label-desc">{{ $t('sync.identifier_desc') }}</span>
         </label>
         <van-field
           v-model="syncIdentifier"
           type="text"
-          placeholder="输入同步标识（字母数字，至少8位）"
+          :placeholder="$t('sync.identifier_ph')"
           :disabled="loading"
         />
       </div>
@@ -37,13 +37,13 @@
       <!-- 加密密码 -->
       <div class="sync-field-group">
         <label class="sync-label">
-          加密密码
-          <span class="sync-label-desc">（用于本地加密数据）</span>
+          {{ $t('sync.password') }}
+          <span class="sync-label-desc">{{ $t('sync.password_desc') }}</span>
         </label>
         <van-field
           v-model="password"
           :type="showPassword ? 'text' : 'password'"
-          placeholder="输入加密密码，至少8位"
+          :placeholder="$t('sync.password_ph')"
           :disabled="loading"
           :right-icon="showPassword ? 'eye-o' : 'closed-eye'"
           @click-right-icon="showPassword = !showPassword"
@@ -53,33 +53,28 @@
       <!-- 双输入提示条 -->
       <div class="sync-blue-notice">
         <span class="sync-blue-notice-icon">📌</span>
-        <div class="sync-blue-notice-text">
-          <b>同步标识</b>与<b>加密密码</b>共同确定一份同步数据。<br>
-          更改其中任何一个，都将定位到不同的存储空间，<br>
-          新位置将没有数据，或为另一份同步数据。<br>
-          请在所有设备上使用相同的密码和标识进行同步。
-        </div>
+        <div class="sync-blue-notice-text" v-html="dualNoticeText"></div>
       </div>
 
       <!-- 同步范围 -->
       <div class="sync-scope">
         <van-checkbox-group v-model="syncScope">
           <van-checkbox name="all" shape="round" @change="onScopeChangeAll">
-            全部同步
+            {{ $t('sync.scope_all') }}
           </van-checkbox>
           <van-checkbox
             name="history"
             shape="round"
             :disabled="syncScope.includes('all')"
           >
-            浏览/搜索历史
+            {{ $t('sync.scope_history') }}
           </van-checkbox>
           <van-checkbox
             name="blocks"
             shape="round"
             :disabled="syncScope.includes('all')"
           >
-            标签/作者屏蔽
+            {{ $t('sync.scope_blocks') }}
           </van-checkbox>
         </van-checkbox-group>
       </div>
@@ -93,7 +88,7 @@
           :disabled="!isPasswordValid || !isSyncIdentifierValid || loading"
           @click="onUpload"
         >
-          上传到云端
+          {{ $t('sync.upload_btn') }}
         </van-button>
         <van-button
           type="primary"
@@ -102,7 +97,7 @@
           :disabled="!isPasswordValid || !isSyncIdentifierValid || loading"
           @click="onDownload"
         >
-          从云端下载
+          {{ $t('sync.download_btn') }}
         </van-button>
         <van-button
           size="small"
@@ -110,7 +105,7 @@
           :disabled="!isPasswordValid || !isSyncIdentifierValid || loading"
           @click="onCheckInfo"
         >
-          查询状态
+          {{ $t('sync.check_btn') }}
         </van-button>
       </div>
 
@@ -119,33 +114,33 @@
         {{ statusText }}
       </div>
       <div v-if="lastSyncText" class="sync-status sync-status-muted">
-        上次同步: {{ lastSyncText }}
+        {{ $t('sync.last_sync', [lastSyncText]) }}
       </div>
 
       <!-- 安全提示 -->
       <div class="sync-notice">
         <div class="sync-notice-section">
-          <strong>🔒 加密说明</strong>
+          <strong>{{ $t('sync.enc_title') }}</strong>
           <ul>
-            <li>密码仅用于在浏览器本地加密您的数据，<b>不会被发送到服务器</b></li>
-            <li>每次同步均使用 AES-256 加密，云端仅存储密文</li>
-            <li>忘记密码将无法恢复数据，请妥善保管</li>
+            <li v-html="$t('sync.enc_1')"></li>
+            <li v-html="$t('sync.enc_2')"></li>
+            <li v-html="$t('sync.enc_3')"></li>
           </ul>
         </div>
         <div class="sync-notice-section">
-          <strong>🛡️ 隐私提醒</strong>
+          <strong>{{ $t('sync.priv_title') }}</strong>
           <ul>
-            <li>同步数据包含您的设置与浏览历史，其中可能含有 <b>RefreshToken</b> 等敏感凭据</li>
-            <li>如对隐私有较高要求，建议<b>自行部署同步服务</b>以完全掌控数据</li>
-            <li>同步标识仅用于区分不同的同步空间，<b>与 Pixiv 账户无关</b>，不会上传到同步服务</li>
+            <li v-html="$t('sync.priv_1')"></li>
+            <li v-html="$t('sync.priv_2')"></li>
+            <li v-html="$t('sync.priv_3')"></li>
           </ul>
         </div>
         <div class="sync-notice-section sync-notice-experimental">
-          <strong>⚠️ 实验性功能</strong>
+          <strong>{{ $t('sync.exp_title') }}</strong>
           <ul>
-            <li>此同步功能为实验性，不保证稳定可用</li>
-            <li>云端数据可能因维护或故障而遗失</li>
-            <li>建议定期使用「导出设置/历史」功能备份到本地文件</li>
+            <li v-html="$t('sync.exp_1')"></li>
+            <li v-html="$t('sync.exp_2')"></li>
+            <li v-html="$t('sync.exp_3')"></li>
           </ul>
         </div>
       </div>
@@ -189,6 +184,11 @@ export default {
     isSyncIdentifierValid() {
       return /^[a-zA-Z0-9]{8,}$/.test(this.syncIdentifier)
     },
+    dualNoticeText() {
+      return ['sync.dual_1', 'sync.dual_2', 'sync.dual_3', 'sync.dual_4']
+        .map(key => this.$t(key))
+        .join('<br>')
+    },
     syncOptions() {
       const all = this.syncScope.includes('all')
       return {
@@ -207,12 +207,18 @@ export default {
     async onUpload() {
       window.umami?.track('settings-sync-upload')
       const scopeLabel = this.syncScope.includes('all')
-        ? '全部数据'
-        : [this.syncScope.includes('history') ? '历史记录' : '',
-            this.syncScope.includes('blocks') ? '屏蔽配置' : ''].filter(Boolean).join('、')
-      const message = `将以下数据加密后上传至 <b>${this.syncUrl}</b>：<br><br>• <b>${scopeLabel}</b><br><br>数据将使用 AES-256 加密，云端仅存储密文。<br><br>⚠️ 如果云端已有相同同步标识+密码的数据，${this.syncScope.includes('all') ? '则将覆盖旧数据。' : '则将合并所选数据。'}<br>请确认您的同步标识「<b>${this.syncIdentifier}</b>」与加密密码与其他设备一致。<br>是否继续？`
+        ? this.$t('sync.data_all')
+        : [this.syncScope.includes('history') ? this.$t('sync.data_history') : '',
+            this.syncScope.includes('blocks') ? this.$t('sync.data_blocks') : ''].filter(Boolean).join(this.$t('sync.scope_joiner'))
+      const conflictText = this.syncScope.includes('all') ? this.$t('sync.upload_overwrite') : this.$t('sync.upload_merge')
+      const message = [
+        this.$t('sync.upload_msg_head', [this.syncUrl, scopeLabel]),
+        this.$t('sync.upload_conflict_warn', [conflictText]),
+        this.$t('sync.confirm_identifier', [this.syncIdentifier]),
+        this.$t('sync.confirm_end'),
+      ].join('<br>')
       const confirmed = await Dialog.confirm({
-        title: '☁️ 即将上传同步数据',
+        title: this.$t('sync.upload_title'),
         message,
         messageAlign: 'left',
       }).catch(() => false)
@@ -222,17 +228,17 @@ export default {
       this.saveConfig()
       this.loading = true
       this.action = 'upload'
-      this.statusText = '正在上传...'
+      this.statusText = this.$t('sync.uploading')
       try {
         const result = await SyncManager.upload(this.password, this.syncIdentifier, this.syncOptions)
         if (result.conflict) {
           const date = new Date(result.serverTimestamp).toLocaleString()
-          this.statusText = `⚠️ 同步冲突：云端有更新的数据（${date}），请先下载再上传`
-          Toast.fail('同步冲突：云端数据更新')
+          this.statusText = this.$t('sync.conflict_status', [date])
+          Toast.fail(this.$t('sync.conflict_toast'))
         } else if (result.ok) {
-          this.statusText = '✅ 同步成功！'
+          this.statusText = this.$t('sync.ok_status')
           this.lastSyncText = new Date(result.timestamp).toLocaleString()
-          Toast.success('上传成功')
+          Toast.success(this.$t('sync.upload_ok'))
         } else {
           this.statusText = `❌ ${result.error}`
           Toast.fail(result.error)
@@ -257,8 +263,8 @@ export default {
           if (lastTs && Number(info.timestamp) > Number(lastTs)) {
             const date = new Date(info.timestamp).toLocaleString()
             const confirmed = await Dialog.confirm({
-              title: '☁️ 检测到云端更新',
-              message: `云端数据（${date}）比上次同步更新。下载将合并浏览历史，云端设置会覆盖本地设置。是否继续？`,
+              title: this.$t('sync.cloud_newer_title'),
+              message: this.$t('sync.cloud_newer_msg', [date]),
               messageAlign: 'left',
             }).catch(() => false)
             if (!confirmed) return
@@ -268,18 +274,23 @@ export default {
 
       const scopeParts = []
       if (this.syncScope.includes('all')) {
-        scopeParts.push('<b>全部数据</b>：设置、历史记录、屏蔽配置')
+        scopeParts.push(this.$t('sync.dl_scope_all'))
       } else {
         if (this.syncScope.includes('history')) {
-          scopeParts.push('<b>浏览历史与搜索历史</b>：与云端记录合并去重')
+          scopeParts.push(this.$t('sync.dl_scope_history'))
         }
         if (this.syncScope.includes('blocks')) {
-          scopeParts.push('<b>屏蔽配置</b>：与云端合并（标签屏蔽 + 作者屏蔽）')
+          scopeParts.push(this.$t('sync.dl_scope_blocks'))
         }
       }
-      const message = `将使用本地密码解密并同步以下数据：<br><br>${scopeParts.join('<br>')}<br><br>⚠️ 请确认您的同步标识「<b>${this.syncIdentifier}</b>」与加密密码与其他设备一致，<br>以确保下载到的是正确的同步数据。<br>是否继续？`
+      const message = [
+        this.$t('sync.download_msg_head'),
+        scopeParts.join('<br>'),
+        this.$t('sync.confirm_identifier_dl', [this.syncIdentifier]),
+        this.$t('sync.confirm_end'),
+      ].join('<br><br>')
       const confirmed = await Dialog.confirm({
-        title: '☁️ 即将从云端下载同步数据',
+        title: this.$t('sync.download_title'),
         message,
         messageAlign: 'left',
       }).catch(() => false)
@@ -287,16 +298,16 @@ export default {
 
       this.loading = true
       this.action = 'download'
-      this.statusText = '正在下载...'
+      this.statusText = this.$t('sync.downloading')
       try {
         const result = await SyncManager.download(this.password, this.syncIdentifier, this.syncOptions)
         if (result.ok) {
           if (result.noUpdate) {
-            this.statusText = 'ℹ️ 云端无新数据'
-            Toast('云端无新数据')
+            this.statusText = this.$t('sync.no_update_status')
+            Toast(this.$t('sync.no_update_toast'))
           } else {
-            this.statusText = '✅ 下载成功，即将刷新！'
-            Toast.success('下载成功，即将刷新')
+            this.statusText = this.$t('sync.dl_ok_status')
+            Toast.success(this.$t('sync.dl_ok_toast'))
             setTimeout(() => location.reload(), 1500)
           }
           if (result.timestamp) {
@@ -318,19 +329,19 @@ export default {
       this.saveConfig()
       this.loading = true
       this.action = 'info'
-      this.statusText = '正在查询...'
+      this.statusText = this.$t('sync.checking')
       try {
         const info = await SyncManager.checkInfo(this.password, this.syncIdentifier)
         if (info) {
           const date = new Date(info.timestamp).toLocaleString()
-          this.statusText = `ℹ️ 云端数据: ${date} | 大小: ${(info.size / 1024).toFixed(1)}KB`
+          this.statusText = this.$t('sync.info_status', [date, (info.size / 1024).toFixed(1)])
         } else if (info === null) {
-          this.statusText = 'ℹ️ 该同步标识在云端无数据'
-          Toast('该同步标识在云端无数据')
+          this.statusText = this.$t('sync.no_cloud_data')
+          Toast(this.$t('sync.no_cloud_data'))
         }
       } catch (e) {
-        this.statusText = '⚠️ 无法连接到同步服务'
-        Toast.fail('无法连接到同步服务')
+        this.statusText = this.$t('sync.connect_fail')
+        Toast.fail(this.$t('sync.connect_fail'))
       }
       this.loading = false
       this.action = ''

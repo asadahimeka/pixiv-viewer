@@ -50,7 +50,12 @@
     "records": "{0} Registros",
     "session": "Caché de tiempo de ejecución",
     "success_tip": "Limpieza completada",
-    "title": "Limpiar cache"
+    "title": "Limpiar cache",
+    "cleared": "Caché borrada",
+    "clear_fail": "Error al borrar la caché: {0}",
+    "confirm_default": "¿Seguro que quieres borrar la caché?",
+    "confirm_pxcl": "¿Seguro que quieres borrar la caché de PixivCollection? Tendrás que volver a descargar los datos de favoritos",
+    "pxcl": "Borrar la caché de PixivCollection"
   },
   "common": {
     "ai_gen": "generado por IA",
@@ -80,7 +85,9 @@
     "ugoira": "Ugoira",
     "user": "Usuario",
     "view_more": "Ver más",
-    "words": "Palabras"
+    "words": "Palabras",
+    "retry": "Reintentar",
+    "default": "Predeterminado"
   },
   "display": {
     "ai": "Pantalla de trabajo generada por IA",
@@ -95,7 +102,11 @@
     "r18_label": "Contiene desnudez o descripciones sexuales.",
     "r18g": "Exhibición de obras R-18G",
     "r18g_label": "Contiene contenido sangriento o repugnante.",
-    "title": "Configuración de visualización de ilustraciones"
+    "title": "Configuración de visualización de ilustraciones",
+    "delete_tag_title": "Eliminar etiqueta bloqueada",
+    "delete_tag_confirm": "¿Seguro que quieres eliminar la etiqueta bloqueada «{0}»?",
+    "delete_uid_title": "Eliminar autor bloqueado",
+    "delete_uid_confirm": "¿Seguro que quieres eliminar al autor bloqueado «{0}»?"
   },
   "follow": {
     "fav": "Marcadores",
@@ -129,7 +140,93 @@
       "d2": "Complete el RefreshToken; consulte el enlace a continuación para saber cómo obtenerlo.",
       "d3": "Por favor complete RefreshToken",
       "d4": "RefreshToken tiene un formato incorrecto"
-    }
+    },
+    "cant_login_msg": "<p>No se puede iniciar sesión en el sitio actual; ve a <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> para hacerlo.<p>"
+  },
+  "filter": {
+    "all_age": "Todo público",
+    "landscape": "Horizontal",
+    "portrait": "Vertical",
+    "square": "Cuadrada"
+  },
+  "sync": {
+    "config_title": "Configuración de la sincronización en la nube",
+    "title": "☁️ Configuración de la sincronización en la nube",
+    "address": "Dirección del servidor de sincronización",
+    "identifier": "ID de sincronización",
+    "identifier_desc": "(Se usa para distinguir los distintos espacios de sincronización; no está relacionado con la cuenta de Pixiv)",
+    "identifier_ph": "Introduce el ID de sincronización (alfanumérico, mínimo 8 caracteres)",
+    "password": "Contraseña de cifrado",
+    "password_desc": "(Se usa para cifrar los datos localmente)",
+    "password_ph": "Introduce la contraseña de cifrado (mínimo 8 caracteres)",
+    "dual_1": "El <b>ID de sincronización</b> y la <b>contraseña de cifrado</b> determinan juntos un conjunto de datos de sincronización.",
+    "dual_2": "Si cambias cualquiera de los dos, se pasará a un espacio de almacenamiento distinto,",
+    "dual_3": "el cual estará vacío o contendrá otros datos de sincronización.",
+    "dual_4": "Usa la misma contraseña y el mismo ID para sincronizar en todos los dispositivos.",
+    "scope_all": "Sincronizar todo",
+    "scope_history": "Historial de navegación/búsqueda",
+    "scope_blocks": "Etiquetas/autores bloqueados",
+    "scope_joiner": ", ",
+    "upload_btn": "Subir a la nube",
+    "download_btn": "Descargar desde la nube",
+    "check_btn": "Consultar estado",
+    "last_sync": "Última sincronización: {0}",
+    "enc_title": "🔒 Información sobre el cifrado",
+    "enc_1": "La contraseña solo se usa para cifrar tus datos localmente en el navegador y <b>no se envía al servidor</b>",
+    "enc_2": "Cada sincronización se cifra con AES-256; en la nube solo se almacena el texto cifrado",
+    "enc_3": "Si olvidas la contraseña no podrás recuperar los datos; guárdala en un lugar seguro",
+    "priv_title": "🛡️ Aviso de privacidad",
+    "priv_1": "Los datos sincronizados incluyen tu configuración y tu historial de navegación, que pueden contener credenciales sensibles como el <b>RefreshToken</b>",
+    "priv_2": "Si la privacidad es importante para ti, se recomienda <b>desplegar tu propio servicio de sincronización</b> para tener el control total de los datos",
+    "priv_3": "El ID de sincronización solo sirve para distinguir los distintos espacios de sincronización, <b>no está relacionado con la cuenta de Pixiv</b> y no se sube al servicio de sincronización",
+    "exp_title": "⚠️ Función experimental",
+    "exp_1": "Esta función de sincronización es experimental y no se garantiza su estabilidad",
+    "exp_2": "Los datos de la nube pueden perderse por mantenimiento o fallos",
+    "exp_3": "Se recomienda hacer copias de seguridad periódicas en un archivo local con la función «Exportar configuración/historial»",
+    "data_all": "Todos los datos",
+    "data_history": "Historial",
+    "data_blocks": "Configuración de bloqueos",
+    "upload_title": "☁️ A punto de subir los datos de sincronización",
+    "upload_msg_head": "Los siguientes datos se cifrarán y subirán a <b>{0}</b>:<br><br>• <b>{1}</b><br><br>Los datos se cifrarán con AES-256; en la nube solo se almacena el texto cifrado.",
+    "upload_conflict_warn": "⚠️ Si en la nube ya existen datos con el mismo ID de sincronización + contraseña, {0}",
+    "upload_overwrite": "se sobrescribirán los datos antiguos.",
+    "upload_merge": "se combinarán los datos seleccionados.",
+    "confirm_identifier": "Confirma que tu ID de sincronización «<b>{0}</b>» y tu contraseña de cifrado coinciden con los de tus demás dispositivos.",
+    "confirm_identifier_dl": "⚠️ Confirma que tu ID de sincronización «<b>{0}</b>» y tu contraseña de cifrado coinciden con los de tus demás dispositivos, <br>para asegurarte de descargar los datos de sincronización correctos.",
+    "confirm_end": "¿Quieres continuar?",
+    "uploading": "Subiendo...",
+    "conflict_status": "⚠️ Conflicto de sincronización: la nube tiene datos más recientes ({0}); descárgalos primero antes de subir",
+    "conflict_toast": "Conflicto de sincronización: los datos de la nube son más recientes",
+    "ok_status": "✅ ¡Sincronización correcta!",
+    "upload_ok": "Subida completada",
+    "cloud_newer_title": "☁️ Actualización detectada en la nube",
+    "cloud_newer_msg": "Los datos de la nube ({0}) son más recientes que la última sincronización. Al descargar, se combinará el historial de navegación y la configuración de la nube sobrescribirá la local. ¿Quieres continuar?",
+    "download_title": "☁️ A punto de descargar los datos de sincronización de la nube",
+    "download_msg_head": "Se usará la contraseña local para descifrar y sincronizar los siguientes datos:",
+    "dl_scope_all": "<b>Todos los datos</b>: configuración, historial y bloqueos",
+    "dl_scope_history": "<b>Historial de navegación y de búsqueda</b>: se combinará con los registros de la nube eliminando duplicados",
+    "dl_scope_blocks": "<b>Configuración de bloqueos</b>: se combinará con la nube (etiquetas bloqueadas + autores bloqueados)",
+    "downloading": "Descargando...",
+    "no_update_status": "ℹ️ No hay datos nuevos en la nube",
+    "no_update_toast": "No hay datos nuevos en la nube",
+    "dl_ok_status": "✅ ¡Descarga completada, actualizando enseguida!",
+    "dl_ok_toast": "Descarga completada, actualizando enseguida",
+    "checking": "Consultando...",
+    "info_status": "ℹ️ Datos en la nube: {0} | Tamaño: {1}KB",
+    "no_cloud_data": "ℹ️ Este ID de sincronización no tiene datos en la nube",
+    "connect_fail": "⚠️ No se pudo conectar al servicio de sincronización",
+    "dl_http_fail": "Error al descargar: HTTP {0}",
+    "decrypt_fail": "Error al descifrar: es posible que la contraseña sea incorrecta",
+    "network_error": "Error de red: {0}",
+    "need_address": "Configura primero la dirección del servidor de sincronización",
+    "need_password": "Introduce la contraseña de cifrado",
+    "need_identifier": "Introduce el ID de sincronización",
+    "merge_no_cloud": "No se pudieron obtener los datos de la nube para combinarlos",
+    "ul_http_fail": "Error al subir: HTTP {0}"
+  },
+  "theme": {
+    "title": "Tema visual",
+    "pick_desc": "Selecciona el tema visual"
   },
   "nav": {
     "follow": "Alimentar",
@@ -141,7 +238,18 @@
   "novel": {
     "series": {
       "next": "Siguiente capítulo:",
-      "prev": "Capítulo previo:"
+      "prev": "Capítulo previo:",
+      "epub_btn": "EPUB (serie)",
+      "dl_btn": "Descargar EPUB de la serie",
+      "dl_title": "Descargando la serie",
+      "dl_pending": "En espera",
+      "dl_downloading": "Descargando",
+      "dl_done": "Completado",
+      "dl_error": "Error",
+      "dl_generating": "Generando EPUB…",
+      "dl_failed_prefix": "Error al descargar: ",
+      "dl_downloading_status": "Descargando…",
+      "dl_done_toast": "Descarga del EPUB de la serie completada"
     },
     "settings": {
       "text": {
@@ -159,6 +267,28 @@
         "direct_hc": "Columnas horizontales"
       },
       "title": "Configuraciones novedosas"
+    },
+    "export": {
+      "epub_error": "Error al exportar EPUB: {0}",
+      "pdf_error": "Error al exportar PDF: {0}",
+      "series_fetch_fail": "Error al obtener la serie",
+      "content_fetch_fail": "Error al obtener el contenido",
+      "build_fail": "Error al generar el EPUB",
+      "meta_title": "Información de la obra",
+      "m_title": "Título: ",
+      "m_author": "Autor: ",
+      "m_novel_id": "ID de la novela: ",
+      "m_created": "Fecha de creación: ",
+      "m_series": "Serie: ",
+      "m_tags": "Etiquetas: ",
+      "m_caption": "Descripción: ",
+      "m_stats": "Estadísticas: ",
+      "m_link": "Enlace original: ",
+      "stats_value": "Caracteres: {0}  Favoritos: {1}  Visualizaciones: {2}",
+      "series_desc": "Serie: {0} (ID: {1})",
+      "series_count": " {0} partes",
+      "series_chars": " {0} caracteres",
+      "series_caption": " Descripción: {0}"
     }
   },
   "rank": {
@@ -205,7 +335,16 @@
     "pop_preview_novel": "Vista previa de novela popular",
     "seach_tag": "Buscar etiquetas",
     "search": "Buscar",
-    "search_user": "Buscar usuario"
+    "search_user": "Buscar usuario",
+    "jump": {
+      "title": "Elegir tipo de salto",
+      "default_title": "Salto predeterminado en búsquedas numéricas",
+      "ask": "Preguntar cada vez",
+      "artwork": "ID de obra",
+      "novel": "ID de novela",
+      "user": "ID de usuario",
+      "keyword": "Palabra clave"
+    }
   },
   "sess": {
     "example": "El ID de sesión tiene este aspecto (no válido, para demostración):",

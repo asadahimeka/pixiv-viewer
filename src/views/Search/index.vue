@@ -45,7 +45,7 @@
           <div :key="'p_' + n" class="keyword" @click="toPidPage(n)">→ {{ $t('common.illust_manga') }} ID: {{ n }} </div>
           <div :key="'u_' + n" class="keyword" @click="toUidPage(n)">→ {{ $t('common.user') }} ID: {{ n }} </div>
           <div :key="'n_' + n" class="keyword" @click="toNovelPage(n)">→ {{ $t('common.novel') }} ID: {{ n }} </div>
-          <div v-if="n.length<6" :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ 特辑 ID: {{ n }} </div>
+          <div v-if="n.length<6" :key="'s_' + n" class="keyword" @click="toSpotlightPage(n)">→ {{ $t('sp.title') }} ID: {{ n }} </div>
         </template>
       </div>
       <div v-if="keywords.trim() && autoCompleteTagList.length" class="search-history">
@@ -79,7 +79,7 @@
     </div>
     <van-dialog
       v-model="showNumberDialog"
-      title="选择跳转类型"
+      :title="$t('search.jump.title')"
       :show-confirm-button="false"
       close-on-click-overlay
     >
@@ -121,10 +121,10 @@ export default {
       showNumberDialog: false,
       pendingNumber: '',
       numberDialogActions: [
-        { name: '作品ID', value: 'artwork' },
-        { name: '小说ID', value: 'novel' },
-        { name: '用户ID', value: 'user' },
-        { name: '搜索关键词', value: 'keyword' },
+        { name: this.$t('search.jump.artwork'), value: 'artwork' },
+        { name: this.$t('search.jump.novel'), value: 'novel' },
+        { name: this.$t('search.jump.user'), value: 'user' },
+        { name: this.$t('search.jump.keyword'), value: 'keyword' },
       ],
       autoCompleteTagList: [],
     }

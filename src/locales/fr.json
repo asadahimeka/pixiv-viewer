@@ -50,7 +50,12 @@
     "session": "Cache d'exécution",
     "success_tip": "Nettoyage terminé",
     "title": "Vider le cache",
-    "mem": "Mémoire utilisée"
+    "mem": "Mémoire utilisée",
+    "cleared": "Cache vidé",
+    "clear_fail": "Échec du vidage du cache : {0}",
+    "confirm_default": "Voulez-vous vraiment vider le cache ?",
+    "confirm_pxcl": "Voulez-vous vraiment vider le cache PixivCollection ? Les données des favoris devront être retéléchargées ensuite.",
+    "pxcl": "Vider le cache PixivCollection"
   },
   "common": {
     "ai_gen": "Généré par l'IA",
@@ -80,7 +85,9 @@
     "words": "Mots",
     "date": "Date",
     "reset": "réinitialiser",
-    "save": "Sauvegarder"
+    "save": "Sauvegarder",
+    "retry": "Réessayer",
+    "default": "Par défaut"
   },
   "display": {
     "ai": "Affichage du travail généré par l'IA",
@@ -95,7 +102,11 @@
     "block_tags": "Marquer la liste noire",
     "block_tags_ph": "Veuillez saisir des balises, séparées par des virgules",
     "block_uids": "Liste noire des artistes",
-    "block_uids_ph": "Veuillez saisir les identifiants des artistes, séparés par des virgules"
+    "block_uids_ph": "Veuillez saisir les identifiants des artistes, séparés par des virgules",
+    "delete_tag_title": "Supprimer le tag bloqué",
+    "delete_tag_confirm": "Voulez-vous vraiment supprimer le tag bloqué « {0} » ?",
+    "delete_uid_title": "Supprimer l'auteur bloqué",
+    "delete_uid_confirm": "Voulez-vous vraiment supprimer l'auteur bloqué « {0} » ?"
   },
   "history": {
     "confirm": {
@@ -114,7 +125,18 @@
   "novel": {
     "series": {
       "next": "Chapitre suivant:",
-      "prev": "Chapitre précédent :"
+      "prev": "Chapitre précédent :",
+      "epub_btn": "EPUB (série)",
+      "dl_btn": "Télécharger l'EPUB de la série",
+      "dl_title": "Téléchargement de la série",
+      "dl_pending": "En attente",
+      "dl_downloading": "Téléchargement",
+      "dl_done": "Terminé",
+      "dl_error": "Échec",
+      "dl_generating": "Génération de l'EPUB…",
+      "dl_failed_prefix": "Échec du téléchargement : ",
+      "dl_downloading_status": "Téléchargement…",
+      "dl_done_toast": "Téléchargement de l'EPUB de la série terminé"
     },
     "settings": {
       "text": {
@@ -132,6 +154,28 @@
         "direct_hc": "Colonnes horizontales"
       },
       "title": "Nouveaux paramètres"
+    },
+    "export": {
+      "epub_error": "Erreur lors de l'export EPUB : {0}",
+      "pdf_error": "Erreur lors de l'export PDF : {0}",
+      "series_fetch_fail": "Échec de la récupération de la série",
+      "content_fetch_fail": "Échec de la récupération du contenu",
+      "build_fail": "Échec de la génération de l'EPUB",
+      "meta_title": "Informations sur l'œuvre",
+      "m_title": "Titre : ",
+      "m_author": "Auteur : ",
+      "m_novel_id": "ID de la nouvelle : ",
+      "m_created": "Créé le : ",
+      "m_series": "Série : ",
+      "m_tags": "Tags : ",
+      "m_caption": "Résumé : ",
+      "m_stats": "Statistiques : ",
+      "m_link": "Lien original : ",
+      "stats_value": "Caractères : {0}  Favoris : {1}  Vues : {2}",
+      "series_desc": "Série : {0} (ID: {1})",
+      "series_count": " {0} parties",
+      "series_chars": " {0} caractères",
+      "series_caption": " Résumé : {0}"
     }
   },
   "rank": {
@@ -178,6 +222,15 @@
       "exact": "correspondance exacte pour les balises",
       "partial": "correspondance partielle pour les balises",
       "title": "titre et légende"
+    },
+    "jump": {
+      "title": "Choisir le type de destination",
+      "default_title": "Destination par défaut des recherches numériques",
+      "ask": "Demander à chaque fois",
+      "artwork": "ID d'œuvre",
+      "novel": "ID de novel",
+      "user": "ID d'utilisateur",
+      "keyword": "Mot-clé de recherche"
     }
   },
   "setting": {
@@ -389,7 +442,93 @@
       "d2": "Veuillez remplir le RefreshToken, reportez-vous au lien ci-dessous pour savoir comment l'obtenir",
       "d3": "Veuillez remplir RefreshToken",
       "d4": "RefreshToken est malformé"
-    }
+    },
+    "cant_login_msg": "<p>La connexion n'est pas disponible sur le site actuel. Veuillez vous rendre sur <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> pour vous connecter.<p>"
+  },
+  "filter": {
+    "all_age": "Tout public",
+    "landscape": "Paysage",
+    "portrait": "Portrait",
+    "square": "Carré"
+  },
+  "sync": {
+    "config_title": "Configuration de la synchronisation cloud",
+    "title": "☁️ Configuration de la synchronisation cloud",
+    "address": "Adresse du service de synchronisation",
+    "identifier": "ID de synchronisation",
+    "identifier_desc": "(Sert à distinguer les différents espaces de synchronisation, sans lien avec le compte Pixiv)",
+    "identifier_ph": "Saisissez l'ID de synchronisation (alphanumérique, au moins 8 caractères)",
+    "password": "Mot de passe de chiffrement",
+    "password_desc": "(Sert au chiffrement local des données)",
+    "password_ph": "Saisissez le mot de passe de chiffrement (au moins 8 caractères)",
+    "dual_1": "L'<b>ID de synchronisation</b> et le <b>mot de passe de chiffrement</b> déterminent ensemble un jeu de données de synchronisation.",
+    "dual_2": "Modifier l'un ou l'autre vous dirigera vers un espace de stockage différent,",
+    "dual_3": "le nouvel emplacement sera alors vide ou contiendra un autre jeu de données de synchronisation.",
+    "dual_4": "Pensez à utiliser le même mot de passe et le même ID de synchronisation sur tous vos appareils.",
+    "scope_all": "Tout synchroniser",
+    "scope_history": "Historique de navigation/recherche",
+    "scope_blocks": "Tags/auteurs bloqués",
+    "scope_joiner": ", ",
+    "upload_btn": "Envoyer vers le cloud",
+    "download_btn": "Télécharger depuis le cloud",
+    "check_btn": "Vérifier l'état",
+    "last_sync": "Dernière synchronisation : {0}",
+    "enc_title": "🔒 Informations sur le chiffrement",
+    "enc_1": "Le mot de passe sert uniquement à chiffrer vos données localement dans le navigateur, <b>il n'est jamais envoyé au serveur</b>",
+    "enc_2": "Chaque synchronisation est chiffrée avec AES-256, le cloud ne stocke que les données chiffrées",
+    "enc_3": "Si vous oubliez le mot de passe, les données seront irrécupérables, veillez à le conserver en lieu sûr",
+    "priv_title": "🛡️ Avertissement de confidentialité",
+    "priv_1": "Les données synchronisées contiennent vos paramètres et votre historique de navigation, qui peuvent inclure des identifiants sensibles tels que le <b>RefreshToken</b>",
+    "priv_2": "Si vous attachez une grande importance à la confidentialité, il est recommandé de <b>déployer votre propre service de synchronisation</b> pour garder le contrôle total de vos données",
+    "priv_3": "L'ID de synchronisation sert uniquement à distinguer les différents espaces de synchronisation, <b>il n'a aucun lien avec le compte Pixiv</b> et n'est pas transmis au service de synchronisation",
+    "exp_title": "⚠️ Fonctionnalité expérimentale",
+    "exp_1": "Cette fonction de synchronisation est expérimentale, sa stabilité n'est pas garantie",
+    "exp_2": "Les données du cloud peuvent être perdues en cas de maintenance ou de panne",
+    "exp_3": "Il est recommandé de sauvegarder régulièrement vos données dans un fichier local via la fonction « Exporter les paramètres/historique »",
+    "data_all": "Toutes les données",
+    "data_history": "Historique",
+    "data_blocks": "Configuration des blocages",
+    "upload_title": "☁️ Envoi des données de synchronisation",
+    "upload_msg_head": "Les données suivantes seront chiffrées puis envoyées vers <b>{0}</b> :<br><br>• <b>{1}</b><br><br>Elles seront chiffrées avec AES-256, le cloud ne stockera que les données chiffrées.",
+    "upload_conflict_warn": "⚠️ Si le cloud contient déjà des données avec le même ID de synchronisation + mot de passe, {0}",
+    "upload_overwrite": "les anciennes données seront écrasées.",
+    "upload_merge": "les données sélectionnées seront fusionnées.",
+    "confirm_identifier": "Veuillez vérifier que votre ID de synchronisation « <b>{0}</b> » et votre mot de passe de chiffrement correspondent bien à ceux de vos autres appareils.",
+    "confirm_identifier_dl": "⚠️ Veuillez vérifier que votre ID de synchronisation « <b>{0}</b> » et votre mot de passe de chiffrement correspondent bien à ceux de vos autres appareils,<br>afin d'être sûr de télécharger les bonnes données de synchronisation.",
+    "confirm_end": "Voulez-vous continuer ?",
+    "uploading": "Envoi en cours...",
+    "conflict_status": "⚠️ Conflit de synchronisation : des données plus récentes existent dans le cloud ({0}), téléchargez-les d'abord avant d'envoyer",
+    "conflict_toast": "Conflit de synchronisation : les données du cloud sont plus récentes",
+    "ok_status": "✅ Synchronisation réussie !",
+    "upload_ok": "Envoi réussi",
+    "cloud_newer_title": "☁️ Mise à jour détectée dans le cloud",
+    "cloud_newer_msg": "Les données du cloud ({0}) sont plus récentes que la dernière synchronisation. Le téléchargement fusionnera l'historique de navigation et les paramètres du cloud remplaceront les paramètres locaux. Voulez-vous continuer ?",
+    "download_title": "☁️ Téléchargement des données de synchronisation",
+    "download_msg_head": "Les données suivantes seront déchiffrées avec votre mot de passe local puis synchronisées :",
+    "dl_scope_all": "<b>Toutes les données</b> : paramètres, historique, configuration des blocages",
+    "dl_scope_history": "<b>Historique de navigation et de recherche</b> : fusionné et dédoublonné avec les données du cloud",
+    "dl_scope_blocks": "<b>Configuration des blocages</b> : fusionnée avec le cloud (tags bloqués + auteurs bloqués)",
+    "downloading": "Téléchargement en cours...",
+    "no_update_status": "ℹ️ Aucune nouvelle donnée dans le cloud",
+    "no_update_toast": "Aucune nouvelle donnée dans le cloud",
+    "dl_ok_status": "✅ Téléchargement réussi, actualisation imminente !",
+    "dl_ok_toast": "Téléchargement réussi, actualisation imminente",
+    "checking": "Vérification en cours...",
+    "info_status": "ℹ️ Données du cloud : {0} | Taille : {1} Ko",
+    "no_cloud_data": "ℹ️ Aucune donnée dans le cloud pour cet ID de synchronisation",
+    "connect_fail": "⚠️ Impossible de se connecter au service de synchronisation",
+    "dl_http_fail": "Échec du téléchargement : HTTP {0}",
+    "decrypt_fail": "Échec du déchiffrement, le mot de passe est peut-être incorrect",
+    "network_error": "Erreur réseau : {0}",
+    "need_address": "Veuillez d'abord configurer l'adresse du service de synchronisation",
+    "need_password": "Veuillez saisir le mot de passe de chiffrement",
+    "need_identifier": "Veuillez saisir l'ID de synchronisation",
+    "merge_no_cloud": "Impossible de récupérer les données du cloud pour la fusion",
+    "ul_http_fail": "Échec de l'envoi : HTTP {0}"
+  },
+  "theme": {
+    "title": "Thème visuel",
+    "pick_desc": "Choisir le thème visuel"
   },
   "iAH7adsXaqWMXEi3TOuwS": "série",
   "qmd5JADeSGtrvucK3TnGb": "Masquer les mangas dans la page de classement général selon le type d'œuvre, il peut y avoir quelques omissions",

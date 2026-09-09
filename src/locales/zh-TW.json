@@ -50,7 +50,12 @@
     "session": "運行時快取",
     "success_tip": "清理完成",
     "title": "清除快取",
-    "mem": "內存佔用"
+    "mem": "內存佔用",
+    "cleared": "快取已清除",
+    "clear_fail": "清除快取失敗：{0}",
+    "confirm_default": "確定要清除快取嗎？",
+    "confirm_pxcl": "確定要清除 PixivCollection 快取嗎？清除後需要重新下載收藏資料。",
+    "pxcl": "清除 PixivCollection 快取"
   },
   "common": {
     "ai_gen": "AI 生成",
@@ -80,7 +85,9 @@
     "words": "字",
     "date": "日期",
     "reset": "重置",
-    "save": "儲存"
+    "save": "儲存",
+    "retry": "重試",
+    "default": "預設"
   },
   "display": {
     "ai": "顯示 AI 生成標籤",
@@ -95,7 +102,11 @@
     "block_tags": "標籤黑名單",
     "block_tags_ph": "請輸入標籤，英文逗號分隔",
     "block_uids": "畫師黑名單",
-    "block_uids_ph": "請輸入畫師 ID，英文逗號分隔"
+    "block_uids_ph": "請輸入畫師 ID，英文逗號分隔",
+    "delete_tag_title": "刪除封鎖標籤",
+    "delete_tag_confirm": "確定要刪除封鎖標籤「{0}」嗎？",
+    "delete_uid_title": "刪除封鎖作者",
+    "delete_uid_confirm": "確定要刪除封鎖作者「{0}」嗎？"
   },
   "history": {
     "confirm": {
@@ -114,7 +125,18 @@
   "novel": {
     "series": {
       "next": "下一話:",
-      "prev": "上一話："
+      "prev": "上一話：",
+      "epub_btn": "EPUB（系列）",
+      "dl_btn": "下載系列 EPUB",
+      "dl_title": "正在下載系列",
+      "dl_pending": "等待",
+      "dl_downloading": "下載中",
+      "dl_done": "完成",
+      "dl_error": "失敗",
+      "dl_generating": "正在產生 EPUB…",
+      "dl_failed_prefix": "下載失敗：",
+      "dl_downloading_status": "下載中…",
+      "dl_done_toast": "系列 EPUB 下載完成"
     },
     "settings": {
       "text": {
@@ -132,6 +154,28 @@
         "direct_hc": "橫向分列"
       },
       "title": "小說設定"
+    },
+    "export": {
+      "epub_error": "匯出 EPUB 時發生錯誤：{0}",
+      "pdf_error": "匯出 PDF 時發生錯誤：{0}",
+      "series_fetch_fail": "取得系列失敗",
+      "content_fetch_fail": "取得內文失敗",
+      "build_fail": "產生 EPUB 失敗",
+      "meta_title": "作品資訊",
+      "m_title": "標題：",
+      "m_author": "作者：",
+      "m_novel_id": "小說ID：",
+      "m_created": "建立時間：",
+      "m_series": "系列：",
+      "m_tags": "標籤：",
+      "m_caption": "簡介：",
+      "m_stats": "統計：",
+      "m_link": "原始連結：",
+      "stats_value": "字數：{0}  收藏：{1}  瀏覽：{2}",
+      "series_desc": "系列：{0} (ID: {1})",
+      "series_count": " 共{0}篇",
+      "series_chars": " {0}字",
+      "series_caption": " 簡介：{0}"
     }
   },
   "rank": {
@@ -178,6 +222,15 @@
       "exact": "標籤完全一致",
       "partial": "標籤部分一致",
       "title": "標題與簡介"
+    },
+    "jump": {
+      "title": "選擇跳轉類型",
+      "default_title": "輸入數字時的預設跳轉",
+      "ask": "每次詢問",
+      "artwork": "作品 ID",
+      "novel": "小說 ID",
+      "user": "使用者 ID",
+      "keyword": "搜尋關鍵字"
     }
   },
   "setting": {
@@ -389,7 +442,93 @@
       "d2": "請填寫 RefreshToken，獲取方式參考以下連結",
       "d3": "請填寫 RefreshToken",
       "d4": "RefreshToken 格式不正確"
-    }
+    },
+    "cant_login_msg": "<p>目前站點無法登入，請前往 <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> 進行操作。<p>"
+  },
+  "filter": {
+    "all_age": "全年齡",
+    "landscape": "橫圖",
+    "portrait": "直圖",
+    "square": "方圖"
+  },
+  "sync": {
+    "config_title": "雲端同步設定",
+    "title": "☁️ 雲端同步設定",
+    "address": "同步伺服器位址",
+    "identifier": "同步識別碼",
+    "identifier_desc": "（用於區分不同的同步空間，與 Pixiv 帳號無關）",
+    "identifier_ph": "輸入同步識別碼（英數，至少 8 個字元）",
+    "password": "加密密碼",
+    "password_desc": "（用於在本機加密資料）",
+    "password_ph": "輸入加密密碼，至少 8 個字元",
+    "dual_1": "<b>同步識別碼</b>與<b>加密密碼</b>共同決定一份同步資料。",
+    "dual_2": "變更其中任何一項，都會定位到不同的儲存空間，",
+    "dual_3": "新位置將沒有資料，或為另一份同步資料。",
+    "dual_4": "請在所有裝置上使用相同的密碼與識別碼進行同步。",
+    "scope_all": "全部同步",
+    "scope_history": "瀏覽／搜尋紀錄",
+    "scope_blocks": "標籤／作者封鎖",
+    "scope_joiner": "、",
+    "upload_btn": "上傳到雲端",
+    "download_btn": "從雲端下載",
+    "check_btn": "查詢狀態",
+    "last_sync": "上次同步：{0}",
+    "enc_title": "🔒 加密說明",
+    "enc_1": "密碼僅用於在瀏覽器本機加密您的資料，<b>不會被傳送到伺服器</b>",
+    "enc_2": "每次同步均使用 AES-256 加密，雲端僅儲存密文",
+    "enc_3": "忘記密碼將無法還原資料，請妥善保管",
+    "priv_title": "🛡️ 隱私提醒",
+    "priv_1": "同步資料包含您的設定與瀏覽紀錄，其中可能含有 <b>RefreshToken</b> 等敏感憑證",
+    "priv_2": "若對隱私有較高要求，建議<b>自行部署同步服務</b>以完全掌控資料",
+    "priv_3": "同步識別碼僅用於區分不同的同步空間，<b>與 Pixiv 帳號無關</b>，不會上傳到同步服務",
+    "exp_title": "⚠️ 實驗性功能",
+    "exp_1": "此同步功能尚在實驗階段，不保證穩定可用",
+    "exp_2": "雲端資料可能因維護或故障而遺失",
+    "exp_3": "建議定期使用「匯出設定／歷史」功能備份至本機檔案",
+    "data_all": "全部資料",
+    "data_history": "歷史紀錄",
+    "data_blocks": "封鎖設定",
+    "upload_title": "☁️ 即將上傳同步資料",
+    "upload_msg_head": "將以下資料加密後上傳至 <b>{0}</b>：<br><br>• <b>{1}</b><br><br>資料將使用 AES-256 加密，雲端僅儲存密文。",
+    "upload_conflict_warn": "⚠️ 如果雲端已有相同同步識別碼＋密碼的資料，{0}",
+    "upload_overwrite": "則將覆蓋舊資料。",
+    "upload_merge": "則將合併所選資料。",
+    "confirm_identifier": "請確認您的同步識別碼「<b>{0}</b>」與加密密碼皆與其他裝置一致。",
+    "confirm_identifier_dl": "⚠️ 請確認您的同步識別碼「<b>{0}</b>」與加密密碼皆與其他裝置一致，<br>以確保下載到的是正確的同步資料。",
+    "confirm_end": "是否繼續？",
+    "uploading": "正在上傳…",
+    "conflict_status": "⚠️ 同步衝突：雲端有較新的資料（{0}），請先下載再上傳",
+    "conflict_toast": "同步衝突：雲端資料較新",
+    "ok_status": "✅ 同步成功！",
+    "upload_ok": "上傳成功",
+    "cloud_newer_title": "☁️ 偵測到雲端有較新資料",
+    "cloud_newer_msg": "雲端資料（{0}）較上次同步為新。下載將合併瀏覽紀錄，雲端設定會覆蓋本機設定。是否繼續？",
+    "download_title": "☁️ 即將從雲端下載同步資料",
+    "download_msg_head": "將使用本機密碼解密並同步以下資料：",
+    "dl_scope_all": "<b>全部資料</b>：設定、歷史紀錄、封鎖設定",
+    "dl_scope_history": "<b>瀏覽紀錄與搜尋紀錄</b>：與雲端紀錄合併去重",
+    "dl_scope_blocks": "<b>封鎖設定</b>：與雲端合併（標籤封鎖＋作者封鎖）",
+    "downloading": "正在下載…",
+    "no_update_status": "ℹ️ 雲端無新資料",
+    "no_update_toast": "雲端無新資料",
+    "dl_ok_status": "✅ 下載成功，即將重新整理！",
+    "dl_ok_toast": "下載成功，即將重新整理",
+    "checking": "正在查詢…",
+    "info_status": "ℹ️ 雲端資料：{0}｜大小：{1}KB",
+    "no_cloud_data": "ℹ️ 此同步識別碼在雲端沒有資料",
+    "connect_fail": "⚠️ 無法連線到同步服務",
+    "dl_http_fail": "下載失敗：HTTP {0}",
+    "decrypt_fail": "解密失敗，密碼可能不正確",
+    "network_error": "網路錯誤：{0}",
+    "need_address": "請先設定同步伺服器位址",
+    "need_password": "請輸入加密密碼",
+    "need_identifier": "請輸入同步識別碼",
+    "merge_no_cloud": "無法取得雲端資料以進行合併",
+    "ul_http_fail": "上傳失敗：HTTP {0}"
+  },
+  "theme": {
+    "title": "視覺主題",
+    "pick_desc": "選擇視覺主題"
   },
   "iAH7adsXaqWMXEi3TOuwS": "系列",
   "qmd5JADeSGtrvucK3TnGb": "根據作品類型在綜合排行榜列表頁面隱藏漫畫作品，可能會有遺漏",

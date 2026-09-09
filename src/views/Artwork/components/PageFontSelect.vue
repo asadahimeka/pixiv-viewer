@@ -12,12 +12,12 @@
         :key="i + f._value"
         class="font-sel-item"
         :class="{ act: f._value == currentFont, fxxk_nosa: f._value == 'NanoOldSong-A' }"
-        :title="f.name"
+        :title="f._value ? f.name : $t('common.default')"
         :style="f.preview || !f._value ? '' : `font-family: '${f._value}', sans-serif`"
         @click="onChange(f._value)"
       >
         <img v-if="f.preview" class="font-sel-item-preview" :src="`/img/font_preview/${f.name}.svg`" :alt="f.name">
-        <span v-else>{{ f.name }}</span>
+        <span v-else>{{ f._value ? f.name : $t('common.default') }}</span>
         <van-icon v-if="f._value == currentFont" class="font-sel-item-checked" name="checked" />
       </div>
     </div>

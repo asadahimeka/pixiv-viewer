@@ -50,7 +50,12 @@
     "session": "Laufzeit-Cache",
     "success_tip": "Bereinigung abgeschlossen",
     "title": "Cache leeren",
-    "mem": "Speicher verwendet"
+    "mem": "Speicher verwendet",
+    "cleared": "Cache geleert",
+    "clear_fail": "Cache konnte nicht geleert werden: {0}",
+    "confirm_default": "Cache wirklich leeren?",
+    "confirm_pxcl": "PixivCollection-Cache wirklich leeren? Die Lesezeichendaten müssen anschließend neu heruntergeladen werden",
+    "pxcl": "PixivCollection-Cache leeren"
   },
   "common": {
     "ai_gen": "KI-generiert",
@@ -80,7 +85,9 @@
     "words": "Wörter",
     "date": "Datum",
     "reset": "zurücksetzen",
-    "save": "Speichern"
+    "save": "Speichern",
+    "retry": "Wiederholen",
+    "default": "Standard"
   },
   "display": {
     "ai": "KI-generierte Arbeitsanzeige",
@@ -95,7 +102,11 @@
     "block_tags": "Schwarze Liste markieren",
     "block_tags_ph": "Bitte geben Sie Tags durch Kommas getrennt ein",
     "block_uids": "Schwarze Liste der Künstler",
-    "block_uids_ph": "Bitte geben Sie die Künstler-IDs durch Kommas getrennt ein"
+    "block_uids_ph": "Bitte geben Sie die Künstler-IDs durch Kommas getrennt ein",
+    "delete_tag_title": "Blockiertes Tag löschen",
+    "delete_tag_confirm": "Blockiertes Tag „{0}“ wirklich löschen?",
+    "delete_uid_title": "Blockierten Benutzer löschen",
+    "delete_uid_confirm": "Blockierten Benutzer „{0}“ wirklich löschen?"
   },
   "history": {
     "confirm": {
@@ -114,7 +125,18 @@
   "novel": {
     "series": {
       "next": "Nächstes Kapitel:",
-      "prev": "Vorheriges Kapitel:"
+      "prev": "Vorheriges Kapitel:",
+      "epub_btn": "EPUB (Serie)",
+      "dl_btn": "Serien-EPUB herunterladen",
+      "dl_title": "Serie wird heruntergeladen",
+      "dl_pending": "Ausstehend",
+      "dl_downloading": "Wird heruntergeladen",
+      "dl_done": "Abgeschlossen",
+      "dl_error": "Fehlgeschlagen",
+      "dl_generating": "EPUB wird erstellt…",
+      "dl_failed_prefix": "Download fehlgeschlagen: ",
+      "dl_downloading_status": "Wird heruntergeladen…",
+      "dl_done_toast": "Download des Serien-EPUBs abgeschlossen"
     },
     "settings": {
       "text": {
@@ -132,6 +154,28 @@
         "direct_hc": "Horizontale Spalten"
       },
       "title": "Neuartige Einstellungen"
+    },
+    "export": {
+      "epub_error": "Fehler beim EPUB-Export: {0}",
+      "pdf_error": "Fehler beim PDF-Export: {0}",
+      "series_fetch_fail": "Serie konnte nicht abgerufen werden",
+      "content_fetch_fail": "Inhalt konnte nicht abgerufen werden",
+      "build_fail": "EPUB konnte nicht erstellt werden",
+      "meta_title": "Werkinformationen",
+      "m_title": "Titel: ",
+      "m_author": "Autor: ",
+      "m_novel_id": "Novel-ID: ",
+      "m_created": "Erstellt am: ",
+      "m_series": "Serie: ",
+      "m_tags": "Tags: ",
+      "m_caption": "Beschreibung: ",
+      "m_stats": "Statistik: ",
+      "m_link": "Original-Link: ",
+      "stats_value": "Zeichen: {0}  Favoriten: {1}  Aufrufe: {2}",
+      "series_desc": "Serie: {0} (ID: {1})",
+      "series_count": " {0} Teile",
+      "series_chars": " {0} Zeichen",
+      "series_caption": " Beschreibung: {0}"
     }
   },
   "rank": {
@@ -178,6 +222,15 @@
       "exact": "genaue Übereinstimmung für Tags",
       "partial": "teilweise Übereinstimmung für Tags",
       "title": "Titel und Bildunterschrift"
+    },
+    "jump": {
+      "title": "Sprungtyp auswählen",
+      "default_title": "Standard-Sprungtyp für Zahlensuche",
+      "ask": "Jedes Mal fragen",
+      "artwork": "Werk-ID",
+      "novel": "Novel-ID",
+      "user": "Benutzer-ID",
+      "keyword": "Suchbegriff"
     }
   },
   "setting": {
@@ -389,7 +442,93 @@
       "d2": "Bitte füllen Sie das RefreshToken aus. Klicken Sie auf den Link unten, um zu erfahren, wie Sie es erhalten",
       "d3": "Bitte füllen Sie RefreshToken aus",
       "d4": "RefreshToken ist fehlerhaft"
-    }
+    },
+    "cant_login_msg": "<p>Die Anmeldung ist auf der aktuellen Website nicht möglich. Bitte weichen Sie dafür auf <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> aus.<p>"
+  },
+  "filter": {
+    "all_age": "All-Age",
+    "landscape": "Querformat",
+    "portrait": "Hochformat",
+    "square": "Quadratisch"
+  },
+  "sync": {
+    "config_title": "Cloud-Sync-Konfiguration",
+    "title": "☁️ Cloud-Sync-Konfiguration",
+    "address": "Sync-Server-Adresse",
+    "identifier": "Sync-ID",
+    "identifier_desc": "(zur Unterscheidung verschiedener Sync-Bereiche, unabhängig vom Pixiv-Konto)",
+    "identifier_ph": "Sync-ID eingeben (alphanumerisch, mindestens 8 Zeichen)",
+    "password": "Verschlüsselungspasswort",
+    "password_desc": "(zur lokalen Verschlüsselung der Daten)",
+    "password_ph": "Verschlüsselungspasswort eingeben, mindestens 8 Zeichen",
+    "dual_1": "<b>Sync-ID</b> und <b>Verschlüsselungspasswort</b> bestimmen gemeinsam die Sync-Daten.",
+    "dual_2": "Ändert man eines der beiden, wird ein anderer Speicherort adressiert, ",
+    "dual_3": "der dann keine Daten oder einen anderen Satz an Sync-Daten enthält.",
+    "dual_4": "Bitte verwenden Sie auf allen Geräten dasselbe Passwort und dieselbe Sync-ID.",
+    "scope_all": "Alles synchronisieren",
+    "scope_history": "Ansichts-/Suchverlauf",
+    "scope_blocks": "Blockierte Tags/Benutzer",
+    "scope_joiner": ", ",
+    "upload_btn": "Zur Cloud hochladen",
+    "download_btn": "Aus der Cloud herunterladen",
+    "check_btn": "Status abfragen",
+    "last_sync": "Letzter Sync: {0}",
+    "enc_title": "🔒 Hinweise zur Verschlüsselung",
+    "enc_1": "Das Passwort dient ausschließlich zur lokalen Verschlüsselung Ihrer Daten im Browser und <b>wird nicht an den Server gesendet</b>",
+    "enc_2": "Jede Synchronisierung wird mit AES-256 verschlüsselt, in der Cloud werden ausschließlich die verschlüsselten Daten gespeichert",
+    "enc_3": "Ohne das Passwort sind die Daten nicht wiederherstellbar, bewahren Sie es daher sicher auf",
+    "priv_title": "🛡️ Datenschutzhinweis",
+    "priv_1": "Die Sync-Daten enthalten Ihre Einstellungen und Ihren Ansichtsverlauf, darunter möglicherweise sensible Zugangsdaten wie das <b>RefreshToken</b>",
+    "priv_2": "Wer hohen Wert auf Datenschutz legt, sollte den <b>Sync-Server selbst betreiben</b>, um die Daten vollständig unter Kontrolle zu behalten",
+    "priv_3": "Die Sync-ID dient nur der Unterscheidung verschiedener Sync-Bereiche, <b>hat nichts mit dem Pixiv-Konto zu tun</b> und wird nicht an den Sync-Server übertragen",
+    "exp_title": "⚠️ Experimentelle Funktion",
+    "exp_1": "Diese Sync-Funktion ist experimentell, Stabilität und Verfügbarkeit werden nicht garantiert",
+    "exp_2": "Cloud-Daten können durch Wartungen oder Störungen verloren gehen",
+    "exp_3": "Es empfiehlt sich, über die Funktion „Einstellungen/Verlauf exportieren“ regelmäßig ein Backup in einer lokalen Datei zu erstellen",
+    "data_all": "Alle Daten",
+    "data_history": "Verlauf",
+    "data_blocks": "Blocklisten",
+    "upload_title": "☁️ Upload der Sync-Daten",
+    "upload_msg_head": "Die folgenden Daten werden verschlüsselt an <b>{0}</b> hochgeladen:<br><br>• <b>{1}</b><br><br>Die Daten werden mit AES-256 verschlüsselt, in der Cloud werden ausschließlich die verschlüsselten Daten gespeichert.",
+    "upload_conflict_warn": "⚠️ Falls in der Cloud bereits Daten mit derselben Sync-ID und demselben Passwort vorhanden sind, {0}",
+    "upload_overwrite": "werden die alten Daten überschrieben.",
+    "upload_merge": "werden die ausgewählten Daten zusammengeführt.",
+    "confirm_identifier": "Bitte bestätigen Sie, dass Ihre Sync-ID „<b>{0}</b>“ und Ihr Verschlüsselungspasswort mit denen auf Ihren anderen Geräten übereinstimmen.",
+    "confirm_identifier_dl": "⚠️ Bitte bestätigen Sie, dass Ihre Sync-ID „<b>{0}</b>“ und Ihr Verschlüsselungspasswort mit denen auf Ihren anderen Geräten übereinstimmen,<br>damit die richtigen Sync-Daten heruntergeladen werden.",
+    "confirm_end": "Möchten Sie fortfahren?",
+    "uploading": "Wird hochgeladen...",
+    "conflict_status": "⚠️ Synchronisierungskonflikt: In der Cloud liegen neuere Daten ({0}), bitte zuerst herunterladen und danach hochladen",
+    "conflict_toast": "Synchronisierungskonflikt: Cloud-Daten sind aktueller",
+    "ok_status": "✅ Synchronisierung erfolgreich!",
+    "upload_ok": "Upload erfolgreich",
+    "cloud_newer_title": "☁️ Neuere Cloud-Daten erkannt",
+    "cloud_newer_msg": "Die Cloud-Daten ({0}) sind neuer als die der letzten Synchronisierung. Beim Herunterladen wird der Ansichtsverlauf zusammengeführt, und die Cloud-Einstellungen überschreiben die lokalen Einstellungen. Möchten Sie fortfahren?",
+    "download_title": "☁️ Download der Sync-Daten aus der Cloud",
+    "download_msg_head": "Die folgenden Daten werden mit dem lokalen Passwort entschlüsselt und synchronisiert:",
+    "dl_scope_all": "<b>Alle Daten</b>: Einstellungen, Verlauf, Blocklisten",
+    "dl_scope_history": "<b>Ansichts- und Suchverlauf</b>: wird mit den Cloud-Einträgen zusammengeführt, Duplikate werden entfernt",
+    "dl_scope_blocks": "<b>Blocklisten</b>: werden mit der Cloud zusammengeführt (blockierte Tags + blockierte Benutzer)",
+    "downloading": "Wird heruntergeladen...",
+    "no_update_status": "ℹ️ Keine neuen Daten in der Cloud",
+    "no_update_toast": "Keine neuen Daten in der Cloud",
+    "dl_ok_status": "✅ Download erfolgreich, wird gleich aktualisiert!",
+    "dl_ok_toast": "Download erfolgreich, wird gleich aktualisiert",
+    "checking": "Wird abgefragt...",
+    "info_status": "ℹ️ Cloud-Daten: {0} | Größe: {1} KB",
+    "no_cloud_data": "ℹ️ Für diese Sync-ID sind keine Cloud-Daten vorhanden",
+    "connect_fail": "⚠️ Verbindung zum Sync-Server fehlgeschlagen",
+    "dl_http_fail": "Download fehlgeschlagen: HTTP {0}",
+    "decrypt_fail": "Entschlüsselung fehlgeschlagen, das Passwort ist möglicherweise falsch",
+    "network_error": "Netzwerkfehler: {0}",
+    "need_address": "Bitte zuerst die Sync-Server-Adresse konfigurieren",
+    "need_password": "Bitte das Verschlüsselungspasswort eingeben",
+    "need_identifier": "Bitte die Sync-ID eingeben",
+    "merge_no_cloud": "Cloud-Daten für die Zusammenführung konnten nicht abgerufen werden",
+    "ul_http_fail": "Upload fehlgeschlagen: HTTP {0}"
+  },
+  "theme": {
+    "title": "Visuelles Design",
+    "pick_desc": "Visuelles Design auswählen"
   },
   "iAH7adsXaqWMXEi3TOuwS": "Serie",
   "qmd5JADeSGtrvucK3TnGb": "Verstecken Sie Mangas auf der Seite mit der Gesamtrangliste entsprechend der Art des Werks, es kann zu Auslassungen kommen",

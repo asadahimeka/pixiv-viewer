@@ -27,7 +27,9 @@
     "confirm": "Confirm",
     "date": "Date",
     "reset": "Reset",
-    "save": "Save"
+    "save": "Save",
+    "retry": "Retry",
+    "default": "Default"
   },
   "about": {
     "disclaimer": "Disclaimer",
@@ -80,7 +82,12 @@
     "session": "Runtime cache",
     "success_tip": "Cleanup completed",
     "title": "Clear Cache",
-    "mem": "Memory Used"
+    "mem": "Memory Used",
+    "cleared": "Cache cleared",
+    "clear_fail": "Failed to clear cache: {0}",
+    "confirm_default": "Clear the cache?",
+    "confirm_pxcl": "Clear the PixivCollection cache? Bookmark data will need to be re-downloaded afterwards",
+    "pxcl": "Clear PixivCollection cache"
   },
   "display": {
     "ai": "AI generated work display",
@@ -95,7 +102,11 @@
     "block_tags": "Tag Blacklist",
     "block_tags_ph": "Please enter tags, separated by commas",
     "block_uids": "Artist Blacklist",
-    "block_uids_ph": "Please enter artist IDs, separated by commas"
+    "block_uids_ph": "Please enter artist IDs, separated by commas",
+    "delete_tag_title": "Delete blocked tag",
+    "delete_tag_confirm": "Delete blocked tag “{0}”?",
+    "delete_uid_title": "Delete blocked author",
+    "delete_uid_confirm": "Delete blocked author “{0}”?"
   },
   "history": {
     "confirm": {
@@ -114,7 +125,18 @@
   "novel": {
     "series": {
       "next": "Next Chapter:",
-      "prev": "Previous Chapter:"
+      "prev": "Previous Chapter:",
+      "epub_btn": "EPUB (Series)",
+      "dl_btn": "Download series EPUB",
+      "dl_title": "Downloading series…",
+      "dl_pending": "Pending",
+      "dl_downloading": "Downloading",
+      "dl_done": "Done",
+      "dl_error": "Failed",
+      "dl_generating": "Generating EPUB…",
+      "dl_failed_prefix": "Download failed: ",
+      "dl_downloading_status": "Downloading…",
+      "dl_done_toast": "Series EPUB download complete"
     },
     "settings": {
       "text": {
@@ -132,6 +154,28 @@
         "direct_hc": "Horizontal Columns"
       },
       "title": "Novel Settings"
+    },
+    "export": {
+      "epub_error": "Error exporting EPUB: {0}",
+      "pdf_error": "Error exporting PDF: {0}",
+      "series_fetch_fail": "Failed to fetch series",
+      "content_fetch_fail": "Failed to fetch novel content",
+      "build_fail": "Failed to generate EPUB",
+      "meta_title": "Novel Information",
+      "m_title": "Title: ",
+      "m_author": "Author: ",
+      "m_novel_id": "Novel ID: ",
+      "m_created": "Created: ",
+      "m_series": "Series: ",
+      "m_tags": "Tags: ",
+      "m_caption": "Summary: ",
+      "m_stats": "Stats: ",
+      "m_link": "Original link: ",
+      "stats_value": "Words: {0}  Bookmarks: {1}  Views: {2}",
+      "series_desc": "Series: {0} (ID: {1})",
+      "series_count": " {0} works",
+      "series_chars": " {0} characters",
+      "series_caption": " Summary: {0}"
     }
   },
   "rank": {
@@ -178,6 +222,15 @@
       "exact": "Exact Match for Tags",
       "partial": "Partial Match for Tags",
       "title": "Title and Caption"
+    },
+    "jump": {
+      "title": "Select jump type",
+      "default_title": "Default jump for numeric search",
+      "ask": "Ask every time",
+      "artwork": "Artwork ID",
+      "novel": "Novel ID",
+      "user": "User ID",
+      "keyword": "Search keyword"
     }
   },
   "setting": {
@@ -389,7 +442,93 @@
       "d2": "Please fill in the RefreshToken, refer to the link below for how to obtain it",
       "d3": "Please fill in RefreshToken",
       "d4": "RefreshToken is malformed"
-    }
+    },
+    "cant_login_msg": "<p>Unable to log in on the current site. Please visit <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> to log in.<p>"
+  },
+  "filter": {
+    "all_age": "All ages",
+    "landscape": "Landscape",
+    "portrait": "Portrait",
+    "square": "Square"
+  },
+  "sync": {
+    "config_title": "Cloud Sync Settings",
+    "title": "☁️ Cloud Sync Settings",
+    "address": "Sync server address",
+    "identifier": "Sync ID",
+    "identifier_desc": "(Identifies your sync space; unrelated to your Pixiv account)",
+    "identifier_ph": "Enter Sync ID (alphanumeric, at least 8 characters)",
+    "password": "Encryption password",
+    "password_desc": "(Used to encrypt your data locally)",
+    "password_ph": "Enter encryption password (at least 8 characters)",
+    "dual_1": "The <b>Sync ID</b> and <b>encryption password</b> together determine one set of sync data.",
+    "dual_2": "Changing either one will point to a different storage space,",
+    "dual_3": "which may be empty or contain a different set of sync data.",
+    "dual_4": "Use the same password and Sync ID on all devices.",
+    "scope_all": "Sync all",
+    "scope_history": "Browsing/search history",
+    "scope_blocks": "Tag/author blocks",
+    "scope_joiner": ", ",
+    "upload_btn": "Upload to cloud",
+    "download_btn": "Download from cloud",
+    "check_btn": "Check status",
+    "last_sync": "Last sync: {0}",
+    "enc_title": "🔒 Encryption",
+    "enc_1": "Your password is only used to encrypt data locally in your browser and <b>is never sent to the server</b>",
+    "enc_2": "Every sync is encrypted with AES-256; the cloud only stores ciphertext",
+    "enc_3": "Data cannot be recovered if you forget the password — keep it safe",
+    "priv_title": "🛡️ Privacy notice",
+    "priv_1": "Synced data includes your settings and browsing history, which may contain sensitive credentials such as your <b>RefreshToken</b>",
+    "priv_2": "For stronger privacy, it is recommended to <b>self-host the sync server</b> to keep full control of your data",
+    "priv_3": "The Sync ID only distinguishes sync spaces; it is <b>unrelated to your Pixiv account</b> and is never uploaded to the sync server",
+    "exp_title": "⚠️ Experimental feature",
+    "exp_1": "This sync feature is experimental and stability is not guaranteed",
+    "exp_2": "Cloud data may be lost due to maintenance or failures",
+    "exp_3": "Regularly back up to a local file with the “Export settings/history” feature",
+    "data_all": "All data",
+    "data_history": "History",
+    "data_blocks": "Block list",
+    "upload_title": "☁️ About to upload sync data",
+    "upload_msg_head": "The following data will be encrypted and uploaded to <b>{0}</b>:<br><br>• <b>{1}</b><br><br>Data is encrypted with AES-256; the cloud only stores ciphertext.",
+    "upload_conflict_warn": "⚠️ If the cloud already has data for the same Sync ID + password, {0}",
+    "upload_overwrite": "the existing data will be overwritten.",
+    "upload_merge": "the selected data will be merged.",
+    "confirm_identifier": "Please confirm that your Sync ID “<b>{0}</b>” and encryption password match your other devices.",
+    "confirm_identifier_dl": "⚠️ Please confirm that your Sync ID “<b>{0}</b>” and encryption password match your other devices,<br>to make sure you download the correct sync data.",
+    "confirm_end": "Continue?",
+    "uploading": "Uploading...",
+    "conflict_status": "⚠️ Sync conflict: the cloud has newer data ({0}); download it before uploading",
+    "conflict_toast": "Sync conflict: cloud data is newer",
+    "ok_status": "✅ Sync successful!",
+    "upload_ok": "Upload successful",
+    "cloud_newer_title": "☁️ Cloud update detected",
+    "cloud_newer_msg": "The cloud data ({0}) is newer than your last sync. Downloading will merge browsing history, and cloud settings will overwrite local settings. Continue?",
+    "download_title": "☁️ About to download sync data from the cloud",
+    "download_msg_head": "The following data will be decrypted with your local password and synced:",
+    "dl_scope_all": "<b>All data</b>: settings, history, and block list",
+    "dl_scope_history": "<b>Browsing & search history</b>: merged and deduplicated with cloud records",
+    "dl_scope_blocks": "<b>Block list</b>: merged with the cloud (tag blocks + author blocks)",
+    "downloading": "Downloading...",
+    "no_update_status": "ℹ️ No new cloud data",
+    "no_update_toast": "No new cloud data",
+    "dl_ok_status": "✅ Download successful, refreshing!",
+    "dl_ok_toast": "Download successful, refreshing",
+    "checking": "Checking...",
+    "info_status": "ℹ️ Cloud data: {0} | Size: {1}KB",
+    "no_cloud_data": "ℹ️ No cloud data for this Sync ID",
+    "connect_fail": "⚠️ Unable to connect to the sync server",
+    "dl_http_fail": "Download failed: HTTP {0}",
+    "decrypt_fail": "Decryption failed — the password may be incorrect",
+    "network_error": "Network error: {0}",
+    "need_address": "Set the sync server address first",
+    "need_password": "Enter the encryption password",
+    "need_identifier": "Enter the Sync ID",
+    "merge_no_cloud": "Could not fetch cloud data to merge",
+    "ul_http_fail": "Upload failed: HTTP {0}"
+  },
+  "theme": {
+    "title": "Visual theme",
+    "pick_desc": "Choose a visual theme"
   },
   "iAH7adsXaqWMXEi3TOuwS": "Series",
   "3HnNTIScyvd1cNc2qAh7X": "Hide mangas in Ranking",

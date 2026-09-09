@@ -152,8 +152,8 @@ export default {
     async onDeleteBlockTag(tag) {
       try {
         await Dialog.confirm({
-          title: '删除屏蔽标签',
-          message: `确定删除屏蔽标签「${tag}」吗？`,
+          title: this.$t('display.delete_tag_title'),
+          message: this.$t('display.delete_tag_confirm', [tag]),
         })
         store.dispatch('removeBlockTag', tag)
         this.blockTagsList = this.blockTagsList.filter(t => t !== tag)
@@ -178,8 +178,8 @@ export default {
     async onDeleteBlockUid(uid) {
       try {
         await Dialog.confirm({
-          title: '删除屏蔽作者',
-          message: `确定删除屏蔽作者「${uid}」吗？`,
+          title: this.$t('display.delete_uid_title'),
+          message: this.$t('display.delete_uid_confirm', [uid]),
         })
         store.dispatch('removeBlockUid', uid)
         this.blockUidsList = this.blockUidsList.filter(u => u !== uid)

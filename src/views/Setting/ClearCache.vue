@@ -56,7 +56,7 @@
           </template>
         </van-cell>
       </template>
-      <van-cell center title="清除 PixivCollection 缓存">
+      <van-cell center :title="$t('cache.pxcl')">
         <template #right-icon>
           <van-button type="info" size="small" @click="clearPxclCache">
             <span>{{ $t('cache.clear') }}</span>
@@ -116,7 +116,7 @@ export default {
         await localDb.length(),
       ]
     },
-    async showConfirm(message = '确定要清理缓存吗？') {
+    async showConfirm(message = this.$t('cache.confirm_default')) {
       try {
         await Dialog.confirm({
           message,
@@ -175,9 +175,9 @@ export default {
             await localDb.remove(key)
           }
         }
-        this.$toast.success('缓存已清除')
+        this.$toast.success(this.$t('cache.cleared'))
       } catch (err) {
-        this.$toast('清除缓存失败: ' + err.message)
+        this.$toast(this.$t('cache.clear_fail', [err.message]))
       }
     },
     async clearMangaTransCache() {
@@ -190,9 +190,9 @@ export default {
             await localDb.remove(key)
           }
         }
-        this.$toast.success('缓存已清除')
+        this.$toast.success(this.$t('cache.cleared'))
       } catch (err) {
-        this.$toast('清除缓存失败: ' + err.message)
+        this.$toast(this.$t('cache.clear_fail', [err.message]))
       }
     },
     async clearShinobuModelCache(silent) {
@@ -201,20 +201,20 @@ export default {
       try {
         const modelDb = localforage.createInstance({ name: 'shinobu-models', storeName: 'models' })
         await modelDb.clear()
-        silent !== true && this.$toast.success('缓存已清除')
+        silent !== true && this.$toast.success(this.$t('cache.cleared'))
       } catch (err) {
-        silent !== true && this.$toast('清除缓存失败: ' + err.message)
+        silent !== true && this.$toast(this.$t('cache.clear_fail', [err.message]))
       }
     },
     async clearPxclCache(silent) {
-      if (silent !== true && await this.showConfirm('确定要清理 PixivCollection 缓存吗？清理后需要重新下载收藏夹数据')) return
+      if (silent !== true && await this.showConfirm(this.$t('cache.confirm_pxcl'))) return
       window.umami?.track('clear_cache', { type: 'pxcl' })
       try {
         const pxclDb = localforage.createInstance({ name: 'pxcl-store' })
         await pxclDb.clear()
-        silent !== true && this.$toast.success('缓存已清除')
+        silent !== true && this.$toast.success(this.$t('cache.cleared'))
       } catch (err) {
-        silent !== true && this.$toast('清除缓存失败: ' + err.message)
+        silent !== true && this.$toast(this.$t('cache.clear_fail', [err.message]))
       }
     },
   },

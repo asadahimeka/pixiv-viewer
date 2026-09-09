@@ -56,7 +56,7 @@ export async function convertHtmlToEpub(html, style, artwork) {
       if (buf) jepub.image(buf, src.split('/').pop())
     }))
 
-    jepub.add('作品信息', buildMetaHeaderEpub(artwork))
+    jepub.add(i18n.t('novel.export.meta_title'), buildMetaHeaderEpub(artwork))
 
     chapters.forEach(({ title, content }) => {
       jepub.add(title, `<div style="${style}">${content}</div>`)
@@ -67,7 +67,7 @@ export async function convertHtmlToEpub(html, style, artwork) {
 
     return epub
   } catch (err) {
-    Toast(`导出 EPUB 出错：${err}`)
+    Toast(i18n.t('novel.export.epub_error', [err]))
     return null
   }
 }
@@ -116,63 +116,67 @@ export function captionToText(caption) {
 
 function buildMetaRows(artwork) {
   const rows = []
-  rows.push(['标题', artwork.title])
-  rows.push(['作者', `${artwork.author?.name || ''} (ID: ${artwork.author?.id})`])
-  rows.push(['小说ID', `${artwork.id}`])
-  rows.push(['创建时间', formatDate(artwork.create_date)])
+  rows.push(['m_title', artwork.title])
+  rows.push(['m_author', `${artwork.author?.name || ''} (ID: ${artwork.author?.id})`])
+  rows.push(['m_novel_id', `${artwork.id}`])
+  rows.push(['m_created', formatDate(artwork.create_date)])
   if (artwork.series?.id) {
-    rows.push(['系列', `${artwork.series.title} (ID: ${artwork.series.id})`])
+    rows.push(['m_series', `${artwork.series.title} (ID: ${artwork.series.id})`])
   }
-  rows.push(['标签', formatTags(artwork.tags)])
+  rows.push(['m_tags', formatTags(artwork.tags)])
   const caption = captionToText(artwork.caption)
-  if (caption) rows.push(['简介', caption])
+  if (caption) rows.push(['m_caption', caption])
   rows.push([
-    '统计',
-    `字数：${artwork.text_length}  收藏：${artwork.total_bookmarks}  浏览：${artwork.total_view}`,
+    'm_stats',
+    i18n.t('novel.export.stats_value', [artwork.text_length, artwork.total_bookmarks, artwork.total_view]),
   ])
-  rows.push(['原链接', `https://www.pixiv.net/novel/show.php?id=${artwork.id}`])
+  rows.push(['m_link', `https://www.pixiv.net/novel/show.php?id=${artwork.id}`])
   return rows
 }
 
 export function buildMetaHeaderTxt(artwork) {
-  const lines = buildMetaRows(artwork).map(([k, v]) =>
-    v.includes('\n') ? `${k}：\n${v}` : `${k}：${v}`
-  )
+  const lines = buildMetaRows(artwork).map(([key, v]) => {
+    const k = i18n.t(`novel.export.${key}`)
+    return v.includes('\n') ? `${k}\n${v}` : `${k}${v}`
+  })
   return lines.join('\n') + '\n\n'
 }
 
 export function buildMetaHeaderMd(artwork) {
-  const lines = buildMetaRows(artwork).map(([k, v]) => {
+  const lines = buildMetaRows(artwork).map(([key, v]) => {
+    const k = i18n.t(`novel.export.${key}`)
     if (v.includes('\n')) {
-      return `> **${k}**：\n>\n> ${v.replace(/\n/g, '\n> ')}`
+      return `> **${k}**\n>\n> ${v.replace(/\n/g, '\n> ')}`
     }
-    return `> **${k}**：${v}`
+    return `> **${k}**${v}`
   })
   return lines.join('\n') + '\n\n---\n\n'
 }
 
 export function buildMetaHeaderHtml(artwork) {
-  const rows = buildMetaRows(artwork).map(([k, v]) => {
-    if (k === '原链接') {
-      return `<div><b>${k}：</b><a href="${escapeHtml(v)}">${escapeHtml(v)}</a></div>`
+  const rows = buildMetaRows(artwork).map(([key, v]) => {
+    const k = i18n.t(`novel.export.${key}`)
+    if (key === 'm_link') {
+      return `<div><b>${k}</b><a href="${escapeHtml(v)}">${escapeHtml(v)}</a></div>`
     }
     if (v.includes('\n')) {
-      return `<div><b>${k}：</b><br>${escapeHtml(v).replace(/\n/g, '<br>')}</div>`
+      return `<div><b>${k}</b><br>${escapeHtml(v).replace(/\n/g, '<br>')}</div>`
     }
-    return `<div><b>${k}：</b>${escapeHtml(v)}</div>`
+    return `<div><b>${k}</b>${escapeHtml(v)}</div>`
   })
   return `<div class="novel-meta-header" style="margin-bottom:1em;padding:0.5em;border:1px solid #ddd;">${rows.join('')}</div>`
 }
 
 export function buildMetaHeaderEpub(artwork) {
-  const rows = buildMetaRows(artwork).map(([k, v]) => {
-    if (k === '原链接') {
-      return `<p><b>${k}：</b><a href="${escapeHtml(v)}">${escapeHtml(v)}</a></p>`
+  const rows = buildMetaRows(artwork).map(([key, v]) => {
+    const k = i18n.t(`novel.export.${key}`)
+    if (key === 'm_link') {
+      return `<p><b>${k}</b><a href="${escapeHtml(v)}">${escapeHtml(v)}</a></p>`
     }
     if (v.includes('\n')) {
-      return `<p><b>${k}：</b><br>${escapeHtml(v).replace(/\n/g, '<br>')}</p>`
+      return `<p><b>${k}</b><br>${escapeHtml(v).replace(/\n/g, '<br>')}</p>`
     }
-    return `<p><b>${k}：</b>${escapeHtml(v)}</p>`
+    return `<p><b>${k}</b>${escapeHtml(v)}</p>`
   })
   return rows.join('')
 }
@@ -194,15 +198,15 @@ export async function buildSeriesEpub(seriesMeta, items) {
       .map(e => [e.name, e.translated_name])
       .flat()
       .filter(Boolean)
-    let description = `系列：${seriesMeta.title} (ID: ${seriesMeta.id})`
+    let description = i18n.t('novel.export.series_desc', [seriesMeta.title, seriesMeta.id])
     if (seriesMeta.content_count) {
-      description += ` 共${seriesMeta.content_count}篇`
+      description += i18n.t('novel.export.series_count', [seriesMeta.content_count])
     }
     if (seriesMeta.total_character_count) {
-      description += ` ${seriesMeta.total_character_count}字`
+      description += i18n.t('novel.export.series_chars', [seriesMeta.total_character_count])
     }
     if (seriesMeta.caption) {
-      description += ` 简介：${seriesMeta.caption}`
+      description += i18n.t('novel.export.series_caption', [seriesMeta.caption])
     }
     jepub.init({
       i18n: detectLanguage(items[0]?.text || '').language,
@@ -242,7 +246,7 @@ export async function buildSeriesEpub(seriesMeta, items) {
     return epub
   } catch (err) {
     console.log('buildSeriesEpub err: ', err)
-    Toast(`导出 EPUB 出错：${err}`)
+    Toast(i18n.t('novel.export.epub_error', [err]))
     return null
   }
 }
@@ -272,7 +276,7 @@ export async function runSeriesEpubDownload(seriesId, seriesTitle, callbacks = {
     while (true) {
       if (shouldCancel && shouldCancel()) return null
       const res = await api.getNovelSeries(seriesId, page)
-      if (res.status !== 0) throw new Error(res.msg || '获取系列失败')
+      if (res.status !== 0) throw new Error(res.msg || i18n.t('novel.export.series_fetch_fail'))
       all.push(...res.data)
       if (!res.data.next) break
       await sleep(1500)
@@ -309,7 +313,7 @@ export async function runSeriesEpubDownload(seriesId, seriesTitle, callbacks = {
     update()
     try {
       const res = await api.getNovelText(item.id)
-      if (res.status !== 0) throw new Error(res.msg || '获取正文失败')
+      if (res.status !== 0) throw new Error(res.msg || i18n.t('novel.export.content_fetch_fail'))
       item.textObj = res.data
       item.text = res.data.text
       item.status = 'done'
@@ -341,7 +345,7 @@ export async function runSeriesEpubDownload(seriesId, seriesTitle, callbacks = {
   )
   if (!epub) {
     state.failed = true
-    state.errorMsg = '生成 EPUB 失败'
+    state.errorMsg = i18n.t('novel.export.build_fail')
     update()
     return null
   }
@@ -491,7 +495,7 @@ export async function convertHtmlToPdf(element, fileName) {
     return blob
   } catch (err) {
     Toast.clear(true)
-    Toast(`导出 PDF 出错：${err}`)
+    Toast(i18n.t('novel.export.pdf_error', [err]))
     return null
   }
 }

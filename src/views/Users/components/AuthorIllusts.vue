@@ -21,7 +21,7 @@
         </div>
         <div class="member-tag" style="background: #375fd7;color: #fff;" @click="setAgeFilter('S')">
           <div class="member-tag-main">
-            <span>全年龄</span>
+            <span>{{ $t('filter.all_age') }}</span>
             <van-icon v-if="ageFilter == 'S'" class="member-tag-check" name="checked" />
           </div>
         </div>
@@ -29,19 +29,19 @@
       <template v-if="showAspectFilter">
         <div class="member-tag" style="background: #8e7af7;color: #fff;" @click="setAspectFilter('H')">
           <div class="member-tag-main">
-            <span>横图</span>
+            <span>{{ $t('filter.landscape') }}</span>
             <van-icon v-if="aspectFilter == 'H'" class="member-tag-check" name="checked" />
           </div>
         </div>
         <div class="member-tag" style="background: #4caf8a;color: #fff;" @click="setAspectFilter('V')">
           <div class="member-tag-main">
-            <span>竖图</span>
+            <span>{{ $t('filter.portrait') }}</span>
             <van-icon v-if="aspectFilter == 'V'" class="member-tag-check" name="checked" />
           </div>
         </div>
         <div class="member-tag" style="background: #ffb74d;color: #fff;" @click="setAspectFilter('S')">
           <div class="member-tag-main">
-            <span>方图</span>
+            <span>{{ $t('filter.square') }}</span>
             <van-icon v-if="aspectFilter == 'S'" class="member-tag-check" name="checked" />
           </div>
         </div>

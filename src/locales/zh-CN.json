@@ -27,7 +27,9 @@
     "confirm": "确认",
     "reset": "重置",
     "date": "日期",
-    "save": "保存"
+    "save": "保存",
+    "retry": "重试",
+    "default": "默认"
   },
   "artwork": {
     "download": {
@@ -76,7 +78,18 @@
   "novel": {
     "series": {
       "prev": "上一话：",
-      "next": "下一话:"
+      "next": "下一话:",
+      "epub_btn": "EPUB(系列)",
+      "dl_btn": "下载系列EPUB",
+      "dl_title": "正在下载系列",
+      "dl_pending": "等待",
+      "dl_downloading": "下载中",
+      "dl_done": "完成",
+      "dl_error": "失败",
+      "dl_generating": "正在生成 EPUB…",
+      "dl_failed_prefix": "下载失败：",
+      "dl_downloading_status": "下载中…",
+      "dl_done_toast": "系列 EPUB 下载完成"
     },
     "settings": {
       "title": "小说设置",
@@ -94,6 +107,28 @@
         "bg": "文字背景",
         "direct_hc": "横向分列"
       }
+    },
+    "export": {
+      "epub_error": "导出 EPUB 出错：{0}",
+      "pdf_error": "导出 PDF 出错：{0}",
+      "series_fetch_fail": "获取系列失败",
+      "content_fetch_fail": "获取正文失败",
+      "build_fail": "生成 EPUB 失败",
+      "meta_title": "作品信息",
+      "m_title": "标题：",
+      "m_author": "作者：",
+      "m_novel_id": "小说ID：",
+      "m_created": "创建时间：",
+      "m_series": "系列：",
+      "m_tags": "标签：",
+      "m_caption": "简介：",
+      "m_stats": "统计：",
+      "m_link": "原链接：",
+      "stats_value": "字数：{0}  收藏：{1}  浏览：{2}",
+      "series_desc": "系列：{0} (ID: {1})",
+      "series_count": " 共{0}篇",
+      "series_chars": " {0}字",
+      "series_caption": " 简介：{0}"
     }
   },
   "user": {
@@ -166,6 +201,15 @@
       "day": "一天内",
       "week": "一周内",
       "month": "一个月内"
+    },
+    "jump": {
+      "title": "选择跳转类型",
+      "default_title": "数字搜索默认跳转",
+      "ask": "每次询问",
+      "artwork": "作品ID",
+      "novel": "小说ID",
+      "user": "用户ID",
+      "keyword": "搜索关键词"
     }
   },
   "about": {
@@ -192,7 +236,12 @@
       "first": "确定要清理{0}吗？",
       "second": "清理后浏览记录、API 缓存、翻译缓存和模型缓存等将被删除，将重新从网络加载相关内容"
     },
-    "mem": "内存占用"
+    "mem": "内存占用",
+    "cleared": "缓存已清除",
+    "clear_fail": "清除缓存失败: {0}",
+    "confirm_default": "确定要清理缓存吗？",
+    "confirm_pxcl": "确定要清理 PixivCollection 缓存吗？清理后需要重新下载收藏夹数据",
+    "pxcl": "清除 PixivCollection 缓存"
   },
   "display": {
     "title": "作品显示设置",
@@ -207,7 +256,11 @@
     "block_tags": "标签黑名单",
     "block_uids": "画师黑名单",
     "block_tags_ph": "请输入标签，英文逗号分隔",
-    "block_uids_ph": "请输入画师 ID，英文逗号分隔"
+    "block_uids_ph": "请输入画师 ID，英文逗号分隔",
+    "delete_tag_title": "删除屏蔽标签",
+    "delete_tag_confirm": "确定删除屏蔽标签「{0}」吗？",
+    "delete_uid_title": "删除屏蔽作者",
+    "delete_uid_confirm": "确定删除屏蔽作者「{0}」吗？"
   },
   "setting": {
     "about": "关于",
@@ -389,7 +442,93 @@
     },
     "succ_tip": "登录成功",
     "fail_tip": "登录失败",
-    "logout_tip": "确认退出？"
+    "logout_tip": "确认退出？",
+    "cant_login_msg": "<p>当前站点无法进行登录，请前往 <a href=\"https://pixiv.pictures\" target=\"_blank\">https://pixiv.pictures</a> 进行操作。<p>"
+  },
+  "filter": {
+    "all_age": "全年龄",
+    "landscape": "横图",
+    "portrait": "竖图",
+    "square": "方图"
+  },
+  "sync": {
+    "config_title": "云同步配置",
+    "title": "☁️ 云同步配置",
+    "address": "同步服务地址",
+    "identifier": "同步标识",
+    "identifier_desc": "（用于区分不同的同步空间，与 Pixiv 账户无关）",
+    "identifier_ph": "输入同步标识（字母数字，至少8位）",
+    "password": "加密密码",
+    "password_desc": "（用于本地加密数据）",
+    "password_ph": "输入加密密码，至少8位",
+    "dual_1": "<b>同步标识</b>与<b>加密密码</b>共同确定一份同步数据。",
+    "dual_2": "更改其中任何一个，都将定位到不同的存储空间，",
+    "dual_3": "新位置将没有数据，或为另一份同步数据。",
+    "dual_4": "请在所有设备上使用相同的密码和标识进行同步。",
+    "scope_all": "全部同步",
+    "scope_history": "浏览/搜索历史",
+    "scope_blocks": "标签/作者屏蔽",
+    "scope_joiner": "、",
+    "upload_btn": "上传到云端",
+    "download_btn": "从云端下载",
+    "check_btn": "查询状态",
+    "last_sync": "上次同步: {0}",
+    "enc_title": "🔒 加密说明",
+    "enc_1": "密码仅用于在浏览器本地加密您的数据，<b>不会被发送到服务器</b>",
+    "enc_2": "每次同步均使用 AES-256 加密，云端仅存储密文",
+    "enc_3": "忘记密码将无法恢复数据，请妥善保管",
+    "priv_title": "🛡️ 隐私提醒",
+    "priv_1": "同步数据包含您的设置与浏览历史，其中可能含有 <b>RefreshToken</b> 等敏感凭据",
+    "priv_2": "如对隐私有较高要求，建议<b>自行部署同步服务</b>以完全掌控数据",
+    "priv_3": "同步标识仅用于区分不同的同步空间，<b>与 Pixiv 账户无关</b>，不会上传到同步服务",
+    "exp_title": "⚠️ 实验性功能",
+    "exp_1": "此同步功能为实验性，不保证稳定可用",
+    "exp_2": "云端数据可能因维护或故障而遗失",
+    "exp_3": "建议定期使用「导出设置/历史」功能备份到本地文件",
+    "data_all": "全部数据",
+    "data_history": "历史记录",
+    "data_blocks": "屏蔽配置",
+    "upload_title": "☁️ 即将上传同步数据",
+    "upload_msg_head": "将以下数据加密后上传至 <b>{0}</b>：<br><br>• <b>{1}</b><br><br>数据将使用 AES-256 加密，云端仅存储密文。",
+    "upload_conflict_warn": "⚠️ 如果云端已有相同同步标识+密码的数据，{0}",
+    "upload_overwrite": "则将覆盖旧数据。",
+    "upload_merge": "则将合并所选数据。",
+    "confirm_identifier": "请确认您的同步标识「<b>{0}</b>」与加密密码与其他设备一致。",
+    "confirm_identifier_dl": "⚠️ 请确认您的同步标识「<b>{0}</b>」与加密密码与其他设备一致，<br>以确保下载到的是正确的同步数据。",
+    "confirm_end": "是否继续？",
+    "uploading": "正在上传...",
+    "conflict_status": "⚠️ 同步冲突：云端有更新的数据（{0}），请先下载再上传",
+    "conflict_toast": "同步冲突：云端数据更新",
+    "ok_status": "✅ 同步成功！",
+    "upload_ok": "上传成功",
+    "cloud_newer_title": "☁️ 检测到云端更新",
+    "cloud_newer_msg": "云端数据（{0}）比上次同步更新。下载将合并浏览历史，云端设置会覆盖本地设置。是否继续？",
+    "download_title": "☁️ 即将从云端下载同步数据",
+    "download_msg_head": "将使用本地密码解密并同步以下数据：",
+    "dl_scope_all": "<b>全部数据</b>：设置、历史记录、屏蔽配置",
+    "dl_scope_history": "<b>浏览历史与搜索历史</b>：与云端记录合并去重",
+    "dl_scope_blocks": "<b>屏蔽配置</b>：与云端合并（标签屏蔽 + 作者屏蔽）",
+    "downloading": "正在下载...",
+    "no_update_status": "ℹ️ 云端无新数据",
+    "no_update_toast": "云端无新数据",
+    "dl_ok_status": "✅ 下载成功，即将刷新！",
+    "dl_ok_toast": "下载成功，即将刷新",
+    "checking": "正在查询...",
+    "info_status": "ℹ️ 云端数据: {0} | 大小: {1}KB",
+    "no_cloud_data": "ℹ️ 该同步标识在云端无数据",
+    "connect_fail": "⚠️ 无法连接到同步服务",
+    "dl_http_fail": "下载失败: HTTP {0}",
+    "decrypt_fail": "解密失败，密码可能不正确",
+    "network_error": "网络错误: {0}",
+    "need_address": "请先配置同步服务地址",
+    "need_password": "请输入加密密码",
+    "need_identifier": "请输入同步标识",
+    "merge_no_cloud": "无法获取云端数据以合并",
+    "ul_http_fail": "上传失败: HTTP {0}"
+  },
+  "theme": {
+    "title": "视觉主题",
+    "pick_desc": "选择视觉主题"
   },
   "iAH7adsXaqWMXEi3TOuwS": "系列",
   "3HnNTIScyvd1cNc2qAh7X": "排行榜隐藏漫画",

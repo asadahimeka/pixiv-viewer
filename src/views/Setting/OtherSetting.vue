@@ -5,7 +5,7 @@
     <van-cell-group :title="$t('GS0J0mAbmiqPGKw20ORPi')">
       <van-cell center :title="$t('setting.other.lang')" is-link :label="selLangLabel" @click="lang.show = true" />
       <van-cell center :title="$t('psoXLFqv51j1SeKjTbnms')" is-link :label="`${accentColor} ${actTheme}`" to="/setting/accent_color" />
-      <van-cell v-if="!isDark" center title="视觉主题" is-link :label="$t('setting.lab.title')" @click="visualTheme.show = true" />
+      <van-cell v-if="!isDark" center :title="$t('theme.title')" is-link :label="$t('setting.lab.title')" @click="visualTheme.show = true" />
       <van-cell center :title="$t('setting.dark.title')" :label="$t('setting.lab.title')">
         <template #right-icon>
           <van-switch :value="isDark" size="24" @change="onDarkChange" />
@@ -55,7 +55,7 @@
       </van-cell>
       <van-cell
         center
-        title="数字搜索默认跳转"
+        :title="$t('search.jump.default_title')"
         :label="searchDefaultIdTypeLabel"
         is-link
         @click="showDefaultTypeSheet = true"
@@ -335,7 +335,7 @@
       <van-cell center :title="$t('Bi5BpYwKhUhWcm_RueGZN')" is-link @click="exportSettings" />
       <van-cell center :title="$t('zhO6bfsyPM1-GpZgyer-L')" is-link @click="importHistory" />
       <van-cell center :title="$t('VV1Yh4x2vpWMf-YwVIRSl')" is-link @click="exportHistory" />
-      <van-cell center title="云同步配置" is-link @click="syncDialogShow = true" />
+      <van-cell center :title="$t('sync.config_title')" is-link @click="syncDialogShow = true" />
     </van-cell-group>
 
     <van-dialog
@@ -443,7 +443,7 @@
       v-model="visualTheme.show"
       :actions="visualTheme.actions"
       :cancel-text="$t('common.cancel')"
-      description="选择视觉主题"
+      :description="$t('theme.pick_desc')"
       close-on-click-action
       @select="changeVisualTheme"
     />
@@ -532,7 +532,7 @@
     <van-action-sheet
       v-model="showDefaultTypeSheet"
       :actions="defaultTypeActions"
-      cancel-text="取消"
+      :cancel-text="$t('common.cancel')"
       close-on-click-action
       @select="onDefaultTypeSelect"
       @cancel="showDefaultTypeSheet = false"
@@ -765,15 +765,15 @@ export default {
       syncDialogShow: false,
       showDefaultTypeSheet: false,
       defaultTypeActions: [
-        { name: '每次询问', value: '' },
-        { name: '作品ID', value: 'artwork' },
-        { name: '小说ID', value: 'novel' },
-        { name: '用户ID', value: 'user' },
+        { name: this.$t('search.jump.ask'), value: '' },
+        { name: this.$t('search.jump.artwork'), value: 'artwork' },
+        { name: this.$t('search.jump.novel'), value: 'novel' },
+        { name: this.$t('search.jump.user'), value: 'user' },
       ],
       visualTheme: {
         show: false,
         actions: [
-          { name: '默认', _value: 'default' },
+          { name: this.$t('common.default'), _value: 'default' },
           { name: 'Sakuria', _value: 'sakuria' },
           { name: 'MD', _value: 'md' },
           { name: 'iOS', _value: 'ios26' },
@@ -807,7 +807,7 @@ export default {
       return this.novelDlFmt.actions.find(e => e._value == store.state.appSetting.novelDefDlFormat)?.name || ''
     },
     searchDefaultIdTypeLabel() {
-      return this.defaultTypeActions.find(e => e.value == store.state.appSetting.searchDefaultIdType)?.name || '每次询问'
+      return this.defaultTypeActions.find(e => e.value == store.state.appSetting.searchDefaultIdType)?.name || this.$t('search.jump.ask')
     },
     sampleArtFileName() {
       return getSampleFileName(this.dlFileNameTpl)

@@ -68,7 +68,7 @@
               plain
               @click="downloadNovel({ val: 'epub_series' })"
             >
-              ⬇️EPUB(系列)
+              ⬇️{{ $t('novel.series.epub_btn') }}
             </van-button>
             <template v-if="showPntBtn">
               <van-button v-if="isTranslated" type="info" size="small" plain @click="showOriginText">↩️显示原文</van-button>
@@ -150,7 +150,7 @@
         />
         <p class="series-dl-status">
           {{ seriesDl.current }} / {{ seriesDl.total }}
-          {{ seriesDl.phase === 'build' ? '正在生成 EPUB…' : seriesDl.failed ? '下载失败：' + seriesDl.errorMsg : '下载中…' }}
+          {{ seriesDl.phase === 'build' ? $t('novel.series.dl_generating') : seriesDl.failed ? $t('novel.series.dl_failed_prefix') + seriesDl.errorMsg : $t('novel.series.dl_downloading_status') }}
         </p>
         <div ref="seriesDlList" class="series-dl-list">
           <div
@@ -166,9 +166,9 @@
         </div>
         <div class="series-dl-actions">
           <van-button v-if="seriesDl.failed" type="danger" size="small" @click="retrySeriesDownload">
-            重试
+            {{ $t('common.retry') }}
           </van-button>
-          <van-button size="small" @click="cancelSeriesDownload">取消</van-button>
+          <van-button size="small" @click="cancelSeriesDownload">{{ $t('common.cancel') }}</van-button>
         </div>
       </div>
     </van-dialog>
@@ -265,7 +265,7 @@ export default {
       showDlPopover: false,
       seriesDl: {
         show: false,
-        title: '正在下载系列',
+        title: this.$t('novel.series.dl_title'),
         total: 0,
         current: 0,
         items: [],
@@ -327,7 +327,7 @@ export default {
         !store.state.appSetting.useNovelWebview && { text: 'PDF', val: 'pdf' },
         !store.state.isMobile && ({ text: `PDF(${i18n.t('Uf25j8CV8zHmOiUk7dn-M')})`, val: 'print' }),
         !store.state.appSetting.useNovelWebview && { text: 'EPUB', val: 'epub' },
-        this.artwork.series && this.artwork.series.id && { text: 'EPUB(系列)', val: 'epub_series' },
+        this.artwork.series && this.artwork.series.id && { text: i18n.t('novel.series.epub_btn'), val: 'epub_series' },
       ].filter(Boolean)
     },
     useNovelWebview() {
@@ -634,10 +634,10 @@ export default {
     seriesDlStatusText(status) {
       return (
         {
-          pending: '等待',
-          downloading: '下载中',
-          done: '完成',
-          error: '失败',
+          pending: this.$t('novel.series.dl_pending'),
+          downloading: this.$t('novel.series.dl_downloading'),
+          done: this.$t('novel.series.dl_done'),
+          error: this.$t('novel.series.dl_error'),
         }[status] || ''
       )
     },
@@ -645,7 +645,7 @@ export default {
       if (!seriesId) return
       this.seriesDl = {
         show: true,
-        title: '正在下载系列',
+        title: this.$t('novel.series.dl_title'),
         total: 0,
         current: 0,
         items: [],
@@ -683,7 +683,7 @@ export default {
         const safeName = this.seriesDl.seriesTitle.replace(/[\\/:*?"<>|]/g, '_')
         await downloadFile(epub, `${safeName}.epub`, { subDir: 'novel' })
         this.seriesDl.show = false
-        this.$toast('系列 EPUB 下载完成')
+        this.$toast(this.$t('novel.series.dl_done_toast'))
       }
     },
     retrySeriesDownload() {
