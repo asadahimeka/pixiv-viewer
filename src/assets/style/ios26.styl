@@ -152,7 +152,7 @@
       color var(--accent-color) !important
     .van-action-sheet__item,
     .van-action-sheet__description
-      border-bottom 1PX solid #0003
+      border-bottom 1PX solid rgba(0, 0, 0, 0.1)
     .van-action-sheet__description::after
       display none
     .van-action-sheet__cancel, .van-share-sheet__cancel
@@ -161,6 +161,9 @@
   #app .van-popup--bottom
     width 9.5rem !important
     margin-left -4.75rem !important
+    .van-popup--bottom
+      width 100% !important
+      margin-left 0 !important
   .artwork.novel .setting-actions
     right 0.25rem
 
