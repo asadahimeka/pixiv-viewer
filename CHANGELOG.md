@@ -129,6 +129,14 @@
 - Style fixes
 - Ios style fixes
 - Novel download meta header and series epub
+- Ios style fixes
+- Novel epub series download sleep
+- Safari style fixes
+- Safari style fixes
+- Change default ai translate provider
+- Ios style fix
+- Update locales
+- Novel hc layout paging
 
 ### 💼 Other
 
@@ -203,6 +211,7 @@
 - Patch swiper
 - Release v1.37.1
 - Release v1.37.2
+- Release v1.37.3
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
