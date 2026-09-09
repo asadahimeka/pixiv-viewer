@@ -564,7 +564,7 @@ export function parseNovelTextToHtml(textObj = {}, textConfig = {}) {
     .replace(/\[i:([^[\]]+)\]/g, '<i style="font-style:oblique">$1</i>')
     .replace(/\[b:([^[\]]+)\]/g, '<b style="font-weight:bolder;text-shadow:1px 1px 1px currentColor">$1</b>')
     .replace(/\[pixivimage:([\d-]+)\]/g, '<img style="display:block;max-width:100%;margin:auto" src="https://pximg.cocomi.eu.org/-pid-/$1" alt>')
-    .replace(/\[jump:(\d+)\]/g, (_, $1) => `<a style="cursor:pointer;text-decoration:underline" onclick="document.querySelector('hr[data-index=page${$1}]')?.scrollIntoView({behavior:'smooth'})">page${$1}</a>`)
+    .replace(/\[jump:(\d+)\]/g, (_, $1) => `<a style="cursor:pointer;text-decoration:underline" onclick="var t=document.querySelector('hr[data-index=page${$1}]');if(!t)return;var v=t.closest('.novel-view');if(v&&v.classList.contains('horizon-cols')){event.stopPropagation();var w=v.clientWidth;if(w){var x=Math.floor((t.getBoundingClientRect().left-v.getBoundingClientRect().left+v.scrollLeft)/w)*w;v.scrollTo({left:Math.min(Math.max(x,0),v.scrollWidth-w),behavior:'smooth'})}}else{t.scrollIntoView({behavior:'smooth'})}">page${$1}</a>`)
     .replace(/\[chapter: *([^[\]]+)\]/g, '<h2 style="margin: 1em 0;font-weight:bold;font-size:1.5em">$1</h2>')
     .replace(/\[uploadedimage:(\d+)\]/g, (_, $1) => `<img style="display:block;max-width:100%;margin:auto" src="${getEmbedImg(textObj, $1)}" alt>`)
     .replace(/若想浏览插图，还请使用网页版。/g, '-- 插图 --')

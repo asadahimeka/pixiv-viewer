@@ -12,6 +12,7 @@
     :style="{ backgroundColor: textConfig.bg }"
     @click="handleContClick"
     @wheel="handleWheel"
+    @scroll.passive="handleScroll"
     @touchstart.passive="handleTouchstart"
     @touchend.passive="handleTouchend"
   >
@@ -99,6 +100,16 @@ export default {
       return match?.src || ''
     },
   },
+  watch: {
+    'textConfig.direction'(val) {
+      if (val == 'hc') {
+        this.$nextTick(() => this.syncPageIndex())
+      }
+    },
+  },
+  created() {
+    this._pageIdx = 0
+  },
   activated() {
     console.log('++++++ novel view activated')
     this.$nextTick(() => {
@@ -110,20 +121,82 @@ export default {
     this.$nextTick(() => {
       this.restoreScrollPosition()
     })
+    this.initResizeObserver()
+  },
+  beforeDestroy() {
+    if (this._resizeObserver) {
+      this._resizeObserver.disconnect()
+      this._resizeObserver = null
+    }
+    clearTimeout(this._resizeTimer)
+    clearTimeout(this._scrollSyncTimer)
   },
   methods: {
     async restoreScrollPosition() {
-      if (!this.artwork.id || (this.textConfig.direction == 'h' && this.isShrink)) {
-        return
+      try {
+        if (!this.artwork.id || (this.textConfig.direction == 'h' && this.isShrink)) {
+          return
+        }
+        const position = await getCache(`novel.scroll.${this.artwork.id}`)
+        console.log('restoreScrollPosition: ', position)
+        if (!position) return
+        if (this.textConfig.direction == 'h') {
+          document.documentElement.scrollTop = position
+        } else if (this.textConfig.direction == 'hc') {
+          const m = this.getHcMetrics()
+          const pos = Number(position)
+          if (m && Number.isFinite(pos)) {
+            const left = Math.min(Math.round(Math.min(Math.max(pos, 0), m.maxScroll) / m.w) * m.w, m.maxScroll)
+            m.el.scrollTo({ left, behavior: 'auto' })
+            this._pageIdx = Math.round(left / m.w)
+          }
+        } else {
+          this.$refs.view.scrollLeft = position
+        }
+      } finally {
+        this._restoreReady = true
       }
-      const position = await getCache(`novel.scroll.${this.artwork.id}`)
-      console.log('restoreScrollPosition: ', position)
-      if (!position) return
-      if (this.textConfig.direction == 'h') {
-        document.documentElement.scrollTop = position
-      } else {
-        this.$refs.view.scrollLeft = position
-      }
+    },
+    // hc 模式: 列宽即容器内容宽度, 页宽/最大滚动距离/末页索引都由此推导
+    getHcMetrics() {
+      if (this.textConfig.direction != 'hc') return null
+      const el = this.$refs.view
+      const w = el && el.clientWidth
+      if (!el || !w) return null
+      const maxScroll = Math.max(el.scrollWidth - w, 0)
+      return { el, w, maxScroll, maxPage: Math.round(maxScroll / w) }
+    },
+    // 按页码索引绝对定位, 而非 scrollLeft += 相对累加:
+    // 平滑滚动动画进行中再次翻页时按页码累加, 落点始终对齐列边界, 不会残留半页偏移
+    flipPage(dir) {
+      const m = this.getHcMetrics()
+      if (!m) return
+      this._pageIdx = Math.min(Math.max(this._pageIdx + dir, 0), m.maxPage)
+      m.el.scrollTo({ left: Math.min(this._pageIdx * m.w, m.maxScroll), behavior: 'smooth' })
+    },
+    // 滚动停稳后从实际位置反推页码, 兜底覆盖外部滚动(跳转链接/查找/自由拖动等)
+    syncPageIndex() {
+      const m = this.getHcMetrics()
+      if (!m) return
+      this._pageIdx = Math.min(Math.max(Math.round(m.el.scrollLeft / m.w), 0), m.maxPage)
+    },
+    handleScroll() {
+      if (this.textConfig.direction != 'hc') return
+      clearTimeout(this._scrollSyncTimer)
+      this._scrollSyncTimer = setTimeout(() => this.syncPageIndex(), 150)
+    },
+    // 容器尺寸变化(旋转屏幕/折叠信息栏/窗口缩放)会使旧偏移脱离列边界, 需按页码重新对齐
+    initResizeObserver() {
+      if (typeof ResizeObserver === 'undefined' || !this.$refs.view) return
+      this._resizeObserver = new ResizeObserver(() => {
+        clearTimeout(this._resizeTimer)
+        this._resizeTimer = setTimeout(() => {
+          const m = this.getHcMetrics()
+          if (!m || !this._restoreReady) return
+          m.el.scrollTo({ left: Math.min(this._pageIdx * m.w, m.maxScroll), behavior: 'auto' })
+        }, 100)
+      })
+      this._resizeObserver.observe(this.$refs.view)
     },
     handleContClick(e) {
       if (this.isShrink) {
@@ -135,9 +208,8 @@ export default {
         })
       }
       if (this.textConfig.direction == 'hc') {
-        const w = this.$refs.view.offsetWidth
-        const i = e.clientX > (w / 2) ? 1 : -1
-        this.$refs.view.scrollLeft += w * i
+        const w = this.$refs.view.clientWidth
+        this.flipPage(e.clientX > (w / 2) ? 1 : -1)
       }
     },
     handleWheel(e) {
@@ -146,7 +218,12 @@ export default {
       e.preventDefault()
       e.stopPropagation()
       if (this.textConfig.direction == 'hc') {
-        this.$refs.view.scrollLeft += this.$refs.view.clientWidth * (e.deltaY > 0 ? 1 : -1)
+        // 触控板惯性一次手势会触发大量 wheel 事件, 加时间闸保证一次手势只翻一页
+        const now = Date.now()
+        if (now - (this._lastWheelFlipAt || 0) > 250) {
+          this._lastWheelFlipAt = now
+          this.flipPage(e.deltaY > 0 ? 1 : -1)
+        }
         return
       }
       this.$refs.view.scrollLeft += e.deltaY * 2
@@ -167,7 +244,7 @@ export default {
       const deltaY = this.endY - this.startY
 
       if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
-        this.$refs.view.scrollLeft += this.$refs.view.clientWidth * (deltaX > 0 ? -1 : 1)
+        this.flipPage(deltaX > 0 ? -1 : 1)
       }
     },
   },
@@ -235,7 +312,6 @@ export default {
     column-gap: 0
     padding-bottom 40px
     box-sizing border-box
-    scroll-behavior: smooth
     .novel_text
       padding 0
       box-sizing border-box
