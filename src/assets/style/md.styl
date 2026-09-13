@@ -96,7 +96,6 @@ md-apply()
   .van-dialog .van-dialog__footer button,
   .van-share-sheet button,
   .van-action-sheet button,
-  .search-dropdown,
   #ldio-loading
     background: var(--md-sys-color-surface-container-high) !important
   .van-popup .van-search
@@ -143,15 +142,16 @@ md-apply()
           top: 0.1rem
           left: 50%
           z-index: -1
-          width: 60PX
-          height: 30PX
+          width: 1.55rem
+          height: 0.8rem
           background: var(--md-sys-color-primary-container)
           border-radius: 32PX
           transform: translateX(-50%) scaleX(.5)
           transition-duration: 0.2s
           opacity: 0
           @media screen and (min-width: 1120px)
-            width 55PX
+            width: 1.05rem
+            height: 0.55rem
         &:has(.svg-icon.active)::before
           transform: translateX(-50%) scaleX(1)
           opacity: 1
@@ -386,6 +386,12 @@ md-apply()
     background: var(--md-sys-color-surface-container-low) !important
     .van-cell
       background transparent !important
+  #app .search .search-bar,
+  #app .search .search_params,
+  #app .search .search-dropdown
+    background: var(--md-sys-color-background) !important
+  #app .search .search_param_sel .van-dropdown-item__option
+    background: var(--md-sys-color-surface-container-low) !important
 
 // ============ 共享应用规则（dark，覆盖 base.styl .dark #app 强制 #16161a 的容器） ============
 md-dark-apply()

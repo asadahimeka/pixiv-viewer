@@ -32,14 +32,14 @@ importers:
         specifier: 4.4.2
         version: 4.4.2
       core-js:
-        specifier: 3.49.0
-        version: 3.49.0
+        specifier: 3.50.0
+        version: 3.50.0
       crypto-js:
         specifier: 4.2.0
         version: 4.2.0
       dayjs:
-        specifier: 1.11.21
-        version: 1.11.21
+        specifier: 1.11.23
+        version: 1.11.23
       gif.js:
         specifier: 0.2.0
         version: 0.2.0
@@ -61,6 +61,9 @@ importers:
       onnxruntime-web:
         specifier: 1.27.0
         version: 1.27.0
+      qs:
+        specifier: 6.16.0
+        version: 6.16.0
       register-service-worker:
         specifier: 1.7.2
         version: 1.7.2
@@ -109,7 +112,7 @@ importers:
         version: 2023.10.7
       '@vue/cli-plugin-babel':
         specifier: 5.0.9
-        version: 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.34)(ejs@3.1.10)(lodash@4.18.1)(stylus-loader@7.1.3(stylus@0.64.0)(webpack@5.106.2))(vue@2.7.16)(webpack-sources@3.4.1))(core-js@3.49.0)(vue@2.7.16)
+        version: 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.34)(ejs@3.1.10)(lodash@4.18.1)(stylus-loader@7.1.3(stylus@0.64.0)(webpack@5.106.2))(vue@2.7.16)(webpack-sources@3.4.1))(core-js@3.50.0)(vue@2.7.16)
       '@vue/cli-plugin-pwa':
         specifier: 5.0.9
         version: 5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.34)(ejs@3.1.10)(lodash@4.18.1)(stylus-loader@7.1.3(stylus@0.64.0)(webpack@5.106.2))(vue@2.7.16)(webpack-sources@3.4.1))
@@ -1832,8 +1835,8 @@ packages:
   core-js-compat@3.49.0:
     resolution: {integrity: sha512-VQXt1jr9cBz03b331DFDCCP90b3fanciLkgiOoy8SBHy06gNf+vQ1A3WFLqG7I8TipYIKeYK9wxd0tUrvHcOZA==}
 
-  core-js@3.49.0:
-    resolution: {integrity: sha512-es1U2+YTtzpwkxVLwAFdSpaIMyQaq0PBgm3YD1W3Qpsn1NAmO3KSgZfu+oGSWVu6NvLHoHCV/aYcsE5wiB7ALg==}
+  core-js@3.50.0:
+    resolution: {integrity: sha512-BRWgOLKkFeCgRudR6zrs8p9XJZcE14grzKMMssoYrk6krtuEZ7MTKPIY5RzOnqsEKIR9kst7wNzphttraT+Yqw==}
 
   core-util-is@1.0.3:
     resolution: {integrity: sha512-ZQBvi1DcpJ4GDqanjucZ2Hj3wEO5pZDS89BWbkcrvdxksJorwUDDZamX9ldFkp9aw2lmBDLgkObEA4DWNJ9FYQ==}
@@ -1947,8 +1950,8 @@ packages:
     resolution: {integrity: sha512-BS8PfmtDGnrgYdOonGZQdLZslWIeCGFP9tpan0hi1Co2Zr2NKADsvGYA8XxuG/4UWgJ6Cjtv+YJnB6MM69QGlQ==}
     engines: {node: '>= 0.4'}
 
-  dayjs@1.11.21:
-    resolution: {integrity: sha512-98IT+HOahAisibz/yjKbzuOBwYcjJ7BCLPzARyHiyEBmRz4fatF+KPJszEHXsGYjUG234aH/cOjW1wwTbKUZlA==}
+  dayjs@1.11.23:
+    resolution: {integrity: sha512-QDTCU0M0MxR3hQfnlDJfwekQiaanm1ubOD231u73WBckQ/fsamwRLiE2GBz6D3a/xF1NgfiDLJjXBa1hYOYTtQ==}
 
   debounce@1.2.1:
     resolution: {integrity: sha512-XRRe6Glud4rd/ZGQfiV1ruXSfbvfJedlV9Y6zOlP+2K04vBYiJEte6stfFkCP03aMnY5tsipamumUjL14fofug==}
@@ -3752,6 +3755,10 @@ packages:
     resolution: {integrity: sha512-6YHEFRL9mfgcAvql/XhwTvf5jKcOiiupt2FiJxHkiX1z4j7WL8J/jRHYLluORvc1XxB5rV20KoeK00gVJamspg==}
     engines: {node: '>=0.6'}
 
+  qs@6.16.0:
+    resolution: {integrity: sha512-h6fhOIaRrID2CbEY2fqs+7t+UXZo+MLAnU5gRIq85uFtdiUPCdsApMlHhXogKVM4HM2DVbIjGNTTYH2OcmP1vA==}
+    engines: {node: '>=0.6'}
+
   queue-microtask@1.2.3:
     resolution: {integrity: sha512-NuaNSa6flKT5JaSYQzJok04JzTL1CA6aGhv5rfLW3PgqA+M2ChpZQnAC8h8i4ZFkBS8X5RqkDBHA7r4hej3K9A==}
 
@@ -4020,6 +4027,10 @@ packages:
 
   side-channel@1.1.0:
     resolution: {integrity: sha512-ZX99e6tRweoUXqR+VBrslhda51Nh5MTQwou5tnUDgbtyM0dBgmhEDtWGP/xbKn6hqfPRHujUNwz5fy/wbbhnpw==}
+    engines: {node: '>= 0.4'}
+
+  side-channel@1.1.1:
+    resolution: {integrity: sha512-6x6dK6zJdpTzF4sQeNYxwtvBzf6Eg4GtlesS94HOvTudUeyK2WXAaIfmDgsyslYrRBeFIlsi54AYsFGUuhmvrQ==}
     engines: {node: '>= 0.4'}
 
   signal-exit@3.0.7:
@@ -5860,7 +5871,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@vue/babel-preset-app@5.0.9(@babel/core@7.29.0)(core-js@3.49.0)(vue@2.7.16)':
+  '@vue/babel-preset-app@5.0.9(@babel/core@7.29.0)(core-js@3.50.0)(vue@2.7.16)':
     dependencies:
       '@babel/core': 7.29.0
       '@babel/helper-compilation-targets': 7.28.6
@@ -5878,7 +5889,7 @@ snapshots:
       core-js-compat: 3.49.0
       semver: 7.7.4
     optionalDependencies:
-      core-js: 3.49.0
+      core-js: 3.50.0
       vue: 2.7.16
     transitivePeerDependencies:
       - supports-color
@@ -5942,10 +5953,10 @@ snapshots:
 
   '@vue/cli-overlay@5.0.9': {}
 
-  '@vue/cli-plugin-babel@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.34)(ejs@3.1.10)(lodash@4.18.1)(stylus-loader@7.1.3(stylus@0.64.0)(webpack@5.106.2))(vue@2.7.16)(webpack-sources@3.4.1))(core-js@3.49.0)(vue@2.7.16)':
+  '@vue/cli-plugin-babel@5.0.9(@vue/cli-service@5.0.9(@vue/compiler-sfc@3.5.34)(ejs@3.1.10)(lodash@4.18.1)(stylus-loader@7.1.3(stylus@0.64.0)(webpack@5.106.2))(vue@2.7.16)(webpack-sources@3.4.1))(core-js@3.50.0)(vue@2.7.16)':
     dependencies:
       '@babel/core': 7.29.0
-      '@vue/babel-preset-app': 5.0.9(@babel/core@7.29.0)(core-js@3.49.0)(vue@2.7.16)
+      '@vue/babel-preset-app': 5.0.9(@babel/core@7.29.0)(core-js@3.50.0)(vue@2.7.16)
       '@vue/cli-service': 5.0.9(@vue/compiler-sfc@3.5.34)(ejs@3.1.10)(lodash@4.18.1)(stylus-loader@7.1.3(stylus@0.64.0)(webpack@5.106.2))(vue@2.7.16)(webpack-sources@3.4.1)
       '@vue/cli-shared-utils': 5.0.9
       babel-loader: 8.4.1(@babel/core@7.29.0)(webpack@5.106.2)
@@ -6869,7 +6880,7 @@ snapshots:
     dependencies:
       browserslist: 4.28.2
 
-  core-js@3.49.0: {}
+  core-js@3.50.0: {}
 
   core-util-is@1.0.3: {}
 
@@ -7011,7 +7022,7 @@ snapshots:
       es-errors: 1.3.0
       is-data-view: 1.0.2
 
-  dayjs@1.11.21: {}
+  dayjs@1.11.23: {}
 
   debounce@1.2.1: {}
 
@@ -8878,6 +8889,11 @@ snapshots:
     dependencies:
       side-channel: 1.1.0
 
+  qs@6.16.0:
+    dependencies:
+      es-define-property: 1.0.1
+      side-channel: 1.1.1
+
   queue-microtask@1.2.3: {}
 
   randombytes@2.1.0:
@@ -9212,6 +9228,14 @@ snapshots:
       side-channel-map: 1.0.1
 
   side-channel@1.1.0:
+    dependencies:
+      es-errors: 1.3.0
+      object-inspect: 1.13.4
+      side-channel-list: 1.0.1
+      side-channel-map: 1.0.1
+      side-channel-weakmap: 1.0.2
+
+  side-channel@1.1.1:
     dependencies:
       es-errors: 1.3.0
       object-inspect: 1.13.4

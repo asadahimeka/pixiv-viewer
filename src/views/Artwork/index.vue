@@ -1270,14 +1270,14 @@ img[src*="https://api.moedog.org/qr/?url="]
   position: sticky;
   top: 0;
 
-@media screen and (min-width: 1600px)
-  .ia-cont
-    &.landscape-1-art
+@media screen and (min-width: 1121px)
+  .ia-cont.landscape-1-art
+    .ia-left
+      height 100vh
       align-items center
-      .ia-left
-        margin-top -.2rem
-      .ia-right
-        min-height 100vh
+      margin-top 0
+    .ia-right
+      min-height 100vh
 @media screen and (max-width: 1120px)
   .ia-cont
     display block !important
