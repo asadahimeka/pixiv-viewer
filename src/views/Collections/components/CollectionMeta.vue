@@ -218,6 +218,7 @@ export default {
     display flex
     align-items center
     flex-wrap wrap
+    gap 5PX 10PX
     color: #6633FF
     margin: 16px 0;
     overflow: hidden;
@@ -231,7 +232,6 @@ export default {
     .tag {
       line-height: 42px;
       font-size: 26px;
-      margin-right: 10px;
       cursor pointer
       background transparent
       border-radius 5px

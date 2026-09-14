@@ -3,7 +3,7 @@
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('cache.title') }}</h3>
     <div class="setting-cell-group">
-      <van-cell center :title="$t('cache.db')">
+      <van-cell v-if="isLoggedIn" center :title="$t('cache.db')">
         <template #label>
           <span>{{ $t('cache.records', [size.db[1]]) }} ~ {{ size.db[0] | bytes }}</span>
         </template>
@@ -33,7 +33,7 @@
           </van-button>
         </template>
       </van-cell>
-      <template v-if="showClearTransate">
+      <template v-if="isLoggedIn && showClearTransate">
         <van-cell center title="清除小说翻译缓存">
           <template #right-icon>
             <van-button type="info" size="small" @click="clearNovelTransCache">
@@ -56,7 +56,7 @@
           </template>
         </van-cell>
       </template>
-      <van-cell center :title="$t('cache.pxcl')">
+      <van-cell v-if="isLoggedIn" center :title="$t('cache.pxcl')">
         <template #right-icon>
           <van-button type="info" size="small" @click="clearPxclCache">
             <span>{{ $t('cache.clear') }}</span>
@@ -69,6 +69,7 @@
 
 <script>
 import localforage from 'localforage'
+import { mapGetters } from 'vuex'
 import { Dialog } from '@/lib/vant-apis'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import localDb from '@/utils/storage/localDb'
@@ -103,6 +104,9 @@ export default {
   },
   head() {
     return { title: this.$t('cache.title') }
+  },
+  computed: {
+    ...mapGetters(['isLoggedIn']),
   },
   activated() {
     this.calcCacheSize()
