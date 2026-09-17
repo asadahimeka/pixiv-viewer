@@ -1,5 +1,41 @@
 # Pixiv Viewer — Agent Guide
 
+## ⚠️ CRITICAL RULES
+
+### Never Modify Code Without Explicit Request
+- **INVESTIGATE ≠ IMPLEMENT**. "look into", "check", "find" → report only.
+- "explain", "how does X work" → answer only.
+- Do not write code, edit files, or create features unless explicitly asked.
+
+### Never Delete Files Without Explicit Request
+- "revert" → revert changes with `git restore`, not delete files.
+- When in doubt → ask.
+
+### Never Commit to Git Without Explicit Request
+- Do not stage, commit, or push changes unless the user directly says "commit" or "push".
+- Even if work is complete, wait for instruction.
+
+---
+
+## Pre-Implementation Protocol
+
+Before writing any code or modifying any file, you MUST follow this protocol:
+
+### Step 1 — Restate Understanding
+In your own words, explain:
+- What problem you're solving and what the deliverable is.
+- Any assumptions you're making or things you're uncertain about.
+- If you see a better technical approach, propose it — the user decides.
+
+### Step 2 — Ask Key Questions
+Ask no more than **3** questions until you have 100% clarity on:
+1. **The real goal** — what the user actually wants to achieve (not just what they said).
+2. **Unstated constraints** — tech stack limits, performance requirements, code that must not be touched, etc.
+3. **Your implementation plan** — core approach, why this solution, what tradeoffs exist.
+
+### Step 3 — Wait for Go-Ahead
+**Do not write code or modify files** until the user explicitly says to proceed.
+
 ## Stack
 
 - **Vue 2.7** (Composition API available) + Vue Router 3 + Vuex 3 + Vue I18n 8
@@ -15,7 +51,7 @@
 |---|---|
 | `pnpm serve` | Dev server at `localhost:8080` |
 | `pnpm build` | Production build → `dist/` |
-| `pnpm lint` | ESLint check |
+| `pnpm lint` | ESLint check （尽量不跑全量 lint，而是只对改动文件做 lint 检查） |
 | `pnpm analyze` | Build with bundle report |
 | `pnpm release` | Bump version (`bumpp`), then `npm run prerelease` |
 | `npm run changelog` | Generate CHANGELOG.md via git-cliff |

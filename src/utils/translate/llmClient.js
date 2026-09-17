@@ -126,11 +126,91 @@ async function throwHttpError(resp) {
 }
 
 /**
+ * 从 delta 中提取推理增量，兼容两种常见字段：
+ * - reasoning_content：DeepSeek 官方 / SiliconFlow 等多数 OpenAI 兼容网关
+ * - reasoning：OpenRouter；两者同时存在时 reasoning_content 优先
+ * 非字符串值（null/对象等）一律忽略
+ * @param {object} delta
+ * @returns {string}
+ */
+function pickReasoning(delta) {
+  const rc = delta.reasoning_content
+  if (typeof rc === 'string' && rc) return rc
+  const r = delta.reasoning
+  if (typeof r === 'string' && r) return r
+  return ''
+}
+
+/**
+ * 内联 <think>...</think> 流式拆分器：部分网关（如 Qwen3 系）把推理以
+ * <think> 标签混在正文里返回，此拆分器把 think 段落归为推理增量。
+ * 标签可能被切断在任意 chunk 边界（如 "<thi" / "</th"），
+ * 未拼齐的部分标签先扣留，等后续 chunk 拼齐再判定；流结束时 flush 兜底。
+ * @returns {{ push: (chunk: string) => {reasoning: string, content: string}, flush: () => {reasoning: string, content: string} }}
+ */
+export function createThinkTagSplitter() {
+  const OPEN = '<think>'
+  const CLOSE = '</think>'
+  let inThink = false
+  let buf = ''
+  /** text 末尾与 tag 前缀重合的最长长度（疑似被切断的标签部分） */
+  function partialLen(text, tag) {
+    const max = Math.min(tag.length - 1, text.length)
+    for (let len = max; len > 0; len--) {
+      if (text.endsWith(tag.slice(0, len))) return len
+    }
+    return 0
+  }
+  function drain() {
+    let reasoning = ''
+    let content = ''
+    while (buf) {
+      const tag = inThink ? CLOSE : OPEN
+      const idx = buf.indexOf(tag)
+      if (idx !== -1) {
+        const seg = buf.slice(0, idx)
+        if (inThink) reasoning += seg
+        else content += seg
+        buf = buf.slice(idx + tag.length)
+        inThink = !inThink
+        continue
+      }
+      const emitLen = buf.length - partialLen(buf, tag)
+      if (emitLen > 0) {
+        const seg = buf.slice(0, emitLen)
+        if (inThink) reasoning += seg
+        else content += seg
+        buf = buf.slice(emitLen)
+      }
+      break
+    }
+    return { reasoning, content }
+  }
+  return {
+    push(chunk) {
+      if (!chunk) return { reasoning: '', content: '' }
+      buf += chunk
+      return drain()
+    },
+    flush() {
+      const rest = buf
+      buf = ''
+      // 未闭合的 <think> 残段按推理处理，其余原样输出
+      if (inThink) return { reasoning: rest, content: '' }
+      return { reasoning: '', content: rest }
+    },
+  }
+}
+
+/**
  * 流式 chat/completions。
  * 收到 HTTP 状态码（401 等）说明 CORS 已通，直接抛 ApiError，不走油猴重试；
  * 仅当 fetch 抛网络异常（TypeError）时才降级油猴整包返回。
+ * 推理模型支持：delta.reasoning_content / delta.reasoning 以
+ * { reasoning, content: '' } 独立事件旁路发出（content 恒为空串，老回调的
+ * resText += content 累加不受影响）；正文内联 <think> 段落同样归入推理。
  *
- * @param {{ baseUrl: string, apiKey: string, body: object, onRead: (c: {content: string, done: boolean}) => void, signal?: AbortSignal }} opts
+ * @param {{ baseUrl: string, apiKey: string, body: object, onRead: (c: {content: string, reasoning?: string, done: boolean}) => void, signal?: AbortSignal }} opts
  */
 export async function chatCompletionStream({ baseUrl, apiKey, body, onRead, signal }) {
   const endpoint = buildEndpoint(baseUrl, '/chat/completions')
@@ -169,6 +249,17 @@ export async function chatCompletionStream({ baseUrl, apiKey, body, onRead, sign
 
   const reader = response.body.getReader()
   const decoder = new TextDecoder()
+  const thinkSplitter = createThinkTagSplitter()
+  // 单个 SSE 事件处理：推理字段直通，content 过滤内联 <think>
+  const handleDelta = json => {
+    const delta = json.choices?.[0]?.delta || {}
+    const reasoning = pickReasoning(delta)
+    if (reasoning) onRead({ reasoning, content: '', done: false })
+    if (!delta.content) return
+    const split = thinkSplitter.push(delta.content)
+    if (split.reasoning) onRead({ reasoning: split.reasoning, content: '', done: false })
+    if (split.content) onRead({ content: split.content, done: false })
+  }
   let buffer = ''
   while (true) {
     const { value, done } = await reader.read()
@@ -178,19 +269,15 @@ export async function chatCompletionStream({ baseUrl, apiKey, body, onRead, sign
     const lines = buffer.split('\n')
     buffer = lines.pop()
     for (const line of lines) {
-      for (const json of parseSseLines(line)) {
-        const delta = json.choices?.[0]?.delta || {}
-        const content = delta.content || ''
-        if (content) onRead({ content, done: false })
-      }
+      for (const json of parseSseLines(line)) handleDelta(json)
     }
   }
   // 流结束，处理残余 buffer（可能含未以换行结尾的最后一行）
-  for (const json of parseSseLines(buffer)) {
-    const delta = json.choices?.[0]?.delta || {}
-    const content = delta.content || ''
-    if (content) onRead({ content, done: false })
-  }
+  for (const json of parseSseLines(buffer)) handleDelta(json)
+  // 冲刷 <think> 拆分器中扣留的部分标签 / 未闭合段落
+  const tail = thinkSplitter.flush()
+  if (tail.reasoning) onRead({ reasoning: tail.reasoning, content: '', done: false })
+  if (tail.content) onRead({ content: tail.content, done: false })
   onRead({ content: '', done: true })
 }
 

@@ -185,7 +185,7 @@ import { getArtworkFileName } from '@/store/actions/filename'
 import { PIXIV_NEXT_URL } from '@/consts'
 import { getNoTranslateWords, isNativeTranslatorSupported, loadKISSTranslator, nativeTranslate, siliconCloudTranslate } from '@/utils/translate'
 import { copyText, downloadFile } from '@/utils'
-import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel, buildMetaHeaderTxt, buildMetaHeaderHtml, runSeriesEpubDownload } from '@/utils/novel'
+import { convertHtmlToDoc, convertHtmlToEpub, convertHtmlToPdf, convertNovelToMarkdown, printNovel, buildMetaHeaderTxt, buildMetaHeaderHtml, runSeriesEpubDownload, escapeHtml } from '@/utils/novel'
 import { getCache, setCache, toggleBookmarkCache } from '@/utils/storage/siteCache'
 import { i18n } from '@/i18n'
 import TopBar from '@/components/TopBar'
@@ -791,10 +791,23 @@ export default {
       const notsArr = nots ? nots.split(',') : []
       const novelElement = document.querySelector('.novel_text')
       let resText = ''
+      let reasoningText = ''
+      let contentStarted = false
       this.novelText.text = this.$t('tips.loading')
+      // 推理模型思考阶段：阅读区显示一行灰色滚动文字（推理尾部），避免看起来像卡死
+      const renderReasoning = () => {
+        const tail = reasoningText.slice(-100)
+        const lead = reasoningText.length > tail.length ? '…' : ''
+        const html = `<div class="novel-ai-reasoning">💭 ${escapeHtml(lead + tail)}</div>`
+        requestAnimationFrame(() => {
+          novelElement.innerHTML = html
+        })
+      }
       const callback = chunk => {
         if (chunk.done) {
           if (chunk.error) {
+            // 出错且尚未出译文时清掉推理灰字，避免停留在一行静止文字上
+            if (reasoningText && !contentStarted) novelElement.innerHTML = ''
             this.$toast(chunk.error)
             this.translateLoading = false
             return
@@ -808,6 +821,15 @@ export default {
           return
         }
 
+        if (chunk.reasoning) {
+          // 译文开始后才到达的推理增量（交错思考模型）直接忽略，避免冲掉已流出的译文
+          if (!contentStarted) {
+            reasoningText += chunk.reasoning
+            renderReasoning()
+          }
+          if (!chunk.content) return
+        }
+        contentStarted = true
         resText += chunk.content
         notsArr.forEach((e, i) => {
           resText = resText.replaceAll(`[名字${i}]`, e)
@@ -852,6 +874,18 @@ img[src*="https://api.moedog.org/qr/?url="]
   height 80%
   margin-left -5rem
   overflow hidden
+
+// AI 翻译推理模型思考阶段的灰色滚动提示行（aiTranslate 直改 DOM，非 Vue 渲染）
+.novel-ai-reasoning
+  margin 0.3em 0
+  color #8a8f99
+  font-size 0.85em
+  line-height 1.5
+  white-space nowrap
+  overflow hidden
+
+.dark .novel-ai-reasoning
+  color #67707e
 </style>
 <style lang="stylus" scoped>
 .comments-title
@@ -1070,5 +1104,4 @@ img[src*="https://api.moedog.org/qr/?url="]
     display flex
     justify-content flex-end
     gap 0.3rem
-
 </style>
