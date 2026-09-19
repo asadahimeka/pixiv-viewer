@@ -6,6 +6,7 @@
         :key="art.id"
         v-longpress="clearSingleFn(art.id)"
         :artwork="art"
+        no-longpress
         @click-card="toArtwork($event)"
       />
     </masonry>

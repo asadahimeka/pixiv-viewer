@@ -1,5 +1,5 @@
 <template>
-  <div class="novel-card" @click.stop="click(artwork.id)">
+  <div v-longpress="onLongpress" class="novel-card" @click.stop="click(artwork.id)" @contextmenu="preventContext">
     <div v-if="showImg" class="img-cont">
       <Pximg :src="imgSrc" :alt="artwork.title" class="image" :class="{ censored }" />
     </div>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { Dialog } from '@/lib/vant-apis'
 import { mapGetters } from 'vuex'
 import { formatIntlNumber } from '@/utils'
 import { isCNLocale } from '@/i18n'
@@ -51,6 +52,10 @@ export default {
       default: true,
     },
     showCaption: {
+      type: Boolean,
+      default: false,
+    },
+    noLongpress: {
       type: Boolean,
       default: false,
     },
@@ -95,6 +100,46 @@ export default {
       ) { return false }
 
       this.$emit('click-card', id)
+    },
+    onLongpress(/** @type {Event} */ ev) {
+      if (this.noLongpress) return
+      ev.preventDefault()
+      this.showBlockDialog()
+    },
+    preventContext(/** @type {Event} */ event) {
+      if (this.noLongpress) return true
+      event.preventDefault()
+      return false
+    },
+    showBlockDialog() {
+      Dialog.confirm({
+        title: this.$t('1a1meIFthYyv_s7C4M4L0'),
+        message: `
+        <div id="sel_block_dialog">
+          <p style="margin:0.2rem 0">${this.$t('mK4Dqnx_FvC3JhJMR4B4t')}</p>
+          <div class="sel_block_chks"><input type="checkbox" data-author="${this.artwork.author.id}">${this.artwork.author.name}(${this.artwork.author.id})</div>
+          <div style="height:1px;margin:0.2rem 0;border-bottom:1px solid #ccc"></div>
+          <p style="margin:0.2rem 0">${this.$t('1NIKIVhrUKhUHhuWv3Sxt')}</p>
+          ${(this.artwork.tags || []).map(e => `<div class="sel_block_chks" style="margin-bottom:0.1rem"><input type="checkbox" data-tagname="${e.name}"><span style="text-align: left;">${e.name}</span></div>`).join('')}
+        </div>`,
+        lockScroll: false,
+        closeOnPopstate: true,
+        cancelButtonText: this.$t('common.cancel'),
+        confirmButtonText: this.$t('common.confirm'),
+        beforeClose: (action, done) => {
+          if (action == 'confirm') {
+            const authors = document.querySelectorAll('#sel_block_dialog input[data-author]:checked')
+            const tags = document.querySelectorAll('#sel_block_dialog input[data-tagname]:checked')
+            if (authors.length) {
+              this.$store.dispatch('appendBlockUids', [...authors].map(e => e.getAttribute('data-author')))
+            }
+            if (tags.length) {
+              this.$store.dispatch('appendBlockTags', [...tags].map(e => e.getAttribute('data-tagname')))
+            }
+          }
+          done()
+        },
+      }).catch(() => {})
     },
   },
 }
