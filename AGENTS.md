@@ -36,6 +36,8 @@ Ask no more than **3** questions until you have 100% clarity on:
 ### Step 3 — Wait for Go-Ahead
 **Do not write code or modify files** until the user explicitly says to proceed.
 
+---
+
 ## Stack
 
 - **Vue 2.7** (Composition API available) + Vue Router 3 + Vuex 3 + Vue I18n 8
@@ -126,8 +128,14 @@ App.vue
 
 ### i18n
 - Default locale: `zh-CN`; lazy-loaded from `src/locales/*.json`
-- Translation keys are auto-generated hashes (e.g., `'sBmkLtGcrWIL7xsU-EdM9'`) — do NOT edit keys manually
+- 使用语义化的`key`，不要使用 hash
 - Vant locale set separately alongside app locale
+
+### Adding i18n Keys
+1. Add to `src/locales/zh-CN.json` first (default locale)
+2. Add translations to other locale files as needed
+3. Use `$t('key')` in templates, `i18n.t('key')` in JS
+4. 避免直接写入大量 i18n 文件，考虑使用脚本
 
 ### CSS
 - `postcss-pxtorem` (rootValue: 75) — write `px`, get `rem` at build time

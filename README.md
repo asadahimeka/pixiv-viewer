@@ -390,6 +390,8 @@ pnpm build
 
 您的支持是我持续更新的动力！
 
+赞助列表: https://sponsors-yumine.netlify.app/account
+
 ---
 
 ## ❓ 常见问题
@@ -502,11 +504,11 @@ pnpm build
 - [PixEz](https://github.com/Notsfsssf/pixez-flutter)：直连模式参考
 - [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator)：漫画翻译引擎
 - [KISS Translator](https://github.com/fishjar/kiss-translator)：翻译工具
-- [ZeoSeven Fonts](https://fonts.zeoseven.com)：释放字体自由！
 
 ### 服务
 
 - [Pixiv.cat](https://pixiv.re/)：图像反代服务
+- [ZeoSeven Fonts](https://fonts.zeoseven.com)：释放字体自由！
 - [SauceNAO](https://saucenao.com/)：以图搜图功能接口
 - [Cloudflare Workers](https://workers.cloudflare.com/)：图像反代服务
 - [Cloudflare Pages](https://pages.cloudflare.com/)：提供页面托管服务

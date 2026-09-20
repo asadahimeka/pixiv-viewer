@@ -508,11 +508,11 @@ Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) t
 * [PixEz](https://github.com/Notsfsssf/pixez-flutter): Direct connect mode logic reference.
 * [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator): Manga translation engine.
 * [KISS Translator](https://github.com/fishjar/kiss-translator): Translation tool.
-* [ZeoSeven Fonts](https://fonts.zeoseven.com): Free fonts for everyone!
 
 ### Services
 
 * [Pixiv.cat](https://pixiv.re/): Image proxy service
+* [ZeoSeven Fonts](https://fonts.zeoseven.com): Free fonts for everyone!
 * [SauceNAO](https://saucenao.com/): Image search API
 * [Cloudflare Workers](https://workers.cloudflare.com/): Image proxy service
 * [Cloudflare Pages](https://pages.cloudflare.com/): Page hosting service
