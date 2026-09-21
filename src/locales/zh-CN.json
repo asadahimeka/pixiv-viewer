@@ -293,6 +293,13 @@
       },
       "swipe_toggle": "详情页左右滑动浏览作品",
       "api_proxy": {
+        "def": "恢复默认代理",
+        "manual": "手动输入",
+        "manual_title": "手动输入 AppAPI 代理",
+        "input_desc": "请填写你的 PxveAPI 域名（不含 https://，仅支持 HTTPS），如 my-pxveapi.example.com",
+        "security_notice": "安全提醒：登录凭据（RefreshToken/AccessToken）会经由代理服务器转发，请仅使用可信来源或自行搭建的代理服务。",
+        "input_ph": "my-pxveapi.example.com",
+        "input_invalid": "代理域名格式不正确",
         "def_ph": "默认代理无法使用的话可以尝试其他代理",
         "title": "选择 AppAPI 代理",
         "sel_desc": "请选择 AppAPI 代理"
@@ -415,7 +422,7 @@
     "succ_msg": "Session ID 认证成功",
     "warn": {
       "title": "风险告知",
-      "text": "本功能为非正常方式登录，可能存在风险，使用本功能即视为使用者本人同意且已明确使用风险，如发生账号异常等情况与本项目作者无关。"
+      "text": "本站为非官方站点，使用本站登录即视为使用者本人同意且已明确使用风险，如发生账号异常等情况与本项目作者无关。"
     }
   },
   "follow": {

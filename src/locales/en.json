@@ -284,6 +284,13 @@
       "manual_input": "Not using the default pximg proxy",
       "manual_input_label": "Turn this switch on to manually enter the link below",
       "api_proxy": {
+        "def": "Restore default proxy",
+        "manual": "Enter manually",
+        "manual_title": "Enter AppAPI proxy manually",
+        "input_desc": "Enter your PxveAPI domain (without https://, HTTPS only), e.g. my-pxveapi.example.com",
+        "security_notice": "Security reminder: Login credentials (RefreshToken/AccessToken) will be forwarded through the proxy server. Please only use trusted sources or self-built proxy services.",
+        "input_ph": "my-pxveapi.example.com",
+        "input_invalid": "Invalid proxy domain format",
         "def_ph": "If the default proxy cannot be used, you can try another proxy",
         "sel_desc": "Please select AppApi Proxy",
         "title": "Select AppApi Proxy"
@@ -414,7 +421,7 @@
     "succ_msg": "Session ID authentication succeeded",
     "title": "Set Pixiv Cookie",
     "warn": {
-      "text": "This function is an abnormal login method and may involve risks. Using this function is deemed to be the user's consent and clear use of the risks. If account abnormalities occur, the author of this project has nothing to do with it.",
+      "text": "This site is an unofficial site. Using this site to log in is deemed to be the user's consent and the risks of use have been made clear. The author of this project has nothing to do with account abnormalities and other situations.",
       "title": "Risk Notice"
     }
   },

@@ -284,6 +284,13 @@
       "manual_input": "不使用預設 pximg 代理",
       "manual_input_label": "打開此開關可在下方手動輸入連結",
       "api_proxy": {
+        "def": "恢復預設代理",
+        "manual": "手動輸入",
+        "manual_title": "手動輸入 AppAPI 代理",
+        "input_desc": "請填寫你的 PxveAPI 網域（不含 https://，僅支援 HTTPS），如 my-pxveapi.example.com",
+        "security_notice": "安全性提醒：登入憑證（RefreshToken/AccessToken）會經由代理伺服器轉發，請僅使用可信任來源或自行建置的代理服務。",
+        "input_ph": "my-pxveapi.example.com",
+        "input_invalid": "代理網域格式不正確",
         "def_ph": "預設代理無法使用的話可以嘗試其他代理",
         "sel_desc": "請選擇 AppAPI 代理",
         "title": "選擇 AppAPI 代理"
@@ -414,7 +421,7 @@
     "succ_msg": "Session ID 認證成功",
     "title": "設定 Pixiv Cookie",
     "warn": {
-      "text": "本功能為非正常方式登入，可能有風險，使用本功能即視為使用者本人同意且已明確使用風險，如發生帳號異常等情形與本專案作者無關。",
+      "text": "本站為非官方站點，使用本站登入即視為使用者本人同意且已明確使用風險，如發生帳號異常等情況與本專案作者無關。",
       "title": "風險告知"
     }
   },

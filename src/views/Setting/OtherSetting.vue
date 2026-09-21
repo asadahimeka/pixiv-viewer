@@ -366,6 +366,20 @@
       <van-cell>{{ $t('setting.api.desc5') }}</van-cell>
       <van-field v-model="hibiapi.value" :label="$t('setting.input')" label-width="4.5em" :placeholder="$t('setting.api.title3')" />
     </van-dialog>
+    <van-dialog
+      v-model="apiProxyInput.show"
+      width="9rem"
+      :title="$t('setting.other.api_proxy.manual_title')"
+      show-cancel-button
+      :cancel-button-text="$t('common.cancel')"
+      :confirm-button-text="$t('common.confirm')"
+      @confirm="changeApiProxyManual"
+    >
+      <van-cell>{{ $t('setting.other.api_proxy.input_desc') }}</van-cell>
+      <van-cell>{{ $t('setting.api.desc3') }}: <a href="https://github.com/asadahimeka/pxve-api" target="_blank" rel="noreferrer">🔗PxveAPI</a></van-cell>
+      <van-cell>{{ $t('setting.other.api_proxy.security_notice') }}</van-cell>
+      <van-field v-model="apiProxyInput.value" :label="$t('setting.input')" label-width="4.5em" :placeholder="$t('setting.other.api_proxy.input_ph')" />
+    </van-dialog>
     <van-action-sheet
       v-model="apiProxySel.show"
       :actions="apiProxySel.actions"
@@ -569,7 +583,7 @@ import { Dialog } from '@/lib/vant-apis'
 import PixivAuth from '@/api/client/pixiv-auth'
 import localDb from '@/utils/storage/localDb'
 import store from '@/store'
-import { APP_API_PROXYS, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, PXIMG_PROXYS } from '@/consts'
+import { APP_API_PROXYS, DEF_API_PROXY, DEF_HIBIAPI_MAIN, DEF_PXIMG_MAIN, PXIMG_PROXYS } from '@/consts'
 import { i18n } from '@/i18n'
 import { applyVisualTheme } from '@/utils/theme'
 import { getSampleFileName } from '@/store/actions/filename'
@@ -587,6 +601,15 @@ import MangaTranslateSettings from '../Artwork/components/MangaTranslateSettings
 import NovelTranslateSettings from '../Artwork/components/NovelTranslateSettings.vue'
 import SyncDialog from './SyncDialog.vue'
 
+/** 掩码显示代理主机名，如 hibiapi.cocomi.eu.org -> hi*iapi.eu.org */
+const maskHost = host => {
+  const arr = host.split('.')
+  return arr.map((e, i) => {
+    if (i == 0) { return e.length <= 4 ? e : `${e[0]}*${e.slice(-3)}` }
+    return i == arr.length - 1 ? e : '*'
+  }).join('.')
+}
+
 export default {
   name: 'SettingOthers',
   components: {
@@ -602,14 +625,17 @@ export default {
       isHelperInst: !!window.__httpRequest__,
       apiProxySel: {
         show: false,
-        actions: APP_API_PROXYS.split(',').map((_value, i) => {
-          const arr = _value.split('.')
-          const label = arr.map((e, i) => {
-            if (i == 0) { return e.length <= 4 ? e : `${e[0]}*${e.slice(-3)}` }
-            return i == arr.length - 1 ? e : '*'
-          }).join('.')
-          return { name: `Proxy ${i} (${label})`, _value }
-        }),
+        actions: [
+          { name: i18n.t('setting.other.api_proxy.def'), subname: maskHost(DEF_API_PROXY), _value: '' },
+          { name: i18n.t('setting.other.api_proxy.manual'), color: '#1989fa', _value: '__custom__' },
+          ...APP_API_PROXYS.split(',').filter(Boolean).map((_value, i) => {
+            return { name: `Proxy ${i} (${maskHost(_value)})`, _value }
+          }),
+        ],
+      },
+      apiProxyInput: {
+        show: false,
+        value: '',
       },
       pximgBed: {
         show: false,
@@ -795,7 +821,9 @@ export default {
       return this.pximgBed_.actions.find(e => e._value == this.pximgBed_.value)?.name || ''
     },
     apiProxyLabel() {
-      return this.apiProxySel.actions.find(e => e._value == this.clientConfig.apiProxy)?.name || ''
+      const val = this.clientConfig.apiProxy
+      if (!val) return ''
+      return this.apiProxySel.actions.find(e => e._value == val)?.name || val
     },
     appSetting() {
       return store.state.appSetting
@@ -928,8 +956,32 @@ export default {
       }
     },
     async changeApiProxy({ _value }) {
+      if (_value === '__custom__') {
+        this.apiProxyInput.value = ''
+        this.apiProxyInput.show = true
+        return
+      }
       this.clientConfig.apiProxy = _value
       window.umami?.track('set_api_proxy', { _value })
+      await this.saveClientConfig()
+    },
+    async changeApiProxyManual() {
+      const input = this.apiProxyInput.value.trim().replace(/^https?:\/\//i, '').replace(/\/.*$/, '')
+      let url
+      try {
+        url = new URL(`https://${input}`)
+      } catch (_err) {
+        url = null
+      }
+      const { hostname, port } = url || {}
+      const portNum = Number(port)
+      if (!hostname || !/^[a-zA-Z0-9.-]+$/.test(hostname) || (port && (!/^\d{1,5}$/.test(port) || portNum < 1 || portNum > 65535))) {
+        this.$toast.fail(i18n.t('setting.other.api_proxy.input_invalid'))
+        return
+      }
+      const value = port ? `${hostname}:${port}` : hostname
+      window.umami?.track('set_api_proxy', { _value: value, manual: true })
+      this.clientConfig.apiProxy = value
       await this.saveClientConfig()
     },
     saveSetting(key, val) {

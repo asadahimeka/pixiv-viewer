@@ -58,7 +58,10 @@ async function callApi(url, options) {
     if (OAUTH_URL.includes(fUrl.hostname)) {
       fUrl.pathname = '/pixiv-oauth' + fUrl.pathname
     }
-    fUrl.hostname = window.p_api_proxy
+    // 代理值可为 host 或 host:port（URL 的 hostname setter 会静默忽略带端口的值，需分开设置）
+    const [proxyHost, proxyPort] = window.p_api_proxy.split(':')
+    fUrl.hostname = proxyHost
+    if (proxyPort) fUrl.port = proxyPort
     finalUrl = fUrl.href
   } else if (window.__httpRequest__) {
     if (window.p_api_hosts) {
