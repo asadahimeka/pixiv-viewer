@@ -527,10 +527,11 @@ Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) t
 
 ## 🔗 Related Sites
 
+- [Mita](https://mita.cocomi.eu.org/)
+- [PixivFun](https://pxfun.cocomi.eu.org/)
 - [Pixivel](https://pxelk.cocomi.eu.org/)
 - [Pixiviz](https://pixiviz.cocomi.eu.org/)
 - [PixivNow](https://pxnow.cocomi.eu.org/)
-- [PixivFun](https://pxfun.cocomi.eu.org/)
 - [PixivMoe](https://pixivmoe.cocomi.eu.org/)
 - [PixivLxns](https://pixivlxns.cocomi.eu.org/)
 - [MixPiv](https://mixpiv.cocomi.eu.org/)

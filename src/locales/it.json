@@ -269,7 +269,7 @@
     "succ_msg": "Autenticazione dell'ID di sessione riuscita",
     "title": "Imposta il cookie Pixiv",
     "warn": {
-      "text": "Questa funzione è un metodo di accesso anomalo e può comportare rischi. L'utilizzo di questa funzione presuppone il consenso dell'utente e un chiaro utilizzo dei rischi. Se si verificano anomalie nell'account, l'autore di questo progetto non ha nulla a che fare con ciò.",
+      "text": "Questo sito è un sito non ufficiale. L'utilizzo di questo sito per effettuare il login presuppone il consenso dell'utente e i rischi di utilizzo sono stati chiariti. L'autore di questo progetto non ha nulla a che fare con anomalie dell'account e altre situazioni.",
       "title": "Avviso di rischio"
     }
   },
@@ -327,7 +327,14 @@
       "api_proxy": {
         "def_ph": "Se non è possibile utilizzare il proxy predefinito, puoi provare un altro proxy",
         "sel_desc": "Seleziona AppAPI Proxy",
-        "title": "Selezionare AppAPI Proxy"
+        "title": "Selezionare AppAPI Proxy",
+        "security_notice": "Promemoria di sicurezza: le credenziali di accesso (RefreshToken/AccessToken) verranno inoltrate tramite il server proxy. Utilizza solo fonti attendibili o servizi proxy autocostruiti.",
+        "def": "Ripristina il proxy predefinito",
+        "input_desc": "Inserisci il nome del tuo dominio PxveAPI (escluso https://, supporta solo HTTPS), ad esempio my-pxveapi.example.com",
+        "input_invalid": "Il formato del nome di dominio proxy non è corretto",
+        "input_ph": "mio-pxveapi.esempio.com",
+        "manual": "Inserimento manuale",
+        "manual_title": "Inserisci manualmente il proxy AppAPI"
       },
       "cp_token_label": "Copia il RefreshToken corrente negli appunti",
       "cp_token_title": "Esporta RefreshToken",

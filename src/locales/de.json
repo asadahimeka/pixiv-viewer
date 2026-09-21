@@ -286,7 +286,14 @@
       "api_proxy": {
         "def_ph": "Wenn der Standard-Proxy nicht verwendet werden kann, können Sie es mit einem anderen Proxy versuchen",
         "sel_desc": "Bitte wählen Sie AppAPI Proxy",
-        "title": "Wählen Sie AppAPI-Proxy aus"
+        "title": "Wählen Sie AppAPI-Proxy aus",
+        "security_notice": "Sicherheitserinnerung: Anmeldeinformationen (RefreshToken/AccessToken) werden über den Proxyserver weitergeleitet. Bitte verwenden Sie nur vertrauenswürdige Quellen oder selbst erstellte Proxy-Dienste.",
+        "def": "Standard-Proxy wiederherstellen",
+        "input_desc": "Bitte geben Sie Ihren PxveAPI-Domänennamen ein (außer https://, unterstützt nur HTTPS), z. B. my-pxveapi.example.com",
+        "input_invalid": "Das Format des Proxy-Domänennamens ist falsch",
+        "input_ph": "my-pxveapi.example.com",
+        "manual": "Manuelle Eingabe",
+        "manual_title": "Geben Sie den AppAPI-Proxy manuell ein"
       },
       "cp_token_label": "Kopieren Sie das aktuelle RefreshToken in die Zwischenablage",
       "cp_token_title": "RefreshToken exportieren",
@@ -414,7 +421,7 @@
     "succ_msg": "Sitzungs-ID-Authentifizierung erfolgreich",
     "title": "Pixiv-Cookie setzen",
     "warn": {
-      "text": "Diese Funktion ist eine ungewöhnliche Anmeldemethode und kann Risiken bergen. Die Verwendung dieser Funktion gilt als Zustimmung des Benutzers und als klare Nutzung der Risiken. Sollten Kontoanomalien auftreten, hat der Autor dieses Projekts nichts damit zu tun.",
+      "text": "Diese Seite ist eine inoffizielle Seite. Die Nutzung dieser Website zum Anmelden gilt als Zustimmung des Nutzers und die mit der Nutzung verbundenen Risiken wurden klar dargelegt. Der Autor dieses Projekts hat nichts mit Kontoanomalien und anderen Situationen zu tun.",
       "title": "Risikohinweis"
     }
   },

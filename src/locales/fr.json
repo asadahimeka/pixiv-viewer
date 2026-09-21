@@ -286,7 +286,14 @@
       "api_proxy": {
         "def_ph": "Si le proxy par défaut ne peut pas être utilisé, vous pouvez essayer un autre proxy",
         "sel_desc": "Veuillez sélectionner le proxy AppAPI",
-        "title": "Sélectionnez le proxy AppAPI"
+        "title": "Sélectionnez le proxy AppAPI",
+        "security_notice": "Rappel de sécurité : les informations de connexion (RefreshToken/AccessToken) seront transmises via le serveur proxy. Veuillez utiliser uniquement des sources fiables ou des services proxy créés par vous-même.",
+        "def": "Restaurer le proxy par défaut",
+        "input_desc": "Veuillez renseigner votre nom de domaine PxveAPI (hors https://, ne prend en charge que HTTPS), tel que my-pxveapi.example.com",
+        "input_invalid": "Le format du nom de domaine proxy est incorrect",
+        "input_ph": "mon-pxveapi.example.com",
+        "manual": "Saisie manuelle",
+        "manual_title": "Entrez manuellement le proxy AppAPI"
       },
       "swipe_toggle": "Balayez vers la gauche et vers la droite sur la page de détails pour parcourir les œuvres",
       "cp_token_label": "Copiez le RefreshToken actuel dans le presse-papiers",
@@ -414,7 +421,7 @@
     "succ_msg": "Authentification de l'ID de session réussie",
     "title": "Définir le cookie Pixiv",
     "warn": {
-      "text": "Cette fonction est une méthode de connexion anormale et peut comporter des risques. L'utilisation de cette fonction est considérée comme le consentement de l'utilisateur et une utilisation claire des risques. Si des anomalies de compte surviennent, l'auteur de ce projet n'y est pour rien.",
+      "text": "Ce site est un site non officiel. L'utilisation de ce site pour se connecter vaut consentement de l'utilisateur et les risques d'utilisation ont été précisés. L'auteur de ce projet n'a rien à voir avec les anomalies de compte et autres situations.",
       "title": "Avis de risque"
     }
   },

@@ -376,7 +376,7 @@
     "succ_msg": "La autenticación de ID de sesión se realizó correctamente",
     "title": "Establecer galleta Pixiv",
     "warn": {
-      "text": "Esta función es un método de inicio de sesión anormal y puede implicar riesgos. El uso de esta función se considera como el consentimiento del usuario y el uso claro de los riesgos. Si se producen anomalías en la cuenta, el autor de este proyecto no tiene nada que ver con ello.",
+      "text": "Este sitio es un sitio no oficial. El uso de este sitio para iniciar sesión se considera el consentimiento del usuario y los riesgos de su uso han quedado claros. El autor de este proyecto no tiene nada que ver con anomalías de cuentas y otras situaciones.",
       "title": "Aviso de riesgo"
     }
   },
@@ -430,7 +430,14 @@
       "api_proxy": {
         "def_ph": "Si no se puede utilizar el proxy predeterminado, puede probar con otro proxy.",
         "sel_desc": "Seleccione el proxy AppAPI",
-        "title": "Seleccione el proxy AppAPI"
+        "title": "Seleccione el proxy AppAPI",
+        "security_notice": "Recordatorio de seguridad: las credenciales de inicio de sesión (RefreshToken/AccessToken) se reenviarán a través del servidor proxy. Utilice únicamente fuentes confiables o servicios de proxy de creación propia.",
+        "def": "Restaurar el proxy predeterminado",
+        "input_desc": "Complete su nombre de dominio PxveAPI (excluyendo https://, solo admite HTTPS), como my-pxveapi.example.com",
+        "input_invalid": "El formato del nombre de dominio proxy es incorrecto",
+        "input_ph": "mi-pxveapi.ejemplo.com",
+        "manual": "Entrada manual",
+        "manual_title": "Ingrese manualmente el proxy AppAPI"
       },
       "cp_token_label": "Copie el RefreshToken actual al portapapeles",
       "cp_token_title": "Exportar token de actualización",

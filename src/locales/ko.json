@@ -286,7 +286,14 @@
       "api_proxy": {
         "def_ph": "기본 프록시를 사용할 수 없는 경우 다른 프록시를 사용해 볼 수 있습니다.",
         "sel_desc": "AppAPI 프록시를 선택하세요.",
-        "title": "AppAPI 프록시 선택"
+        "title": "AppAPI 프록시 선택",
+        "security_notice": "보안 알림: 로그인 자격 증명(RefreshToken/AccessToken)은 프록시 서버를 통해 전달됩니다. 신뢰할 수 있는 소스나 자체 구축된 프록시 서비스만 사용하십시오.",
+        "def": "기본 프록시 복원",
+        "input_desc": "my-pxveapi.example.com과 같이 PxveAPI 도메인 이름(https:// 제외, HTTPS만 지원)을 입력하세요.",
+        "input_invalid": "프록시 도메인 이름 형식이 잘못되었습니다.",
+        "input_ph": "my-pxveapi.example.com",
+        "manual": "수동 입력",
+        "manual_title": "AppAPI 프록시를 수동으로 입력하세요."
       },
       "cp_token_label": "현재 RefreshToken을 클립보드에 복사",
       "cp_token_title": "RefreshToken 내보내기",
@@ -414,7 +421,7 @@
     "succ_msg": "세션 ID 인증 성공",
     "title": "Pixiv 쿠키 설정",
     "warn": {
-      "text": "본 기능은 비정상적인 로그인 방식으로 위험이 수반될 수 있으며, 이 기능을 사용하는 것은 사용자의 동의와 위험을 명확히 활용한 것으로 간주됩니다.",
+      "text": "이 사이트는 비공식 사이트입니다. 이 사이트를 사용하여 로그인하는 것은 사용자의 동의로 간주되며 사용에 따른 위험이 명확하게 설명되어 있습니다. 본 프로젝트의 작성자는 계정 이상 및 기타 상황과 아무런 관련이 없습니다.",
       "title": "위험 고지"
     }
   },

@@ -20,6 +20,13 @@
         />
         <van-cell
           center
+          title="Mita"
+          is-link
+          label="https://mita.cocomi.eu.org"
+          @click="openLink('https://mita.cocomi.eu.org')"
+        />
+        <van-cell
+          center
           title="PixivNow"
           is-link
           label="https://pixiv.js.org"

@@ -577,7 +577,7 @@
     "succ_msg": "Pengesahan ID Sesi berjaya",
     "title": "Tetapkan cookie pixiv",
     "warn": {
-      "text": "Fungsi ini adalah kaedah log masuk yang tidak normal dan mungkin melibatkan risiko. \nMenggunakan fungsi ini dianggap sebagai persetujuan pengguna dan penggunaan risiko yang jelas. \nSekiranya keabnormalan akaun berlaku, pengarang projek ini tidak ada kaitan dengannya.",
+      "text": "Laman web ini adalah laman tidak rasmi. Menggunakan laman web ini untuk log masuk dianggap sebagai persetujuan pengguna dan risiko penggunaan telah dijelaskan. Pengarang projek ini tiada kaitan dengan keabnormalan akaun dan situasi lain.",
       "title": "Notis risiko"
     }
   },
@@ -631,7 +631,14 @@
       "api_proxy": {
         "def_ph": "Sekiranya proksi lalai tidak dapat digunakan, anda boleh mencuba proksi lain",
         "sel_desc": "Sila pilih Proksi Appapi",
-        "title": "Pilih Proksi AppAPI"
+        "title": "Pilih Proksi AppAPI",
+        "security_notice": "Peringatan keselamatan: Bukti kelayakan log masuk (RefreshToken/AccessToken) akan dimajukan melalui pelayan proksi. Sila gunakan sumber yang dipercayai atau perkhidmatan proksi binaan sendiri sahaja.",
+        "def": "Pulihkan proksi lalai",
+        "input_desc": "Sila isikan nama domain PxveAPI anda (tidak termasuk https://, hanya menyokong HTTPS), seperti my-pxveapi.example.com",
+        "input_invalid": "Format nama domain proksi tidak betul",
+        "input_ph": "my-pxveapi.example.com",
+        "manual": "Kemasukan manual",
+        "manual_title": "Masukkan proksi AppAPI secara manual"
       },
       "cp_token_label": "Salin penyegaran semula semasa ke papan klip",
       "cp_token_title": "Eksport refreshtoken",
