@@ -41,7 +41,7 @@
   "8dWKEVyxLa8UjO0iuOA78": "แบ่งปันผู้ใช้ Pixiv",
   "8ko0ip_aETyyaSIMQmLqR": "การเลือกอินสแตนซ์ API แบบขยาย",
   "8msFTe9uT5LS1hBRYrhDQ": "วิธีรับ RefreshToken",
-  "8zJrQTdrphmkCMMgL9SPW": "API ของแอป (OAuth)",
+  "8zJrQTdrphmkCMMgL9SPW": "เว็บไซต์อย่างเป็นทางการเข้าสู่ระบบ OAuth",
   "94IU-NPgYBjKNVa_XspuT": "ให้สิทธิ์ในการจัดเก็บข้อมูลแอปพลิเคชันนี้ในการตั้งค่าระบบหรือดาวน์โหลดเวอร์ชันล่าสุดก่อนที่จะลอง",
   "9H-9VJU67Fuabl8OgbhOr": "คลิกเพื่อแสดงความคิดเห็น",
   "9X179hdP1zzapzk5Rvqx2": "การตั้งค่าการเรียกดู",
@@ -273,7 +273,7 @@
     }
   },
   "history_tab_label_user": "ผู้ใช้",
-  "hqciRRXfoN19LYLh8xr4D": "API ของแอป (RefreshToken)",
+  "hqciRRXfoN19LYLh8xr4D": "เข้าสู่ระบบ RefreshToken",
   "iAH7adsXaqWMXEi3TOuwS": "ชุด",
   "iHxoO4eLVL-CHSVMoVynN": "ผู้ใช้ที่แนะนำ",
   "iqjnYM1N-k0dRi9zK1qhY": "Yande.re การก่ออิฐ",

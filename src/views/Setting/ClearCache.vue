@@ -3,7 +3,7 @@
     <top-bar id="top-bar-wrap" />
     <h3 class="af_title">{{ $t('cache.title') }}</h3>
     <div class="setting-cell-group">
-      <van-cell v-if="isLoggedIn" center :title="$t('cache.db')">
+      <van-cell center :title="$t('cache.db')">
         <template #label>
           <span>{{ $t('cache.records', [size.db[1]]) }} ~ {{ size.db[0] | bytes }}</span>
         </template>
