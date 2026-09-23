@@ -426,7 +426,15 @@ export default {
     },
     async getMemberInfo(id) {
       // console.log(id);
-      const res = await api.getMemberInfo(id)
+      const res = await api.getMemberInfo(id, data => {
+        // 补充信息（简介/外链）后台加载完成：更新并重新测量简介高度
+        this.userInfo = data
+        this.$nextTick(() => {
+          if (this.$refs.comment) {
+            this.commentHeight = this.$refs.comment.clientHeight
+          }
+        })
+      })
       if (res.status === 0) {
         this.userInfo = res.data
         this.loading = false

@@ -544,6 +544,55 @@ export const localApi = {
   },
 }
 
+/**
+ * 画师补充信息（简介/外链）加载任务表，按画师ID去重，避免并发重复请求
+ * @type {Map<Number, Promise<Object|null>>}
+ */
+const memberSupplementTasks = new Map()
+
+/**
+ * 后台加载画师补充信息（comment/webpage/twitter），完成后写缓存并通知回调
+ * @param {Number} id 画师ID
+ * @param {Object} memberInfo 基础画师信息对象（补充字段将合并到该对象上）
+ * @param {Function} [onUpdate] 补充信息就绪后的回调，参数为更新后的画师信息
+ */
+async function supplementMemberInfo(id, memberInfo, onUpdate) {
+  let task = memberSupplementTasks.get(id)
+  if (!task) {
+    task = (async () => {
+      try {
+        if (!memberInfo.comment || !memberInfo.webpage || !memberInfo.twitter_url) {
+          const webRes = await get(`${PIXIV_NOW_URL}/ajax/user/${id}?full=1`)
+          memberInfo.comment = await mintFilter(webRes?.commentHtml)
+          memberInfo.webpage = webRes?.webpage
+          memberInfo.twitter_url = webRes?.social?.twitter?.url || ''
+          memberInfo.twitter_account = webRes?.social?.twitter?.url?.split('/').pop() || ''
+        }
+        // 标记已补充（无论是否真的缺字段），避免下次进页面重复请求
+        memberInfo._supplemented = true
+        setCache(`memberInfo_${id}`, memberInfo, 60 * 60 * 24)
+        return memberInfo
+      } catch (err) {
+        // 补充失败不打扰用户，不标记，下次进页面重试
+        console.log('err: ', err)
+        return null
+      } finally {
+        memberSupplementTasks.delete(id)
+      }
+    })()
+    memberSupplementTasks.set(id, task)
+  }
+
+  const data = await task
+  if (data && typeof onUpdate === 'function') {
+    try {
+      onUpdate(data)
+    } catch (err) {
+      console.log('err: ', err)
+    }
+  }
+}
+
 const api = {
   /**
    *
@@ -1696,10 +1745,11 @@ const api = {
   },
 
   /**
-   *
+   * 获取画师信息（基础信息立即返回；简介/外链等补充信息后台加载，就绪后通过 onUpdate 回调更新）
    * @param {Number} id 画师ID
+   * @param {Function} [onUpdate] 补充信息就绪后的回调，参数为更新后的画师信息
    */
-  async getMemberInfo(id) {
+  async getMemberInfo(id, onUpdate) {
     const cacheKey = `memberInfo_${id}`
     let memberInfo = await getCache(cacheKey)
 
@@ -1713,20 +1763,14 @@ const api = {
         }
       } else {
         memberInfo = parseUser(res)
-        try {
-          if (!memberInfo.comment || !memberInfo.webpage || !memberInfo.twitter_url) {
-            const webRes = await get(`${PIXIV_NOW_URL}/ajax/user/${id}?full=1`)
-            memberInfo.comment = webRes?.commentHtml
-            memberInfo.webpage = webRes?.webpage
-            memberInfo.twitter_url = webRes?.social?.twitter?.url || ''
-            memberInfo.twitter_account = webRes?.social?.twitter?.url?.split('/').pop() || ''
-          }
-          memberInfo.comment = await mintFilter(memberInfo.comment)
-        } catch (err) {
-          console.log('err: ', err)
-        }
+        memberInfo.comment = await mintFilter(memberInfo.comment)
+        // 基础信息先行缓存与返回，补充信息后台加载，不阻塞页面渲染
         setCache(cacheKey, memberInfo, 60 * 60 * 24)
       }
+    }
+
+    if (!memberInfo._supplemented) {
+      supplementMemberInfo(id, memberInfo, onUpdate)
     }
 
     return { status: 0, data: memberInfo }
