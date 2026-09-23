@@ -85,7 +85,7 @@ export default {
     },
     openDlLink() {
       window.umami?.track('open_dl_app_link')
-      window.open('https://github.com/asadahimeka/pixiv-viewer/releases', '_blank', 'noopener')
+      window.open('/app', '_blank', 'noopener')
     },
   },
 }
