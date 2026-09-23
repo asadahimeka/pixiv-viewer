@@ -72,6 +72,8 @@
 - *(translate)* BYOK VL engine call chain — pass vlApiConfig to manga.js
 - BYOK LLM translation + personal workspace sync
 - Member artworks aspect filter
+- Novel card longpress block dialog
+- Manual input for app api proxy
 
 ### 🐛 Bug Fixes
 
@@ -137,6 +139,9 @@
 - Ios style fix
 - Update locales
 - Novel hc layout paging
+- Style fixes
+- Style fix
+- Show novel ai translate reasoning
 
 ### 💼 Other
 
@@ -162,6 +167,7 @@
 
 - *(vant)* Unify to lib build via vant-apis facade
 - *(ort)* Isolate onnxruntime-web chunk and exclude from SW precache
+- Non-blocking member info supplement
 
 ### 🎨 Styling
 
@@ -212,6 +218,12 @@
 - Release v1.37.1
 - Release v1.37.2
 - Release v1.37.3
+- Release v1.37.4
+- Update docs
+- Update locales and docs
+- Update locales
+- Update locales
+- Add app landing page
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
