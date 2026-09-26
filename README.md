@@ -208,29 +208,29 @@
 
 - 移动端
 
-<kbd><img src="docs/1.webp" width="390"></kbd>  <kbd><img src="docs/5.webp" width="390"></kbd>
+<kbd><img src="docs/screenshots/1.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/5.webp" width="390"></kbd>
 
-<kbd><img src="docs/6.webp" width="390"></kbd>  <kbd><img src="docs/8.webp" width="390"></kbd>
+<kbd><img src="docs/screenshots/6.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/8.webp" width="390"></kbd>
 
 <details>
 <summary>查看更多</summary>
-<kbd><img src="docs/2.webp" width="390"></kbd>  <kbd><img src="docs/4.webp" width="390"></kbd>
+<kbd><img src="docs/screenshots/2.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/4.webp" width="390"></kbd>
 
-<kbd><img src="docs/7.webp" width="390"></kbd>  <kbd><img src="docs/3.webp" width="390"></kbd>
+<kbd><img src="docs/screenshots/7.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/3.webp" width="390"></kbd>
 </details>
 <br>
 
 - 桌面端
 
-<kbd><img src="docs/w1.webp" width="390"></kbd>  <kbd><img src="docs/w7.webp" width="390"></kbd>
+<kbd><img src="docs/screenshots/w1.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/w7.webp" width="390"></kbd>
 
-<kbd><img src="docs/w3.webp" width="390"></kbd>  <kbd><img src="docs/w4.webp" width="390"></kbd>
+<kbd><img src="docs/screenshots/w3.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/w4.webp" width="390"></kbd>
 
 <details>
 <summary>查看更多</summary>
-<kbd><img src="docs/w2.webp" width="390"></kbd>  <kbd><img src="docs/w5.webp" width="390"></kbd>　
+<kbd><img src="docs/screenshots/w2.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/w5.webp" width="390"></kbd>　
 
-<kbd><img src="docs/w6.webp" width="390"></kbd>  <kbd><img src="docs/w8.webp" width="390"></kbd>
+<kbd><img src="docs/screenshots/w6.webp" width="390"></kbd>  <kbd><img src="docs/screenshots/w8.webp" width="390"></kbd>
 </details>
 
 ---
@@ -501,7 +501,7 @@ pnpm build
 - [HibiAPI](https://github.com/mixmoe/HibiAPI)：提供大部分接口支持
 - [PixivNow](https://github.com/FreeNowOrg/PixivNow)：提供部分网页版接口支持
 - [pxder](https://github.com/Tsuk1ko/pxder)：OAuth 登录参考实现
-- [PixEz](https://github.com/Notsfsssf/pixez-flutter)：直连模式参考
+- [PixEz](https://github.com/Notsfsssf/pixez-flutter)：客户端逻辑参考
 - [ShinobuTranslator](https://github.com/DonutShinobu/ShinobuTranslator)：漫画翻译引擎
 - [KISS Translator](https://github.com/fishjar/kiss-translator)：翻译工具
 
@@ -525,6 +525,7 @@ pnpm build
 
 - [Mita](https://mita.cocomi.eu.org/)
 - [PixivFun](https://pxfun.cocomi.eu.org/)
+- [PixivBiu](https://pxbiu.cocomi.eu.org/)
 - [Pixivel](https://pxelk.cocomi.eu.org/)
 - [Pixiviz](https://pixiviz.cocomi.eu.org/)
 - [PixivNow](https://pxnow.cocomi.eu.org/)

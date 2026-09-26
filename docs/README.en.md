@@ -529,6 +529,7 @@ Please use [GitHub Issues](https://github.com/asadahimeka/pixiv-viewer/issues) t
 
 - [Mita](https://mita.cocomi.eu.org/)
 - [PixivFun](https://pxfun.cocomi.eu.org/)
+- [PixivBiu](https://pxbiu.cocomi.eu.org/)
 - [Pixivel](https://pxelk.cocomi.eu.org/)
 - [Pixiviz](https://pixiviz.cocomi.eu.org/)
 - [PixivNow](https://pxnow.cocomi.eu.org/)
