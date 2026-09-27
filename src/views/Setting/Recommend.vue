@@ -22,15 +22,15 @@
           center
           title="PixivFun"
           is-link
-          label="https://pxbiu.cocomi.eu.org"
-          @click="openLink('https://pxbiu.cocomi.eu.org/')"
+          label="https://pxfun.cocomi.eu.org"
+          @click="openLink('https://pxfun.cocomi.eu.org/')"
         />
         <van-cell
           center
           title="PixivBiu"
           is-link
-          label="https://pxfun.cocomi.eu.org"
-          @click="openLink('https://pxfun.cocomi.eu.org/')"
+          label="https://pxbiu.cocomi.eu.org"
+          @click="openLink('https://pxbiu.cocomi.eu.org/')"
         />
         <van-cell
           center
