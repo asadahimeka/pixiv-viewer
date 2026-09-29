@@ -382,11 +382,25 @@ function processNovel(html) {
   return { chapters, images }
 }
 
+// 常见位图魔数：镜像/代理在限流或拦截时会回 200 的 HTML/JSON 错误页，
+// 不过滤会把垃圾字节喂给 jEpub 触发 "cover data is not allowed" 中断整本导出
+function isImageBuffer(buf) {
+  if (!(buf instanceof ArrayBuffer) || buf.byteLength < 12) return false
+  const b = new Uint8Array(buf)
+  if (b[0] === 0xFF && b[1] === 0xD8 && b[2] === 0xFF) return true // jpeg
+  if (b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4E && b[3] === 0x47) return true // png
+  if (b[0] === 0x47 && b[1] === 0x49 && b[2] === 0x46) return true // gif
+  if (b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 &&
+    b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return true // webp(riff)
+  return false
+}
+
 async function fetchImage(src) {
   const fetchBuffer = async src => {
     const response = await fetch(src)
     if (!response.ok) throw new Error('Response not ok.')
     const arrayBuffer = await response.arrayBuffer()
+    if (!isImageBuffer(arrayBuffer)) throw new Error('Not an image buffer')
     return arrayBuffer
   }
   try {

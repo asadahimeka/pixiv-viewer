@@ -55,7 +55,8 @@
     "clear_fail": "Αποτυχία εκκαθάρισης cache: {0}",
     "confirm_default": "Να γίνει εκκαθάριση της cache;",
     "confirm_pxcl": "Να γίνει εκκαθάριση της cache του PixivCollection; Μετά την εκκαθάριση θα χρειαστεί να γίνει εκ νέου λήψη των δεδομένων των αγαπημένων",
-    "pxcl": "Εκκαθάριση cache PixivCollection"
+    "pxcl": "Εκκαθάριση cache PixivCollection",
+    "pximg_thumb": "Cache μικρογραφιών"
   },
   "common": {
     "ai_gen": "Δημιουργήθηκε από AI",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "Να διαγραφεί η αποκλεισμένη ετικέτα «{0}»;",
     "delete_uid_title": "Διαγραφή αποκλεισμένου καλλιτέχνη",
     "delete_uid_confirm": "Να διαγραφεί ο αποκλεισμένος καλλιτέχνης «{0}»;"
+  },
+  "dlc": {
+    "download_all": "Λήψη όλων",
+    "select_pages": "Επιλογή σελίδων για λήψη",
+    "pages_title": "Επιλογή σελίδων",
+    "page_range_ph": "Εύρος σελίδων, π.χ. 1-5,8"
   },
   "follow": {
     "fav": "Σελιδοδείκτες",

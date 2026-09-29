@@ -20,6 +20,7 @@
             :alt="`${artwork.title} - Page ${index + 1}`"
             :style="isLargeWebp && index==0 ? 'view-transition-name: artwork-cover' : ''"
             class="image"
+            nobg
             @click.native.stop="view(index)"
           />
           <template v-if="showPicTranslateBtn">

@@ -55,7 +55,8 @@
     "clear_fail": "캐시 삭제 실패: {0}",
     "confirm_default": "캐시를 삭제하시겠습니까?",
     "confirm_pxcl": "PixivCollection 캐시를 삭제하시겠습니까? 삭제 후에는 북마크 데이터를 다시 다운로드해야 합니다",
-    "pxcl": "PixivCollection 캐시 삭제"
+    "pxcl": "PixivCollection 캐시 삭제",
+    "pximg_thumb": "썸네일 캐시"
   },
   "common": {
     "ai_gen": "AI 생성",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "차단된 태그 ‘{0}’을(를) 삭제하시겠습니까?",
     "delete_uid_title": "차단된 작가 삭제",
     "delete_uid_confirm": "차단된 작가 ‘{0}’을(를) 삭제하시겠습니까?"
+  },
+  "dlc": {
+    "download_all": "전체 다운로드",
+    "select_pages": "페이지 선택 다운로드",
+    "pages_title": "페이지 선택",
+    "page_range_ph": "페이지 범위 (예: 1-5,8)"
   },
   "history": {
     "confirm": {

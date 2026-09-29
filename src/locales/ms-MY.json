@@ -193,7 +193,8 @@
     "clear_fail": "Gagal mengosongkan cache: {0}",
     "confirm_default": "Adakah anda pasti mahu mengosongkan cache?",
     "confirm_pxcl": "Adakah anda pasti mahu mengosongkan cache PixivCollection? Selepas dibersihkan, data koleksi perlu dimuat turun semula",
-    "pxcl": "Kosongkan cache PixivCollection"
+    "pxcl": "Kosongkan cache PixivCollection",
+    "pximg_thumb": "Cache thumbnail"
   },
   "common": {
     "ai_gen": "Ai-dihasilkan",
@@ -247,6 +248,12 @@
     "delete_tag_confirm": "Adakah anda pasti mahu memadam tag yang disekat “{0}”?",
     "delete_uid_title": "Padam pengarang yang disekat",
     "delete_uid_confirm": "Adakah anda pasti mahu memadam pengarang yang disekat “{0}”?"
+  },
+  "dlc": {
+    "download_all": "Muat turun semua",
+    "select_pages": "Pilih halaman untuk dimuat turun",
+    "pages_title": "Pilih halaman",
+    "page_range_ph": "Julat halaman, cth 1-5,8"
   },
   "eZpkRjFnBvTEVV8yNj5b7": "Lebih suka menggunakan muat turun skrip pengguna tampermonkey",
   "ebHfHD4g4932R2m1gFtmn": "Adakah anda mahu kembali ke halaman rumah?",

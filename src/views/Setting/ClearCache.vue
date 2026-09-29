@@ -33,6 +33,16 @@
           </van-button>
         </template>
       </van-cell>
+      <van-cell v-if="isDirectPximg" center :title="$t('cache.pximg_thumb')">
+        <template #label>
+          <span>{{ $t('cache.records', [size.pximg[1]]) }} ~ {{ size.pximg[0] | bytes }}</span>
+        </template>
+        <template #right-icon>
+          <van-button type="info" size="small" @click="clearCache('pximg')">
+            <span>{{ $t('cache.clear') }}</span>
+          </van-button>
+        </template>
+      </van-cell>
       <template v-if="isLoggedIn && showClearTransate">
         <van-cell center title="清除小说翻译缓存">
           <template #right-icon>
@@ -74,6 +84,7 @@ import { Dialog } from '@/lib/vant-apis'
 import { LocalStorage, SessionStorage } from '@/utils/storage'
 import localDb from '@/utils/storage/localDb'
 import { i18n } from '@/i18n'
+import store from '@/store'
 
 export default {
   name: 'SettingClearCache',
@@ -98,6 +109,7 @@ export default {
         db: [0, 0],
         local: [0, 0],
         session: [0, 0],
+        pximg: [0, 0],
       },
       showClearTransate: i18n.locale.includes('zh'),
     }
@@ -107,6 +119,9 @@ export default {
   },
   computed: {
     ...mapGetters(['isLoggedIn']),
+    isDirectPximg() {
+      return store.state.appSetting.isDirectPximg
+    },
   },
   activated() {
     this.calcCacheSize()
@@ -119,6 +134,10 @@ export default {
         (await navigator.storage.estimate()).usage,
         await localDb.length(),
       ]
+      if (this.isDirectPximg) {
+        const { pximgThumbCacheStats } = await import('@/utils/pximgCache')
+        this.size.pximg = await pximgThumbCacheStats()
+      }
     },
     async showConfirm(message = this.$t('cache.confirm_default')) {
       try {
@@ -147,6 +166,9 @@ export default {
         case 'session':
           showName = this.$t('cache.session')
           break
+        case 'pximg':
+          showName = this.$t('cache.pximg_thumb')
+          break
         default:
           break
       }
@@ -162,9 +184,11 @@ export default {
         await Promise.all(cacheKeys.map(key => caches.delete(key)))
         await this.clearShinobuModelCache(true)
         await this.clearPxclCache(true)
+        await this.clearPximgCache(true)
       }
       if (type === 'local') LocalStorage.clear()
       if (type === 'session') SessionStorage.clear()
+      if (type === 'pximg') await this.clearPximgCache(true)
 
       this.calcCacheSize()
       this.$toast.success(this.$t('cache.success_tip'))
@@ -216,6 +240,17 @@ export default {
       try {
         const pxclDb = localforage.createInstance({ name: 'pxcl-store' })
         await pxclDb.clear()
+        silent !== true && this.$toast.success(this.$t('cache.cleared'))
+      } catch (err) {
+        silent !== true && this.$toast(this.$t('cache.clear_fail', [err.message]))
+      }
+    },
+    async clearPximgCache(silent) {
+      if (silent !== true && await this.showConfirm()) return
+      window.umami?.track('clear_cache', { type: 'pximg_thumb' })
+      try {
+        const { clearPximgThumbCache } = await import('@/utils/pximgCache')
+        await clearPximgThumbCache()
         silent !== true && this.$toast.success(this.$t('cache.cleared'))
       } catch (err) {
         silent !== true && this.$toast(this.$t('cache.clear_fail', [err.message]))

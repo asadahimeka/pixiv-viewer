@@ -55,7 +55,8 @@
     "clear_fail": "清除快取失敗：{0}",
     "confirm_default": "確定要清除快取嗎？",
     "confirm_pxcl": "確定要清除 PixivCollection 快取嗎？清除後需要重新下載收藏資料。",
-    "pxcl": "清除 PixivCollection 快取"
+    "pxcl": "清除 PixivCollection 快取",
+    "pximg_thumb": "縮略圖快取"
   },
   "common": {
     "ai_gen": "AI 生成",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "確定要刪除封鎖標籤「{0}」嗎？",
     "delete_uid_title": "刪除封鎖作者",
     "delete_uid_confirm": "確定要刪除封鎖作者「{0}」嗎？"
+  },
+  "dlc": {
+    "download_all": "全部下載",
+    "select_pages": "選擇頁碼下載",
+    "pages_title": "選擇下載頁碼",
+    "page_range_ph": "頁碼範圍，如 1-5,8"
   },
   "history": {
     "confirm": {

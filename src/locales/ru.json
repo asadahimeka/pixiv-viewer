@@ -87,7 +87,8 @@
     "clear_fail": "Не удалось очистить кэш: {0}",
     "confirm_default": "Очистить кэш?",
     "confirm_pxcl": "Очистить кэш PixivCollection? После этого потребуется заново скачать данные закладок",
-    "pxcl": "Очистить кэш PixivCollection"
+    "pxcl": "Очистить кэш PixivCollection",
+    "pximg_thumb": "Кэш миниатюр"
   },
   "display": {
     "ai": "Отображать работы, созданные ИИ",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "Удалить заблокированный тег «{0}»?",
     "delete_uid_title": "Удалить заблокированного автора",
     "delete_uid_confirm": "Удалить заблокированного автора «{0}»?"
+  },
+  "dlc": {
+    "download_all": "Скачать всё",
+    "select_pages": "Выбрать страницы для скачивания",
+    "pages_title": "Выбрать страницы",
+    "page_range_ph": "Диапазон страниц, напр. 1-5,8"
   },
   "history": {
     "confirm": {

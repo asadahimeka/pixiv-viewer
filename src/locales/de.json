@@ -55,7 +55,8 @@
     "clear_fail": "Cache konnte nicht geleert werden: {0}",
     "confirm_default": "Cache wirklich leeren?",
     "confirm_pxcl": "PixivCollection-Cache wirklich leeren? Die Lesezeichendaten müssen anschließend neu heruntergeladen werden",
-    "pxcl": "PixivCollection-Cache leeren"
+    "pxcl": "PixivCollection-Cache leeren",
+    "pximg_thumb": "Vorschaubild-Cache"
   },
   "common": {
     "ai_gen": "KI-generiert",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "Blockiertes Tag „{0}“ wirklich löschen?",
     "delete_uid_title": "Blockierten Benutzer löschen",
     "delete_uid_confirm": "Blockierten Benutzer „{0}“ wirklich löschen?"
+  },
+  "dlc": {
+    "download_all": "Alle herunterladen",
+    "select_pages": "Seiten zum Herunterladen wählen",
+    "pages_title": "Seiten auswählen",
+    "page_range_ph": "Seitenbereich, z. B. 1-5,8"
   },
   "history": {
     "confirm": {

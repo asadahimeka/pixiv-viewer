@@ -55,7 +55,8 @@
     "clear_fail": "Error al borrar la caché: {0}",
     "confirm_default": "¿Seguro que quieres borrar la caché?",
     "confirm_pxcl": "¿Seguro que quieres borrar la caché de PixivCollection? Tendrás que volver a descargar los datos de favoritos",
-    "pxcl": "Borrar la caché de PixivCollection"
+    "pxcl": "Borrar la caché de PixivCollection",
+    "pximg_thumb": "Caché de miniaturas"
   },
   "common": {
     "ai_gen": "generado por IA",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "¿Seguro que quieres eliminar la etiqueta bloqueada «{0}»?",
     "delete_uid_title": "Eliminar autor bloqueado",
     "delete_uid_confirm": "¿Seguro que quieres eliminar al autor bloqueado «{0}»?"
+  },
+  "dlc": {
+    "download_all": "Descargar todo",
+    "select_pages": "Seleccionar páginas para descargar",
+    "pages_title": "Seleccionar páginas",
+    "page_range_ph": "Rango de páginas, p. ej. 1-5,8"
   },
   "follow": {
     "fav": "Marcadores",

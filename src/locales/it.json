@@ -55,7 +55,8 @@
     "clear_fail": "Svuotamento della cache non riuscito: {0}",
     "confirm_default": "Svuotare la cache?",
     "confirm_pxcl": "Svuotare la cache di PixivCollection? Al termine sarà necessario scaricare di nuovo i dati dei preferiti",
-    "pxcl": "Svuota la cache di PixivCollection"
+    "pxcl": "Svuota la cache di PixivCollection",
+    "pximg_thumb": "Cache delle miniature"
   },
   "common": {
     "ai_gen": "Generato dall'intelligenza artificiale",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "Eliminare il tag bloccato «{0}»?",
     "delete_uid_title": "Elimina autore bloccato",
     "delete_uid_confirm": "Eliminare l'autore bloccato «{0}»?"
+  },
+  "dlc": {
+    "download_all": "Scarica tutto",
+    "select_pages": "Seleziona pagine da scaricare",
+    "pages_title": "Seleziona pagine",
+    "page_range_ph": "Intervallo di pagine, es. 1-5,8"
   },
   "follow": {
     "fav": "Segnalibri",

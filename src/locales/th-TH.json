@@ -193,7 +193,8 @@
     "clear_fail": "ล้างแคชไม่สำเร็จ: {0}",
     "confirm_default": "ต้องการล้างแคชหรือไม่?",
     "confirm_pxcl": "ต้องการล้างแคชของ PixivCollection หรือไม่? หลังจากล้างแล้ว จะต้องดาวน์โหลดข้อมูลบุ๊กมาร์กใหม่อีกครั้ง",
-    "pxcl": "ล้างแคช PixivCollection"
+    "pxcl": "ล้างแคช PixivCollection",
+    "pximg_thumb": "แคชภาพขนาดย่อ"
   },
   "common": {
     "ai_gen": "สร้างขึ้นโดย AI",
@@ -247,6 +248,12 @@
     "delete_tag_confirm": "ต้องการลบแท็กที่บล็อก “{0}” หรือไม่?",
     "delete_uid_title": "ลบศิลปินที่บล็อก",
     "delete_uid_confirm": "ต้องการลบศิลปินที่บล็อก “{0}” หรือไม่?"
+  },
+  "dlc": {
+    "download_all": "ดาวน์โหลดทั้งหมด",
+    "select_pages": "เลือกหน้าที่จะดาวน์โหลด",
+    "pages_title": "เลือกหน้า",
+    "page_range_ph": "ช่วงหน้า เช่น 1-5,8"
   },
   "eZpkRjFnBvTEVV8yNj5b7": "ต้องการใช้การดาวน์โหลดสคริปต์ผู้ใช้ Tampermonkey",
   "ebHfHD4g4932R2m1gFtmn": "คุณต้องการกลับไปที่หน้าแรกหรือไม่?",

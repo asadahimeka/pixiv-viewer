@@ -126,11 +126,9 @@ export default {
         }
         url.protocol = 'http:'
         url.host = 'i.pximg.net'
-        const { data } = await window.__httpRequest__(url.href, JSON.stringify({
-          responseType: 'blob',
-          headers: { /* Host: 'i.pximg.net',  */Referer: 'https://www.pixiv.net/' },
-        }))
-        this.localSrc = URL.createObjectURL(data)
+        const { getPximgBlob } = await import('@/utils/pximgCache')
+        const blob = await getPximgBlob(url)
+        this.localSrc = URL.createObjectURL(blob)
         this.loading = false
       } catch (error) {
         console.log('error: ', error)

@@ -87,7 +87,8 @@
     "clear_fail": "キャッシュの削除に失敗しました: {0}",
     "confirm_default": "キャッシュを削除しますか？",
     "confirm_pxcl": "PixivCollectionのキャッシュを削除しますか？削除後はブックマークデータを再ダウンロードする必要があります",
-    "pxcl": "PixivCollectionのキャッシュを削除"
+    "pxcl": "PixivCollectionのキャッシュを削除",
+    "pximg_thumb": "サムネイルキャッシュ"
   },
   "display": {
     "ai": "AI生成作品展示",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "ブロックタグ「{0}」を削除しますか？",
     "delete_uid_title": "ブロックしたユーザーの削除",
     "delete_uid_confirm": "ブロックしたユーザー「{0}」を削除しますか？"
+  },
+  "dlc": {
+    "download_all": "すべてダウンロード",
+    "select_pages": "ページを選択してダウンロード",
+    "pages_title": "ページを選択",
+    "page_range_ph": "ページ範囲（例: 1-5,8）"
   },
   "history": {
     "confirm": {

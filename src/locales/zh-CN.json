@@ -241,7 +241,8 @@
     "clear_fail": "清除缓存失败: {0}",
     "confirm_default": "确定要清理缓存吗？",
     "confirm_pxcl": "确定要清理 PixivCollection 缓存吗？清理后需要重新下载收藏夹数据",
-    "pxcl": "清除 PixivCollection 缓存"
+    "pxcl": "清除 PixivCollection 缓存",
+    "pximg_thumb": "缩略图缓存"
   },
   "display": {
     "title": "作品显示设置",
@@ -261,6 +262,12 @@
     "delete_tag_confirm": "确定删除屏蔽标签「{0}」吗？",
     "delete_uid_title": "删除屏蔽作者",
     "delete_uid_confirm": "确定删除屏蔽作者「{0}」吗？"
+  },
+  "dlc": {
+    "download_all": "全部下载",
+    "select_pages": "选择页码下载",
+    "pages_title": "选择下载页码",
+    "page_range_ph": "页码范围，如 1-5,8"
   },
   "setting": {
     "about": "关于",

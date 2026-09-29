@@ -55,7 +55,8 @@
     "clear_fail": "Échec du vidage du cache : {0}",
     "confirm_default": "Voulez-vous vraiment vider le cache ?",
     "confirm_pxcl": "Voulez-vous vraiment vider le cache PixivCollection ? Les données des favoris devront être retéléchargées ensuite.",
-    "pxcl": "Vider le cache PixivCollection"
+    "pxcl": "Vider le cache PixivCollection",
+    "pximg_thumb": "Cache des miniatures"
   },
   "common": {
     "ai_gen": "Généré par l'IA",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "Voulez-vous vraiment supprimer le tag bloqué « {0} » ?",
     "delete_uid_title": "Supprimer l'auteur bloqué",
     "delete_uid_confirm": "Voulez-vous vraiment supprimer l'auteur bloqué « {0} » ?"
+  },
+  "dlc": {
+    "download_all": "Tout télécharger",
+    "select_pages": "Sélectionner les pages à télécharger",
+    "pages_title": "Sélectionner les pages",
+    "page_range_ph": "Plage de pages, ex. 1-5,8"
   },
   "history": {
     "confirm": {

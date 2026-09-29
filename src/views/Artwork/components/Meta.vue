@@ -123,42 +123,89 @@
     </div>
     <template v-if="!isNovel">
       <div v-show="isBtnsShow" class="meta_btns" :class="{ censored }">
-        <van-button
-          v-if="isLoggedIn"
-          v-longpress="showBookmarkDialog"
-          size="small"
-          :loading="favLoading"
-          :icon="bookmarkId ? 'like' : 'like-o'"
-          plain
-          color="#E87A90"
-          @click="toggleBookmark"
-        >
-          {{ bookmarkId ? $t('user.faved') : $t('user.fav') }}
-        </van-button>
-        <van-button
-          type="info"
-          icon="down"
-          size="small"
-          plain
-          color="#5DAC81"
-          @click="downloadArtwork()"
-        >
-          {{ $t('common.download') }}
-        </van-button>
-        <van-button type="info" icon="comment-o" size="small" plain color="#005CAF" @click="showComments = true">
-          <span>{{ $t('user.view_comments') }}</span>
-        </van-button>
-        <van-button
-          v-if="showPicTranslateBtn"
-          type="info"
-          icon="setting-o"
-          size="small"
-          plain
-          @click.stop="showTranslateSettings = true"
-        >
-          <span>翻译设置</span>
-        </van-button>
+        <div v-if="isLoggedIn" class="meta-btn-cell">
+          <van-button
+            v-longpress="showBookmarkDialog"
+            size="small"
+            :loading="favLoading"
+            :icon="bookmarkId ? 'like' : 'like-o'"
+            plain
+            color="#E87A90"
+            @click="toggleBookmark"
+          >
+            {{ bookmarkId ? $t('user.faved') : $t('user.fav') }}
+          </van-button>
+        </div>
+        <van-popover v-model="dlPopShow" placement="top">
+          <template #reference>
+            <van-button
+              type="info"
+              icon="down"
+              size="small"
+              plain
+              color="#5DAC81"
+              style="width: 100%;"
+              @click="downloadArtwork()"
+            >
+              {{ $t('common.download') }}
+            </van-button>
+          </template>
+          <div class="dl-pop">
+            <van-icon name="cross" class="dl-pop-close" @click="dlPopShow = false" />
+            <div class="dl-pop-item" @click="startDownload(null)">{{ $t('dlc.download_all') }}</div>
+            <div class="dl-pop-item" @click="openPageSelect">{{ $t('dlc.select_pages') }}</div>
+          </div>
+        </van-popover>
+        <div class="meta-btn-cell">
+          <van-button type="info" icon="comment-o" size="small" plain color="#005CAF" @click="showComments = true">
+            <span>{{ $t('user.view_comments') }}</span>
+          </van-button>
+        </div>
+        <div v-if="showPicTranslateBtn" class="meta-btn-cell">
+          <van-button
+            type="info"
+            icon="setting-o"
+            size="small"
+            plain
+            @click.stop="showTranslateSettings = true"
+          >
+            <span>翻译设置</span>
+          </van-button>
+        </div>
       </div>
+      <van-popup v-model="dlPageSelectShow" round class="dl-page-select-popup" get-container="body" closeable>
+        <div class="dl-page-select">
+          <div class="dl-page-title">{{ $t('dlc.pages_title') }}</div>
+          <van-checkbox-group v-model="dlSelectedPages" class="dl-page-grid">
+            <van-checkbox
+              v-for="(img, index) in artwork.images"
+              :key="index"
+              :name="index"
+              class="dl-page-item"
+            >
+              <div class="dl-page-thumb-wrap">
+                <Pximg :src="img.s" nobg class="dl-page-thumb" :alt="`p${index + 1}`" />
+                <span class="dl-page-num">{{ index + 1 }}</span>
+              </div>
+            </van-checkbox>
+          </van-checkbox-group>
+          <div v-if="artwork.images.length > 20" class="dl-page-range">
+            <van-field v-model="dlPageRange" :placeholder="$t('dlc.page_range_ph')" class="dl-page-range-input" />
+            <van-button size="small" plain @click="applyPageRange">{{ $t('common.confirm') }}</van-button>
+          </div>
+          <div class="dl-page-btns">
+            <van-button size="small" plain @click="dlPageSelectShow = false">{{ $t('common.cancel') }}</van-button>
+            <van-button
+              type="info"
+              size="small"
+              :disabled="!dlSelectedPages.length"
+              @click="downloadSelectedPages"
+            >
+              {{ $t('common.confirm') }} ({{ dlSelectedPages.length }})
+            </van-button>
+          </div>
+        </div>
+      </van-popup>
     </template>
     <van-popup v-if="!isNovel" v-model="showComments" class="comments-popup" position="right" get-container="body" closeable>
       <template v-if="showComments">
@@ -238,6 +285,10 @@ export default {
       favLoading: false,
       showComments: false,
       showTranslateSettings: false,
+      dlPopShow: false,
+      dlPageSelectShow: false,
+      dlSelectedPages: [],
+      dlPageRange: '',
     }
   },
   computed: {
@@ -501,6 +552,19 @@ export default {
         this.$emit('ugoira-download')
         return
       }
+      // 多页作品弹出下载菜单（Popover，仅关闭图标可关），单页直接下载
+      if (this.artwork.images.length > 1) {
+        this.dlPopShow = true
+        return
+      }
+      this.startDownload(null)
+    },
+    openPageSelect() {
+      this.dlSelectedPages = []
+      this.dlPageRange = ''
+      this.dlPageSelectShow = true
+    },
+    async startDownload(indices) {
       if (localApi.APP_CONFIG.useLocalAppApi && !this.bookmarkId && isAutoBookmarkAfterDownload) {
         this.favLoading = true
         localApi.illustBookmarkAdd(
@@ -520,8 +584,11 @@ export default {
       }
       const artwork = _.cloneDeep(this.artwork)
       const len = artwork.images.length
-      window.umami?.track('download_artwork_btn', { len })
-      for (let index = 0; index < len; index++) {
+      const pages = indices == null
+        ? artwork.images.map((e, i) => i)
+        : [...new Set(indices)].filter(i => i >= 0 && i < len).sort((a, b) => a - b)
+      window.umami?.track('download_artwork_btn', { len, pages: pages.length })
+      for (const index of pages) {
         const item = artwork.images[index]
         const fileName = `${getArtworkFileName(artwork, index)}.${item.o.split('.').pop()}`
         await downloadFile(item.o, fileName, {
@@ -529,6 +596,25 @@ export default {
           subDir: store.state.appSetting.dlSubDirByAuthor ? artwork.author.name : undefined,
         })
       }
+    },
+    async downloadSelectedPages() {
+      if (!this.dlSelectedPages.length) return
+      this.dlPageSelectShow = false
+      await this.startDownload([...this.dlSelectedPages])
+    },
+    applyPageRange() {
+      // 支持 "1-5,8" 形式的页码范围（1 起始，含两端）
+      const picked = new Set(this.dlSelectedPages)
+      const len = this.artwork.images.length
+      this.dlPageRange.split(/[,，]/).forEach(seg => {
+        const m = seg.trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/)
+        if (!m) return
+        let a = parseInt(m[1]) - 1
+        let b = m[2] ? parseInt(m[2]) - 1 : a
+        if (a > b) [a, b] = [b, a]
+        for (let i = a; i <= b; i++) if (i >= 0 && i < len) picked.add(i)
+      })
+      this.dlSelectedPages = [...picked].sort((x, y) => x - y)
     },
     async copyId(text) {
       copyText(
@@ -580,16 +666,45 @@ export default {
   margin-top 16px
   gap 0.15rem
   flex-wrap wrap
-  ::v-deep .van-button {
+  // 等宽外壳：弹性布局等分的是「内容盒」，按钮自带的 8px 内边距 + 1px 边框
+  // 会叠在等分宽度之外，直接当弹性项就会比无内边距的弹层宽 18px。
+  // 让每个可见按钮都装进内外边距为 0 的外壳（.meta-btn-cell / 弹层 wrapper），
+  // 各弹性项对等宽的贡献就完全一致，任何语言/按钮数量下外宽都严格相等
+  ::v-deep .van-popover__wrapper,
+  .meta-btn-cell {
     flex 1
     width max-content
-    min-width max-content
+    // 统一的宽度下限（与各按钮标签长度无关）：所有按钮的 clamp 基准相同，
+    // 同排必然等宽；窄到一行放不下时按该统一下限换行，每行仍等宽
+    min-width 2.5rem
+  }
+  // 外壳内的按钮撑满外壳（border-box 下 100% 即外壳外宽）
+  .meta-btn-cell > .van-button {
+    width 100%
+  }
+  // 外壳改作弹性容器，让内部引用按钮直接参与同一套尺寸计算：
+  // 按钮由 flex 1 撑满外壳，外壳再与兄弟按钮等分
+  ::v-deep .van-popover__wrapper {
+    display flex
+  }
+  ::v-deep .van-popover__wrapper > .van-button {
+    flex 1
+    min-width 0
+  }
+  ::v-deep .van-button {
+    overflow hidden
     transition: filter 0.2s
     filter: none
 
     &:hover {
       filter: brightness(1.05);
     }
+  }
+  // 标签超过等分宽度时省略号截断，而不是挤占兄弟按钮的宽度
+  ::v-deep .van-button__text {
+    overflow hidden
+    text-overflow ellipsis
+    white-space nowrap
   }
 }
 
@@ -848,6 +963,134 @@ export default {
     ::v-deep a {
       color: #36a8f5;
     }
+  }
+}
+
+.dl-pop {
+  position: relative;
+  padding: 10px 0;
+
+  .dl-pop-close {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    padding: 4px;
+    color: #999;
+    cursor: pointer;
+  }
+
+  .dl-pop-item {
+    padding: 10px 16px;
+    font-size: 14PX;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    &:active {
+      background: #f5f5f5;
+    }
+  }
+}
+
+.dl-page-select {
+  width 9rem
+  padding: 20px 16px;
+
+  .dl-page-title {
+    text-align: center;
+    font-size: 16PX;
+    font-weight: 600;
+    margin-bottom: 16px;
+  }
+
+  .dl-page-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    max-height: 70vh;
+    overflow-y: auto;
+
+    .dl-page-item {
+      box-sizing: border-box;
+      width: calc((100% - 20px) / 3);
+      padding: 0;
+      position: relative;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+
+      // 勾选角标悬浮在缩略图左上角
+      ::v-deep .van-checkbox__icon {
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        z-index: 1;
+        height: auto;
+
+        .van-icon {
+          display: block;
+        }
+      }
+
+      ::v-deep .van-checkbox__label {
+        width: 100%;
+        margin: 0;
+        line-height: 0;
+      }
+
+      .dl-page-thumb-wrap {
+        position: relative;
+        width: 100%;
+      }
+
+      .dl-page-thumb {
+        display: block;
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+      }
+
+      .dl-page-num {
+        position: absolute;
+        right: 4px;
+        bottom: 4px;
+        padding: 0 5PX;
+        border-radius: 4PX;
+        background: rgba(0, 0, 0, 0.7);
+        color: #fff;
+        font-size: 12PX;
+        line-height: 16PX;
+      }
+
+      &:has(.van-checkbox__icon--checked) {
+        border-color: var(--accent-color, #f2c358);
+        box-shadow: 0 0 0 1px var(--accent-color, #f2c358);
+      }
+    }
+  }
+
+  .dl-page-range {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 14px;
+
+    .dl-page-range-input {
+      flex: 1;
+      padding: 6px 10px;
+      background: #f5f5f5;
+      border-radius: 8px;
+    }
+  }
+
+  .dl-page-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
   }
 }
 </style>

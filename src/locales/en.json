@@ -87,7 +87,8 @@
     "clear_fail": "Failed to clear cache: {0}",
     "confirm_default": "Clear the cache?",
     "confirm_pxcl": "Clear the PixivCollection cache? Bookmark data will need to be re-downloaded afterwards",
-    "pxcl": "Clear PixivCollection cache"
+    "pxcl": "Clear PixivCollection cache",
+    "pximg_thumb": "Thumbnail cache"
   },
   "display": {
     "ai": "AI generated work display",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "Delete blocked tag “{0}”?",
     "delete_uid_title": "Delete blocked author",
     "delete_uid_confirm": "Delete blocked author “{0}”?"
+  },
+  "dlc": {
+    "download_all": "Download all",
+    "select_pages": "Select pages to download",
+    "pages_title": "Select pages",
+    "page_range_ph": "Page range, e.g. 1-5,8"
   },
   "history": {
     "confirm": {

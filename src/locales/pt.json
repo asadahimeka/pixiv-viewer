@@ -55,7 +55,8 @@
     "clear_fail": "Falha ao limpar o cache: {0}",
     "confirm_default": "Tem certeza de que deseja limpar o cache?",
     "confirm_pxcl": "Tem certeza de que deseja limpar o cache do PixivCollection? Depois de limpar, será necessário baixar novamente os dados dos favoritos",
-    "pxcl": "Limpar cache do PixivCollection"
+    "pxcl": "Limpar cache do PixivCollection",
+    "pximg_thumb": "Cache de miniaturas"
   },
   "common": {
     "ai_gen": "Gerado por IA",
@@ -107,6 +108,12 @@
     "delete_tag_confirm": "Tem certeza de que deseja excluir a tag bloqueada “{0}”?",
     "delete_uid_title": "Excluir autor bloqueado",
     "delete_uid_confirm": "Tem certeza de que deseja excluir o autor bloqueado “{0}”?"
+  },
+  "dlc": {
+    "download_all": "Baixar tudo",
+    "select_pages": "Selecionar páginas para baixar",
+    "pages_title": "Selecionar páginas",
+    "page_range_ph": "Faixa de páginas, ex. 1-5,8"
   },
   "follow": {
     "fav": "Favoritos",
