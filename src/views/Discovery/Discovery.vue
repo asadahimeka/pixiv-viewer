@@ -18,12 +18,12 @@
       :force-layout="forceSlideLayout ? 'VirtualSlide' : 'Grid'"
       :list="artList"
       :loading="loading"
-      :finished="finished"
-      :error="error"
-      :on-load-more="getArtList"
+      :finished="true"
+      :error="false"
+      :on-load-more="() => {}"
     />
     <van-loading v-show="loading" class="loading" :size="'50px'" />
-    <van-empty v-if="!loading && !artList.length && (!error || forceSlideLayout)" :description="$t('tips.no_data')" />
+    <van-empty v-if="!loading && !artList.length" :description="$t('tips.no_data')" />
   </div>
 </template>
 
@@ -41,8 +41,6 @@ export default {
   data() {
     return {
       loading: false,
-      finished: true,
-      error: false,
       artList: [],
       showImageList: true,
       forceSlideLayout: false,
@@ -65,19 +63,15 @@ export default {
     },
     async getArtList() {
       this.loading = true
-      this.error = false
       this.artList = []
       const res = await api.getDiscoveryList('safe', 18, true)
       if (res.status === 0) {
         this.artList = res.data
-        this.finished = true
       } else {
         this.$toast({
           message: res.msg,
           icon: require('@/icons/error.svg'),
         })
-        this.error = true
-        this.finished = false
       }
       this.loading = false
     },
