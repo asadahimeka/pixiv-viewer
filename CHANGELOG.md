@@ -2,6 +2,20 @@
 
 ### 🚀 Features
 
+- Per-page download selection, pximg thumb cache, novel export fix
+
+### 🐛 Bug Fixes
+
+- Pagination end detection and honest list error semantics
+
+### ⚙️ Miscellaneous Tasks
+
+- Update docs
+- Update link
+## [1.37.5] - 2026-09-23
+
+### 🚀 Features
+
 - Add theme color
 - Add novel rich text formats
 - Novel scroll position record
@@ -224,6 +238,7 @@
 - Update locales
 - Update locales
 - Add app landing page
+- Release v1.37.5
 ## [1.33.0] - 2026-04-12
 
 ### 🚀 Features
