@@ -101,9 +101,9 @@ export default {
           ...res.data,
         ], 'id')
 
-        this.detail = res.data.detail
+        this.detail = res.detail
         this.loading = false
-        if (res.data.next) {
+        if (res.next) {
           this.curPage++
         } else {
           this.finished = true

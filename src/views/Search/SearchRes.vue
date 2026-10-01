@@ -594,7 +594,7 @@ export default {
       this.loading = true
       const res = await api.search(val, this.curPage, params)
       if (res.status === 0) {
-        if (res.data.length) {
+        if (res.rawLen) {
           let artList = res.data
 
           if (this.usersIriTag) {

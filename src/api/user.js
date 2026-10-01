@@ -174,8 +174,8 @@ export async function getDiscoveryArtworks(page = 1, mode = 'all', limit = 60) {
       setCache(cacheKey, list, 60 * 10)
     } else {
       return {
-        status: 0,
-        data: [],
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
       }
     }
   }
@@ -299,18 +299,24 @@ export async function getFollowingIllusts(page = 1, mode = 'all') {
       setCache(cacheKey, list, 60 * 10)
     } else {
       return {
-        status: 0,
-        data: [],
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
       }
     }
   }
 
-  return { status: 0, data: list }
+  return { status: 0, data: list, rawLen: list.length }
 }
 
 export async function getNewIllusts(page = 1, lastId = 0, restrict = 'safe') {
-  const cacheKey = `new.illusts.${page}.${restrict}`
-  let list = await getCache(cacheKey)
+  const cacheKey = `new.illusts.v2.${page}.${restrict}`
+  const cached = await getCache(cacheKey)
+  let list
+  let lastIdVal = 0
+  if (cached && Array.isArray(cached.list)) {
+    list = cached.list
+    lastIdVal = Number(cached.lastId) || 0
+  }
 
   if (!list) {
     const { data: res } = await doGet('/ajax/illust/new', {
@@ -331,17 +337,17 @@ export async function getNewIllusts(page = 1, lastId = 0, restrict = 'safe') {
           e.url = e.url.replace(/\/c\/.+\/img\/(.+)_\w+1200\.(.+)/, '/c/540x540_70/img-master/img/$1_master1200.$2')
           return parseWebApiIllust(e)
         })
-      list._lastId = res?.lastId || 0
-      setCache(cacheKey, list, 60 * 10)
+      lastIdVal = res?.lastId || 0
+      setCache(cacheKey, { list, lastId: lastIdVal }, 60 * 10)
     } else {
       return {
-        status: 0,
-        data: [],
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
       }
     }
   }
 
-  return { status: 0, data: list }
+  return { status: 0, data: list, rawLen: list.length, lastId: lastIdVal }
 }
 
 export async function getBookmarkIllusts(page = 1, userId) {
@@ -371,13 +377,13 @@ export async function getBookmarkIllusts(page = 1, userId) {
       setCache(cacheKey, list, 60 * 10)
     } else {
       return {
-        status: 0,
-        data: [],
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
       }
     }
   }
 
-  return { status: 0, data: list }
+  return { status: 0, data: list, rawLen: list.length }
 }
 
 export async function isIllustBookmarked(id) {

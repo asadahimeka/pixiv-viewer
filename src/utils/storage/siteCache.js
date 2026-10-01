@@ -4,8 +4,15 @@ import localDb from './localDb'
 
 const _siteCacheData = new Map()
 
+/** 只判"列表型"空值；null/undefined/string/Blob/普通对象 一律 false（放行） */
+function isEmptyListLike(v) {
+  if (Array.isArray(v)) return v.length === 0
+  if (v && typeof v === 'object' && Array.isArray(v.list)) return v.list.length === 0
+  return false
+}
+
 export async function setCache(key, val, expires) {
-  if (Array.isArray(val) && !val.length) return
+  if (isEmptyListLike(val)) return
   console.log('setCache', key, val)
   _siteCacheData.set(key, val)
   await localDb.set(key, val, expires)

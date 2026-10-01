@@ -79,7 +79,7 @@ export default {
           ...res.data,
         ], 'id')
         this.loading = false
-        if (res.data.next) {
+        if (res.next) {
           this.curPage++
         } else {
           this.finished = true

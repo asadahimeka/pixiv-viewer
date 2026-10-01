@@ -82,7 +82,8 @@ export default {
             ...this.artList,
             ...res.data.filter(filterCensoredIllust),
           ], 'id')
-          this.nextUrl = res.data.nextUrl
+          this.nextUrl = res.nextUrl
+          if (!this.nextUrl) this.finished = true
         } else {
           this.finished = true
         }
@@ -100,7 +101,8 @@ export default {
       const res = await api.getRecommendedIllust()
       if (res.status === 0) {
         this.artList = res.data.filter(this.showLoadMoreBtn ? filterCensoredIllust : filterRecommIllust)
-        this.nextUrl = res.data.nextUrl
+        this.nextUrl = res.nextUrl
+        if (!this.nextUrl) this.finished = true
       } else {
         this.$toast({
           message: res.msg,

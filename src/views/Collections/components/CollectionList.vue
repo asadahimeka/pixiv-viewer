@@ -41,6 +41,16 @@ import { COMMON_IMAGE_PROXY } from '@/consts'
 import { randomBg } from '@/utils'
 import { filterCensoredCollections } from '@/utils/filter'
 
+// 兼容三种历史形状：裸数组（含旧版数组 expando 元数据）/ {data|list, total} / null
+function normalizeFetchResult(raw) {
+  const list = Array.isArray(raw)
+    ? raw
+    : (raw && Array.isArray(raw.data) ? raw.data : (raw && Array.isArray(raw.list) ? raw.list : []))
+  const totalVal = Array.isArray(raw) ? undefined : (raw && (raw.total ?? raw.data?.total))
+  const total = typeof totalVal === 'number' ? totalVal : undefined
+  return { list, total }
+}
+
 export default {
   name: 'CollectionList',
   props: {
@@ -52,6 +62,7 @@ export default {
   data() {
     return {
       curPage: 1,
+      rawCount: 0,
       artList: [],
       loading: false,
       finished: false,
@@ -62,22 +73,31 @@ export default {
       this.loading = true
       this.artList = []
       this.curPage = 1
+      this.rawCount = 0
       this.finished = false
       this.getList()
     },
     getList: _.throttle(async function () {
       this.loading = true
-      const res = await this.fetchList(this.curPage)
-      if (res.length) {
+      const page = this.curPage
+      const res = await this.fetchList(page)
+      if (this.curPage !== page) {
+        // fetch 在途期间 curPage 被改（reset() 重入）：丢弃过期响应，避免旧页数据虚增 rawCount 提前判底
+        this.loading = false
+        return
+      }
+      const { list, total } = normalizeFetchResult(res)
+      if (list.length) {
+        this.rawCount += list.length
         this.artList = _.uniqBy([
           ...this.artList,
           ...filterCensoredCollections(
-            res.map(e => ({ ...e, style: `background: ${randomBg()}` }))
+            list.map(e => ({ ...e, style: `background: ${randomBg()}` }))
           ),
         ], 'id')
 
         this.loading = false
-        if (!this.pagination || res._total === this.artList.length) {
+        if (!this.pagination || (typeof total === 'number' && this.rawCount >= total)) {
           this.finished = true
         } else {
           this.curPage++

@@ -202,7 +202,7 @@ export default {
       const res = await api.getNovelRankList(type, this.curPage, this.date)
       if (res.status === 0) {
         let newList = res.data
-        if (newList.length == 0) {
+        if (!res.rawLen) {
           this.finished = true
         } else {
           if (!this.menu[this.curType]?.x) {

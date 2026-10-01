@@ -58,16 +58,17 @@ export default {
     getRankList: _.throttle(async function () {
       if (this.loading || this.finished) return
       this.loading = true
+      this.error = false
       const res = await getNewIllusts(this.curPage, this.lastId, this.restrict)
       if (res.status === 0) {
         this.artList = _.uniqBy([
           ...this.artList,
           ...res.data,
         ], 'id')
-        this.lastId = res.data._lastId || 0
+        this.lastId = res.lastId || 0
         this.loading = false
         this.curPage++
-        if (!res.data?.length) this.finished = true
+        if (!res.rawLen) this.finished = true
       } else {
         this.$toast({
           message: res.msg,

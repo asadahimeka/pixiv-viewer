@@ -112,6 +112,7 @@ export default {
     getRankList: _.throttle(async function () {
       if (this.loading || this.finished) return
       this.loading = true
+      this.error = false
       const res = this.isAppLogin
         ? await localApi.illustFollow(this.curPage, this.restrict)
         : await getFollowingIllusts(this.curPage)
@@ -143,7 +144,7 @@ export default {
 
         this.loading = false
         this.curPage++
-        if (!res.data?.length) this.finished = true
+        if (!res.rawLen) this.finished = true
       } else {
         this.$toast({
           message: res.msg,

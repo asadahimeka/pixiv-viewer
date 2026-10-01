@@ -49,6 +49,7 @@ export default {
     return {
       artList: [],
       loading: true,
+      nextUrl: null,
     }
   },
   computed: {
@@ -75,7 +76,7 @@ export default {
       const res = await api.getRecommendedIllust()
       if (res.status === 0) {
         this.artList = res.data.filter(filterRecommIllust)
-        this.artList.nextUrl = res.data.nextUrl
+        this.nextUrl = res.nextUrl
       } else {
         this.$toast({
           message: res.msg,
@@ -85,7 +86,7 @@ export default {
       this.loading = false
     },
     toList() {
-      SessionStorage.set('recommended.illust', this.artList)
+      SessionStorage.set('recommended.illust', { list: this.artList, nextUrl: this.nextUrl })
       this.$router.push({
         name: 'RecommendIllust',
       })

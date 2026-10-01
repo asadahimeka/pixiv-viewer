@@ -392,7 +392,7 @@ export const localApi = {
       }
     }
 
-    return { status: 0, data: filterCensoredIllusts(list) }
+    return { status: 0, data: filterCensoredIllusts(list), rawLen: list.length }
   },
   async novelFollow(page = 1, restrict = 'all') {
     let list = []
@@ -415,7 +415,7 @@ export const localApi = {
       }
     }
 
-    return { status: 0, data: filterCensoredNovels(list) }
+    return { status: 0, data: filterCensoredNovels(list), rawLen: list.length }
   },
   async illustBookmarkAdd(id, restrict = 'public', tags) {
     if (!id) return false
@@ -697,8 +697,14 @@ const api = {
    * @param {Number} page 页数 [1,5]
    */
   async getRelated(id, page = 1, nextUrl = '') {
-    const cacheKey = `relatedList_${id}_p${page}`
-    let relatedList = await getCache(cacheKey)
+    const cacheKey = `relatedList_v2_${id}_p${page}`
+    const cached = await getCache(cacheKey)
+    let relatedList
+    let nextUrlVal
+    if (cached && Array.isArray(cached.list)) {
+      relatedList = cached.list
+      nextUrlVal = cached.nextUrl
+    }
 
     if (!relatedList) {
       const res = await get('/related', {
@@ -709,8 +715,8 @@ const api = {
 
       if (res.illusts) {
         relatedList = res.illusts.map(art => parseIllust(art))
-        relatedList.nextUrl = res.next_url
-        setCache(cacheKey, relatedList, 60 * 60 * 48)
+        nextUrlVal = res.next_url
+        setCache(cacheKey, { list: relatedList, nextUrl: nextUrlVal }, 60 * 60 * 48)
       } else if (res.error) {
         return {
           status: -1,
@@ -726,7 +732,7 @@ const api = {
 
     console.log('relatedList: ', relatedList)
 
-    return { status: 0, data: relatedList }
+    return { status: 0, data: relatedList, nextUrl: nextUrlVal }
   },
 
   async getRelatedNovel(id, page = 1) {
@@ -757,14 +763,19 @@ const api = {
 
     console.log('relatedList: ', relatedList)
 
-    return { status: 0, data: filterCensoredNovels(relatedList) }
+    return { status: 0, data: filterCensoredNovels(relatedList), rawLen: relatedList.length }
   },
 
   async getRecommendedIllust(params) {
-    const cacheKey = 'recommended.illust'
+    const cacheKey = 'recommended.illust.v2'
     let relatedList
+    let nextUrlVal
     if (!localApi.APP_CONFIG.useLocalAppApi) {
-      relatedList = await getCache(cacheKey)
+      const cached = await getCache(cacheKey)
+      if (cached && Array.isArray(cached.list)) {
+        relatedList = cached.list
+        nextUrlVal = cached.nextUrl
+      }
     }
 
     if (!relatedList) {
@@ -772,9 +783,9 @@ const api = {
 
       if (res.illusts) {
         relatedList = res.illusts.map(art => parseIllust(art)).filter(e => e.like >= 500)
-        relatedList.nextUrl = res.next_url
+        nextUrlVal = res.next_url
         if (!localApi.APP_CONFIG.useLocalAppApi) {
-          setCache(cacheKey, relatedList, 60 * 60 * 12)
+          setCache(cacheKey, { list: relatedList, nextUrl: nextUrlVal }, 60 * 60 * 12)
         }
       } else if (res.error) {
         return {
@@ -791,7 +802,7 @@ const api = {
 
     console.log('getRecommendedIllust: ', relatedList)
 
-    return { status: 0, data: relatedList }
+    return { status: 0, data: relatedList, nextUrl: nextUrlVal }
   },
 
   async getRecommendedManga() {
@@ -1256,13 +1267,13 @@ const api = {
         rankList.length && setCache(cacheKey, rankList, 60 * 60 * 24 * 14)
       } else {
         return {
-          status: 0,
-          data: [],
+          status: -1,
+          msg: i18n.t('tip.unknown_err'),
         }
       }
     }
 
-    return { status: 0, data: filterCensoredIllusts(rankList) }
+    return { status: 0, data: filterCensoredIllusts(rankList), rawLen: rankList.length }
   },
 
   async getDiscoveryArtworks(mode = 'all', limit = 60) {
@@ -1283,8 +1294,8 @@ const api = {
       list = illust.filter(e => !e.isAdContainer && !blockIds.includes(`${e.id}`) && !isBlockTagHit(new Set(blockTags), e.tags)).map(e => parseWebApiIllust(e))
     } else {
       return {
-        status: 0,
-        data: [],
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
       }
     }
 
@@ -1307,8 +1318,8 @@ const api = {
       list = res.illusts.filter(e => !e.isAdContainer).map(e => parseWebApiIllust(e))
     } else {
       return {
-        status: 0,
-        data: [],
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
       }
     }
 
@@ -1335,12 +1346,12 @@ const api = {
       artList = res.map(parseWebPopularIllust)
     } else {
       return {
-        status: 0,
-        data: [],
+        status: -1,
+        msg: i18n.t('tip.unknown_err'),
       }
     }
 
-    return { status: 0, data: filterCensoredIllusts(artList) }
+    return { status: 0, data: filterCensoredIllusts(artList), rawLen: artList.length }
   },
 
   /**
@@ -1377,7 +1388,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: filterCensoredIllusts(rankList) }
+    return { status: 0, data: filterCensoredIllusts(rankList), rawLen: rankList.length }
   },
 
   async getNovelRankList(mode = 'day', page = 1, date = dayjs().subtract(2, 'days').format('YYYY-MM-DD')) {
@@ -1408,7 +1419,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: filterCensoredNovels(rankList) }
+    return { status: 0, data: filterCensoredNovels(rankList), rawLen: rankList.length }
   },
 
   /**
@@ -1443,13 +1454,14 @@ const api = {
       }
     }
 
-    return { status: 0, data: filterCensoredIllusts(searchList) }
+    return { status: 0, data: filterCensoredIllusts(searchList), rawLen: searchList.length }
   },
 
   async searchNovel(word, page = 1, params = {}) {
-    const cacheKey = `searchList_novel_${word}_${page}_${JSON.stringify(params)}`
-    let searchList = SessionStorage.get(cacheKey)
-    let hasNext
+    const cacheKey = `searchList_novel_v2_${word}_${page}_${JSON.stringify(params)}`
+    const cached = SessionStorage.get(cacheKey)
+    let searchList = cached && Array.isArray(cached.list) ? cached.list : null
+    let hasNext = searchList ? Boolean(cached.hasNext) : undefined
 
     if (!searchList) {
       const res = await get('/search_novel', {
@@ -1460,8 +1472,8 @@ const api = {
 
       if (res.novels) {
         searchList = res.novels.map(art => parseNovel(art))
-        SessionStorage.set(cacheKey, searchList, 60 * 60 * 1)
         hasNext = Boolean(res.next_url)
+        SessionStorage.set(cacheKey, { list: searchList, hasNext }, 60 * 60 * 1)
       } else if (res.error) {
         return {
           status: -1,
@@ -1475,7 +1487,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: filterCensoredNovels(searchList), hasNext }
+    return { status: 0, data: filterCensoredNovels(searchList), rawLen: searchList.length, hasNext }
   },
 
   async getNovelDetail(id) {
@@ -1848,9 +1860,14 @@ const api = {
    * @param {Number} page 页数
    */
   async getMemberArtwork(id, page, illust_type = 'illust') {
-    const cacheKey = `memberArtwork_${id}_${illust_type}_p${page}`
-    let memberArtwork = await getCache(cacheKey)
-    let hasNext = true
+    const cacheKey = `memberArtwork_v2_${id}_${illust_type}_p${page}`
+    const cached = await getCache(cacheKey)
+    let memberArtwork
+    let hasNext = false
+    if (cached && Array.isArray(cached.list)) {
+      memberArtwork = cached.list
+      hasNext = Boolean(cached.hasNext)
+    }
 
     if (!memberArtwork) {
       const res = await get('/member_illust', {
@@ -1862,7 +1879,7 @@ const api = {
       if (res.illusts) {
         memberArtwork = res.illusts.map(art => parseIllust(art))
         hasNext = Boolean(res.next_url)
-        setCache(cacheKey, memberArtwork, 60 * 60 * 6)
+        setCache(cacheKey, { list: memberArtwork, hasNext }, 60 * 60 * 6)
       } else if (res.error) {
         return {
           status: -1,
@@ -1880,8 +1897,14 @@ const api = {
   },
 
   async getMemberIllustSeries(id, page = 1) {
-    const cacheKey = `member_illust_series_${id}_${page}`
-    let memberArtwork = await getCache(cacheKey)
+    const cacheKey = `member_illust_series_v2_${id}_${page}`
+    const cached = await getCache(cacheKey)
+    let memberArtwork
+    let nextVal = false
+    if (cached && Array.isArray(cached.list)) {
+      memberArtwork = cached.list
+      nextVal = Boolean(cached.next)
+    }
 
     if (!memberArtwork) {
       const res = await get('/member_illust_series', { id, page })
@@ -1889,8 +1912,8 @@ const api = {
       if (res.illust_series_details) {
         res.illust_series_details.forEach(e => { e.cover_image_urls.medium = imgProxy(e.cover_image_urls.medium) })
         memberArtwork = res.illust_series_details
-        memberArtwork.next = !!res.next_url
-        setCache(cacheKey, memberArtwork, 60 * 60 * 24)
+        nextVal = !!res.next_url
+        setCache(cacheKey, { list: memberArtwork, next: nextVal }, 60 * 60 * 24)
       } else if (res.error) {
         return {
           status: -1,
@@ -1904,22 +1927,30 @@ const api = {
       }
     }
 
-    return { status: 0, data: memberArtwork }
+    return { status: 0, data: memberArtwork, next: nextVal }
   },
 
   async getIllustSeries(id, page = 1) {
-    const cacheKey = `illust_series_${id}_${page}`
-    let data = await getCache(cacheKey)
+    const cacheKey = `illust_series_v2_${id}_${page}`
+    const cached = await getCache(cacheKey)
+    let data
+    let nextVal = false
+    let detailVal
+    if (cached && Array.isArray(cached.list)) {
+      data = cached.list
+      nextVal = Boolean(cached.next)
+      detailVal = cached.detail
+    }
 
     if (!data) {
       const res = await get('/illust_series', { id, page })
 
       if (res.illusts) {
         data = res.illusts.map(art => parseIllust(art))
-        data.next = !!res.next_url
-        data.detail = res.illust_series_detail
-        data.detail.cover = imgProxy(res.illust_series_detail?.cover_image_urls?.medium || '')
-        setCache(cacheKey, data, 60 * 60 * 12)
+        nextVal = !!res.next_url
+        detailVal = res.illust_series_detail
+        detailVal.cover = imgProxy(res.illust_series_detail?.cover_image_urls?.medium || '')
+        setCache(cacheKey, { list: data, next: nextVal, detail: detailVal }, 60 * 60 * 12)
       } else if (res.error) {
         return {
           status: -1,
@@ -1933,20 +1964,26 @@ const api = {
       }
     }
 
-    return { status: 0, data }
+    return { status: 0, data, next: nextVal, detail: detailVal }
   },
 
   async getMemberNovelSeries(id, page = 1) {
-    const cacheKey = `member_novel_series_${id}_${page}`
-    let memberArtwork = await getCache(cacheKey)
+    const cacheKey = `member_novel_series_v2_${id}_${page}`
+    const cached = await getCache(cacheKey)
+    let memberArtwork
+    let nextVal = false
+    if (cached && Array.isArray(cached.list)) {
+      memberArtwork = cached.list
+      nextVal = Boolean(cached.next)
+    }
 
     if (!memberArtwork) {
       const res = await get('/member_novel_series', { id, page })
 
       if (res.novel_series_details) {
         memberArtwork = res.novel_series_details
-        memberArtwork.next = !!res.next_url
-        setCache(cacheKey, memberArtwork, 60 * 60 * 24)
+        nextVal = !!res.next_url
+        setCache(cacheKey, { list: memberArtwork, next: nextVal }, 60 * 60 * 24)
       } else if (res.error) {
         return {
           status: -1,
@@ -1960,21 +1997,29 @@ const api = {
       }
     }
 
-    return { status: 0, data: memberArtwork }
+    return { status: 0, data: memberArtwork, next: nextVal }
   },
 
   async getNovelSeries(id, page = 1) {
-    const cacheKey = `novel_series_${id}_${page}`
-    let data = await getCache(cacheKey)
+    const cacheKey = `novel_series_v2_${id}_${page}`
+    const cached = await getCache(cacheKey)
+    let data
+    let nextVal = false
+    let detailVal
+    if (cached && Array.isArray(cached.list)) {
+      data = cached.list
+      nextVal = Boolean(cached.next)
+      detailVal = cached.detail
+    }
 
     if (!data) {
       const res = await get('/novel_series', { id, page })
 
       if (res.novels) {
         data = res.novels.map(art => parseNovel(art))
-        data.next = !!res.next_url
-        data.detail = res.novel_series_detail
-        setCache(cacheKey, data, 60 * 60 * 12)
+        nextVal = !!res.next_url
+        detailVal = res.novel_series_detail
+        setCache(cacheKey, { list: data, next: nextVal, detail: detailVal }, 60 * 60 * 12)
       } else if (res.error) {
         return {
           status: -1,
@@ -1988,7 +2033,7 @@ const api = {
       }
     }
 
-    return { status: 0, data }
+    return { status: 0, data, next: nextVal, detail: detailVal }
   },
 
   async getMemberNovel(id, page = 1) {
@@ -2017,7 +2062,7 @@ const api = {
       }
     }
 
-    return { status: 0, data: filterCensoredNovels(memberArtwork) }
+    return { status: 0, data: filterCensoredNovels(memberArtwork), rawLen: memberArtwork.length }
   },
 
   /**
@@ -2341,7 +2386,7 @@ const api = {
   },
   async searchCollections(tags = [], page = 1, mode = 'safe') {
     try {
-      const cacheKey = `collections.search.${tags.join('_')}.${page}.${mode}`
+      const cacheKey = `collections.search.v2.${tags.join('_')}.${page}.${mode}`
       const cache = await getCache(cacheKey)
       if (cache) return cache
       const params = new URLSearchParams()
@@ -2354,14 +2399,14 @@ const api = {
       params.append('lang', 'zh')
       const res = await get(`${PIXIV_NEXT_URL}/https://www.pixiv.net/ajax/collections/search?${params}`)
       const data = res?.body?.thumbnails?.collection
-      if (!Array.isArray(data) || !data.length) return []
-      const total = res?.body?.data?.total
-      if (total) data._total = total
-      await setCache(cacheKey, data, 60 * 30)
-      return data
+      const rawTotal = res?.body?.data?.total
+      const total = typeof rawTotal === 'number' && rawTotal > 0 ? rawTotal : undefined
+      if (!Array.isArray(data) || !data.length) return { status: 0, data: [], total }
+      await setCache(cacheKey, { status: 0, data, total }, 60 * 30)
+      return { status: 0, data, total }
     } catch (err) {
       console.log('err: ', err)
-      return []
+      return { status: 0, data: [], total: undefined }
     }
   },
   async getUserCollections(id) {

@@ -238,10 +238,10 @@ export default {
           ...res.data,
         ], 'id')
 
-        console.log('res.data.detail: ', res.data.detail)
-        this.detail = res.data.detail
+        console.log('res.detail: ', res.detail)
+        this.detail = res.detail
         this.loading = false
-        if (res.data.next) {
+        if (res.next) {
           this.curPage++
         } else {
           this.finished = true

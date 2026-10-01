@@ -98,7 +98,7 @@ export default {
             ...res.data,
           ], 'id')
           this.curPage++
-          if (res.data.nextUrl) this.nextUrl = res.data.nextUrl
+          if (res.nextUrl) this.nextUrl = res.nextUrl
           else this.finished = true
         } else {
           this.finished = true

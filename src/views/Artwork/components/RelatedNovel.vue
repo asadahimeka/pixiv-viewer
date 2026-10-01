@@ -104,7 +104,7 @@ export default {
       const res = await api.getRelatedNovel(this.artwork.id, this.curPage)
       if (res.status === 0) {
         newList = res.data
-        if (newList.length) {
+        if (res.rawLen) {
           this.artList = _.uniqBy([
             ...this.artList,
             ...newList,

@@ -246,6 +246,7 @@ export default {
     getRankList: async function () {
       if (this.loading || this.finished) return
       this.loading = true
+      this.error = false
       const type = this.getIOType(this.curType)
       let res
       const isWebRank = !!type?.includes('-web')
@@ -256,7 +257,7 @@ export default {
         res = await api.getRankList(type, this.curPage, this.date)
       }
       if (res.status === 0) {
-        if (res.data.length == 0) {
+        if (!res.rawLen) {
           this.finished = true
         } else {
           let artList = res.data

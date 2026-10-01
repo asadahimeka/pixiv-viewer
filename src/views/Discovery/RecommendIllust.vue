@@ -89,7 +89,8 @@ export default {
             ...this.artList,
             ...res.data.filter(filterCensoredIllust),
           ], 'id')
-          this.nextUrl = res.data.nextUrl
+          this.nextUrl = res.nextUrl
+          if (!this.nextUrl) this.finished = true
         } else {
           this.finished = true
         }
@@ -107,7 +108,8 @@ export default {
       const res = await api.getRecommendedIllust()
       if (res.status === 0) {
         this.artList = res.data.filter(this.showLoadMoreBtn ? filterCensoredIllust : filterRecommIllust)
-        this.nextUrl = res.data.nextUrl
+        this.nextUrl = res.nextUrl
+        if (!this.nextUrl) this.finished = true
       } else {
         this.$toast({
           message: res.msg,
@@ -119,11 +121,11 @@ export default {
     init() {
       if (this.isFromDetail && this.artList.length) return
       this.artList = []
-      const list = SessionStorage.get('recommended.illust')
-      console.log('list: ', list)
-      if (list) {
-        this.artList = list
-        this.nextUrl = list.nextUrl
+      const cached = SessionStorage.get('recommended.illust')
+      console.log('list: ', cached)
+      if (cached && Array.isArray(cached.list)) {
+        this.artList = cached.list
+        this.nextUrl = cached.nextUrl
       } else {
         this.getArtList()
       }

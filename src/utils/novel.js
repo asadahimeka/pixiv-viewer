@@ -278,7 +278,7 @@ export async function runSeriesEpubDownload(seriesId, seriesTitle, callbacks = {
       const res = await api.getNovelSeries(seriesId, page)
       if (res.status !== 0) throw new Error(res.msg || i18n.t('novel.export.series_fetch_fail'))
       all.push(...res.data)
-      if (!res.data.next) break
+      if (!res.next) break
       await sleep(1500)
       page++
     }
