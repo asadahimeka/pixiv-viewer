@@ -266,6 +266,22 @@ export function parseWebPopularIllust(d) {
   return artwork
 }
 
+function parseAppComment(c, parentUserId) {
+  const user = c.user || {}
+  const imgs = user.profile_image_urls || {}
+  return {
+    id: c.id,
+    userId: `${user.id}`,
+    userName: user.name,
+    img: imgs.medium,
+    comment: c.comment,
+    commentDate: c.date,
+    stampId: c.stamp ? c.stamp.stamp_id : null,
+    hasReplies: Boolean(c.has_replies),
+    replyToUserId: parentUserId,
+  }
+}
+
 function handleErrMsg(res) {
   const isRateLimitCode = res.error?.response?.status == 429
   const err = res.error?.response?.data?.error || res.error?.error || res.error
@@ -563,10 +579,12 @@ async function supplementMemberInfo(id, memberInfo, onUpdate) {
       try {
         if (!memberInfo.comment || !memberInfo.webpage || !memberInfo.twitter_url) {
           const webRes = await get(`${PIXIV_NOW_URL}/ajax/user/${id}?full=1`)
-          memberInfo.comment = await mintFilter(webRes?.commentHtml)
-          memberInfo.webpage = webRes?.webpage
-          memberInfo.twitter_url = webRes?.social?.twitter?.url || ''
-          memberInfo.twitter_account = webRes?.social?.twitter?.url?.split('/').pop() || ''
+          if (webRes && !webRes.error) {
+            memberInfo.comment = await mintFilter(webRes.commentHtml)
+            memberInfo.webpage = webRes.webpage
+            memberInfo.twitter_url = webRes.social?.twitter?.url || ''
+            memberInfo.twitter_account = webRes.social?.twitter?.url?.split('/').pop() || ''
+          }
         }
         // 标记已补充（无论是否真的缺字段），避免下次进页面重复请求
         memberInfo._supplemented = true
@@ -764,6 +782,50 @@ const api = {
     console.log('relatedList: ', relatedList)
 
     return { status: 0, data: filterCensoredNovels(relatedList), rawLen: relatedList.length }
+  },
+
+  async getIllustComments(id, page = 1) {
+    const res = await get('/illust_comments', { id, page, size: 30 })
+    if (res.comments) {
+      const list = res.comments.map(c => parseAppComment(c))
+      return { status: 0, data: list, hasNext: Boolean(res.next_url) }
+    } else if (res.error) {
+      return { status: -1, msg: handleErrMsg(res) }
+    }
+    return { status: -1, msg: i18n.t('tip.unknown_err') }
+  },
+
+  async getNovelComments(id, page = 1) {
+    const res = await get('/novel_comments', { id, page, size: 30 })
+    if (res.comments) {
+      const list = res.comments.map(c => parseAppComment(c))
+      return { status: 0, data: list, hasNext: Boolean(res.next_url) }
+    } else if (res.error) {
+      return { status: -1, msg: handleErrMsg(res) }
+    }
+    return { status: -1, msg: i18n.t('tip.unknown_err') }
+  },
+
+  async getIllustCommentReplies(id, parentUserId) {
+    const res = await get('/illust_comment_replies', { id })
+    if (res.comments) {
+      const list = res.comments.map(c => parseAppComment(c, parentUserId))
+      return { status: 0, data: list, hasNext: Boolean(res.next_url) }
+    } else if (res.error) {
+      return { status: -1, msg: handleErrMsg(res) }
+    }
+    return { status: -1, msg: i18n.t('tip.unknown_err') }
+  },
+
+  async getNovelCommentReplies(id, parentUserId) {
+    const res = await get('/novel_comment_replies', { id })
+    if (res.comments) {
+      const list = res.comments.map(c => parseAppComment(c, parentUserId))
+      return { status: 0, data: list, hasNext: Boolean(res.next_url) }
+    } else if (res.error) {
+      return { status: -1, msg: handleErrMsg(res) }
+    }
+    return { status: -1, msg: i18n.t('tip.unknown_err') }
   },
 
   async getRecommendedIllust(params) {

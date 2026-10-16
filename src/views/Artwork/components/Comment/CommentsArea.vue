@@ -26,10 +26,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import _ from '@/lib/lodash'
+import api from '@/api'
 import { mintFilter } from '@/utils/filter'
-import { PIXIV_NOW_URL } from '@/consts'
 import Comment from './Comment.vue'
 
 export default {
@@ -45,17 +44,12 @@ export default {
     return {
       loading: false,
       comments: [],
-      offset: 0,
+      page: 1,
       hasNext: false,
       qShowMap: {},
       qLoadingMap: {},
       qComments: {},
     }
-  },
-  computed: {
-    ajaxPart() {
-      return this.isNovel ? 'novels' : 'illusts'
-    },
   },
   async mounted() {
     if (!this.id) return console.info('Component CommentsArea missing param: id')
@@ -66,24 +60,21 @@ export default {
       if (this.loading) return
       try {
         this.loading = true
-        const { data } = await axios.get(
-          `${PIXIV_NOW_URL}/ajax/${this.ajaxPart}/comments/roots`,
-          {
-            params: {
-              [this.isNovel ? 'novel_id' : 'illust_id']: id,
-              limit: this.comments.length ? 30 : (this.limit || 3),
-              offset: this.offset,
-            },
-          }
-        )
-        this.hasNext = data.hasNext
-        for (let i = 0; i < data.comments.length; i++) {
-          const element = data.comments[i]
+        // Unified entry: HibiAPI proxy when anonymous, local AppAPI when logged in.
+        // Page-based contract on both paths (proxy ignores nextUrl, honors page/size).
+        // Note: `limit` prop no longer controls fetch size (server returns ~30/page).
+        const res = this.isNovel
+          ? await api.getNovelComments(id, this.page)
+          : await api.getIllustComments(id, this.page)
+        if (res.status !== 0) return console.warn('Comments fetch error', res.msg)
+        this.hasNext = res.hasNext
+        for (let i = 0; i < res.data.length; i++) {
+          const element = res.data[i]
           element.userName = await mintFilter(element.userName)
           element.comment = await mintFilter(element.comment)
         }
-        this.comments = _.uniqBy(this.comments.concat(data.comments), 'id')
-        this.offset += data.comments.length
+        this.comments = _.uniqBy(this.comments.concat(res.data), 'id')
+        this.page += 1
       } catch (err) {
         console.warn('Comments fetch error', err)
       } finally {
@@ -94,21 +85,18 @@ export default {
       if (this.qLoadingMap[id]) return
       try {
         this.$set(this.qLoadingMap, id, true)
-        const { data } = await axios.get(
-          `${PIXIV_NOW_URL}/ajax/${this.ajaxPart}/comments/replies`,
-          {
-            params: {
-              comment_id: id,
-              page: 1,
-            },
-          }
-        )
-        for (let i = 0; i < data.comments.length; i++) {
-          const element = data.comments[i]
+        const parent = this.comments.find(c => c.id === id)
+        const parentUserId = parent && parent.userId
+        const res = this.isNovel
+          ? await api.getNovelCommentReplies(id, parentUserId)
+          : await api.getIllustCommentReplies(id, parentUserId)
+        if (res.status !== 0) return console.warn('Comments fetch error', res.msg)
+        for (let i = 0; i < res.data.length; i++) {
+          const element = res.data[i]
           element.userName = await mintFilter(element.userName)
           element.comment = await mintFilter(element.comment)
         }
-        this.$set(this.qComments, id, _.uniqBy(data.comments, 'id'))
+        this.$set(this.qComments, id, _.uniqBy(res.data, 'id'))
         this.$set(this.qShowMap, id, true)
       } catch (err) {
         console.warn('Comments fetch error', err)
