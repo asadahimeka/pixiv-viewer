@@ -58,7 +58,7 @@ export default new Vuex.Store({
         [DEF_LLM_API_BASE]: {
           apiKey: '****************',
           baseUrl: DEF_LLM_API_BASE,
-          model: 'THUDM/GLM-4-9B-0414',
+          model: 'Index-Translate-9B',
           modelSelMode: 'list',
         },
         [SILICON_CLOUD_BASR_URL]: {
@@ -74,7 +74,7 @@ export default new Vuex.Store({
       // 小说翻译独立配置
       novelProvider: DEF_LLM_API_BASE,
       /** @type {string} 小说翻译完整模型 id */
-      novelModel: 'tencent/Hunyuan-MT-7B',
+      novelModel: 'Index-Translate-9B',
       serverUrl: SERVER_TRANSLATE_URL,
       serverToken: SERVER_TRANSLATE_TOKEN,
       ...getSettingDef('PXV_TRANSLATE_CONFIG', {}),
